@@ -24,7 +24,14 @@ Things you may want to cover:
 * ...
 
 
+### DB
+
+```rails db:migrate```
+
+
 ### Tests
 
 ```bundle exec rspec```
+
+```bundle exec rspec spec\requests```
 

@@ -16,7 +16,7 @@ class SessionsController < ApplicationController
       @session = user.sessions.create!
       response.set_header "X-Session-Token", @session.signed_id
 
-      render json: @session, status: :created
+      render json: { auth_token: @session.signed_id }, status: :created
     else
       render json: { error: "That email or password is incorrect" }, status: :unauthorized
     end
@@ -27,7 +27,8 @@ class SessionsController < ApplicationController
   end
 
   private
-    def set_session
-      @session = Current.user.sessions.find(params[:id])
-    end
+
+  def set_session
+    @session = Current.user.sessions.find(params[:id])
+  end
 end

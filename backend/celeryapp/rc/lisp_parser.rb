@@ -1,9 +1,12 @@
 # lisp parser for recurse center
 # sllewely
+# I haven't verified that I created the tree correctly just because checking it
+# is too close to the interview solution
 
 class LispNode
   attr_accessor :op, :children, :parent
 
+  # instance variables in ruby
   @op
   @children
   @parent
@@ -12,15 +15,16 @@ class LispNode
     @op = op
     @parent = parent
     @children = []
-
   end
-
 end
 
 class LispParserTree
 
+  attr_accessor :root
+
   @root
 
+  # constants
   Op_regex = /\((\+|\-|\w+) /
   Num_regex = /(\d+)[ \)]/
 
@@ -35,18 +39,13 @@ class LispParserTree
     i = m.end(0)
     substring = str[i, str.length]
 
-    # puts substring
-    #
-    # puts op
-    # puts @root.inspect
-
     current_node = @root
 
     while true do
 
       num = Num_regex.match(substring)
 
-      puts substring
+      # puts substring
 
       if (substring[0] == '(')
         m = Op_regex.match(substring)
@@ -104,6 +103,28 @@ class LispParserTree
     # assumption: ops have children
 
     # I could parse with regex
+  end
+
+  def walk_tree
+    q = [root]
+
+    # for the interpreter I need to go to the lowest nodes first and "bubble up"
+
+  end
+
+  # recursive function
+  def operate(node)
+
+    children_ints = []
+    node.children.each do |c|
+      if c.instance_of? Fixnum
+        children_ints << c
+      else
+        children_ints << operate(node)
+        # woops I'm going to stop here otherwise I'll be solving the problem
+      end
+    end
+
   end
 
 end

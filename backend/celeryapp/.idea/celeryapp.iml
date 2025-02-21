@@ -55,6 +55,9 @@
     <orderEntry type="library" scope="PROVIDED" name="diff-lcs (v1.5.0, RVM: ruby-3.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="drb (v2.2.1, RVM: ruby-3.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="erubi (v1.13.1, RVM: ruby-3.2.2) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="factory_bot (v6.5.1, RVM: ruby-3.2.2) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="factory_bot_rails (v6.4.4, RVM: ruby-3.2.2) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="faker (v3.5.1, RVM: ruby-3.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="globalid (v1.2.1, RVM: ruby-3.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="i18n (v1.14.7, RVM: ruby-3.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="io-console (v0.8.0, RVM: ruby-3.2.2) [gem]" level="application" />
@@ -112,84 +115,76 @@
   <component name="RailsGeneratorsCache">
     <option name="generators">
       <list>
-        <option value="active_record:application_record" />
         <option value="active_record:migration" />
         <option value="active_record:model" />
-        <option value="active_record:multi_db" />
-        <option value="application_record" />
-        <option value="authentication" />
-        <option value="benchmark" />
-        <option value="channel" />
+        <option value="active_record:observer" />
+        <option value="active_record:session_migration" />
         <option value="controller" />
-        <option value="erb:authentication" />
+        <option value="erb:controller" />
+        <option value="erb:mailer" />
+        <option value="erb:scaffold" />
         <option value="generator" />
+        <option value="helper" />
         <option value="integration_test" />
-        <option value="job" />
-        <option value="mailbox" />
         <option value="mailer" />
+        <option value="metal" />
         <option value="migration" />
         <option value="model" />
+        <option value="model_subclass" />
+        <option value="observer" />
+        <option value="performance_test" />
+        <option value="plugin" />
         <option value="resource" />
         <option value="scaffold" />
         <option value="scaffold_controller" />
-        <option value="script" />
-        <option value="system_test" />
-        <option value="task" />
-        <option value="test_unit:authentication" />
-        <option value="test_unit:channel" />
+        <option value="session_migration" />
+        <option value="stylesheets" />
         <option value="test_unit:controller" />
-        <option value="test_unit:generator" />
         <option value="test_unit:helper" />
-        <option value="test_unit:install" />
         <option value="test_unit:integration" />
-        <option value="test_unit:job" />
-        <option value="test_unit:mailbox" />
         <option value="test_unit:mailer" />
         <option value="test_unit:model" />
+        <option value="test_unit:observer" />
+        <option value="test_unit:performance" />
         <option value="test_unit:plugin" />
         <option value="test_unit:scaffold" />
-        <option value="test_unit:system" />
       </list>
     </option>
     <option name="myGenerators">
       <list>
-        <option value="active_record:application_record" />
         <option value="active_record:migration" />
         <option value="active_record:model" />
-        <option value="active_record:multi_db" />
-        <option value="application_record" />
-        <option value="authentication" />
-        <option value="benchmark" />
-        <option value="channel" />
+        <option value="active_record:observer" />
+        <option value="active_record:session_migration" />
         <option value="controller" />
-        <option value="erb:authentication" />
+        <option value="erb:controller" />
+        <option value="erb:mailer" />
+        <option value="erb:scaffold" />
         <option value="generator" />
+        <option value="helper" />
         <option value="integration_test" />
-        <option value="job" />
-        <option value="mailbox" />
         <option value="mailer" />
+        <option value="metal" />
         <option value="migration" />
         <option value="model" />
+        <option value="model_subclass" />
+        <option value="observer" />
+        <option value="performance_test" />
+        <option value="plugin" />
         <option value="resource" />
         <option value="scaffold" />
         <option value="scaffold_controller" />
-        <option value="script" />
-        <option value="system_test" />
-        <option value="task" />
-        <option value="test_unit:authentication" />
-        <option value="test_unit:channel" />
+        <option value="session_migration" />
+        <option value="stylesheets" />
         <option value="test_unit:controller" />
-        <option value="test_unit:generator" />
         <option value="test_unit:helper" />
-        <option value="test_unit:install" />
         <option value="test_unit:integration" />
-        <option value="test_unit:job" />
-        <option value="test_unit:mailbox" />
         <option value="test_unit:mailer" />
         <option value="test_unit:model" />
+        <option value="test_unit:observer" />
+        <option value="test_unit:performance" />
         <option value="test_unit:plugin" />
         <option value="test_unit:scaffold" />
-        <option value="test_unit:system" />
       </list>
     </option>
   </component>
@@ -349,6 +344,13 @@
             </subtasks>
           </RakeTaskImpl>
           <RakeTaskImpl description="Run all specs in spec directory (excluding plugin specs)" fullCommand="spec" id="spec" />
+          <RakeTaskImpl id="spec">
+            <subtasks>
+              <RakeTaskImpl description="Run the code examples in spec/requests" fullCommand="spec:requests" id="requests" />
+              <RakeTaskImpl description="" fullCommand="spec:prepare" id="prepare" />
+              <RakeTaskImpl description="" fullCommand="spec:statsetup" id="statsetup" />
+            </subtasks>
+          </RakeTaskImpl>
           <RakeTaskImpl description="Report code statistics (KLOCs, etc) from the application or engine" fullCommand="stats" id="stats" />
           <RakeTaskImpl description="Run all tests in test folder except system ones" fullCommand="test" id="test" />
           <RakeTaskImpl id="test">
@@ -434,12 +436,6 @@
                   <RakeTaskImpl description="" fullCommand="railties:install:migrations" id="migrations" />
                 </subtasks>
               </RakeTaskImpl>
-            </subtasks>
-          </RakeTaskImpl>
-          <RakeTaskImpl id="spec">
-            <subtasks>
-              <RakeTaskImpl description="" fullCommand="spec:prepare" id="prepare" />
-              <RakeTaskImpl description="" fullCommand="spec:statsetup" id="statsetup" />
             </subtasks>
           </RakeTaskImpl>
           <RakeTaskImpl description="" fullCommand="tmp" id="tmp" />

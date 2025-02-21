@@ -14,5 +14,6 @@ Rails.application.routes.draw do
   # root "articles#index"
 
   resources :events
+  resources :recommendations
   resources :users, only: [:index, :show]
 end

@@ -4,6 +4,10 @@ class ApplicationController < ActionController::API
   before_action :set_current_request_details
   before_action :authenticate
 
+  def current_user
+    @current_user ||= User.find_by(id: Current.session.user_id)
+  end
+
   private
 
   def authenticate

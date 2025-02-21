@@ -60,7 +60,4 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
-
-  # Makes it possible to use syntactic sugar like create(:user) instead of FactoryBot.create(:user)
-  config.include FactoryBot::Syntax::Methods
 end

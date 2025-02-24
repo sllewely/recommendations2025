@@ -16,7 +16,6 @@ class RegistrationsController < ApplicationController
   private
 
   def user_params
-    params.delete(:registration)
     params.permit(:username, :name, :email, :password, :password_confirmation)
   end
 

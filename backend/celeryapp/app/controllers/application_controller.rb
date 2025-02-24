@@ -4,6 +4,10 @@ class ApplicationController < ActionController::API
   before_action :set_current_request_details
   before_action :authenticate
 
+  # Without this, Rails will create params like {username: 'test', registration: {username: 'test'}}
+  # Duplicating the params inside the controller name.  I've removed this so that the tests can match js requests.
+  wrap_parameters false
+
   def current_user
     @current_user ||= User.find_by(id: Current.session.user_id)
   end

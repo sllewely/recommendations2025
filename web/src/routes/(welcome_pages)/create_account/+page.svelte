@@ -1,27 +1,68 @@
 <script lang="ts">
-    async function submitCreateAccount(event: Event) {};
+    import {enhance} from '$app/forms';
 
-    async function onsubmit() {
-        console.log($state.snapshot(name));
-        console.log("sarah");
-    }
 
-    let name = $state("");
+    let {data, form} = $props();
 
-    $inspect(name);
+    let name="Roonie";
+
+    console.log(form);
+
+    let creating = $state(false);
+    // async function submitSignin(event: Event) {}
 
 </script>
 
+<h1>{name.toUpperCase()}!  Are you a kitty cat???</h1>
+
 <h2>Create account</h2>
 
-<form {onsubmit}>
-    <label for="friend_code">Friend Code:</label>
-    <input type="text" name="friend code" id="friend_code"/><br />
-    <label for="name">Name</label>
-    <input type="text" name="name" id="name" bind:value={name}/><br />
-    <label for="email">E-mail:</label>
-    <input type="text" name="email" id="email"/><br />
-    <label for="password">Password:</label>
-    <input type="password" name="password" id="password"/><br />
+{#if creating }
+    <p>creating...</p>
+{/if}
+
+<form
+        method="POST"
+        action="?/create"
+        use:enhance={() => {
+            creating = true;
+            return async ({update}) => {
+                await update();
+                creating = false;
+            };
+
+        }}
+
+>
+    <label for="name">Name:
+        <input
+                type="text"
+                name="name"
+                value="{form?.username ?? ''}"
+                id="name"
+                autocomplete="off"
+                required/>
+    </label><br />
+    <label for="username">Username:
+        <input
+                type="text"
+                name="username"
+                value="{form?.username ?? ''}"
+                id="username"
+                autocomplete="off"
+                required/>
+    </label><br />
+    <label for="email">E-mail:
+        <input
+                type="text"
+                name="email"
+                value="{form?.email ?? ''}"
+                id="email"
+                autocomplete="off"
+                required/>
+    </label><br />
+    <label for="password">Password:
+        <input type="password" name="password" id="password" autocomplete="off" required/>
+    </label><br />
     <button type="submit">Create account</button>
 </form>

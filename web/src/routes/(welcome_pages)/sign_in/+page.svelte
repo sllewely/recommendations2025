@@ -18,7 +18,7 @@
 <h2>Sign in</h2>
 
 {#if creating }
-    <p>creating...</p>
+    <p>signing in...</p>
 {/if}
 
 <form
@@ -34,15 +34,7 @@
         }}
 
 >
-    <label for="username">Username:
-        <input
-                type="text"
-                name="username"
-                value="{form?.username ?? ''}"
-                id="username"
-                autocomplete="off"
-                required/>
-    </label><br />
+
     <label for="email">E-mail:
     <input
             type="text"

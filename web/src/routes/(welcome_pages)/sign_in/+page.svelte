@@ -1,9 +1,14 @@
 <script lang="ts">
+    import {enhance} from '$app/forms';
+
 
     let {data, form} = $props();
 
     let name="Roonie";
 
+    console.log(form);
+
+    let creating = $state(false);
     // async function submitSignin(event: Event) {}
 
 </script>
@@ -12,7 +17,23 @@
 
 <h2>Sign in</h2>
 
-<form method="POST" action="?/signin">
+{#if creating }
+    <p>creating...</p>
+{/if}
+
+<form
+        method="POST"
+        action="?/signin"
+        use:enhance={() => {
+            creating = true;
+            return async ({update}) => {
+                await update();
+                creating = false;
+            };
+
+        }}
+
+>
     <label for="email">E-mail:
     <input
             type="text"

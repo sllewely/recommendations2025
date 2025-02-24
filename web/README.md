@@ -36,3 +36,11 @@ npm run build
 You can preview the production build with `npm run preview`.
 
 > To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+
+## Debugging
+
+To debug the svelte server, run dev in debug mode.
+
+[Jetbrains Webstorm instructions](https://www.jetbrains.com/help/webstorm/svelte.html#ws_svelte_debug).
+
+

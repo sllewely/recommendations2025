@@ -34,11 +34,20 @@
         }}
 
 >
+    <label for="username">Username:
+        <input
+                type="text"
+                name="username"
+                value="{form?.username ?? ''}"
+                id="username"
+                autocomplete="off"
+                required/>
+    </label><br />
     <label for="email">E-mail:
     <input
             type="text"
             name="email"
-            value="{form?.description ?? ''}"
+            value="{form?.email ?? ''}"
             id="email"
             autocomplete="off"
             required/>

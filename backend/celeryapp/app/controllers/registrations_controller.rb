@@ -4,6 +4,7 @@ class RegistrationsController < ApplicationController
   def create
     @user = User.new(user_params)
 
+    logger.debug "sarah: #{params}"
     if @user.save
       send_email_verification
       render json: @user, status: :created
@@ -15,6 +16,7 @@ class RegistrationsController < ApplicationController
   private
 
   def user_params
+    params.delete(:registration)
     params.permit(:username, :name, :email, :password, :password_confirmation)
   end
 

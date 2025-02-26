@@ -1,6 +1,8 @@
 <script lang="ts">
     import {enhance} from '$app/forms';
     import FormButton from '$lib/components/FormButton.svelte';
+    import Input from '$lib/components/Input.svelte';
+    import PageTitle from "$lib/components/text/PageTitle.svelte";
 
 
     let {data, form} = $props();
@@ -15,9 +17,11 @@
 </script>
 <div>
 
-<h1>{name.toUpperCase()}!  Are you a kitty cat???</h1>
+<PageTitle>{name.toUpperCase()}!  Are you a kitty cat???</PageTitle>
 
-<h2>Create account</h2>
+<PageTitle>Create account</PageTitle>
+
+    <p>todo: if form fails, keep values</p>
 
 {#if creating }
     <p>creating...</p>
@@ -36,36 +40,13 @@
         }}
 
 >
-    <label for="name">Name:
-        <input
-                type="text"
-                name="name"
-                value="{form?.username ?? ''}"
-                id="name"
-                autocomplete="off"
-                required/>
-    </label><br />
-    <label for="username">Username:
-        <input
-                type="text"
-                name="username"
-                value="{form?.username ?? ''}"
-                id="username"
-                autocomplete="off"
-                required/>
-    </label><br />
-    <label for="email">E-mail:
-        <input
-                type="text"
-                name="email"
-                value="{form?.email ?? ''}"
-                id="email"
-                autocomplete="off"
-                required/>
-    </label><br />
-    <label for="password">Password:
-        <input type="password" name="password" id="password" autocomplete="off" required/>
-    </label><br />
+    <div class="flex flex-col">
+        <Input name="name" input_type="text" label="Name:" value="{form?.name}" required=true />
+        <Input name="username" label="Username:" value={form?.username} required=true />
+        <Input name="email" label="E-mail:" value={form?.email} required=true />
+        <Input name="password" label="Password:" input_type="password" required=true />
+
+    </div>
     <FormButton>Create account</FormButton>
 
 </form>

@@ -1,5 +1,6 @@
 <script lang="ts">
-	import Link from '$lib/components/text/Link.svelte'
+	import Link from '$lib/components/text/Link.svelte';
+	import PageTitle from '$lib/components/text/PageTitle.svelte';
 
 </script>
 
@@ -11,9 +12,9 @@
 <section>
 
 		<div>
-	<h1 class="text-2xl">
+	<PageTitle>
 		Recommendations by Celery
-	</h1>
+	</PageTitle>
 
 	<h2 class="text-md">
 		welcome to my app!!!

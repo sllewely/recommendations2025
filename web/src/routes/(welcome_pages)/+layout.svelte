@@ -10,7 +10,9 @@
     <Header />
 
     <main>
+        <div class="flex items-center justify-center">
         {@render children()}
+        </div>
     </main>
 
     <Footer />

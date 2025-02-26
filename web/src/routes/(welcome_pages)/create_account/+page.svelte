@@ -1,5 +1,6 @@
 <script lang="ts">
     import {enhance} from '$app/forms';
+    import FormButton from '$lib/components/FormButton.svelte';
 
 
     let {data, form} = $props();
@@ -12,6 +13,7 @@
     // async function submitSignin(event: Event) {}
 
 </script>
+<div>
 
 <h1>{name.toUpperCase()}!  Are you a kitty cat???</h1>
 
@@ -64,5 +66,7 @@
     <label for="password">Password:
         <input type="password" name="password" id="password" autocomplete="off" required/>
     </label><br />
-    <button type="submit">Create account</button>
+    <FormButton>Create account</FormButton>
+
 </form>
+</div>

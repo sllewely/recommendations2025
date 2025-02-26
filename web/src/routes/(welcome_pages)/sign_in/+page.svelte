@@ -1,5 +1,8 @@
 <script lang="ts">
     import {enhance} from '$app/forms';
+    import Input from "$lib/components/Input.svelte";
+    import FormButton from "$lib/components/FormButton.svelte";
+    import PageTitle from "$lib/components/text/PageTitle.svelte";
 
 
     let {data, form} = $props();
@@ -12,10 +15,11 @@
     // async function submitSignin(event: Event) {}
 
 </script>
+<div>
 
-<h1>{name.toUpperCase()}!  Are you a kitty cat???</h1>
+<PageTitle>{name.toUpperCase()}!  Are you a kitty cat???</PageTitle>
 
-<h2>Sign in</h2>
+<PageTitle>Sign in</PageTitle>
 
 {#if creating }
     <p>signing in...</p>
@@ -35,17 +39,11 @@
 
 >
 
-    <label for="email">E-mail:
-    <input
-            type="text"
-            name="email"
-            value="{form?.email ?? ''}"
-            id="email"
-            autocomplete="off"
-            required/>
-    </label><br />
-    <label for="password">Password:
-    <input type="password" name="password" id="password" autocomplete="off" required/>
-    </label><br />
-    <button type="submit">Sign in</button>
+    <div class="flex flex-col">
+        <Input name="email" label="E-mail:" value={form?.email} required=true />
+        <Input name="password" label="Password:" input_type="password" required=true />
+
+    </div>
+    <FormButton>Sign in</FormButton>
 </form>
+</div>

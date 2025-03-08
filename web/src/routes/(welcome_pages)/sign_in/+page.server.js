@@ -18,7 +18,7 @@ export const actions = {
             const response = await fetch(root_url + "sign_in", {
                 method: "POST",
                 body: JSON.stringify({
-                    username: data.get('username'),
+                    username: data.get('email'),
                     password: data.get('password'),
                 }),
                 headers: {

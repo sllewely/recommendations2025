@@ -1,4 +1,7 @@
 import {fail} from '@sveltejs/kit';
+import { redirect } from '@sveltejs/kit';
+
+import  { token } from '$lib/api_calls/auth.svelte.js';
 
 
 export function load() {
@@ -18,7 +21,7 @@ export const actions = {
             const response = await fetch(root_url + "sign_in", {
                 method: "POST",
                 body: JSON.stringify({
-                    username: data.get('email'),
+                    email: data.get('email'),
                     password: data.get('password'),
                 }),
                 headers: {
@@ -31,10 +34,13 @@ export const actions = {
             // }
             const json = await response.json();
 
+            token.jwt = json['auth_token'];
             2 + 5;
         } catch (error) {
             console.error(error.message);
         }
+
+        redirect(302, '/feed')
 
         // if success, pass auth token to internal home component we're moving to
 

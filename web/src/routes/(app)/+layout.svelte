@@ -1,22 +1,22 @@
 <script lang="ts">
-    // import Header from './Header.svelte';
+    import Header from './Header.svelte';
+    import { fail } from '@sveltejs/kit';
+    import Footer from '$lib/components/Footer.svelte';
     import '../../app.css';
 
     let { children } = $props();
+
+
 </script>
 
 <div class="app">
-<!--    <Header />-->
+    <Header />
 
     <main>
         {@render children()}
     </main>
 
-    <footer>
-        <p>
-            visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to learn about SvelteKit
-        </p>
-    </footer>
+    <Footer />
 </div>
 
 <style>

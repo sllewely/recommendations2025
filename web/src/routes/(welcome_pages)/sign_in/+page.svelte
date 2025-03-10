@@ -1,8 +1,8 @@
 <script lang="ts">
     import {enhance} from '$app/forms';
-    import Input from "$lib/components/Input.svelte";
-    import FormButton from "$lib/components/FormButton.svelte";
-    import PageTitle from "$lib/components/text/PageTitle.svelte";
+    import Input from "$lib/components/form/Input.svelte";
+    import FormButton from "$lib/components/form/FormButton.svelte";
+    import H1 from "$lib/components/text/H1.svelte";
 
 
     let {data, form} = $props();
@@ -17,9 +17,9 @@
 </script>
 <div>
 
-<PageTitle>{name.toUpperCase()}!  Are you a kitty cat???</PageTitle>
+<H1>{name.toUpperCase()}!  Are you a kitty cat???</H1>
 
-<PageTitle>Sign in</PageTitle>
+<H1>Sign in</H1>
 
 {#if creating }
     <p>signing in...</p>

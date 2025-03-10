@@ -40,7 +40,7 @@ export const actions = {
             console.error(error.message);
         }
 
-        redirect(302, '/feed')
+        redirect(302, '/posts')
 
         // if success, pass auth token to internal home component we're moving to
 

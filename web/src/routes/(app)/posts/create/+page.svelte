@@ -4,6 +4,7 @@
     import FormButton from "$lib/components/form/FormButton.svelte";
     import H1 from '$lib/components/text/H1.svelte'
     import Link from '$lib/components/text/Link.svelte'
+    import Card from '$lib/components/Card.svelte';
 
     let {data, form} = $props();
 
@@ -19,7 +20,7 @@
 {#if creating }
     <p>signing in...</p>
 {/if}
-
+<Card>
     <form
             method="POST"
             action="?/create_post"
@@ -35,13 +36,19 @@
     >
 
         <div class="flex flex-col">
-            <Input name="title" label="Title:" value={form?.title} required=true />
-            <p>TODO: Should be text area</p>
-            <Input name="description" label="Description:" required=true />
-            <Input name="who_recommended" label="Who recommended?:" required=true />
+            <Input name="post_title" label="Post Title:" value={form?.title} />
+            <Card>
+                <H1>Recommendation</H1>
+                <Input name="title" label="Title:" />
+                <Input name="type" label="Type:" placeholder="book, movie, other"/>
+                <p>TODO: Should be text area</p>
+                <Input name="notes" label="Notes:" />
+                <Input name="who_recommended" label="Who recommended?:" />
+
+            </Card>
         </div>
         <FormButton>Create post</FormButton>
     </form>
-
+</Card>
 
 </div>

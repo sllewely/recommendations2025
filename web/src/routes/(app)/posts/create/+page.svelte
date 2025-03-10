@@ -43,7 +43,16 @@
                 <Input name="type" label="Type:" placeholder="book, movie, other"/>
                 <p>TODO: Should be text area</p>
                 <Input name="notes" label="Notes:" />
-                <Input name="who_recommended" label="Who recommended?:" />
+                <Card>
+
+                    <H1>Extras</H1>
+                    <Input name="author" label="Author/Artist/Creator:" />
+                    <Input name="rating" label="Rating:" placeholder="1-5"/>
+                    <Input name="completed" label="Completed?" placeholder="yes/no" />
+                    <Input name="who_recommended" label="Who recommended?:" />
+                </Card>
+
+
 
             </Card>
         </div>

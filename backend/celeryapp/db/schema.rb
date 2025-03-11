@@ -24,10 +24,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_11_202938) do
   create_table "posts", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "author_id", null: false
     t.string "post_title"
     t.text "content"
-    t.index ["author_id"], name: "index_posts_on_author_id"
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
   create_table "recommendations", force: :cascade do |t|
@@ -38,7 +38,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_11_202938) do
     t.string "who_recommended"
     t.integer "status", default: 0
     t.integer "rating", default: 0
-    t.bigint "user_id"
+    t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_recommendations_on_user_id"
   end
 
@@ -62,6 +62,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_11_202938) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  add_foreign_key "posts", "users"
   add_foreign_key "recommendations", "users"
   add_foreign_key "sessions", "users"
 end

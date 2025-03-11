@@ -9,10 +9,19 @@ class PostsController < ApplicationController
 
   def create
 
-    @post = current_user.posts.new(post_params)
-    if @post.save
-      render json: @post, status: :created
-    else
+    begin
+      @post = current_user.posts.new(post_params)
+      ActiveRecord::Base.transaction do
+        @post.save!
+        if params.has_key?('recommendations_attributes')
+          params['recommendations_attributes'].each do |rec_params|
+            strong_params = recommendation_params(rec_params).merge(user_id: current_user.id)
+            @post.recommendations << Recommendation.create!(strong_params)
+          end
+        end
+      end
+      render json: @post.attributes, status: :created
+    rescue ActiveRecord::Rollback => e
       render json: @post.errors, status: :unprocessable_content
     end
 
@@ -21,12 +30,10 @@ class PostsController < ApplicationController
   private
 
   def post_params
-    params.permit(:post_title, :content, recommendations_attributes: [:title, :description, :who_recommended])
+    params.permit(:post_title, :content)
   end
 
-  def recommendation_params
-    if params.has_key?('recommendation')
-      params['recommendation'].permit()
-    end
+  def recommendation_params(rec_params)
+    rec_params.permit(:title, :description, :who_recommended)
   end
 end

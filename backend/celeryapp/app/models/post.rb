@@ -5,4 +5,8 @@ class Post < ApplicationRecord
 
   accepts_nested_attributes_for :recommendations
 
+  def attributes
+    super.merge({ recommendations: recommendations })
+  end
+
 end

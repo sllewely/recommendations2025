@@ -49,4 +49,31 @@ RSpec.describe "Posts", type: :request do
     end
   end
 
+  describe "GET /posts" do
+    before(:context) do
+      @my_user = create(:user)
+
+      headers = { 'ACCEPT' => 'application/json' }
+      post "/sign_in", params: { email: @my_user.email, password: @my_user.password }, headers: headers
+
+      auth_token = JSON.parse(response.body)["auth_token"]
+      @headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{auth_token}" }
+    end
+
+    it 'gets all posts and recommendations' do
+      3.times do
+        create(:post)
+      end
+      get "/posts", params: {}, headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      res = JSON.parse(response.body)
+      expect(res.size).to eq(3)
+      expect(res.first['post_title']).to_not be_nil
+      expect(res.first['content']).to_not be_nil
+      expect(res.first['user_id']).to_not be_nil
+    end
+
+  end
+
 end

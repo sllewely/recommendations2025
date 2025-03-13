@@ -1,6 +1,9 @@
 class PostsController < ApplicationController
   def index
-
+    posts = Post.all.order(created_at: :desc).limit(25)
+    recommendations = Recommendation.all.order(created_at: :desc).limit(25)
+    feed = merge_by_time(posts, recommendations)
+    render json: feed, status: :ok
   end
 
   def show
@@ -35,5 +38,32 @@ class PostsController < ApplicationController
 
   def recommendation_params(rec_params)
     rec_params.permit(:title, :notes, :who_recommended, :rating, :status, :media_type)
+  end
+
+  def merge_by_time(array1, array2)
+    res = []
+    index1 = 0
+    index2 = 0
+    while (index1 < array1.size || index2 < array2.size) do
+      if index1 == array1.size
+        res << array2[index2]
+        index2 += 1
+        next
+      end
+      if index2 == array2.size
+        res << array1[index1]
+        index1 += 1
+        next
+      end
+
+      if (array1[index1].created_at > array2[index2].created_at)
+        res << array1[index1]
+        index1 += 1
+      else
+        res << array2[index2]
+        index2 += 1
+      end
+    end
+    res
   end
 end

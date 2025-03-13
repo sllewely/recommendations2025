@@ -60,7 +60,7 @@ RSpec.describe "Posts", type: :request do
       @headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{auth_token}" }
     end
 
-    it 'gets all posts and recommendations' do
+    it 'gets all posts' do
       3.times do
         create(:post)
       end
@@ -72,6 +72,24 @@ RSpec.describe "Posts", type: :request do
       expect(res.first['post_title']).to_not be_nil
       expect(res.first['content']).to_not be_nil
       expect(res.first['user_id']).to_not be_nil
+    end
+
+    it 'gets all posts and recommendations' do
+      user = create(:user)
+      create(:post, user: user)
+      create(:recommendation, user: user)
+      create(:post, user: @my_user)
+
+      get "/posts", params: {}, headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      res = JSON.parse(response.body)
+      expect(res.size).to eq(3)
+      expect(res.first['post_title']).to_not be_nil
+      expect(res.first['content']).to_not be_nil
+      expect(res.first['user_id']).to_not be_nil
+      expect(res[1]['title']).to_not be_nil
+      expect(res[1]['status']).to eq("interested")
     end
 
   end

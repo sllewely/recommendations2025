@@ -33,6 +33,9 @@ Things you may want to cover:
 
 ```bundle exec rspec spec\requests```
 
+Clear test db
+```bundle exec rails db:reset RAILS_ENV=test```
+
 ### Rails
 
 Add a new gem and

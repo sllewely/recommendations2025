@@ -3,7 +3,7 @@ class CreateRecommendations < ActiveRecord::Migration[8.0]
     create_table :recommendations do |t|
       t.timestamps
       t.string :title, null: false
-      t.text :description
+      t.text :notes
       t.string :media_type
       t.string :who_recommended
       t.integer :status, default: 0 # completed/interested/etc

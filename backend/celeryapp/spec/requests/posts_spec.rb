@@ -24,7 +24,7 @@ RSpec.describe "Posts", type: :request do
     end
 
     it 'creates a new post with a recommendation' do
-      post "/posts", params: { post_title: "new fav book", content: "I love it a lot, you should read it", recommendations_attributes: [title: "Annihilation", description: "A book I like"] }, headers: @headers
+      post "/posts", params: { post_title: "new fav book", content: "I love it a lot, you should read it", recommendations_attributes: [title: "Annihilation", notes: "A book I like"] }, headers: @headers
 
       expect(response).to have_http_status(:created)
       res = JSON.parse(response.body)
@@ -34,7 +34,7 @@ RSpec.describe "Posts", type: :request do
     end
 
     it 'creates a new post with a recommendation with rating' do
-      post "/posts", params: { post_title: "new fav book", content: "I love it a lot, you should read it", recommendations_attributes: [title: "Annihilation", description: "A book I like", rating: 5, status: 'recommend', media_type: 'book'] }, headers: @headers
+      post "/posts", params: { post_title: "new fav book", content: "I love it a lot, you should read it", recommendations_attributes: [title: "Annihilation", notes: "A book I like", rating: 5, status: 'recommend', media_type: 'book'] }, headers: @headers
 
       expect(response).to have_http_status(:created)
       res = JSON.parse(response.body)
@@ -45,6 +45,7 @@ RSpec.describe "Posts", type: :request do
       expect(rec_res['rating']).to eq(5)
       expect(rec_res['status']).to eq('recommend')
       expect(rec_res['media_type']).to eq('book')
+      expect(rec_res['notes']).to eq('A book I like')
     end
   end
 

@@ -34,6 +34,6 @@
     }
 
 </script>
-    <button class="{selected ? color_selected_class : color_class} font-bold py-2 px-4 border rounded">
+    <button type="button" class="{selected ? color_selected_class : color_class} font-bold py-2 px-4 border rounded">
         <slot />
     </button>

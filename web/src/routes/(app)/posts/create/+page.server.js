@@ -1,3 +1,6 @@
+import  { token } from '$lib/api_calls/auth.svelte.js';
+import {redirect} from "@sveltejs/kit";
+
 let root_url = "http://127.0.0.1:3000/"
 
 // named action for sign in form
@@ -8,16 +11,22 @@ export const actions = {
         await new Promise((fulfil) => setTimeout(fulfil, 1000));
 
         try {
-            const response = await fetch(root_url + "sign_up", {
+            const response = await fetch(root_url + "posts", {
                 method: "POST",
                 body: JSON.stringify({
-                    username: data.get('username'),
-                    email: data.get('email'),
-                    password: data.get('password'),
+                    post_title: data.get('post_title'),
+                    recommendations_attributes: [{
+                            title: data.get('title'),
+                            type: data.get('media_type'),
+                            status: Number(data.get('status')) ?? 0,
+                            notes: data.get('notes'),
+                            who_recommended: data.get('who_recommended'),
+                        }],
                 }),
                 headers: {
                     'Content-Type': 'application/json',
-                    'Accept': 'application/json',
+                    'ACCEPT': 'application/json',
+                    'Authorization': "Token " + token.jwt,
                 },
             });
             // if (!response.ok) {
@@ -30,7 +39,9 @@ export const actions = {
             console.error(error.message);
         }
 
-        // if success, pass auth token to internal home component we're moving to
+        //TODO: Success toast
+
+        redirect(302, '/posts')
 
     }
 }

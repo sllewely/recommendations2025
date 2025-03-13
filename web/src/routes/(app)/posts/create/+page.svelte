@@ -52,14 +52,15 @@
             <Input name="post_title" label="Post Title:" value={form?.title} />
             <Card>
                 <H1>Recommendation</H1>
-                <Input name="type" label="Type:" placeholder="book, movie, other"/>
+                <Input name="media_type" label="Type:" placeholder="book, movie, other" value={form?.media_type}/>
+                <input type="hidden" name="status" value={status} />
                 <div>
                     <span onclick={() => status = RecommendationStatus.Interested}><ToggleButton color="yellow" selected={status === RecommendationStatus.Interested}>&#10133; Interested</ToggleButton></span>
                     <span onclick={() => status = RecommendationStatus.Watching}><ToggleButton color="orange" selected={status === RecommendationStatus.Watching}>&#10133; Watching</ToggleButton></span>
                     <span onclick={() => status = RecommendationStatus.Recommend}><ToggleButton color="blue" selected={status === RecommendationStatus.Recommend}>&#10133; Recommend</ToggleButton></span>
                 </div>
 
-                <Input name="title" label="Title:" />
+                <Input name="title" label="Title:" value={form?.title}/>
 
                 <p>TODO: Should be text area</p>
                 <Input name="notes" label="Notes:" />

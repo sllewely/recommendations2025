@@ -34,6 +34,6 @@ class PostsController < ApplicationController
   end
 
   def recommendation_params(rec_params)
-    rec_params.permit(:title, :description, :who_recommended)
+    rec_params.permit(:title, :description, :who_recommended, :rating, :status)
   end
 end

@@ -35,6 +35,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_11_202938) do
     t.datetime "updated_at", null: false
     t.string "title", null: false
     t.text "description"
+    t.string "media_type"
     t.string "who_recommended"
     t.integer "status", default: 0
     t.integer "rating", default: 0

@@ -15,12 +15,22 @@ RSpec.describe "Recommendations", type: :request do
     end
 
     it 'creates a new recommendation' do
-      post "/recommendations", params: { name: "Annihilation", description: "A book I like" }, headers: @headers
+      post "/recommendations", params: { title: "Annihilation", notes: "A book I like" }, headers: @headers
 
       expect(response).to have_http_status(:created)
       res = JSON.parse(response.body)
       expect(res['id']).to_not be_nil
-      expect(res['name']).to eq("Annihilation")
+      expect(res['title']).to eq("Annihilation")
+    end
+
+    it 'creates a new recommendation interested in' do
+      post "/recommendations", params: { title: "Annihilation", notes: "A book I like", status: 'watching' }, headers: @headers
+
+      expect(response).to have_http_status(:created)
+      res = JSON.parse(response.body)
+      expect(res['id']).to_not be_nil
+      expect(res['title']).to eq("Annihilation")
+      expect(res['status']).to eq('watching')
     end
   end
 

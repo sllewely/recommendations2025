@@ -3,6 +3,7 @@ class User < ApplicationRecord
 
   has_many :recommendations
   has_many :posts
+  has_many :events
 
   generates_token_for :email_verification, expires_in: 2.days do
     email
@@ -26,5 +27,11 @@ class User < ApplicationRecord
 
   after_update if: :password_digest_previously_changed? do
     sessions.where.not(id: Current.session).delete_all
+  end
+
+  def public_attributes
+    {
+      username: username
+    }
   end
 end

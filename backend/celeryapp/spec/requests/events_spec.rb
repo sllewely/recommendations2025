@@ -14,9 +14,9 @@ RSpec.describe "Events", type: :request do
       @headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{auth_token}" }
     end
 
-    it 'auth is working' do
+    it 'creates an event' do
 
-      post "/events", headers: @headers
+      post "/events", params: { title: 'k flay', description: "come see this fun show with me", date: Date.today + 5, start_time: (12 + 7).hours }, headers: @headers
 
       expect(response).to have_http_status(:created)
 

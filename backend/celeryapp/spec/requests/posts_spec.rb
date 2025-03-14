@@ -92,6 +92,46 @@ RSpec.describe "Posts", type: :request do
       expect(res[1]['status']).to eq("interested")
     end
 
+    it 'gets all posts, recommendations, and events' do
+      user = create(:user)
+      create(:post, user: user)
+      create(:recommendation, user: user)
+      create(:event, user: user)
+      create(:post, user: @my_user)
+
+      get "/posts", params: {}, headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      res = JSON.parse(response.body)
+      expect(res.size).to eq(4)
+      expect(res.first['post_title']).to_not be_nil
+      expect(res.first['content']).to_not be_nil
+      expect(res.first['user_id']).to_not be_nil
+      expect(res[2]['title']).to_not be_nil
+      expect(res[2]['status']).to eq("interested")
+    end
+
+    it 'gets events' do
+      user = create(:user)
+      create(:event, user: user)
+      create(:event, user: @my_user)
+
+      get "/posts", params: {}, headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      res = JSON.parse(response.body)
+      expect(res.size).to eq(2)
+      expect(res[0]['title']).to_not be_nil
+      expect(res[0]['description']).to_not be_nil
+      expect(res[0]['user_id']).to_not be_nil
+      expect(res[0]['address']).to_not be_nil
+      expect(res[0]['url']).to_not be_nil
+      expect(res[0]['start_date_time']).to_not be_nil
+      expect(res[0]['user']['username']).to_not be_nil
+      expect(res[0]['user']['name']).to_not be_nil
+      expect(res[0]['class_name']).to eq('Event')
+    end
+
   end
 
 end

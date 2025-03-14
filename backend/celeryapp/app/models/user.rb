@@ -31,7 +31,8 @@ class User < ApplicationRecord
 
   def public_attributes
     {
-      username: username
+      username: username,
+      name: name
     }
   end
 end

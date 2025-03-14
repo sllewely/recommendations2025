@@ -7,8 +7,6 @@ RSpec.describe "Sessions", type: :request do
 
     context do
       before(:context) do
-        @email = 'test@gmail.com'
-        @password = 'testtesttest77'
         headers = { 'ACCEPT' => 'application/json' }
         post "/sign_up", params: { email: @email, password: @password, password_confirmation: @password }, headers: headers
 
@@ -16,7 +14,7 @@ RSpec.describe "Sessions", type: :request do
 
       it "signs in the user with email and password" do
         headers = { 'ACCEPT' => 'application/json' }
-        post "/sign_in", params: { email: @email, password: @password }, headers: headers
+        post "/sign_in", params: { email: test_user.email, password: test_user.password }, headers: headers
 
         # puts test_user.password
 

@@ -11,15 +11,16 @@
 
 <H1>Posts</H1>
 <div>
-    <LinkButton color="yellow" url="/posts/recommendations/create">&#10133; Recommendation</LinkButton>
-    <LinkButton color="orange" url="/posts/create">&#10133; Event</LinkButton>
+    <LinkButton color="yellow" url="/recommendations/create">&#10133; Recommendation</LinkButton>
+    <LinkButton color="orange" url="/events/create">&#10133; Event</LinkButton>
     <LinkButton color="blue" url="/posts/create">&#10133; Post</LinkButton>
 </div>
 <h2><Link url="/posts/create">create a post</Link></h2>
 
 <h1>res:</h1>
 <h2>{data.jwt}</h2>
-<div class="flex flex-col">
+<div class="grid grid-cols-3">
+<div class="col-span-2 flex flex-col">
     {#each data.posts as feed_item}
         <Card>
             {#if feed_item.status}
@@ -33,4 +34,5 @@
 
     {/each}
 
+</div>
 </div>

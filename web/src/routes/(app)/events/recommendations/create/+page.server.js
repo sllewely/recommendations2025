@@ -1,4 +1,4 @@
-import  { token } from '$lib/api_calls/auth.svelte.js';
+import  { token } from '$lib/api_calls/auth.svelte.ts';
 import {redirect} from "@sveltejs/kit";
 
 let root_url = "http://127.0.0.1:3000/"

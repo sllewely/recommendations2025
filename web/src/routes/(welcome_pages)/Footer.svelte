@@ -5,9 +5,7 @@
         </div>
         <div class="w-full md:w-1/2 md:text-center md:mb-0 mb-8">
             <ul class="list-reset flex justify-center flex-wrap text-xs md:text-sm gap-3">
-                <li><a href="#" class="text-gray-400 hover:text-white">Contact</a></li>
-                <li class="mx-4"><a href="#" class="text-gray-400 hover:text-white">Privacy Policy</a></li>
-                <li><a href="#" class="text-gray-400 hover:text-white">Terms of Use</a></li>
+                <li class="mx-4"><a href="/bug_report" class="text-gray-400 hover:text-white">Report a bug</a></li>
             </ul>
         </div>
     </div>

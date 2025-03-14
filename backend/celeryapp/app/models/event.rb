@@ -3,7 +3,8 @@ class Event < ApplicationRecord
 
   def attributes
     super.merge({
-                  user: user.public_attributes
+                  user: user.public_attributes,
+                  class_name: 'Event',
                 }
     )
   end

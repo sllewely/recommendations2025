@@ -9,6 +9,7 @@ class Post < ApplicationRecord
     super.merge(
       { recommendations: recommendations,
         user: user.public_attributes,
+        class_name: 'Post',
       })
   end
 

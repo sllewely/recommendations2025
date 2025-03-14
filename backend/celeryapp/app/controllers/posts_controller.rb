@@ -2,8 +2,10 @@ class PostsController < ApplicationController
   def index
     posts = Post.all.order(created_at: :desc).limit(25)
     recommendations = Recommendation.all.order(created_at: :desc).limit(25)
+    events = Event.all.order(created_at: :desc).limit(25)
     feed = merge_by_time(posts, recommendations)
-    render json: feed, status: :ok
+    feed = merge_by_time(feed, events)
+    render json: feed.map { |e| e.attributes }, status: :ok
   end
 
   def show

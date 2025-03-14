@@ -12,6 +12,7 @@ class Recommendation < ApplicationRecord
   def attributes
     super.merge({
                   user: user.public_attributes,
+                  class_name: 'Recommendation',
                 })
   end
 end

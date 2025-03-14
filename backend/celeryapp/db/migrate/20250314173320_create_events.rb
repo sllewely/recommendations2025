@@ -4,8 +4,7 @@ class CreateEvents < ActiveRecord::Migration[8.0]
       t.timestamps
       t.string :title, null: false
       t.string :description
-      t.date :date, null: false
-      t.integer :start_time
+      t.datetime :start_date_time, null: false
       t.string :address
       t.string :url
       t.string :event_type

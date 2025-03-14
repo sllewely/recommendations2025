@@ -16,7 +16,7 @@ RSpec.describe "Events", type: :request do
 
     it 'creates an event' do
 
-      post "/events", params: { title: 'k flay', description: "come see this fun show with me", date: Date.today + 5, start_time: (12 + 7).hours }, headers: @headers
+      post "/events", params: { title: 'k flay', description: "come see this fun show with me", start_date_time: DateTime.now + 5.days, }, headers: @headers
 
       expect(response).to have_http_status(:created)
 

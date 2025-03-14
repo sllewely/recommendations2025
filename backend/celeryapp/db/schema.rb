@@ -19,8 +19,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_14_173320) do
     t.datetime "updated_at", null: false
     t.string "title", null: false
     t.string "description"
-    t.date "date", null: false
-    t.integer "start_time"
+    t.datetime "start_date_time", null: false
     t.string "address"
     t.string "url"
     t.string "event_type"

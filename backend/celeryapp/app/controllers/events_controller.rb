@@ -1,6 +1,7 @@
 class EventsController < ApplicationController
 
   def index
+    Event.all.order
 
   end
 
@@ -17,7 +18,7 @@ class EventsController < ApplicationController
   private
 
   def event_params
-    params.permit(:title, :description, :date, :start_time, :address, :url, :event_type)
+    params.permit(:title, :description, :start_date_time, :start_time, :address, :url, :event_type)
   end
 
 end

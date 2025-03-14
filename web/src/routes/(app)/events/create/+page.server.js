@@ -16,6 +16,7 @@ export const actions = {
                 method: "POST",
                 body: JSON.stringify({
                             title: data.get('title'),
+                            description: data.get('description'),
                             start_date_time: datetime,
                             address: data.get('address'),
                             url: data.get('url'),

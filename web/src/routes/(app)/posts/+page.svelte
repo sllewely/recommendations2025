@@ -6,6 +6,8 @@
     import Card from '$lib/components/Card.svelte'
 
     let { data } = $props();
+
+    //TODO: display dates above events
 </script>
 
 
@@ -21,6 +23,7 @@
 <h2>{data.jwt}</h2>
 <div class="grid grid-cols-3">
 <div class="col-span-2 flex flex-col">
+    <H2>the feed</H2>
     {#each data.posts as feed_item}
         <Card>
             {#if feed_item.status}
@@ -35,4 +38,22 @@
     {/each}
 
 </div>
+    <div class="flex flex-col">
+        <H2>Events</H2>
+        {#each data.events as event_item}
+            <Card>
+                <H2>{event_item.title}</H2>
+                <p>posted by {event_item.creator_name}</p>
+                {#if event_item.description}
+                    <p>{event_item.description}</p>
+                {/if}
+                <p>{event_item.start_date_time}</p>
+                {#if event_item.url}
+                <p><Link url={event_item.url}></Link></p>
+                    {/if}
+
+            </Card>
+
+        {/each}
+    </div>
 </div>

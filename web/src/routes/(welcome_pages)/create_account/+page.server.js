@@ -19,6 +19,7 @@ export const actions = {
                 method: "POST",
                 body: JSON.stringify({
                     username: data.get('username'),
+                    name: data.get('name'),
                     email: data.get('email'),
                     password: data.get('password'),
                 }),

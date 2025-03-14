@@ -124,6 +124,7 @@ RSpec.describe "Posts", type: :request do
       expect(res[0]['title']).to_not be_nil
       expect(res[0]['description']).to_not be_nil
       expect(res[0]['user_id']).to_not be_nil
+      expect(res[0]['creator_name']).to_not be_nil
       expect(res[0]['address']).to_not be_nil
       expect(res[0]['url']).to_not be_nil
       expect(res[0]['start_date_time']).to_not be_nil

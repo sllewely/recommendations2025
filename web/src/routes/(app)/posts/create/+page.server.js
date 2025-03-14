@@ -8,8 +8,6 @@ export const actions = {
     create_post: async ({request}) => {
         const data = await request.formData();
 
-        await new Promise((fulfil) => setTimeout(fulfil, 1000));
-
         try {
             const response = await fetch(root_url + "posts", {
                 method: "POST",

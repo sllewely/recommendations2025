@@ -4,6 +4,7 @@
     import Link from '$lib/components/text/Link.svelte';
     import LinkButton from '$lib/components/text/LinkButton.svelte';
     import Card from '$lib/components/Card.svelte'
+    import FeedItem from "./FeedItem.svelte";
 
     let { data } = $props();
 
@@ -25,15 +26,7 @@
 <div class="col-span-2 flex flex-col">
     <H2>the feed</H2>
     {#each data.posts as feed_item}
-        <Card>
-            {#if feed_item.status}
-                <p>friend is {feed_item.status}...</p>
-            {/if}
-            <H2>{feed_item.title ?? feed_item.post_title}</H2>
-            {#if feed_item.notes ?? feed_item.content}
-                <p>{feed_item.notes ?? feed_item.content}</p>
-            {/if}
-        </Card>
+        <FeedItem feed_item={feed_item} />
 
     {/each}
 

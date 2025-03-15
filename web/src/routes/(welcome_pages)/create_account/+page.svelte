@@ -7,17 +7,12 @@
 
     let {data, form} = $props();
 
-    let name="Roonie";
-
     console.log(form);
 
     let creating = $state(false);
-    // async function submitSignin(event: Event) {}
 
 </script>
 <div>
-
-<H1>{name.toUpperCase()}!  Are you a kitty cat???</H1>
 
 <H1>Create account</H1>
 

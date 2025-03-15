@@ -31,8 +31,13 @@ class User < ApplicationRecord
 
   def public_attributes
     {
+      id: id,
       username: username,
       name: name
     }
+  end
+
+  def attributes
+    super.except!('password_digest')
   end
 end

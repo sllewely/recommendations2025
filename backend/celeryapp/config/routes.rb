@@ -16,5 +16,5 @@ Rails.application.routes.draw do
   resources :events
   resources :recommendations
   resources :posts
-  resources :users, only: [:index, :show]
+  resources :users, only: [:index, :show, :update]
 end

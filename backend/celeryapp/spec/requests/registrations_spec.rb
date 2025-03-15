@@ -26,11 +26,11 @@ RSpec.describe "Registrations", type: :request do
       expect(response).to have_http_status(:unprocessable_content)
     end
 
-    it "creates a new user without name" do
+    it "returns error without name" do
       headers = { 'ACCEPT' => 'application/json' }
       post "/sign_up", params: { username: Faker::Internet.username, email: 'registratiozn@gmail.com', password: 'testtesttest77', password_confirmation: 'testtesttest77' }, headers: headers
 
-      expect(response).to have_http_status(:created)
+      expect(response).to have_http_status(:unprocessable_content)
     end
 
     it "returns error if password is too short" do

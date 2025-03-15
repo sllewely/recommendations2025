@@ -2,9 +2,8 @@ require 'rails_helper'
 require 'json'
 
 RSpec.describe "User", type: :request do
-  describe "GET /users/[:id]" do
-    let(:other_user) { create(:user) }
 
+  describe "GET /users/[:id]" do
     before(:context) do
       @my_user = create(:user)
 
@@ -14,6 +13,8 @@ RSpec.describe "User", type: :request do
       auth_token = JSON.parse(response.body)["auth_token"]
       @headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{auth_token}" }
     end
+
+    let(:other_user) { create(:user) }
 
     it 'shows fields when I view myself' do
       get "/users/#{@my_user.id}", headers: @headers
@@ -47,6 +48,35 @@ RSpec.describe "User", type: :request do
       expect(res['name']).to be_nil
       expect(res['id']).to be_nil
     end
+  end
+
+  describe "POST /users/:id" do
+    before(:context) do
+      @my_update_user = create(:user)
+
+      headers = { 'ACCEPT' => 'application/json' }
+      post "/sign_in", params: { email: @my_update_user.email, password: @my_update_user.password }, headers: headers
+
+      auth_token = JSON.parse(response.body)["auth_token"]
+      @update_headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{auth_token}" }
+    end
+
+    it 'updates my name' do
+      put "/users/#{@my_update_user.id}", params: { name: "New Name" }, headers: @update_headers
+
+      expect(response).to have_http_status(:ok)
+      res = JSON.parse(response.body)
+
+      expect(res['name']).to eq("New Name")
+    end
+
+    it 'cannot update someone else' do
+      other_user = create(:user)
+      put "/users/#{other_user.id}", params: { name: "New Name" }, headers: @update_headers
+
+      expect(response).to have_http_status(:unauthorized)
+    end
+
   end
 
 end

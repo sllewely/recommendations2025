@@ -20,7 +20,21 @@ class UsersController < ApplicationController
   end
 
   def update
+    if params[:id].to_i != current_user.id
+      render json: {}, status: :unauthorized and return
+    end
+    current_user.update(updatable_params)
+    if current_user.save
+      render json: current_user.attributes, status: :ok
+    else
+      render json: current_user.errors, status: :unprocessable_content
+    end
+  end
 
+  private
+
+  def updatable_params
+    params.permit(:name)
   end
 
 end

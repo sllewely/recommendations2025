@@ -5,7 +5,7 @@ class PostsController < ApplicationController
     events = Event.all.order(created_at: :desc).limit(25)
     feed = merge_by_time(posts, recommendations)
     feed = merge_by_time(feed, events)
-    render json: feed.map { |e| e.attributes.merge(creator_name: e.user.name) }, status: :ok
+    render json: feed.map { |e| e.attributes.merge(creator_name: e.user.name, creator_id: e.user.id) }, status: :ok
   end
 
   def show

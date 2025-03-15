@@ -5,13 +5,17 @@
 
     let {feed_item} = $props();
 
-    let by_line = ' posted...';
+    let by_line = ' posted';
     if (feed_item.class_name === 'Recommendation') {
         if (feed_item.status === 'watching') {
-            by_line = ' is watching...';
-        } else if (feed_item.status === 'interested') {
-            by_line = ' is interested in...';
+            by_line = ' is watching';
+        } else if (feed_item.status === 'recommend') {
+            by_line = ' recommends';
+        } else {
+            by_line = ' is interested in';
         }
+    } else if (feed_item.class_name === 'Event') {
+        by_line = ' posted an upcoming event'
     }
 
 

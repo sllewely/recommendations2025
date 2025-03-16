@@ -13,6 +13,16 @@ class EventsController < ApplicationController
     else
       render json: @event.errors, status: :unprocessable_content
     end
+  end
+
+  def show
+    @event = Event.find(params[:id])
+    # TODO: PERMISSIONS
+    if @event
+      render json: @event.attributes, status: :ok
+    else
+      render json: @event.errors, status: :not_found
+    end
 
   end
 

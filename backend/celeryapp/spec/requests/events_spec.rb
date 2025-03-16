@@ -89,7 +89,7 @@ RSpec.describe "Events", type: :request do
       res = JSON.parse(response.body)
 
       expect(res['start_date_string']).to match(/\d?\d\/\d?\d\/\d\d\d\d/)
-      expect(res['start_time_string']).to match(/\d?\d:\d?\d:\d\d/)
+      expect(res['start_time_string']).to match(/\d\d:\d\d:\d\d/)
     end
 
   end

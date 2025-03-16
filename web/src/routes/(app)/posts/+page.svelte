@@ -20,8 +20,6 @@
 </div>
 <h2><Link url="/posts/create">create a post</Link></h2>
 
-<h1>res:</h1>
-<h2>{data.jwt}</h2>
 <div class="grid grid-cols-3">
 <div class="col-span-2 flex flex-col">
     <H2>the feed</H2>

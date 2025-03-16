@@ -14,6 +14,8 @@ export async function getEvents() {
     });
     const json = await response.json();
 
+    // TODO: catch error and display in UI
+
     return json;
 
 }

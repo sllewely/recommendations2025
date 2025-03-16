@@ -8,6 +8,8 @@ export async function load() {
     let posts = await getPosts();
     let events = await getEvents();
 
+    2 + 5;
+
     let events_with_dates_headers = process_dates(events);
 
     2 + 5;

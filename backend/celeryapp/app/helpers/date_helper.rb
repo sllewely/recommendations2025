@@ -6,7 +6,7 @@ module DateHelper
   end
 
   def get_time_string(dt)
-    seconds, minutes, hours, *rest = dt.to_a
+    _seconds, minutes, hours, *rest = dt.to_a
     "#{hours}:#{minutes < 10 ? '0' : ''}#{minutes}"
   end
 

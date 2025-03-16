@@ -6,6 +6,7 @@
     let {event_item} = $props();
 </script>
 
+<div class="p-2">
 <Card>
     <H2>{event_item.title}</H2>
     <p>posted by <Link url="/users/{event_item.creator_id}">{event_item.creator_name}</Link></p>
@@ -18,3 +19,4 @@
     {/if}
 
 </Card>
+</div>

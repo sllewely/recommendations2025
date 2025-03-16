@@ -6,6 +6,7 @@
     import Card from '$lib/components/Card.svelte'
     import FeedItem from "./FeedItem.svelte";
     import EventFeedItem from "./EventFeedItem.svelte";
+    import DateHeader from "./DateHeader.svelte";
 
     let { data } = $props();
 
@@ -19,7 +20,6 @@
     <LinkButton color="orange" url="/events/create">&#10133; Event</LinkButton>
     <LinkButton color="blue" url="/posts/create">&#10133; Post</LinkButton>
 </div>
-<h2><Link url="/posts/create">create a post</Link></h2>
 
 <div class="grid grid-cols-3">
 <div class="col-span-2 flex flex-col">
@@ -34,9 +34,7 @@
         <H2>Events</H2>
         {#each data.events as event_item}
             {#if event_item['date_header']}
-                <Card>
-                    <H2>{event_item['date_header']}</H2>
-                </Card>
+                <DateHeader event_item={event_item} />
             {:else}
                 <EventFeedItem event_item={event_item}/>
             {/if}

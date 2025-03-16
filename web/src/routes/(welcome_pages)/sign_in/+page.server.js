@@ -35,6 +35,7 @@ export const actions = {
             const json = await response.json();
 
             token.jwt = json['auth_token'];
+            token.my_user_id = json['user_id'];
             2 + 5;
         } catch (error) {
             console.error(error.message);

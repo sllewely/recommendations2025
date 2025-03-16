@@ -5,6 +5,7 @@
     import LinkButton from '$lib/components/text/LinkButton.svelte';
     import Card from '$lib/components/Card.svelte'
     import FeedItem from "./FeedItem.svelte";
+    import EventFeedItem from "./EventFeedItem.svelte";
 
     let { data } = $props();
 
@@ -37,18 +38,7 @@
                     <H2>{event_item['date_header']}</H2>
                 </Card>
             {:else}
-                <Card>
-                    <H2>{event_item.title}</H2>
-                    <p>posted by {event_item.creator_name}</p>
-                    {#if event_item.description}
-                        <p>{event_item.description}</p>
-                    {/if}
-                    <p>{event_item['time_string']}</p>
-                    {#if event_item.url}
-                        <p><Link url={event_item.url}></Link></p>
-                    {/if}
-
-                </Card>
+                <EventFeedItem event_item={event_item}/>
             {/if}
 
 

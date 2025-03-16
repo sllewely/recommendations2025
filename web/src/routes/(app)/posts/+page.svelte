@@ -10,7 +10,6 @@
 
     let { data } = $props();
 
-    //TODO: display dates above events
 </script>
 
 

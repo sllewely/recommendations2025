@@ -5,9 +5,9 @@
         </div>
         <div class="w-full md:w-1/2 md:text-center md:mb-0 mb-8">
             <ul class="list-reset flex justify-center flex-wrap text-xs md:text-sm gap-3">
-                <li><a href="#" class="text-gray-400 hover:text-white">Github</a></li>
-                <li class="mx-4"><a href="#" class="text-gray-400 hover:text-white">Report Bug</a></li>
-                <li><a href="#" class="text-gray-400 hover:text-white">Feature Roadmap</a></li>
+                <li><a href="https://github.com/sllewely/recommendations2025" class="text-gray-400 hover:text-white">Github</a></li>
+                <li class="mx-4"><a href="/bug_report" class="text-gray-400 hover:text-white">Report Bug</a></li>
+                <li><a href="/roadmap" class="text-gray-400 hover:text-white">Feature Roadmap</a></li>
             </ul>
         </div>
     </div>

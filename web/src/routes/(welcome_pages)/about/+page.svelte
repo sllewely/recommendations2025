@@ -4,14 +4,8 @@
 
 </script>
 
-<svelte:head>
-	<title>Home</title>
-	<meta name="description" content="Celery's recommendations" />
-</svelte:head>
 
-<section>
-
-		<div>
+<div>
 	<H1>
 		Recommendations by Celery
 	</H1>
@@ -19,9 +13,6 @@
 	<h2 class="text-md">
 		welcome to my app!!!
 	</h2>
-			<p></p>
-			<p><Link url="/create_account" >Create an account</Link></p>
-		</div>
-</section>
+</div>
 
 

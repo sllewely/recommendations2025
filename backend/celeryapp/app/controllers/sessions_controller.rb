@@ -16,7 +16,7 @@ class SessionsController < ApplicationController
       @session = user.sessions.create!
       response.set_header "X-Session-Token", @session.signed_id
 
-      render json: { auth_token: @session.signed_id }, status: :created
+      render json: { auth_token: @session.signed_id, user_id: user.id }, status: :created
     else
       render json: { error: "That email or password is incorrect" }, status: :unauthorized
     end

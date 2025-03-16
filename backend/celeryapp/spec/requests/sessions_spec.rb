@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'json'
 
 RSpec.describe "Sessions", type: :request do
 
@@ -16,8 +17,6 @@ RSpec.describe "Sessions", type: :request do
         headers = { 'ACCEPT' => 'application/json' }
         post "/sign_in", params: { email: test_user.email, password: test_user.password }, headers: headers
 
-        # puts test_user.password
-
         expect(response).to have_http_status(:created)
       end
 
@@ -26,6 +25,18 @@ RSpec.describe "Sessions", type: :request do
         post "/sign_in", params: { email: test_user.email, password: 'incorrect' }, headers: headers
 
         expect(response).to have_http_status(:unauthorized)
+      end
+
+      it "returns jwt and user id" do
+        headers = { 'ACCEPT' => 'application/json' }
+        post "/sign_in", params: { email: test_user.email, password: test_user.password }, headers: headers
+
+        # puts test_user.password
+
+        expect(response).to have_http_status(:created)
+        res = JSON.parse(response.body)
+        expect(res['auth_token']).to_not be_nil
+        expect(res['user_id']).to eq(test_user.id)
       end
 
     end

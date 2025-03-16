@@ -50,7 +50,7 @@ RSpec.describe "User", type: :request do
     end
   end
 
-  describe "POST /users/:id" do
+  describe "PUT /users/:id" do
     before(:context) do
       @my_update_user = create(:user)
 

@@ -14,9 +14,9 @@
 			</ul>
 		</div>
 		<div class="w-full  md:text-center md:mb-0 mb-8 justify-end">
-			<a class="text-sm/6 font-semibold text-gray-400 hover:text-orange-400" href="bug_report">Report a bug</a>
+			<a class="text-sm/6 font-semibold text-gray-400 hover:text-orange-400" href="/bug_report">Report a bug</a>
 			|
-			<a class="text-sm/6 font-semibold text-gray-400 hover:text-orange-400" href="users/edit">
+			<a class="text-sm/6 font-semibold text-gray-400 hover:text-orange-400" href="/users/edit">
 				&#9881;
 			</a>
 			|

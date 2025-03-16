@@ -1,15 +1,48 @@
 import { getUser } from '$lib/api_calls/users.svelte.js';
 import {token} from "$lib/api_calls/auth.svelte";
+import {redirect} from "@sveltejs/kit";
 
 export async function load({ params }) {
 
     let user_id = token.my_user_id;
     let user = await getUser(user_id);
 
-    // TODO: posts response included user: { username..., etc} but is lost in the next step somehow
-
     return {
         user: user,
     }
+}
 
+let root_url = "http://127.0.0.1:3000/";
+
+export const actions = {
+    update_user: async ({request}) => {
+        const data = await request.formData();
+        let user_id = data.get('user_id');
+
+        try {
+            const response = await fetch(root_url + "users/" + user_id, {
+                method: "PUT",
+                body: JSON.stringify({
+                    name: data.get('name'),
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'ACCEPT': 'application/json',
+                    'Authorization': "Token " + token.jwt,
+                },
+            });
+            // if (!response.ok) {
+            //     throw new Error(`Response status: ${response.status}`);
+            // }
+            const json = await response.json();
+
+            2 + 5;
+        } catch (error) {
+            console.error(error.message);
+        }
+
+        //TODO: Success toast
+
+        redirect(302, '/users/' + user_id)
+    }
 }

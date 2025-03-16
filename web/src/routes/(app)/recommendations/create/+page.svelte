@@ -42,9 +42,7 @@
                 await update();
                 creating = false;
             };
-
         }}
-
     >
 
         <div class="flex flex-col">

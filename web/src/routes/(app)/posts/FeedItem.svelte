@@ -23,7 +23,10 @@
 </script>
 <div class="p-2">
     <Card>
-        <div><Link url="/users/{feed_item.creator_id}">{feed_item.creator_name}</Link> {by_line}</div>
+        <div class="flex flex-row justify-between">
+            <div><Link url="/users/{feed_item.creator_id}">{feed_item.creator_name}</Link> {by_line}</div>
+            <div>at {feed_item.create_date_string} {feed_item.create_time_string}</div>
+        </div>
         <H2>{feed_item.title ?? feed_item.post_title}</H2>
         {#if feed_item.notes ?? feed_item.content}
             <p>{feed_item.notes ?? feed_item.content}</p>

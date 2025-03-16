@@ -52,5 +52,19 @@ RSpec.describe "Events", type: :request do
 
     end
 
+    it 'retrieves a list of events, with creator_name and id' do
+      create(:event, user: other_user)
+      create(:event, user: other_user)
+      create(:event, user: other_user)
+
+      get '/events', headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      res = JSON.parse(response.body)
+      expect(res.size).to eq(3)
+      expect(res.first['creator_name']).to eq(other_user.name)
+      expect(res.first['creator_id']).to eq(other_user.id)
+    end
+
   end
 end

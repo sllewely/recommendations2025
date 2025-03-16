@@ -5,6 +5,8 @@ class Event < ApplicationRecord
     super.merge({
                   user: user.public_attributes,
                   class_name: 'Event',
+                  creator_name: user.name,
+                  creator_id: user.id,
                 }
     )
   end

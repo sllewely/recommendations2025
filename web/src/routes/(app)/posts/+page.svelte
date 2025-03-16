@@ -34,18 +34,25 @@
     <div class="flex flex-col">
         <H2>Events</H2>
         {#each data.events as event_item}
-            <Card>
-                <H2>{event_item.title}</H2>
-                <p>posted by {event_item.creator_name}</p>
-                {#if event_item.description}
-                    <p>{event_item.description}</p>
-                {/if}
-                <p>{event_item.start_date_time}</p>
-                {#if event_item.url}
-                <p><Link url={event_item.url}></Link></p>
+            {#if event_item['date_header']}
+                <Card>
+                    <H2>{event_item['date_header']}</H2>
+                </Card>
+            {:else}
+                <Card>
+                    <H2>{event_item.title}</H2>
+                    <p>posted by {event_item.creator_name}</p>
+                    {#if event_item.description}
+                        <p>{event_item.description}</p>
+                    {/if}
+                    <p>{event_item['time_string']}</p>
+                    {#if event_item.url}
+                        <p><Link url={event_item.url}></Link></p>
                     {/if}
 
-            </Card>
+                </Card>
+            {/if}
+
 
         {/each}
     </div>

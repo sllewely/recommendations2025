@@ -4,13 +4,14 @@
     import Footer from '$lib/components/Footer.svelte';
     import '../../app.css';
 
-    let { children } = $props();
+    let { children, data } = $props();
+    let user_id = data.user_id;
 
 
 </script>
 
 <div class="app">
-    <Header />
+    <Header user_id={user_id}/>
 
     <main>
         {@render children()}

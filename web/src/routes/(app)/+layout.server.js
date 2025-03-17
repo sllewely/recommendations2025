@@ -14,7 +14,7 @@ export function load() {
 
 
     return {
-        jwt: token.jwt
+        user_id: token.my_user_id
     }
 
 }

@@ -8,8 +8,8 @@
 
     // TODO: turn into color consts
 
-    let default_color_class = "bg-transparent hover:bg-orange-200 text-teal-700 border-teal-500";
-    let default_color_selected_class = "bg-transparent hover:bg-orange-500 text-teal-700 border-teal-500";
+    let default_color_class = "bg-white hover:bg-orange-200 text-teal-700 border-teal-500";
+    let default_color_selected_class = "bg-teal-700 text-white border-teal-500";
     let yellow_class = "bg-yellow-200 hover:bg-yellow-500 text-black border-yellow-500";
     let yellow_selected_class = "bg-yellow-500 text-black border-yellow-500";
     let blue_class = "bg-blue-200 hover:bg-blue-500 text-black border-blue-500";

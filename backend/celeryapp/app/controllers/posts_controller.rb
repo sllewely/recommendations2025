@@ -9,7 +9,7 @@ class PostsController < ApplicationController
     events = events.where(user_id: user_id) if user_id
     feed = merge_by_time(posts, recommendations)
     feed = merge_by_time(feed, events)
-    render json: feed.map { |e| e.attributes.merge(creator_name: e.user.name, creator_id: e.user.id) }, status: :ok
+    render json: feed.map(&:attributes), status: :ok
   end
 
   def show

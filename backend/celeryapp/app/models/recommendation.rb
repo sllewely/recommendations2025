@@ -16,6 +16,8 @@ class Recommendation < ApplicationRecord
                   class_name: 'Recommendation',
                   create_date_string: get_date_string(created_at),
                   create_time_string: get_time_string(created_at),
+                  creator_id: user.id,
+                  creator_name: user.name,
                 })
   end
 end

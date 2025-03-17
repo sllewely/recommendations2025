@@ -50,7 +50,21 @@
             <Card>
                 <Input name="title" label="Title:" value={form?.title}/>
                 <H1>Recommendation</H1>
-                <Input name="media_type" label="Type:" placeholder="book, movie, other" value={form?.media_type}/>
+                <Input name="media_type" label="Type:" placeholder="book, movie, other" value={form?.media_type} list="mediaTypeList"/>
+                <datalist id="mediaTypeList">
+                    <option value="book" />
+                    <option value="tv show" />
+                    <option value="movie" />
+                    <option value="video game" />
+                    <option value="board game" />
+                    <option value="artist" />
+                    <option value="artist, music" />
+                    <option value="theatre" />
+                    <option value="food" />
+                    <option value="article" />
+                    <option value="author" />
+
+                </datalist>
                 <input type="hidden" name="status" value={status} />
                 <div>
                     <span onclick={() => status = RecommendationStatus.Interested}><ToggleButton color="yellow" selected={status === RecommendationStatus.Interested}>&#10133; Interested</ToggleButton></span>

@@ -1,5 +1,5 @@
 <script>
-    let { name, label, input_type='text', value='', placeholder='', required=false } = $props();
+    let { name, label, input_type='text', value='', placeholder='', required=false, list='' } = $props();
     let req = required ? 'required' : '';
 </script>
 <div class="mb-5">
@@ -12,6 +12,7 @@
             value={value}
             {placeholder}
            {req}
+            {list}
             autocomplete="off"
     />
     </label>

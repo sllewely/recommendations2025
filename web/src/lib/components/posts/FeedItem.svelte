@@ -2,6 +2,7 @@
     import Card from '$lib/components/Card.svelte';
     import Link from '$lib/components/text/Link.svelte';
     import H2 from "$lib/components/text/H2.svelte";
+    import PlusCircle from "$lib/components/posts/PlusCircle.svelte";
 
     let {feed_item} = $props();
 
@@ -25,10 +26,22 @@
     }
 
 
+    //TODO: different component based on which type
+
+
 
 </script>
+<div>
+    {#if feed_item.class_name === 'Recommendation'}
+    <div class="float-right relative">
+        <div class="absolute top-0 right-0">
+<PlusCircle />
+        </div></div>
+        {/if}
 <div class="p-2">
+
     <Card border_color={border_color}>
+
         <div class="flex flex-row justify-between pb-2">
             <div><span class="font-bold"><Link url="/users/{feed_item.creator_id}">{feed_item.creator_name}</Link></span> {by_line}</div>
             <div><span class="text-sm">at {feed_item.create_date_string} {feed_item.create_time_string}</span></div>
@@ -44,5 +57,8 @@
             <p>at {feed_item.address}</p>
         {/if}
 
+
+
     </Card>
 </div>
+    </div>

@@ -17,3 +17,18 @@ export async function getPosts() {
     return json;
 
 }
+
+export async function getPostsForUser(user_id: string) {
+    const response = await fetch(root_url + "posts?user_id=" + user_id, {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            'ACCEPT': 'application/json',
+            'Authorization': "Token " + token.jwt,
+        },
+    });
+    const json = await response.json();
+
+    return json;
+
+}

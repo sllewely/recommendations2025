@@ -17,10 +17,13 @@
 <H1>Create account</H1>
 
     <p>todo: if form fails, keep values</p>
+    <p>Sorry, for now you must have both a name and username, but name will be shown to your friends</p>
 
 {#if creating }
     <p>creating...</p>
 {/if}
+
+
 
 <form
         method="POST"

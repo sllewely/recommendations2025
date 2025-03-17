@@ -12,8 +12,6 @@ export const actions = {
     create: async ({request}) => {
         const data = await request.formData();
 
-        await new Promise((fulfil) => setTimeout(fulfil, 1000));
-
         try {
             const response = await fetch(root_url + "sign_up", {
                 method: "POST",

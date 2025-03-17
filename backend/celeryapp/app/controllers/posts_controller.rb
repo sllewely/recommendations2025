@@ -1,8 +1,12 @@
 class PostsController < ApplicationController
   def index
-    posts = Post.all.order(created_at: :desc).limit(25)
-    recommendations = Recommendation.all.order(created_at: :desc).limit(25)
-    events = Event.all.order(created_at: :desc).limit(25)
+    user_id = params[:user_id]
+    posts = Post.all.order(created_at: :desc)
+    posts = posts.where(user_id: user_id) if user_id
+    recommendations = Recommendation.all.order(created_at: :desc)
+    recommendations = recommendations.where(user_id: user_id) if user_id
+    events = Event.all.order(created_at: :desc)
+    events = events.where(user_id: user_id) if user_id
     feed = merge_by_time(posts, recommendations)
     feed = merge_by_time(feed, events)
     render json: feed.map { |e| e.attributes.merge(creator_name: e.user.name, creator_id: e.user.id) }, status: :ok

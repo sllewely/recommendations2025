@@ -1,5 +1,16 @@
 class RecommendationsController < ApplicationController
   def index
+    # could eventually just be a slice of my friends
+    user_id = params[:user_id]
+    if user_id.nil?
+      render json: { error: "Error expected param user_id" }, status: :bad_request and return
+    end
+    @recommendations = User.find(user_id).recommendations.order(created_at: :desc)
+    if params['status']
+      @recommendations = @recommendations.where(status: params['status'])
+    end
+    # TODO permission and pagination
+    render json: @recommendations.limit(100), status: :ok
 
   end
 

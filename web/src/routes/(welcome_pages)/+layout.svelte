@@ -5,6 +5,7 @@
 
     let { children } = $props();
 </script>
+<div class="bg-teal-100"></div>
 
 <div class="flex flex-col h-screen justify-between">
     <Header />

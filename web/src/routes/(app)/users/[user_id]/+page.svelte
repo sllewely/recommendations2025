@@ -1,6 +1,6 @@
 <script lang="ts">
     import H1 from '$lib/components/text/H1.svelte'
-    import FeedItem from "../../posts/FeedItem.svelte";
+    import FeedItem from "$lib/components/posts/FeedItem.svelte";
     import H2 from "$lib/components/text/H2.svelte";
     import ToggleButton from "$lib/components/form/ToggleButton.svelte";
     import {RecommendationStatus} from "$lib/enums";

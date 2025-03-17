@@ -6,7 +6,10 @@
     let {feed_item} = $props();
 
     let by_line = ' posted';
+
+    let border_color = "border-orange-500";
     if (feed_item.class_name === 'Recommendation') {
+        border_color = "border-yellow-500";
         if (feed_item.status === 'watching') {
             by_line = ' is watching';
         } else if (feed_item.status === 'recommend') {
@@ -15,21 +18,30 @@
             by_line = ' is interested in';
         }
     } else if (feed_item.class_name === 'Event') {
+        border_color = "border-blue-500";
         by_line = ' posted an upcoming event'
+    } else {
+        border_color = "border-orange-500";
     }
 
 
 
 </script>
 <div class="p-2">
-    <Card>
-        <div class="flex flex-row justify-between">
-            <div><Link url="/users/{feed_item.creator_id}">{feed_item.creator_name}</Link> {by_line}</div>
-            <div>at {feed_item.create_date_string} {feed_item.create_time_string}</div>
+    <Card border_color={border_color}>
+        <div class="flex flex-row justify-between pb-2">
+            <div><span class="font-bold"><Link url="/users/{feed_item.creator_id}">{feed_item.creator_name}</Link></span> {by_line}</div>
+            <div><span class="text-sm">at {feed_item.create_date_string} {feed_item.create_time_string}</span></div>
         </div>
         <H2>{feed_item.title ?? feed_item.post_title}</H2>
         {#if feed_item.notes ?? feed_item.content}
             <p>{feed_item.notes ?? feed_item.content}</p>
+        {/if}
+        {#if feed_item.start_date_string}
+            <p>Happening {feed_item.start_date_string} - {feed_item.start_time_string}</p>
+        {/if}
+        {#if feed_item.address}
+            <p>at {feed_item.address}</p>
         {/if}
 
     </Card>

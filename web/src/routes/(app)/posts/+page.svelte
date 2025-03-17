@@ -4,8 +4,8 @@
     import Link from '$lib/components/text/Link.svelte';
     import LinkButton from '$lib/components/text/LinkButton.svelte';
     import Card from '$lib/components/Card.svelte'
-    import FeedItem from "./FeedItem.svelte";
-    import EventFeedItem from "./EventFeedItem.svelte";
+    import FeedItem from "$lib/components/posts/FeedItem.svelte";
+    import EventFeedItem from "$lib/components/posts/EventFeedItem.svelte";
     import DateHeader from "./DateHeader.svelte";
 
     let { data } = $props();
@@ -13,12 +13,13 @@
 </script>
 
 
-<H1>Posts</H1>
 <div>
     <LinkButton color="yellow" url="/recommendations/create">&#10133; Recommendation</LinkButton>
     <LinkButton color="orange" url="/events/create">&#10133; Event</LinkButton>
     <LinkButton color="blue" url="/posts/create">&#10133; Post</LinkButton>
 </div>
+
+<H1>Posts</H1>
 
 <div class="grid grid-cols-3">
 <div class="col-span-2 flex flex-col">

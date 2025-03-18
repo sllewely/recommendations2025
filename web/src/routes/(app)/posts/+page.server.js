@@ -10,8 +10,12 @@ export async function load() {
     let posts = await getPosts();
     let events = await getEvents();
 
-    let events_with_dates_headers = process_dates(events);
-
+    let events_with_dates_headers = [];
+    if (events['error']) {
+        // TODO: Create a new toast
+    } else {
+        events_with_dates_headers = process_dates(events);
+    }
     return {
         posts: posts,
         events: events_with_dates_headers,

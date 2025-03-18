@@ -2,23 +2,14 @@
     import Card from '$lib/components/Card.svelte';
     import Link from '$lib/components/text/Link.svelte';
     import H2 from "$lib/components/text/H2.svelte";
-    import PlusCircle from "$lib/components/posts/PlusCircle.svelte";
+    import RecommendationCard from "$lib/components/posts/RecommendationCard.svelte";
 
     let {feed_item} = $props();
 
     let by_line = ' posted';
 
     let border_color = "border-orange-500";
-    if (feed_item.class_name === 'Recommendation') {
-        border_color = "border-yellow-500";
-        if (feed_item.status === 'watching') {
-            by_line = ' is watching';
-        } else if (feed_item.status === 'recommend') {
-            by_line = ' recommends';
-        } else {
-            by_line = ' is interested in';
-        }
-    } else if (feed_item.class_name === 'Event') {
+    if (feed_item.class_name === 'Event') {
         border_color = "border-blue-500";
         by_line = ' posted an upcoming event'
     } else {
@@ -33,11 +24,8 @@
 </script>
 <div>
     {#if feed_item.class_name === 'Recommendation'}
-    <div class="float-right relative">
-        <div class="absolute top-0 right-0">
-<PlusCircle />
-        </div></div>
-        {/if}
+        <RecommendationCard feed_item={feed_item} />
+        {:else}
 <div class="p-2">
 
     <Card border_color={border_color}>
@@ -61,4 +49,5 @@
 
     </Card>
 </div>
+        {/if}
     </div>

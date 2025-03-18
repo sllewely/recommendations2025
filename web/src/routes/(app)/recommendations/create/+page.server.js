@@ -16,6 +16,7 @@ export const actions = {
                             type: data.get('media_type'),
                             status: Number(data.get('status')) ?? 0,
                             notes: data.get('notes'),
+                            media_type: data.get('media_type'),
                             who_recommended: data.get('who_recommended'),
                 }),
                 headers: {

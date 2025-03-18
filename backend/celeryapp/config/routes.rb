@@ -16,5 +16,6 @@ Rails.application.routes.draw do
   resources :events
   resources :recommendations
   resources :posts
+  resources :rsvps
   resources :users, only: [:index, :show, :update]
 end

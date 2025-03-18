@@ -1,6 +1,7 @@
 class Event < ApplicationRecord
   include DateHelper
   belongs_to :user
+  has_many :rsvps
 
   def attributes
     super.merge({

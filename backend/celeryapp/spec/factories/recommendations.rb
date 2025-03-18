@@ -3,6 +3,7 @@ FactoryBot.define do
     title { Faker::Book.title }
 
     media_type { 'book' }
+    status { 'interested' }
     association :user
 
   end

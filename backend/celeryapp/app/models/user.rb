@@ -4,6 +4,7 @@ class User < ApplicationRecord
   has_many :recommendations
   has_many :posts
   has_many :events
+  has_many :rsvps
 
   generates_token_for :email_verification, expires_in: 2.days do
     email

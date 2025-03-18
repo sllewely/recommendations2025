@@ -17,6 +17,23 @@ export async function getRecommendations() {
     return json;
 }
 
+export async function getRecommendation(id) {
+    const response = await fetch(root_url + "recommendations/" + id, {
+        method: "GET",
+
+        headers: {
+            'Content-Type': 'application/json',
+            'ACCEPT': 'application/json',
+            'Authorization': "Token " + token.jwt,
+        },
+    });
+    const json = await response.json();
+
+    2 + 5;
+
+    return json;
+}
+
 export async function getRecommendationsForUser(user_id, opt = {}) {
     let request = root_url + "recommendations?";
     request = request + "user_id=" + user_id;

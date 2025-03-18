@@ -72,4 +72,36 @@ RSpec.describe "Recommendations", type: :request do
 
   end
 
+  describe "GET /recommendations/:id" do
+
+    before(:context) do
+      @my_user = create(:user)
+
+      headers = { 'ACCEPT' => 'application/json' }
+      post "/sign_in", params: { email: @my_user.email, password: @my_user.password }, headers: headers
+
+      auth_token = JSON.parse(response.body)["auth_token"]
+      @headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{auth_token}" }
+    end
+
+    it 'gets a specific recommendation' do
+      recommendation = create(:recommendation, user: @my_user)
+
+      get "/recommendations/#{recommendation.id}", headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      res = JSON.parse(response.body)
+      expect(res['title']).to eq(recommendation.title)
+    end
+
+    it 'fails if the recommendation does not exist' do
+      create(:recommendation, user: @my_user)
+
+      get "/recommendations/1234", params: {}, headers: @headers
+
+      expect(response).to have_http_status(:not_found)
+    end
+
+  end
+
 end

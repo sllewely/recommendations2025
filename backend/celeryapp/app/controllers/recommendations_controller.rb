@@ -15,6 +15,12 @@ class RecommendationsController < ApplicationController
   end
 
   def show
+    @recommendation = Recommendation.find(params[:id])
+    if @recommendation.nil?
+      render json: {}, status: :not_found and return
+    end
+    # TODO permissions
+    render json: @recommendation.attributes, status: :ok
 
   end
 

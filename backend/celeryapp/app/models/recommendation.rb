@@ -5,7 +5,7 @@ class Recommendation < ApplicationRecord
   belongs_to :user
 
   enum :status, [:interested, :watching, :recommend]
-
+  
   def unrated?
     rating == 0 || rating.nil?
   end

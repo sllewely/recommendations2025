@@ -51,7 +51,8 @@
             </div></div>
     <div class="p-2">
 
-        <Card border_color={border_color}>
+        <a href="/recommendations/{feed_item.id}">
+        <Card border_color={border_color} hover_color="hover:bg-yellow-100">
 
             <div class="flex flex-row justify-between pb-2">
                 <div><span class="font-bold"><Link url="/users/{feed_item.creator_id}">{feed_item.creator_name}</Link></span> {by_line}</div>
@@ -64,5 +65,6 @@
             {/if}
 
         </Card>
+        </a>
     </div>
 </div>

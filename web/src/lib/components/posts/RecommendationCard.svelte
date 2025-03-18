@@ -1,4 +1,6 @@
 <script lang="ts">
+    import {enhance} from '$app/forms';
+
     import Card from '$lib/components/Card.svelte';
     import Link from '$lib/components/text/Link.svelte';
     import H2 from "$lib/components/text/H2.svelte";
@@ -20,13 +22,32 @@
         by_line = ' recommends';
     }
 
+    let creating = $state(false);
+
 
 
 </script>
 <div>
         <div class="float-right relative">
             <div class="absolute top-0 right-0">
+                <form
+                        method="POST"
+                        action="?/add_recommendation"
+                        use:enhance={() => {
+            creating = true;
+            return async ({update}) => {
+                await update();
+                creating = false;
+            };
+        }}
+                >
+                    <input type="hidden" name="title" value={feed_item.title} />
+                    <input type="hidden" name="media_type" value={feed_item.media_type} />
+                    <input type="hidden" name="who_recommended" value={feed_item.creator_name} />
+                    <button type="submit">
                 <PlusCircle />
+                    </button>
+                </form>
             </div></div>
     <div class="p-2">
 

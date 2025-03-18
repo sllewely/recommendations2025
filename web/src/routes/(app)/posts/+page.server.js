@@ -1,6 +1,9 @@
 import { getPosts } from '$lib/api_calls/posts.svelte.js';
 import { getEvents } from '$lib/api_calls/events.svelte.js';
 import { readable_backend_date } from '$lib/utils/dates.svelte';
+import {token} from "$lib/api_calls/auth.svelte.js";
+import {redirect} from "@sveltejs/kit";
+import {RecommendationStatus} from "$lib/enums.js";
 
 export async function load() {
 
@@ -13,7 +16,44 @@ export async function load() {
         posts: posts,
         events: events_with_dates_headers,
     }
+}
 
+let root_url = "http://127.0.0.1:3000/"
+
+// named action for sign in form
+export const actions = {
+    add_recommendation: async ({request}) => {
+        const data = await request.formData();
+
+        try {
+            const response = await fetch(root_url + "recommendations", {
+                method: "POST",
+                body: JSON.stringify({
+                    title: data.get('title'),
+                    status: RecommendationStatus.Interested,
+                    media_type: data.get('media_type'),
+                    who_recommended: data.get('who_recommended'),
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'ACCEPT': 'application/json',
+                    'Authorization': "Token " + token.jwt,
+                },
+            });
+            // if (!response.ok) {
+            //     throw new Error(`Response status: ${response.status}`);
+            // }
+            const json = await response.json();
+
+            2 + 5;
+        } catch (error) {
+            console.error(error.message);
+        }
+
+        //TODO: Success toast
+
+        redirect(302, '/posts')
+    }
 }
 
 function process_dates(events) {

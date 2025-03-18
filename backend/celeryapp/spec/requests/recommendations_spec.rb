@@ -101,7 +101,37 @@ RSpec.describe "Recommendations", type: :request do
 
       expect(response).to have_http_status(:not_found)
     end
+  end
 
+  describe "POST /recommendations/:id" do
+
+    before(:context) do
+      @my_user = create(:user)
+
+      headers = { 'ACCEPT' => 'application/json' }
+      post "/sign_in", params: { email: @my_user.email, password: @my_user.password }, headers: headers
+
+      auth_token = JSON.parse(response.body)["auth_token"]
+      @headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{auth_token}" }
+    end
+
+    it 'updates the recommendation' do
+      recommendation = create(:recommendation, user: @my_user)
+
+      patch "/recommendations/#{recommendation.id}", params: { notes: "I'm a fan" }, headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      res = JSON.parse(response.body)
+      expect(res['notes']).to eq("I'm a fan")
+    end
+
+    it 'fails if the user does not own the recommendation' do
+      recommendation = create(:recommendation)
+
+      patch "/recommendations/#{recommendation.id}", params: { notes: "I'm a fan" }, headers: @headers
+
+      expect(response).to have_http_status(:not_found)
+    end
   end
 
 end

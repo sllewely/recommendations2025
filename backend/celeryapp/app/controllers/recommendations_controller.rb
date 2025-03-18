@@ -21,6 +21,15 @@ class RecommendationsController < ApplicationController
     end
     # TODO permissions
     render json: @recommendation.attributes, status: :ok
+  end
+
+  def update
+    @recommendation = current_user.recommendations.find(params[:id])
+    if @recommendation.nil?
+      render json: { error: "recommendation not found" }, status: :not_found and return
+    end
+    @recommendation.update(recommendation_params)
+    render json: @recommendation.attributes, status: :ok
 
   end
 

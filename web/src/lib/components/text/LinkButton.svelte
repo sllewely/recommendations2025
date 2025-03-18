@@ -1,7 +1,7 @@
 <script lang="ts">
     let {color, url} = $props();
 
-    let default_color_class = "bg-transparent hover:bg-orange-500 text-teal-700 border-teal-500";
+    let default_color_class = "bg-transparent hover:bg-orange-500 text-teal-700 border-teal-500 bg-white";
     let yellow_class = "bg-yellow-500 hover:bg-yellow-700 text-white border-yellow-500";
     let blue_class = "bg-blue-500 hover:bg-blue-700 text-white border-blue-500";
     let orange_class = "bg-orange-500 hover:bg-orange-700 text-white border-orange-500";

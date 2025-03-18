@@ -4,17 +4,21 @@
     import InputCheckbox from "$lib/components/form/InputCheckbox.svelte";
     import FormButton from "$lib/components/form/FormButton.svelte";
     import H1 from '$lib/components/text/H1.svelte'
-    import Link from '$lib/components/text/Link.svelte'
     import ToggleButton from '$lib/components/form/ToggleButton.svelte'
     import Card from '$lib/components/Card.svelte';
-    import LinkButton from "$lib/components/text/LinkButton.svelte";
 
     import {RecommendationStatus} from "$lib/enums";
 
     let {data, form} = $props();
+    let recommendation = data.recommendation;
+
 
     let creating = $state(false);
-    let status = $state(RecommendationStatus.Interested);
+    let starting_status = (recommendation.status === 'interested' ? RecommendationStatus.Interested :
+        recommendation.status === 'recommend' ? RecommendationStatus.Recommend : RecommendationStatus.Watching);
+    let status = $state(starting_status);
+    console.log(recommendation.status)
+
 
     // TODO:
     // List of types, one can be selected
@@ -35,7 +39,7 @@
 <Card>
     <form
             method="POST"
-            action="?/create_recommendation"
+            action="?/edit_recommendation"
             use:enhance={() => {
             creating = true;
             return async ({update}) => {
@@ -46,11 +50,12 @@
     >
 
         <div class="flex flex-col">
+            <input type="hidden" name="id" value={recommendation.id} />
             <InputCheckbox name="recommendation_only" label="Don't post publicly, just save for me (TODO: not implemented):" />
             <Card>
-                <Input name="title" label="Title:" value={form?.title}/>
+                <Input name="title" label="Title:" value={form?.title ?? recommendation.title}/>
                 <H1>Recommendation</H1>
-                <Input name="media_type" label="Type:" placeholder="book, movie, other" value={form?.media_type} list="mediaTypeList"/>
+                <Input name="media_type" label="Type:" placeholder="book, movie, other" value={form?.media_type ?? recommendation.media_type} list="mediaTypeList"/>
                 <datalist id="mediaTypeList">
                     <option value="book" />
                     <option value="tv show" />
@@ -73,14 +78,14 @@
                 </div>
 
                 <p>TODO: Should be text area</p>
-                <Input name="notes" label="Notes:" />
+                <Input name="notes" label="Notes:" value={form?.notes ?? recommendation.notes}/>
                 <Card>
 
                     <H1>Extras</H1>
                     <Input name="author" label="Author/Artist/Creator:" />
                     <Input name="rating" label="Rating:" placeholder="1-5"/>
                     <Input name="completed" label="Completed?" placeholder="yes/no" />
-                    <Input name="who_recommended" label="Who recommended?:" />
+                    <Input name="who_recommended" label="Who recommended?:" value={form?.who_recommended ?? recommendation.who_recommended} />
                 </Card>
 
 

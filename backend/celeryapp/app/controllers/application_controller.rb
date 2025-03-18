@@ -1,6 +1,8 @@
 class ApplicationController < ActionController::API
   include ActionController::HttpAuthentication::Token::ControllerMethods
 
+  rescue_from ActiveRecord::RecordNotUnique, with: :render_non_unique_error
+
   before_action :set_current_request_details
   before_action :authenticate
 
@@ -10,6 +12,10 @@ class ApplicationController < ActionController::API
 
   def current_user
     @current_user ||= User.find_by(id: Current.session.user_id)
+  end
+
+  def render_non_unique_error(exception)
+    render json: { error: exception.message }, status: :unprocessable_content
   end
 
   private

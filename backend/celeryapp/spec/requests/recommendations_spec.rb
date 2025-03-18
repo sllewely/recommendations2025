@@ -32,6 +32,22 @@ RSpec.describe "Recommendations", type: :request do
       expect(res['title']).to eq("Annihilation")
       expect(res['status']).to eq('watching')
     end
+
+    it 'requires a title' do
+      post "/recommendations", params: { notes: "A book I like" }, headers: @headers
+
+      expect(response).to have_http_status(:unprocessable_content)
+      res = JSON.parse(response.body)
+      expect(res['title']).to eq(["can't be blank"])
+    end
+
+    it 'must be unique for the user, title, and media type' do
+      recommendation = create(:recommendation, user: @my_user)
+
+      post "/recommendations", params: { title: recommendation.title, notes: "A book I like", media_type: recommendation.media_type }, headers: @headers
+
+      expect(response).to have_http_status(:unprocessable_content)
+    end
   end
 
   describe "GET /recommendations" do
@@ -132,6 +148,16 @@ RSpec.describe "Recommendations", type: :request do
 
       expect(response).to have_http_status(:not_found)
     end
+
+    it 'cannot update the recommendation to be the same as another' do
+      recommendation = create(:recommendation, user: @my_user)
+      recommendation2 = create(:recommendation, user: @my_user)
+
+      patch "/recommendations/#{recommendation2.id}", params: { title: recommendation.title, media_type: recommendation.media_type }, headers: @headers
+
+      expect(response).to have_http_status(:unprocessable_content)
+    end
+
   end
 
 end

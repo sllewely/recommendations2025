@@ -1,10 +1,10 @@
 <script lang="ts">
     import {enhance} from '$app/forms';
-
     import Card from '$lib/components/Card.svelte';
     import Link from '$lib/components/text/Link.svelte';
     import H2 from "$lib/components/text/H2.svelte";
     import PlusCircle from "$lib/components/posts/PlusCircle.svelte";
+    import {current_user} from '$lib/state/current_user.svelte';
 
     let {feed_item} = $props();
 
@@ -14,7 +14,6 @@
         console.error("not a recommendation feed item");
     }
 
-
     let border_color = "border-yellow-500";
     if (feed_item.status === 'watching') {
         by_line = ' is watching';
@@ -22,12 +21,14 @@
         by_line = ' recommends';
     }
 
+
     let creating = $state(false);
 
 
 
 </script>
 <div>
+    {#if current_user.id !== feed_item.creator_id}
         <div class="float-right relative">
             <div class="absolute top-0 right-0">
                 <form
@@ -49,6 +50,7 @@
                     </button>
                 </form>
             </div></div>
+        {/if}
     <div class="p-2">
 
         <a href="/recommendations/{feed_item.id}">

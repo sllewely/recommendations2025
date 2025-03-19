@@ -2,10 +2,12 @@ import { getPosts } from '$lib/api_calls/posts.svelte.js';
 import { getEvents } from '$lib/api_calls/events.svelte.js';
 import { readable_backend_date } from '$lib/utils/dates.svelte';
 
-export async function load() {
+export async function load({cookies}) {
 
-    let posts = await getPosts();
-    let events = await getEvents();
+    const jwt = cookies.get('jwt');
+
+    let posts = await getPosts(jwt);
+    let events = await getEvents(jwt);
 
     let events_with_dates_headers = process_dates(events);
 

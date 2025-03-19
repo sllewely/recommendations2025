@@ -1,15 +1,14 @@
-import {token} from "$lib/api_calls/auth.svelte";
 
 let root_url = "http://127.0.0.1:3000/"
 
-export async function getRecommendations() {
+export async function getRecommendations(jwt) {
     const response = await fetch(root_url + "recommendations", {
         method: "GET",
 
         headers: {
             'Content-Type': 'application/json',
             'ACCEPT': 'application/json',
-            'Authorization': "Token " + token.jwt,
+            'Authorization': "Token " + jwt,
         },
     });
     const json = await response.json();
@@ -17,14 +16,14 @@ export async function getRecommendations() {
     return json;
 }
 
-export async function getRecommendation(id) {
+export async function getRecommendation(jwt, id) {
     const response = await fetch(root_url + "recommendations/" + id, {
         method: "GET",
 
         headers: {
             'Content-Type': 'application/json',
             'ACCEPT': 'application/json',
-            'Authorization': "Token " + token.jwt,
+            'Authorization': "Token " + jwt,
         },
     });
     const json = await response.json();
@@ -34,7 +33,7 @@ export async function getRecommendation(id) {
     return json;
 }
 
-export async function getRecommendationsForUser(user_id, opt = {}) {
+export async function getRecommendationsForUser(jwt, user_id, opt = {}) {
     let request = root_url + "recommendations?";
     request = request + "user_id=" + user_id;
     if (opt['status']) {
@@ -46,7 +45,7 @@ export async function getRecommendationsForUser(user_id, opt = {}) {
         headers: {
             'Content-Type': 'application/json',
             'ACCEPT': 'application/json',
-            'Authorization': "Token " + token.jwt,
+            'Authorization': "Token " + jwt,
         },
     });
     const json = await response.json();
@@ -54,7 +53,7 @@ export async function getRecommendationsForUser(user_id, opt = {}) {
     return json;
 }
 
-export async function createRecommendation(data) {
+export async function createRecommendation(jwt, data) {
     const response = await fetch(root_url + "recommendations", {
         method: "POST",
         body: JSON.stringify({
@@ -67,7 +66,7 @@ export async function createRecommendation(data) {
         headers: {
             'Content-Type': 'application/json',
             'ACCEPT': 'application/json',
-            'Authorization': "Token " + token.jwt,
+            'Authorization': "Token " + jwt,
         },
     });
     // if (!response.ok) {

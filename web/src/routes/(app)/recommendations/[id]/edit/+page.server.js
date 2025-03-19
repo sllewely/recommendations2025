@@ -1,4 +1,3 @@
-import  { token } from '$lib/api_calls/auth.svelte.ts';
 import {redirect} from "@sveltejs/kit";
 import {getRecommendation} from "$lib/api_calls/recommendations.svelte.js";
 import {getUser} from "$lib/api_calls/users.svelte.js";
@@ -6,12 +5,12 @@ import {getUser} from "$lib/api_calls/users.svelte.js";
 let root_url = "http://127.0.0.1:3000/"
 
 
-export async function load({ params }) {
+export async function load({ cookies, params }) {
 
     let recommendation_id = params.id;
     let recommendation = await getRecommendation(recommendation_id);
     let user = await getUser(recommendation.creator_id);
-    let my_user_id = token.my_user_id;
+    let my_user_id = cookies.get('user_id');
 
     return {
         recommendation: recommendation,
@@ -21,8 +20,9 @@ export async function load({ params }) {
 }
 
 export const actions = {
-    edit_recommendation: async ({request}) => {
+    edit_recommendation: async ({cookies, request}) => {
         const data = await request.formData();
+        const jwt = cookies.get('jwt');
 
         try {
             const response = await fetch(root_url + "recommendations/" + data.get('id'), {
@@ -37,7 +37,7 @@ export const actions = {
                 headers: {
                     'Content-Type': 'application/json',
                     'ACCEPT': 'application/json',
-                    'Authorization': "Token " + token.jwt,
+                    'Authorization': "Token " + jwt,
                 },
             });
             // if (!response.ok) {

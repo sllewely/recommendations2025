@@ -1,14 +1,15 @@
 import { getPosts } from '$lib/api_calls/posts.svelte.js';
 import { getEvents } from '$lib/api_calls/events.svelte.js';
 import { readable_backend_date } from '$lib/utils/dates.svelte';
-import {token} from "$lib/api_calls/auth.svelte.js";
 import {redirect} from "@sveltejs/kit";
 import {RecommendationStatus} from "$lib/enums.js";
 
-export async function load() {
+export async function load({locals, cookies}) {
 
-    let posts = await getPosts();
-    let events = await getEvents();
+    const jwt = cookies.get('jwt');
+
+    let posts = await getPosts(jwt);
+    let events = await getEvents(jwt);
 
     let events_with_dates_headers = [];
     if (events['error']) {
@@ -26,8 +27,9 @@ let root_url = "http://127.0.0.1:3000/"
 
 // named action for sign in form
 export const actions = {
-    add_recommendation: async ({request}) => {
+    add_recommendation: async ({cookies, request}) => {
         const data = await request.formData();
+        const jwt = cookies.get('jwt');
 
         try {
             const response = await fetch(root_url + "recommendations", {
@@ -41,7 +43,7 @@ export const actions = {
                 headers: {
                     'Content-Type': 'application/json',
                     'ACCEPT': 'application/json',
-                    'Authorization': "Token " + token.jwt,
+                    'Authorization': "Token " + jwt,
                 },
             });
             // if (!response.ok) {

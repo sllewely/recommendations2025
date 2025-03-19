@@ -1,12 +1,12 @@
-import  { token } from '$lib/api_calls/auth.svelte.js';
 import {redirect} from "@sveltejs/kit";
 
 let root_url = "http://127.0.0.1:3000/"
 
 // named action for sign in form
 export const actions = {
-    create_post: async ({request}) => {
+    create_post: async ({cookies, request}) => {
         const data = await request.formData();
+        const jwt = cookies.get('jwt');
 
         try {
             const response = await fetch(root_url + "posts", {
@@ -24,7 +24,7 @@ export const actions = {
                 headers: {
                     'Content-Type': 'application/json',
                     'ACCEPT': 'application/json',
-                    'Authorization': "Token " + token.jwt,
+                    'Authorization': "Token " + jwt,
                 },
             });
             // if (!response.ok) {

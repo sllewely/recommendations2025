@@ -1,10 +1,9 @@
 import { getUser } from '$lib/api_calls/users.svelte.js';
-import {token} from "$lib/api_calls/auth.svelte";
 import {redirect} from "@sveltejs/kit";
 
-export async function load({ params }) {
+export async function load({ cookies, params }) {
 
-    let user_id = token.my_user_id;
+    let user_id = cookies.get('user_id');
     let user = await getUser(user_id);
 
     return {
@@ -15,9 +14,10 @@ export async function load({ params }) {
 let root_url = "http://127.0.0.1:3000/";
 
 export const actions = {
-    update_user: async ({request}) => {
+    update_user: async ({cookies, request}) => {
         const data = await request.formData();
         let user_id = data.get('user_id');
+        const jwt = cookies.get('jwt');
 
         try {
             const response = await fetch(root_url + "users/" + user_id, {
@@ -28,7 +28,7 @@ export const actions = {
                 headers: {
                     'Content-Type': 'application/json',
                     'ACCEPT': 'application/json',
-                    'Authorization': "Token " + token.jwt,
+                    'Authorization': "Token " + jwt,
                 },
             });
             // if (!response.ok) {

@@ -1,19 +1,18 @@
 <script lang="ts">
+    import {goto} from '$app/navigation';
     import Header from './Header.svelte';
     import { fail } from '@sveltejs/kit';
     import Footer from '$lib/components/Footer.svelte';
     import '../../app.css';
     import {current_user} from '$lib/state/current_user.svelte';
 
-    let { children, data } = $props();
-    let user_id = data.user_id;
+    let { children } = $props();
 
-    current_user.id = user_id;
 
 </script>
 
 <div class="app">
-    <Header user_id={user_id}/>
+    <Header/>
 
     <main>
         {@render children()}

@@ -5,10 +5,9 @@
     import Card from "$lib/components/Card.svelte";
     import Input from "$lib/components/form/Input.svelte";
     import FormButton from "$lib/components/form/FormButton.svelte";
+    import { current_user } from '$lib/state/current_user.svelte';
 
     let {data, form} = $props();
-    let user = data.user;
-
     let creating = $state(false);
 
 </script>
@@ -34,7 +33,9 @@
         }}
             >
                 <div class="flex flex-col">
-                    <input type="hidden" name="user_id" value={user.id} />
+
+                    <input type="hidden" name="user_id" value={current_user.id} />
+                    <input type="hidden" name="auth_token" value={current_user.auth_token} />
                     <Input name="name" label="Name:" value={form?.name ?? user.name}/>
                     <FormButton>
                         Update

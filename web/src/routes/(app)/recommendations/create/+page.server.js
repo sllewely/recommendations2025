@@ -1,11 +1,11 @@
-import  { token } from '$lib/api_calls/auth.svelte.ts';
 import {redirect} from "@sveltejs/kit";
 
 let root_url = "http://127.0.0.1:3000/"
 
 export const actions = {
-    create_recommendation: async ({request}) => {
+    create_recommendation: async ({cookies, request}) => {
         const data = await request.formData();
+        const jwt = cookies.get('jwt');
 
         try {
             const response = await fetch(root_url + "recommendations", {
@@ -20,7 +20,7 @@ export const actions = {
                 headers: {
                     'Content-Type': 'application/json',
                     'ACCEPT': 'application/json',
-                    'Authorization': "Token " + token.jwt,
+                    'Authorization': "Token " + jwt,
                 },
             });
             // if (!response.ok) {

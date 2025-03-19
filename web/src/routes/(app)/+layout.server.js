@@ -1,20 +1,11 @@
 import { redirect } from '@sveltejs/kit';
 
-import  { token } from '$lib/api_calls/auth.svelte.js';
 
+export function load({locals, cookies}) {
 
-export function load() {
-
-    // TODO: check if expired or valid
-    if (token.jwt === '') {
-        // TODO: send to logged out page or signed out toast
-        redirect(302, '/');
-
-    }
-
-
-    return {
-        user_id: token.my_user_id
+    2 + 5;
+    if (!cookies.get('jwt')) {
+        redirect(301, '/');
     }
 
 }

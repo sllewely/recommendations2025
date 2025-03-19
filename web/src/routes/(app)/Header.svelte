@@ -1,6 +1,7 @@
 <script lang="ts">
+	import { current_user } from '$lib/state/current_user.svelte';
 
-	let {user_id} = $props();
+	let user_id = current_user.id;
 </script>
 
 <header class="bg-gray-800 text-white py-4 px-3">

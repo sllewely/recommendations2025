@@ -4,7 +4,7 @@ class Event < ApplicationRecord
   has_many :rsvps
 
   def rsvp_for_current_user(current_user)
-    self.rsvps.where(user_id: current_user.user_id)
+    self.rsvps.where(user_id: current_user.id)
   end
 
   def total_rsvp

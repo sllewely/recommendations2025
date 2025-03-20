@@ -3,7 +3,7 @@ class EventsController < ApplicationController
   def index
     @events = Event.where('start_date_time > ?', DateTime.now).order(start_date_time: :asc)
 
-    render json: @events.map(&:attributes), status: :ok
+    render json: @events.map { |e| e.attributes.merge({ current_user_rsvp: e.rsvp_for_current_user(current_user) }) }, status: :ok
   end
 
   def create

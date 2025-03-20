@@ -26,20 +26,19 @@
     <H2>the feed</H2>
     {#each data.posts as feed_item}
         <FeedItem feed_item={feed_item} />
-
     {/each}
 
 </div>
     <div class="flex flex-col">
         <H2>Events</H2>
-        {#each data.events as event_item}
-            {#if event_item['date_header']}
-                <DateHeader event_item={event_item} />
-            {:else}
-                <EventFeedItem event_item={event_item}/>
-            {/if}
-
-
-        {/each}
+<!--        {#each data.events as event_item}-->
+<!--            {#if !!event_item['date_header']}-->
+<!--                {console.log(event_item)}-->
+<!--&lt;!&ndash;                <EventFeedItem event_item={event_item}/>&ndash;&gt;-->
+<!--                <DateHeader event_item={event_item} />-->
+<!--            {:else}-->
+<!--                <EventFeedItem event_item={event_item}/>-->
+<!--            {/if}-->
+<!--        {/each}-->
     </div>
 </div>

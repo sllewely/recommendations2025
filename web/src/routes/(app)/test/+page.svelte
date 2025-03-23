@@ -8,6 +8,8 @@
     import Card from '$lib/components/Card.svelte'
     import EventFeedItem from "$lib/components/posts/EventFeedItem.svelte";
     import TestFeedItem from "./TestFeedItem.svelte";
+    import TestRecommendationCard from "./TestRecommendationCard.svelte";
+    import DateHeader from "../posts/DateHeader.svelte";
 
     let { data } = $props();
 
@@ -32,20 +34,24 @@
 <!--            <Card>-->
 <!--                <H1>{feed_item.title ?? feed_item.post_title}</H1>-->
 <!--            </Card>-->
+            {#if feed_item.class_name !== 'Recommendation'}
             <TestFeedItem feed_item={feed_item} />
+                {:else}
+                <TestRecommendationCard feed_item={feed_item} />
+                {/if}
         {/each}
 
     </div>
     <div class="flex flex-col">
         <H2>Events</H2>
-        <!--        {#each data.events as event_item}-->
-        <!--            {#if !!event_item['date_header']}-->
-        <!--                {console.log(event_item)}-->
-        <!--&lt;!&ndash;                <EventFeedItem event_item={event_item}/>&ndash;&gt;-->
-        <!--                <DateHeader event_item={event_item} />-->
-        <!--            {:else}-->
-        <!--                <EventFeedItem event_item={event_item}/>-->
-        <!--            {/if}-->
-        <!--        {/each}-->
+                {#each data.events as event_item}
+                    {#if !!event_item['date_header']}
+                        {console.log(event_item)}
+                        <EventFeedItem event_item={event_item}/>
+                        <DateHeader event_item={event_item} />
+                    {:else}
+                        <EventFeedItem event_item={event_item}/>
+                    {/if}
+                {/each}
     </div>
 </div>

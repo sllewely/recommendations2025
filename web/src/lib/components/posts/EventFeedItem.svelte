@@ -9,10 +9,12 @@
 </script>
 
 <div class="p-2">
-    <a href="/events/{event_item.id}">
-<Card hover_color="hover:bg-teal-100">
+<!--    <a href="/events/{event_item.id}">-->
+<Card>
     <H2>{event_item.title}</H2>
     <p>posted by <Link url="/users/{event_item.creator_id}">{event_item.creator_name}</Link></p>
+        <a href="/events/{event_item.id}">
+    <Card hover_color="hover:bg-teal-100">
     {#if event_item.description}
         <p>{event_item.description}</p>
     {/if}
@@ -22,7 +24,8 @@
         <p><Link url={event_item.url}></Link></p>
     {/if}
     <p class="text-sm">interested | going | cant go | not interested</p>
-
 </Card>
-    </a>
+        </a>
+</Card>
+<!--    </a>-->
 </div>

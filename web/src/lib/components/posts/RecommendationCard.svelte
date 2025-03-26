@@ -28,6 +28,12 @@
 
 </script>
 <div>
+    <div class="flex flex-row justify-between">
+        <div><span class="font-bold"><Link url="/users/{feed_item.creator_id}">{feed_item.creator_name}</Link></span> {by_line}</div>
+        <div><span class="text-sm">at {feed_item.create_date_string} {feed_item.create_time_string}</span></div>
+    </div>
+
+<div>
     {#if current_user.id !== feed_item.creator_id}
         <div class="float-right relative">
             <div class="absolute top-0 right-0">
@@ -53,13 +59,10 @@
         {/if}
     <div class="p-2">
 
-<!--        <a href="/recommendations/{feed_item.id}">-->
+        <a href="/recommendations/{feed_item.id}">
         <Card border_color={border_color} hover_color="hover:bg-yellow-100">
 
-            <div class="flex flex-row justify-between pb-2">
-                <div><span class="font-bold"><Link url="/users/{feed_item.creator_id}">{feed_item.creator_name}</Link></span> {by_line}</div>
-                <div><span class="text-sm">at {feed_item.create_date_string} {feed_item.create_time_string}</span></div>
-            </div>
+
             <p>{feed_item.media_type}</p>
             <H2>{feed_item.title}</H2>
             {#if feed_item.notes}
@@ -67,6 +70,7 @@
             {/if}
 
         </Card>
-<!--        </a>-->
+        </a>
     </div>
+</div>
 </div>

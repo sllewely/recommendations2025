@@ -7,6 +7,7 @@
     import FeedItem from "$lib/components/posts/FeedItem.svelte";
     import EventFeedItem from "$lib/components/posts/EventFeedItem.svelte";
     import DateHeader from "./DateHeader.svelte";
+    import RecommendationCard from '$lib/components/posts/RecommendationCard.svelte'
 
     let { data } = $props();
 

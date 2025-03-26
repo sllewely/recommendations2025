@@ -3,6 +3,8 @@
     import Link from '$lib/components/text/Link.svelte';
     import H2 from "$lib/components/text/H2.svelte";
     import RecommendationCard from "$lib/components/posts/RecommendationCard.svelte";
+    import PostCard from "$lib/components/posts/PostCard.svelte";
+    import EventCard from "$lib/components/posts/EventCard.svelte";
 
     let {feed_item} = $props();
 
@@ -22,32 +24,13 @@
 
 
 </script>
-<div>
+<div class="p-2 my-2 border-bottom-2 border-gray-600 rounded-lg shadow-md">
     {#if feed_item.class_name === 'Recommendation'}
         <RecommendationCard feed_item={feed_item} />
-        {:else}
-<div class="p-2">
+        {:else if feed_item.class_name === 'Post'}
+                <PostCard feed_item={feed_item} />
 
-    <Card border_color={border_color}>
-
-        <div class="flex flex-row justify-between pb-2">
-            <div><span class="font-bold"><Link url="/users/{feed_item.creator_id}">{feed_item.creator_name}</Link></span> {by_line}</div>
-            <div><span class="text-sm">at {feed_item.create_date_string} {feed_item.create_time_string}</span></div>
-        </div>
-        <H2>{feed_item.title ?? feed_item.post_title}</H2>
-        {#if feed_item.notes ?? feed_item.content}
-            <p>{feed_item.notes ?? feed_item.content}</p>
-        {/if}
-        {#if feed_item.start_date_string}
-            <p>Happening {feed_item.start_date_string} - {feed_item.start_time_string}</p>
-        {/if}
-        {#if feed_item.address}
-            <p>at {feed_item.address}</p>
-        {/if}
-
-
-
-    </Card>
-</div>
+            {:else}
+        <EventCard feed_item={feed_item} />
         {/if}
     </div>

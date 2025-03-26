@@ -30,7 +30,7 @@
     <div class="p-2">
 
         <a href="/posts/{feed_item.id}">
-        <Card border_color="border-orange-500" hover_color="hover:bg-yellow-100">
+        <Card border_color="border-orange-500" hover_color="hover:bg-orange-100">
 
 
             <H2>{feed_item.post_title}</H2>

@@ -20,17 +20,12 @@
 
 
 </script>
-<div>
-    <div class="flex flex-row justify-between">
-        <div><span class="font-bold"><Link url="/users/{feed_item.creator_id}">{feed_item.creator_name}</Link></span> posted an upcoming event</div>
-        <div><span class="text-sm">at {feed_item.create_date_string} {feed_item.create_time_string}</span></div>
-    </div>
 
 <div>
     <div class="p-2">
 
         <a href="/events/{feed_item.id}">
-        <Card border_color="border-lime-500" hover_color="hover:bg-yellow-100">
+        <Card border_color="border-lime-500" hover_color="hover:bg-lime-100">
 
 
             <H2>{feed_item.title}</H2>
@@ -44,8 +39,9 @@
                 <p>at {feed_item.address}</p>
             {/if}
 
+            <p class="text-sm">interested | going | cant go | not interested</p>
+
         </Card>
         </a>
     </div>
-</div>
 </div>

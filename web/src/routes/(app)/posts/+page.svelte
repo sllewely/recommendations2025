@@ -5,9 +5,10 @@
     import LinkButton from '$lib/components/text/LinkButton.svelte';
     import Card from '$lib/components/Card.svelte'
     import FeedItem from "$lib/components/posts/FeedItem.svelte";
-    import EventFeedItem from "$lib/components/posts/EventFeedItem.svelte";
+    import EventCard from "$lib/components/posts/EventCard.svelte";
     import DateHeader from "./DateHeader.svelte";
     import RecommendationCard from '$lib/components/posts/RecommendationCard.svelte'
+    import EventFeedItem from "$lib/components/posts/EventFeedItem.svelte";
 
     let { data } = $props();
 

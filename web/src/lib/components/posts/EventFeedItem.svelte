@@ -2,6 +2,7 @@
     import Card from "$lib/components/Card.svelte";
     import Link from "$lib/components/text/Link.svelte";
     import H2 from "$lib/components/text/H2.svelte";
+    import EventCard from "$lib/components/posts/EventCard.svelte";
 
     let {event_item} = $props();
 
@@ -9,23 +10,12 @@
 </script>
 
 <div class="p-2">
-<!--    <a href="/events/{event_item.id}">-->
-<Card>
-    <H2>{event_item.title}</H2>
+    <div class="p-2 my-2 border-bottom-2 border-gray-600 rounded-lg shadow-md">
+
     <p>posted by <Link url="/users/{event_item.creator_id}">{event_item.creator_name}</Link></p>
         <a href="/events/{event_item.id}">
-    <Card hover_color="hover:bg-teal-100">
-    {#if event_item.description}
-        <p>{event_item.description}</p>
-    {/if}
-    <p>{event_item['time_string']}
-        {event_item['address'] ? ' at ' + event_item['address'] : ''} </p>
-    {#if event_item.url}
-        <p><Link url={event_item.url}></Link></p>
-    {/if}
-    <p class="text-sm">interested | going | cant go | not interested</p>
-</Card>
+
+            <EventCard feed_item={event_item} />
         </a>
-</Card>
-<!--    </a>-->
+</div>
 </div>

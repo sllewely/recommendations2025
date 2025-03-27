@@ -30,7 +30,7 @@
 <H1>Create a recommendation post</H1>
 
 {#if creating }
-    <p>signing in...</p>
+    <p>creating post...</p>
 {/if}
 <Card>
     <form

@@ -39,7 +39,11 @@
                 <p>at {feed_item.address}</p>
             {/if}
 
-            <p class="text-sm">interested | going | cant go | not interested</p>
+            {#if feed_item.current_user_status}
+                <p>RSVP: {feed_item.current_user_status}</p>
+                {:else}
+            <p class="text-sm">rsvp: {feed_item.current_user_rsvp}</p>
+                {/if}
 
         </Card>
         </a>

@@ -40,6 +40,17 @@ RSpec.describe "Rsvps", type: :request do
       expect(response).to have_http_status(:unprocessable_content)
     end
 
+    it 'update an rsvp' do
+      event = create(:event)
+      create(:rsvp, event: event, user: @my_user)
+      post "/rsvps", params: { event_id: event.id, status: 'not_interested' }, headers: @headers
+
+      expect(response).to have_http_status(:created)
+      res = JSON.parse(response.body)
+      expect(res['id']).to_not be_nil
+      expect(res['status']).to eq("not_interested")
+    end
+
   end
 
   describe "GET /rsvps" do
@@ -69,30 +80,6 @@ RSpec.describe "Rsvps", type: :request do
       expect(res.size).to eq(2)
     end
 
-  end
-
-  describe "POST /rsvps/:id" do
-
-    before(:context) do
-      @my_user = create(:user)
-
-      headers = { 'ACCEPT' => 'application/json' }
-      post "/sign_in", params: { email: @my_user.email, password: @my_user.password }, headers: headers
-
-      auth_token = JSON.parse(response.body)["auth_token"]
-      @headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{auth_token}" }
-    end
-
-    it 'updates the rsvp' do
-      event = create(:event)
-      rsvp = create(:rsvp, user: @my_user, event: event)
-
-      patch "/rsvps/#{rsvp.id}", params: { status: 'going' }, headers: @headers
-
-      expect(response).to have_http_status(:ok)
-      res = JSON.parse(response.body)
-      expect(res['status']).to eq("going")
-    end
   end
 
 end

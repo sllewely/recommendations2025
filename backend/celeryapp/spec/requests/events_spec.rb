@@ -66,6 +66,25 @@ RSpec.describe "Events", type: :request do
       expect(res.first['creator_id']).to eq(other_user.id)
     end
 
+    it 'retrieves a list of events, with rsvps' do
+      event1 = create(:event, user: other_user)
+      event2 = create(:event, user: other_user)
+      create(:rsvp, event: event1, user: @my_user, status: 'going')
+      create(:rsvp, event: event1, user: other_user)
+      create(:rsvp, event: event2, user: @my_user)
+      create(:rsvp, event: event2, user: other_user, status: 'not_interested')
+
+      get '/events', headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      res = JSON.parse(response.body)
+      expect(res.size).to eq(2)
+      expect(res[0]['rsvps'].size).to eq(2)
+      expect(res[1]['current_user_rsvp']).to eq('going')
+      expect(res.first['creator_name']).to eq(other_user.name)
+      expect(res.first['creator_id']).to eq(other_user.id)
+    end
+
   end
 
   describe 'show' do
@@ -90,6 +109,20 @@ RSpec.describe "Events", type: :request do
 
       expect(res['start_date_string']).to match(/\d?\d\/\d?\d\/\d\d\d\d/)
       expect(res['start_time_string']).to match(/\d?\d:\d\d/)
+    end
+
+    it 'gets an event with rsvps' do
+      event = create(:event)
+      create(:rsvp, user: @my_user, event: event)
+
+      get "/events/#{event.id}", headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      res = JSON.parse(response.body)
+
+      expect(res['start_date_string']).to match(/\d?\d\/\d?\d\/\d\d\d\d/)
+      expect(res['start_time_string']).to match(/\d?\d:\d\d/)
+      expect(res['current_user_rsvp']).to eq('interested')
     end
 
   end

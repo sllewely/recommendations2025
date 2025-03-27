@@ -5,11 +5,18 @@ class PostsController < ApplicationController
     posts = posts.where(user_id: user_id) if user_id
     recommendations = Recommendation.all.order(created_at: :desc)
     recommendations = recommendations.where(user_id: user_id) if user_id
-    events = Event.all.order(created_at: :desc)
+    events = Event.all.includes(:rsvps).order(created_at: :desc)
     events = events.where(user_id: user_id) if user_id
     feed = merge_by_time(posts, recommendations)
     feed = merge_by_time(feed, events)
-    render json: feed.map(&:attributes), status: :ok
+    feed_with_attributes = feed.map do |e|
+      row = e.attributes
+      if (e.class.name == 'Event')
+        row.merge!({ current_user_status: e.rsvp_status_for_current_user(current_user) })
+      end
+      row
+    end
+    render json: feed_with_attributes, status: :ok
   end
 
   def show

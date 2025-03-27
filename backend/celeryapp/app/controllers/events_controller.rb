@@ -1,9 +1,10 @@
 class EventsController < ApplicationController
 
   def index
-    @events = Event.where('start_date_time > ?', DateTime.now).order(start_date_time: :asc)
+    @events = Event.includes(:rsvps).where('start_date_time > ?', DateTime.now).order(start_date_time: :asc)
 
-    render json: @events.map { |e| e.attributes.merge({ current_user_rsvp: e.rsvp_for_current_user(current_user) }) }, status: :ok
+    # TODO: improve query performance
+    render json: @events.map { |e| e.attributes.merge({ current_user_rsvp: e.rsvp_status_for_current_user(current_user), rsvps: e.rsvps }) }, status: :ok
   end
 
   def create
@@ -19,7 +20,8 @@ class EventsController < ApplicationController
     @event = Event.find(params[:id])
     # TODO: PERMISSIONS
     if @event
-      render json: @event.attributes, status: :ok
+      status = @event.rsvp_status_for_current_user(current_user)
+      render json: @event.attributes.merge({ current_user_rsvp: status }), status: :ok
     else
       render json: @event.errors, status: :not_found
     end

@@ -23,21 +23,13 @@ class RsvpsController < ApplicationController
     render json: @rsvp.attributes, status: :ok
   end
 
-  def update
-    @rsvp = current_user.rsvps.find(params[:id])
-    if @rsvp.nil?
-      render json: { error: "rsvp not found" }, status: :not_found and return
-    end
-    @rsvp.update(status: params[:status])
-    render json: @rsvp.attributes, status: :ok
-
-  end
-
+  # Create or update
   def create
     # TODO: Permissions -- cannot rsvp to a rando's event
-    @rsvp = current_user.rsvps.new(rsvps_params)
+    @rsvp = current_user.rsvps.find_or_initialize_by(event_id: params[:event_id])
+    @rsvp.status = params[:status] || 'interested'
     if @rsvp.save
-      render json: @rsvp, status: :created
+      render json: @rsvp.attributes, status: :created
     else
       render json: @rsvp.errors, status: :unprocessable_content
     end

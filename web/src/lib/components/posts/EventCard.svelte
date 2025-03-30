@@ -1,10 +1,6 @@
 <script lang="ts">
-    import {enhance} from '$app/forms';
     import Card from '$lib/components/Card.svelte';
-    import Link from '$lib/components/text/Link.svelte';
     import H2 from "$lib/components/text/H2.svelte";
-    import PlusCircle from "$lib/components/posts/PlusCircle.svelte";
-    import {current_user} from '$lib/state/current_user.svelte';
 
     let {feed_item} = $props();
 
@@ -15,16 +11,13 @@
 
 
 
-    // let creating = $state(false);
-
-
 
 </script>
 
 <div>
     <div class="p-2">
 
-        <a href="/events/{feed_item.id}">
+<!--        <a href="/events/{feed_item.id}">-->
         <Card border_color="border-lime-500" hover_color="hover:bg-lime-100">
 
 
@@ -39,13 +32,9 @@
                 <p>at {feed_item.address}</p>
             {/if}
 
-            {#if feed_item.current_user_status}
-                <p>RSVP: {feed_item.current_user_status}</p>
-                {:else}
-            <p class="text-sm">rsvp: {feed_item.current_user_rsvp}</p>
-                {/if}
 
+            <p class="text-sm">rsvp: {feed_item.current_user_rsvp ?? "not rsvp'd"}</p>
         </Card>
-        </a>
+<!--        </a>-->
     </div>
 </div>

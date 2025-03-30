@@ -1,12 +1,11 @@
 <script>
     import H1 from '$lib/components/text/H1.svelte';
     import H2 from '$lib/components/text/H2.svelte';
-    import Link from '$lib/components/text/Link.svelte';
     import LinkButton from '$lib/components/text/LinkButton.svelte';
-    import Card from '$lib/components/Card.svelte'
-    import FeedItem from "./FeedItem.svelte";
-    import EventFeedItem from "./EventFeedItem.svelte";
-    import DateHeader from "./DateHeader.svelte";
+    import FeedItem from "$lib/components/posts/FeedItem.svelte";
+    import DateHeader from "../../../posts/DateHeader.svelte";
+    import EventFeedItem from "$lib/components/posts/EventFeedItem.svelte";
+
 
     let { data } = $props();
 

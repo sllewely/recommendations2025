@@ -1,6 +1,7 @@
 import { error } from '@sveltejs/kit';
+import { VITE_API_URL } from '$env/static/private';
 
-let root_url = "http://127.0.0.1:3000"
+let root_url = VITE_API_URL
 
 async function send({ method, path, data, token }) {
     const opts = { method, headers: {} };

@@ -1,5 +1,7 @@
+import { VITE_API_URL } from '$env/static/private';
 
-let root_url = "http://127.0.0.1:3000/"
+
+let root_url = VITE_API_URL
 
 export async function getUser(jwt, id: string) {
     const response = await fetch(root_url + "users/" + id , {

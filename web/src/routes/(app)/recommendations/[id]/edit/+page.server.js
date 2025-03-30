@@ -1,8 +1,10 @@
 import {redirect} from "@sveltejs/kit";
 import {getRecommendation} from "$lib/api_calls/recommendations.svelte.js";
 import {getUser} from "$lib/api_calls/users.svelte.js";
+import { VITE_API_URL } from '$env/static/private';
 
-let root_url = "http://127.0.0.1:3000/"
+
+let root_url = VITE_API_URL;
 
 
 export async function load({ cookies, params }) {

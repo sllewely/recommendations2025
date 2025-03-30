@@ -1,5 +1,9 @@
 import { getUser } from '$lib/api_calls/users.svelte.js';
 import {redirect} from "@sveltejs/kit";
+import { VITE_API_URL } from '$env/static/private';
+
+
+let root_url = VITE_API_URL;
 
 export async function load({ cookies, params }) {
 
@@ -11,7 +15,6 @@ export async function load({ cookies, params }) {
     }
 }
 
-let root_url = "http://127.0.0.1:3000/";
 
 export const actions = {
     update_user: async ({cookies, request}) => {

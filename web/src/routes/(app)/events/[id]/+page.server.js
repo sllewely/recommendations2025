@@ -1,6 +1,10 @@
 import * as api from '$lib/api_calls/api.svelte';
 import {getRecommendation} from "$lib/api_calls/recommendations.svelte.js";
 import { getUser } from '$lib/api_calls/users.svelte.js';
+import { VITE_API_URL } from '$env/static/private';
+
+
+let root_url = VITE_API_URL
 
 export async function load({ cookies, params }) {
 
@@ -21,8 +25,6 @@ export async function load({ cookies, params }) {
         my_user_id: my_user_id,
     }
 }
-
-let root_url = "http://127.0.0.1:3000/"
 
 // named action for sign in form
 export const actions = {

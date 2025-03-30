@@ -1,6 +1,8 @@
 import {redirect} from "@sveltejs/kit";
+import { VITE_API_URL } from '$env/static/private';
 
-let root_url = "http://127.0.0.1:3000/"
+
+let root_url = VITE_API_URL;
 
 // named action for sign in form
 export const actions = {

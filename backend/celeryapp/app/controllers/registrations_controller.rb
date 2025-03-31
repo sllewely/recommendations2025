@@ -6,7 +6,7 @@ class RegistrationsController < ApplicationController
 
     logger.debug "sarah: #{params}"
     if @user.save
-      send_email_verification
+      # send_email_verification
       render json: @user, status: :created
     else
       render json: @user.errors, status: :unprocessable_content

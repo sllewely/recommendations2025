@@ -34,8 +34,6 @@
                 console.log(result)
                 let res = result.data
                 if (res.success) {
-                    //token.jwt = result['res']['auth_token'];
-                    //token.my_user_id = result['res']['user_id'];
                     current_user.auth_token = res['auth_token'];
                     current_user.id = res['user_id'];
                     console.log(res);
@@ -43,7 +41,10 @@
                     toast_message.message = "You have successfully signed in";
                 } else {
                     // make toast
-                    toast_message.message = "Error signing in";
+                    console.log(res);
+                    toast_message.message = "Error signing in: " + res.message;
+                    console.log(toast_message.message)
+                    console.log('sarah')
                 }
             };
 

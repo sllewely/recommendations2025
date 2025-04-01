@@ -1,10 +1,7 @@
 <script lang="ts">
-    import {goto} from '$app/navigation';
     import Header from './Header.svelte';
-    import { fail } from '@sveltejs/kit';
     import Footer from '$lib/components/Footer.svelte';
     import '../../app.css';
-    import {current_user} from '$lib/state/current_user.svelte';
     import Toast from "$lib/components/Toast.svelte";
 
     let { children } = $props();
@@ -40,7 +37,7 @@
         margin: 0 auto;
         box-sizing: border-box;
     }
-    
+
 
     @media (min-width: 480px) {
         footer {

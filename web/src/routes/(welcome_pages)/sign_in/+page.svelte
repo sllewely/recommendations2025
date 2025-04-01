@@ -4,7 +4,9 @@
     import Input from "$lib/components/form/Input.svelte";
     import FormButton from "$lib/components/form/FormButton.svelte";
     import H1 from "$lib/components/text/H1.svelte";
+
     import { current_user } from '$lib/state/current_user.svelte';
+    import { toast_message} from "$lib/state/toast.svelte";
 
 
     let {data, form} = $props();
@@ -38,8 +40,10 @@
                     current_user.id = res['user_id'];
                     console.log(res);
                     goto("/posts");
+                    toast_message.message = "You have successfully signed in";
                 } else {
                     // make toast
+                    toast_message.message = "Error signing in";
                 }
             };
 

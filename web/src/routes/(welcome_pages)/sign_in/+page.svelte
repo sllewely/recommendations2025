@@ -4,7 +4,9 @@
     import Input from "$lib/components/form/Input.svelte";
     import FormButton from "$lib/components/form/FormButton.svelte";
     import H1 from "$lib/components/text/H1.svelte";
+
     import { current_user } from '$lib/state/current_user.svelte';
+    import { toast_message} from "$lib/state/toast.svelte";
 
 
     let {data, form} = $props();
@@ -32,14 +34,17 @@
                 console.log(result)
                 let res = result.data
                 if (res.success) {
-                    //token.jwt = result['res']['auth_token'];
-                    //token.my_user_id = result['res']['user_id'];
                     current_user.auth_token = res['auth_token'];
                     current_user.id = res['user_id'];
                     console.log(res);
                     goto("/posts");
+                    toast_message.message = "You have successfully signed in";
                 } else {
                     // make toast
+                    console.log(res);
+                    toast_message.message = "Error signing in: " + res.message;
+                    console.log(toast_message.message)
+                    console.log('sarah')
                 }
             };
 

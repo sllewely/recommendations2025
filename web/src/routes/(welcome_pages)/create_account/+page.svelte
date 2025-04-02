@@ -1,8 +1,11 @@
 <script lang="ts">
     import {enhance} from '$app/forms';
+    import {goto} from '$app/navigation';
+
     import FormButton from '$lib/components/form/FormButton.svelte';
     import Input from '$lib/components/form/Input.svelte';
     import H1 from "$lib/components/text/H1.svelte";
+    import { toast_message} from "$lib/state/toast.svelte";
 
 
     let {data, form} = $props();
@@ -30,10 +33,18 @@
         action="?/create"
         use:enhance={() => {
             creating = true;
-            return async ({update}) => {
+            return async ({update, result}) => {
                 await update();
                 creating = false;
+                let res = result.data;
+            if (res.success) {
+                toast_message.message = "You have successfully created an account!!!!"
+                goto("/sign_in")
+            } else {
+                toast_message.message = "Error creating an account: " + res.message;
+            }
             };
+
 
         }}
 

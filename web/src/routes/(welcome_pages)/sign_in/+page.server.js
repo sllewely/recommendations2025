@@ -15,8 +15,6 @@ export const actions = {
     signin: async ({locals, cookies, request}) => {
         const data = await request.formData();
 
-        await new Promise((fulfil) => setTimeout(fulfil, 1000));
-
         try {
             const response = await fetch(root_url + "sign_in", {
                 method: "POST",
@@ -29,9 +27,7 @@ export const actions = {
                     'Accept': 'application/json',
                 },
             });
-            // if (!response.ok) {
-            //     throw new Error(`Response status: ${response.status}`);
-            // }
+
             const json = await response.json();
 
             if (!response.ok) {

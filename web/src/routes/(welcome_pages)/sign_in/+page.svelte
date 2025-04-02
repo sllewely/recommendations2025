@@ -40,11 +40,7 @@
                     goto("/posts");
                     toast_message.message = "You have successfully signed in";
                 } else {
-                    // make toast
-                    console.log(res);
                     toast_message.message = "Error signing in: " + res.message;
-                    console.log(toast_message.message)
-                    console.log('sarah')
                 }
             };
 

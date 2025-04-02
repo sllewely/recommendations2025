@@ -5,7 +5,7 @@
     import FormButton from '$lib/components/form/FormButton.svelte';
     import Input from '$lib/components/form/Input.svelte';
     import H1 from "$lib/components/text/H1.svelte";
-    import { toast_message} from "$lib/state/toast.svelte";
+    import { toasts, newToast, ToastType } from "$lib/state/toast.svelte";
 
 
     let {data, form} = $props();
@@ -38,10 +38,10 @@
                 creating = false;
                 let res = result.data;
             if (res.success) {
-                toast_message.message = "You have successfully created an account!!!!"
+                toasts.toast = newToast("You have successfully created an account!!!!");
                 goto("/sign_in")
             } else {
-                toast_message.message = "Error creating an account: " + res.message;
+                toasts.toast = newToast("Error creating an account: " + res.message, ToastType.Error);
             }
             };
 

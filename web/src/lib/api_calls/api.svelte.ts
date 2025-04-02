@@ -25,7 +25,6 @@ async function send({ method, path, data, token }) {
         return { success: false, message: json['error']};
     }
 
-    // error(res.status);
 }
 
 export function get(path, token) {

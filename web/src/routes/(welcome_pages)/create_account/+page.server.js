@@ -26,30 +26,5 @@ export const actions = {
         );
 
         return response;
-
-        // try {
-        //     const response = await fetch(root_url + "sign_up", {
-        //         method: "POST",
-        //         body: JSON.stringify({
-        //             username: data.get('username'),
-        //             name: data.get('name'),
-        //             email: data.get('email'),
-        //             password: data.get('password'),
-        //         }),
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //             'Accept': 'application/json',
-        //         },
-        //     });
-
-        //     const json = await response.json();
-        //
-        //     2 + 5;
-        // } catch (error) {
-        //     console.error(error.message);
-        // }
-
-        // if success, pass auth token to internal home component we're moving to
-
     }
 }

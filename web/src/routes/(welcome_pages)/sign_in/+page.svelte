@@ -6,7 +6,7 @@
     import H1 from "$lib/components/text/H1.svelte";
 
     import { current_user } from '$lib/state/current_user.svelte';
-    import { toast_message} from "$lib/state/toast.svelte";
+    import { toasts, newToast, ToastType } from "$lib/state/toast.svelte";
 
 
     let {data, form} = $props();
@@ -38,9 +38,9 @@
                     current_user.id = res['user_id'];
                     console.log(res);
                     goto("/posts");
-                    toast_message.message = "You have successfully signed in";
+                    toasts.toast = newToast("You have successfully signed in");
                 } else {
-                    toast_message.message = "Error signing in: " + res.message;
+                    toasts.toast = newToast("Error signing in: " + res.message, ToastType.Error);
                 }
             };
 

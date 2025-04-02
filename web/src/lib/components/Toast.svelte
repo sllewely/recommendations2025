@@ -3,7 +3,7 @@
     import {toasts, ToastType} from "$lib/state/toast.svelte";
 
     let show_toast =  $derived(toasts.toast.message !== '');
-    let toast_color = $derived(toasts.toast.type === ToastType.Error ? 'bg-red-200' : 'bg-teal-200')
+    let toast_color = $derived(toasts.toast.type === ToastType.Error ? 'bg-orange-200' : 'bg-teal-200')
 
     console.log(toasts.toast.message)
 

@@ -44,10 +44,10 @@
                 let res = result.data;
                 if (res.success) {
                     console.log("success create event")
-                    toasts.toast = newToast("You have successfully created a post ~~<3");
+                    toasts.toast = newToast("You have successfully created an event!!");
                     goto("/posts")
                 } else {
-                    toasts.toast = newToast("Error creating a post: " + res.message, ToastType.Error);
+                    toasts.toast = newToast("Error creating an event: " + res.message, ToastType.Error);
                 }
             };
 
@@ -65,7 +65,7 @@
                 <Input name="event_type" label="Event Type:" value={form?.event_type}/>
             </Card>
         </div>
-        <FormButton>Create post</FormButton>
+        <FormButton>Create event</FormButton>
     </form>
 </Card>
 

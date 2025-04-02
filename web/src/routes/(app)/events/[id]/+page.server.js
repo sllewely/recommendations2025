@@ -20,7 +20,7 @@ export async function load({ cookies, params }) {
     // let my_user_id = user_id;
 
     return {
-        event: res,
+        event: res['res'],
         // user: user,
         my_user_id: my_user_id,
     }
@@ -33,32 +33,16 @@ export const actions = {
 
         const jwt = cookies.get('jwt');
 
-        try {
-            const response = await fetch(root_url + "rsvps", {
-                method: "POST",
-                body: JSON.stringify({
-                    status: data.get('rsvp_status'),
-                    event_id: data.get('event_id'),
-                    user_id: data.get('user_id'),
-                }),
-                headers: {
-                    'Content-Type': 'application/json',
-                    'ACCEPT': 'application/json',
-                    'Authorization': "Token " + jwt,
-                },
-            });
-            // if (!response.ok) {
-            //     throw new Error(`Response status: ${response.status}`);
-            // }
-            const json = await response.json();
+        const response = await api.post(
+            'rsvps',
+            {
+                status: data.get('rsvp_status'),
+                event_id: data.get('event_id'),
+                user_id: data.get('user_id'),
+            },
+            jwt,
+        );
 
-            2 + 5;
-        } catch (error) {
-            console.error(error.message);
-        }
-
-        //TODO: Success toast
-
-
+        return response;
     }
 }

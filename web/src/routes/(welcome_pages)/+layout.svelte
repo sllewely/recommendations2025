@@ -9,8 +9,10 @@
 <div class="bg-teal-100"></div>
 
 <div class="flex flex-col h-screen justify-between">
+    <div>
     <Header />
     <Toast />
+    </div>
 
     <main>
         <div class="flex items-center justify-center">

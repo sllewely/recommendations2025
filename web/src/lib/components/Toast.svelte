@@ -12,7 +12,7 @@
         <p>{toasts.toast.message}</p>
         </div>
         <div>
-            <button class="hover:text-orange-500 text-xl" on:click={() => {toast_message.message=''}}>x</button>
+            <button class="hover:text-orange-500 text-xl" onclick={() => {toasts.toast.message=''}}>x</button>
         </div>
     </div>
 </header>

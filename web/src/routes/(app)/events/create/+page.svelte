@@ -12,6 +12,8 @@
 
     import {RecommendationStatus} from "$lib/enums";
     import InputeDateTime from "$lib/components/form/InputDateTime.svelte";
+    import {newToast, toasts, ToastType} from "$lib/state/toast.svelte";
+    import {goto} from "$app/navigation";
 
     let {data, form} = $props();
 
@@ -36,9 +38,17 @@
             action="?/create_event"
             use:enhance={() => {
             creating = true;
-            return async ({update}) => {
+            return async ({update, result}) => {
                 await update();
                 creating = false;
+                let res = result.data;
+                if (res.success) {
+                    console.log("success create event")
+                    toasts.toast = newToast("You have successfully created a post ~~<3");
+                    goto("/posts")
+                } else {
+                    toasts.toast = newToast("Error creating a post: " + res.message, ToastType.Error);
+                }
             };
 
         }}

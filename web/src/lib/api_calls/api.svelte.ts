@@ -18,9 +18,7 @@ async function send({ method, path, data, token }) {
     const res = await fetch(`${root_url}/${path}`, opts);
     let json = await res.json();
     if (res.ok) {
-        const text = await res.text();
-        let t = text ? JSON.parse(text) : {};
-        return { success: true, res: t};
+        return { success: true, res: json};
     } else {
         return { success: false, message: json['error']};
     }

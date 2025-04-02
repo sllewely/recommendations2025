@@ -79,8 +79,9 @@ RSpec.describe "Events", type: :request do
       expect(response).to have_http_status(:ok)
       res = JSON.parse(response.body)
       expect(res.size).to eq(2)
+      # non deterministic
       expect(res[0]['rsvps'].size).to eq(2)
-      expect(res[1]['current_user_rsvp']).to eq('going')
+      expect(res.first['current_user_rsvp']).to eq('going')
       expect(res.first['creator_name']).to eq(other_user.name)
       expect(res.first['creator_id']).to eq(other_user.id)
     end

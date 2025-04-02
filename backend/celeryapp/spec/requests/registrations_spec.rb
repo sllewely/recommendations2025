@@ -54,15 +54,17 @@ RSpec.describe "Registrations", type: :request do
       post "/sign_up", params: { name: Faker::Name.name, username: Faker::Internet.username, email: other_user.email, password: 'testtesttest77', password_confirmation: 'testtesttest77' }, headers: headers
 
       expect(response).to have_http_status(:unprocessable_content)
-      expect(response.body).to include('"email":["has already been taken"')
+      res = JSON.parse(response.body)
+      expect(res['error']).to include("email: has already been taken")
     end
 
-    it 'returns error if user with same email exists' do
+    it 'returns error if user with same username exists' do
       headers = { 'ACCEPT' => 'application/json' }
       post "/sign_up", params: { name: Faker::Name.name, username: other_user.username, email: 'testemail@gmail.com', password: 'testtesttest77', password_confirmation: 'testtesttest77' }, headers: headers
 
       expect(response).to have_http_status(:unprocessable_content)
-      expect(response.body).to include('"username":["has already been taken"')
+      res = JSON.parse(response.body)
+      expect(res['error']).to include("username: has already been taken")
     end
   end
 

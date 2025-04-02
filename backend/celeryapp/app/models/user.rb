@@ -31,12 +31,6 @@ class User < ApplicationRecord
     sessions.where.not(id: Current.session).delete_all
   end
 
-  def errors_to_s
-    self.errors.map do |err|
-      "#{err.attribute}: #{err.message}"
-    end.join(', ')
-  end
-
   def public_attributes
     {
       id: id,

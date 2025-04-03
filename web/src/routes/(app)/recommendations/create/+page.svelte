@@ -100,7 +100,7 @@
 
             </Card>
         </div>
-        <FormButton>Create post</FormButton>
+        <FormButton>Create recommendation</FormButton>
     </form>
 </Card>
 

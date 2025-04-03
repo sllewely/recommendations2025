@@ -59,6 +59,7 @@
                     <div class="flex flex-col">
                         <Card>
                             <H1>Create an event</H1>
+                            <p class="text-xs">You'll need to be logged in to make an event!</p>
                             <InputCheckbox name="public" label="Public event" value="true" />
 
                             <Input name="title" label="Title:" value={form?.title}/>

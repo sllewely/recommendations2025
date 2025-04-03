@@ -1,10 +1,10 @@
 <script>
-    let { date_value, time_value } = $props();
-    // let default_date = date_value ?? (new Date(new Date().getTime() + 24 * 60 * 60 * 1000));
-    // let input_date_value = 'Y-m-d'.replace('Y', default_date.getFullYear())
-    //     .replace('m', default_date.getMonth()+1)
-    //     .replace('d', default_date.getDate());
+    import moment from 'moment';
 
+    let { date_value, time_value="15:00" } = $props();
+
+    let tomorrow = moment().add(1, 'days');
+    let formatted_date = tomorrow.format('YYYY-MM-DD');
 
 </script>
 <div class="mb-5">
@@ -16,7 +16,7 @@
                 name="date_input"
                 id="date_input"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                value={date_value}
+                value={date_value ?? formatted_date}
                 required
         />
     </label>

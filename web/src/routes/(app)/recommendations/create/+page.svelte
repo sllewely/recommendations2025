@@ -10,6 +10,9 @@
     import LinkButton from "$lib/components/text/LinkButton.svelte";
 
     import {RecommendationStatus} from "$lib/enums";
+    import {current_user} from "$lib/state/current_user.svelte";
+    import {goto} from "$app/navigation";
+    import {newToast, toasts, ToastType} from "$lib/state/toast.svelte";
 
     let {data, form} = $props();
 
@@ -38,9 +41,19 @@
             action="?/create_recommendation"
             use:enhance={() => {
             creating = true;
-            return async ({update}) => {
+            return async ({update, result}) => {
                 await update();
                 creating = false;
+                let res = result.data
+                if (res.success) {
+                    current_user.auth_token = res['auth_token'];
+                    current_user.id = res['user_id'];
+                    console.log(res);
+                    goto("/posts");
+                    toasts.toast = newToast("You have successfully created a recommendation");
+                } else {
+                    toasts.toast = newToast("Error creating recommendation: " + res.message, ToastType.Error);
+                }
             };
         }}
     >

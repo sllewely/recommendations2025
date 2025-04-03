@@ -7,6 +7,13 @@ class EventsController < ApplicationController
     render json: @events.map { |e| e.attributes.merge({ current_user_rsvp: e.rsvp_status_for_current_user(current_user), rsvps: e.rsvps }) }, status: :ok
   end
 
+  def public_events
+    @events = Event.includes(:rsvps).where('start_date_time > ?', DateTime.now).order(start_date_time: :asc)
+
+    # TODO: improve query performance
+    render json: @events.map { |e| e.attributes.merge({ current_user_rsvp: e.rsvp_status_for_current_user(current_user), rsvps: e.rsvps }) }, status: :ok
+  end
+
   def create
     @event = current_user.events.new(event_params)
     if @event.save

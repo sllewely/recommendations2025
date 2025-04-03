@@ -9,7 +9,7 @@
     import EventFeedItem from "$lib/components/posts/EventFeedItem.svelte";
     import TestFeedItem from "./TestFeedItem.svelte";
     import TestRecommendationCard from "./TestRecommendationCard.svelte";
-    import DateHeader from "../posts/DateHeader.svelte";
+    import DateHeader from "$lib/components/posts/DateHeader.svelte";
 
     let { data } = $props();
 

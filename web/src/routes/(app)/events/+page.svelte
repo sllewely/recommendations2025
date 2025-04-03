@@ -5,15 +5,13 @@
     import InputCheckbox from "$lib/components/form/InputCheckbox.svelte";
     import FormButton from "$lib/components/form/FormButton.svelte";
     import H1 from '$lib/components/text/H1.svelte'
-    import Link from '$lib/components/text/Link.svelte'
-    import ToggleButton from '$lib/components/form/ToggleButton.svelte'
-    import Card from '$lib/components/Card.svelte';
-    import LinkButton from "$lib/components/text/LinkButton.svelte";
+    import EventFeedItem from "$lib/components/posts/EventFeedItem.svelte";
 
-    import {RecommendationStatus} from "$lib/enums";
-    import InputeDateTime from "$lib/components/form/InputDateTime.svelte";
+    import Card from '$lib/components/Card.svelte';
+
     import {newToast, toasts, ToastType} from "$lib/state/toast.svelte";
     import {goto} from "$app/navigation";
+    import DateHeader from "$lib/components/posts/DateHeader.svelte";
 
     let {data, form} = $props();
 
@@ -78,6 +76,13 @@
 
         <div class="col-span-2">
             <H1>Events</H1>
+            {#each data.events as event_item}
+                {#if !!event_item['date_header']}
+                    <DateHeader event_item={event_item} />
+                {:else}
+                    <EventFeedItem event_item={event_item}/>
+                {/if}
+            {/each}
 
         </div>
 

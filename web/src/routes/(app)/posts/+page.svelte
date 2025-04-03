@@ -3,7 +3,7 @@
     import H2 from '$lib/components/text/H2.svelte';
     import LinkButton from '$lib/components/text/LinkButton.svelte';
     import FeedItem from "$lib/components/posts/FeedItem.svelte";
-    import DateHeader from "./DateHeader.svelte";
+    import DateHeader from "$lib/components/posts/DateHeader.svelte";
     import EventFeedItem from "$lib/components/posts/EventFeedItem.svelte";
 
     let { data } = $props();

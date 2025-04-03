@@ -1,9 +1,27 @@
-import {redirect} from "@sveltejs/kit";
-import { VITE_API_URL } from '$env/static/private';
 import * as api from "$lib/api_calls/api.svelte.js";
+import {getPosts} from "$lib/api_calls/posts.svelte.js";
+import {getCommunityEvents, process_dates} from "$lib/api_calls/events.svelte.js";
 
 
-let root_url = VITE_API_URL;
+
+
+export async function load({locals, cookies}) {
+
+    const jwt = cookies.get('jwt');
+
+    let res = await getCommunityEvents(jwt);
+
+    let events_with_dates_headers = [];
+    if (!res['success']) {
+        // TODO: Create a new toast
+        return {result: res }
+    } else {
+        events_with_dates_headers = process_dates(res.res);
+    }
+    return {
+        events: events_with_dates_headers,
+    }
+}
 
 // named action for sign in form
 export const actions = {

@@ -5,7 +5,14 @@
     let show_toast =  $derived(toasts.toast.message !== '');
     let toast_color = $derived(toasts.toast.type === ToastType.Error ? 'bg-orange-200' : 'bg-teal-200')
 
-    console.log(toasts.toast.message)
+    $effect(() => {
+        let curr_message = toasts.toast.time;
+        setTimeout(() => {
+            if (toasts.toast.time == curr_message) {
+                toasts.toast.message = '';
+            }
+        }, 8000);
+    })
 
 </script>
 

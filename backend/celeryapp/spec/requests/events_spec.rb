@@ -23,6 +23,24 @@ RSpec.describe "Events", type: :request do
       expect(res['title']).to eq('k flay')
 
     end
+
+    it 'requires a title' do
+
+      post "/events", params: { description: "come see this fun show with me", start_date_time: DateTime.now + 5.days, }, headers: @headers
+
+      expect(response).to have_http_status(:unprocessable_content)
+      res = JSON.parse(response.body)
+      expect(res['error']).to eq("title: can't be blank")
+    end
+
+    it 'requires a time' do
+
+      post "/events", params: { title: 'k flay', description: "come see this fun show with me" }, headers: @headers
+
+      expect(response).to have_http_status(:unprocessable_content)
+      res = JSON.parse(response.body)
+      expect(res['error']).to eq("start_date_time: can't be blank")
+    end
   end
 
   describe 'index' do
@@ -79,8 +97,9 @@ RSpec.describe "Events", type: :request do
       expect(response).to have_http_status(:ok)
       res = JSON.parse(response.body)
       expect(res.size).to eq(2)
+      # non deterministic
       expect(res[0]['rsvps'].size).to eq(2)
-      expect(res[1]['current_user_rsvp']).to eq('going')
+      expect(res.first['current_user_rsvp']).to eq('going')
       expect(res.first['creator_name']).to eq(other_user.name)
       expect(res.first['creator_id']).to eq(other_user.id)
     end

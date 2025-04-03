@@ -38,7 +38,7 @@ RSpec.describe "Recommendations", type: :request do
 
       expect(response).to have_http_status(:unprocessable_content)
       res = JSON.parse(response.body)
-      expect(res['title']).to eq(["can't be blank"])
+      expect(res['error']).to eq("title: can't be blank")
     end
 
     it 'must be unique for the user, title, and media type' do

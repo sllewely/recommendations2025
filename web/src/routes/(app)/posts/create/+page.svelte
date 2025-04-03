@@ -10,6 +10,8 @@
     import LinkButton from "$lib/components/text/LinkButton.svelte";
 
     import {RecommendationStatus} from "$lib/enums";
+    import {newToast, toasts, ToastType} from "$lib/state/toast.svelte";
+    import {goto} from "$app/navigation";
 
     let {data, form} = $props();
 
@@ -38,9 +40,16 @@
             action="?/create_post"
             use:enhance={() => {
             creating = true;
-            return async ({update}) => {
+            return async ({update, result}) => {
                 await update();
                 creating = false;
+                let res = result.data;
+            if (res.success) {
+                toasts.toast = newToast("You have successfully created a post!!!!");
+                goto("/posts")
+            } else {
+                toasts.toast = newToast("Error creating a post: " + res.message, ToastType.Error);
+            }
             };
 
         }}
@@ -48,34 +57,9 @@
     >
 
         <div class="flex flex-col">
-            <InputCheckbox name="recommendation_only" label="Don't post publicly, just save for me (TODO: not implemented):" />
+<!--            <InputCheckbox name="recommendation_only" label="Don't post publicly, just save for me (TODO: not implemented):" />-->
             <Input name="post_title" label="Post Title:" value={form?.title} />
-            <Card>
-                <H1>Recommendation</H1>
-                <Input name="media_type" label="Type:" placeholder="book, movie, other" value={form?.media_type}/>
-                <input type="hidden" name="status" value={status} />
-                <div>
-                    <span onclick={() => status = RecommendationStatus.Interested}><ToggleButton color="yellow" selected={status === RecommendationStatus.Interested}>&#10133; Interested</ToggleButton></span>
-                    <span onclick={() => status = RecommendationStatus.Watching}><ToggleButton color="orange" selected={status === RecommendationStatus.Watching}>&#10133; Watching</ToggleButton></span>
-                    <span onclick={() => status = RecommendationStatus.Recommend}><ToggleButton color="blue" selected={status === RecommendationStatus.Recommend}>&#10133; Recommend</ToggleButton></span>
-                </div>
-
-                <Input name="title" label="Title:" value={form?.title}/>
-
-                <p>TODO: Should be text area</p>
-                <Input name="notes" label="Notes:" />
-                <Card>
-
-                    <H1>Extras</H1>
-                    <Input name="author" label="Author/Artist/Creator:" />
-                    <Input name="rating" label="Rating:" placeholder="1-5"/>
-                    <Input name="completed" label="Completed?" placeholder="yes/no" />
-                    <Input name="who_recommended" label="Who recommended?:" />
-                </Card>
-
-
-
-            </Card>
+            <Input name="content" label="Content" value={form?.content} />
         </div>
         <FormButton>Create post</FormButton>
     </form>

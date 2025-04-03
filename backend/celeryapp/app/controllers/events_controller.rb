@@ -12,7 +12,7 @@ class EventsController < ApplicationController
     if @event.save
       render json: @event, status: :created
     else
-      render json: @event.errors, status: :unprocessable_content
+      render json: { error: @event.errors_to_s }, status: :unprocessable_content
     end
   end
 

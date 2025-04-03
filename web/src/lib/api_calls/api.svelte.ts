@@ -16,12 +16,13 @@ async function send({ method, path, data, token }) {
     }
 
     const res = await fetch(`${root_url}/${path}`, opts);
-    if (res.ok || res.status === 422) {
-        const text = await res.text();
-        return text ? JSON.parse(text) : {};
+    let json = await res.json();
+    if (res.ok) {
+        return { success: true, res: json};
+    } else {
+        return { success: false, message: json['exception'] ?? json['error']};
     }
 
-    error(res.status);
 }
 
 export function get(path, token) {

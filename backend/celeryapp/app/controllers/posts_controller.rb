@@ -24,6 +24,15 @@ class PostsController < ApplicationController
   end
 
   def create
+    @post = current_user.posts.new(post_params)
+    if @post.save
+      render json: @post, status: :created
+    else
+      render json: { error: @post.errors_to_s }, status: :unprocessable_content
+    end
+  end
+
+  def create_post_with_recommendation
 
     begin
       @post = current_user.posts.new(post_params)
@@ -38,7 +47,7 @@ class PostsController < ApplicationController
       end
       render json: @post.attributes, status: :created
     rescue ActiveRecord::Rollback => e
-      render json: @post.errors, status: :unprocessable_content
+      render json: { error: @post.errors_to_s }, status: :unprocessable_content
     end
 
   end

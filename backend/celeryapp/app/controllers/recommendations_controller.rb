@@ -38,7 +38,7 @@ class RecommendationsController < ApplicationController
     if @recommendation.save
       render json: @recommendation, status: :created
     else
-      render json: @recommendation.errors, status: :unprocessable_content
+      render json: { error: @recommendation.errors_to_s }, status: :unprocessable_content
     end
 
   end

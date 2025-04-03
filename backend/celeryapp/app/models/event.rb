@@ -3,6 +3,9 @@ class Event < ApplicationRecord
   belongs_to :user
   has_many :rsvps
 
+  validates :title, presence: true
+  validates :start_date_time, presence: true
+
   def rsvp_status_for_current_user(current_user)
     self.rsvps.where(user_id: current_user.id).first&.status
   end

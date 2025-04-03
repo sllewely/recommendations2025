@@ -7,6 +7,8 @@ class Post < ApplicationRecord
 
   accepts_nested_attributes_for :recommendations
 
+  validates :post_title, presence: true
+
   def attributes
     super.merge(
       { recommendations: recommendations,

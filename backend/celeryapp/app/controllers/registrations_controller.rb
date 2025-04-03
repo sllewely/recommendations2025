@@ -4,12 +4,11 @@ class RegistrationsController < ApplicationController
   def create
     @user = User.new(user_params)
 
-    logger.debug "sarah: #{params}"
     if @user.save
       # send_email_verification
       render json: @user, status: :created
     else
-      render json: @user.errors, status: :unprocessable_content
+      render json: { error: @user.errors_to_s }, status: :unprocessable_content
     end
   end
 

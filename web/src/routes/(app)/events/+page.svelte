@@ -42,13 +42,13 @@
                         use:enhance={() => {
             creating = true;
             return async ({update, result}) => {
-                await update();
+                await update({reset: false});
                 creating = false;
                 let res = result.data;
                 if (res.success) {
                     console.log("success create event")
                     toasts.toast = newToast("You have successfully created an event!!");
-                    goto("/posts")
+                    goto("/events")
                 } else {
                     toasts.toast = newToast("Error creating an event: " + res.message, ToastType.Error);
                 }
@@ -65,6 +65,7 @@
 
                             <Input name="title" label="Title:" value={form?.title}/>
                             <InputDateTime date_value={form?.date_input} time_value="{form?.time_input}" />
+<!--                            <InputDateTime name="end" date_value={form?.date_input} time_value="{form?.time_input}" />-->
                             <Input name="description" label="Description:" />
                             <Input name="address" label="Address:" value={form?.address}/>
                             <Input name="url" label="URL:" value={form?.url}/>

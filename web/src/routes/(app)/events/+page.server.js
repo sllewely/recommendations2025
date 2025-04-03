@@ -9,9 +9,9 @@ let root_url = VITE_API_URL;
 export const actions = {
     create_event: async ({cookies, request}) => {
         const data = await request.formData();
-        const date = data.get('date_input');
-        const time = data.get('time_input');
-        const datetime = new Date(date + ' ' + time);
+        const start_date = data.get('date_input');
+        const start_time = data.get('time_input');
+        const datetime = new Date(start_date + ' ' + start_time);
 
         const jwt = cookies.get('jwt');
 
@@ -24,6 +24,7 @@ export const actions = {
                 address: data.get('address'),
                 url: data.get('url'),
                 event_type: data.get('event_type'),
+                is_public: data.get('public') === 'on',
             },
             jwt,
         );

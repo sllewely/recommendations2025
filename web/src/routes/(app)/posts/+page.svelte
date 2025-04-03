@@ -1,13 +1,9 @@
 <script>
     import H1 from '$lib/components/text/H1.svelte';
     import H2 from '$lib/components/text/H2.svelte';
-    import Link from '$lib/components/text/Link.svelte';
     import LinkButton from '$lib/components/text/LinkButton.svelte';
-    import Card from '$lib/components/Card.svelte'
     import FeedItem from "$lib/components/posts/FeedItem.svelte";
-    import EventCard from "$lib/components/posts/EventCard.svelte";
     import DateHeader from "./DateHeader.svelte";
-    import RecommendationCard from '$lib/components/posts/RecommendationCard.svelte'
     import EventFeedItem from "$lib/components/posts/EventFeedItem.svelte";
 
     let { data } = $props();
@@ -35,7 +31,6 @@
         <H2>Events</H2>
         {#each data.events as event_item}
             {#if !!event_item['date_header']}
-                {console.log(event_item)}
                 <DateHeader event_item={event_item} />
             {:else}
                 <EventFeedItem event_item={event_item}/>

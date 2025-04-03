@@ -3,6 +3,8 @@ class Event < ApplicationRecord
   belongs_to :user
   has_many :rsvps
 
+  before_save :ensure_end_time
+
   validates :title, presence: true
   validates :start_date_time, presence: true
 
@@ -53,5 +55,12 @@ class Event < ApplicationRecord
                   rsvps_count: total_rsvp,
                 }
     )
+  end
+
+  private
+
+  # gives it an end time if it doesn't have one
+  def ensure_end_time
+    self.end_date_time ||= self.start_date_time.end_of_day
   end
 end

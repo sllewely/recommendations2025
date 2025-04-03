@@ -11,21 +11,27 @@
 	</H1>
 	<p>&nbsp;</p>
 
-	<p>I'm building a social media app that fills in the gap that old FB used to, with posts by friends, family, and connections.
-	   It's focusing on two parts that I find particularly interesting -- broadcasting events to friends, and following along with what your friends are reading / watching / playing / etc.  And sharing what you love too.</p>
+	<p>Hey friends!  I’m excited to build this social app.
+		I originally envisioned events and recommendations as two separate projects – inspired by wanting to go to concerts with friends and wishing I could remember that tv show someone recommended to me when I’m bored.
+		But I feel there’s this dark gap in the technology we use, as the social media apps we grew up with have retreated from connecting us with our friends and family to instead serve us ads, propaganda, and addicting content.
+		I want to build something that will help you become more connected with the people you know.  </p>
 
 	<p>&nbsp;</p>
 	<H2>Recommendations</H2>
 
-	<p>One part personal organization tracking what you're interested in, want to watch next, or share what you already love.
-	  It's also one part social media, seeing what your friends are watching or recommend.
-	  I believe that recommendations are more meaningful coming from the people you know, than what "the algorithm" recommends.  Choosing what to watch or read next is more interesting, when you know you'll have people to talk about it with.</p>
+	<p>I want to share what I'm interested in with friends, so that we can talk about or share together the books, tv shows, games, etc that we're interested in.</p>
+		<p>I want to see what my friends are into!  In this age of abundant new media, it's difficult to sift through and find what's meaningful or interesting -- but something becomes more meaningful when I have people to talk to about it.</p>
+		<p>I want to be able to track things that I'm interested in or love.
+		</p>
+	<p>A feature request is being able to have something like a "favorites" list</p>
+	<p>I'm not planning on building any discovery or recommendation algorithm</p>
 
 	<p>&nbsp;</p>
 	<H2>Events</H2>
 
-	<p>I want to broadcast to friends concerts and other events that I'm interested in, so I can see who wants to join.  I want to see what my friends are interested in and are seeking company for.
-	Our relationships grow when we spend time together</p>
+	<p>I want to broadcast to friends concerts and other events that I'm interested in, so I can see who wants to join.  I want to see what my friends are interested in and are seeking company for.</p>
+	<p>Our relationships grow when we spend time together!</p>
+	<p>A feature request here is being able to broadcast a night I'm free, so I can see who wants to join, and then we decide what to do from there!</p>
 </div>
 
 

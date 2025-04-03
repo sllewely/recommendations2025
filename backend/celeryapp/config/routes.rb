@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   # root "articles#index"
 
   resources :events
+  resources :community_events
   resources :recommendations
   resources :posts
   resources :rsvps

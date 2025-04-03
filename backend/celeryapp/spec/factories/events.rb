@@ -6,6 +6,7 @@ FactoryBot.define do
     address { Faker::Address.full_address }
     url { Faker::Internet.url }
     event_type { 'concert' }
+    is_public { false }
     association :user
   end
 end

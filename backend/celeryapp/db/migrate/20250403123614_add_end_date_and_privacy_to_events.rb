@@ -5,5 +5,6 @@ class AddEndDateAndPrivacyToEvents < ActiveRecord::Migration[8.0]
     add_index :events, :start_date_time
     add_index :events, :is_public
     add_index :events, :event_type
+    add_index :events, :end_date_time
   end
 end

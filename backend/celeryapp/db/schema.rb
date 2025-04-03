@@ -26,6 +26,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_03_123614) do
     t.bigint "user_id", null: false
     t.datetime "end_date_time"
     t.boolean "is_public", default: false
+    t.index ["end_date_time"], name: "index_events_on_end_date_time"
     t.index ["event_type"], name: "index_events_on_event_type"
     t.index ["is_public"], name: "index_events_on_is_public"
     t.index ["start_date_time"], name: "index_events_on_start_date_time"

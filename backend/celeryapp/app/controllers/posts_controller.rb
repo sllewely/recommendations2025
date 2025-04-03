@@ -38,7 +38,7 @@ class PostsController < ApplicationController
       end
       render json: @post.attributes, status: :created
     rescue ActiveRecord::Rollback => e
-      render json: @post.errors, status: :unprocessable_content
+      render json: { error: @post.errors_to_s }, status: :unprocessable_content
     end
 
   end

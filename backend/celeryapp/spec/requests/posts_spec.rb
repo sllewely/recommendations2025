@@ -23,6 +23,14 @@ RSpec.describe "Posts", type: :request do
       expect(res['post_title']).to eq("new fav book")
     end
 
+    it 'posts must have a title' do
+      post "/posts", params: { content: "I love it a lot, you should read it" }, headers: @headers
+
+      expect(response).to have_http_status(:unprocessable_content)
+      res = JSON.parse(response.body)
+      expect(res['exception']).to eq("#<ActiveRecord::RecordInvalid: Validation failed: Post title can't be blank>")
+    end
+
     it 'creates a new post with a recommendation' do
       post "/posts", params: { post_title: "new fav book", content: "I love it a lot, you should read it", recommendations_attributes: [title: "Annihilation", notes: "A book I like"] }, headers: @headers
 

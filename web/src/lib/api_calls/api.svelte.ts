@@ -20,7 +20,7 @@ async function send({ method, path, data, token }) {
     if (res.ok) {
         return { success: true, res: json};
     } else {
-        return { success: false, message: json['error']};
+        return { success: false, message: json['exception'] ?? json['error']};
     }
 
 }

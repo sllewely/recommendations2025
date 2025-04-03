@@ -15,13 +15,7 @@ export const actions = {
             'posts',
             {
                 post_title: data.get('post_title'),
-                recommendations_attributes: [{
-                    title: data.get('title'),
-                    type: data.get('media_type'),
-                    status: Number(data.get('status')) ?? 0,
-                    notes: data.get('notes'),
-                    who_recommended: data.get('who_recommended'),
-                }],
+                content: data.get('content'),
             },
             jwt,
         );

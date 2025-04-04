@@ -32,6 +32,9 @@
 
 <H1>Create a recommendation post</H1>
 
+    <p>Hey btw not all of the fields are implemented.</p>
+    <p>Would love a volunteer to let me sit with them as they fill out recommendations & to hear your thoughts, so I can figure out the UX</p>
+
 {#if creating }
     <p>signing in...</p>
 {/if}

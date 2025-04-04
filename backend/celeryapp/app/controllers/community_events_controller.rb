@@ -1,5 +1,7 @@
 class CommunityEventsController < ApplicationController
 
+  skip_before_action :authenticate
+
   def index
     @events = Event.where('is_public IS TRUE').where('start_date_time > ?', DateTime.now).order(start_date_time: :asc)
 

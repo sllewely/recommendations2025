@@ -1,9 +1,22 @@
 <script lang="ts">
+	import {goto} from '$app/navigation';
 	import { current_user, isSignedIn } from '$lib/state/current_user.svelte.js';
 
 	let user_id = current_user.id;
 
 	let signed_in = $derived(current_user.id !== '');
+
+	let log_out = async () => {
+		const response = await fetch('/api/log_out', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+		current_user.id = '';
+		current_user.auth_token = '';
+		await goto('/');
+	}
 
 </script>
 
@@ -35,7 +48,7 @@
 				&#9881;
 			</a>
 			|
-			<a class="text-sm/6 font-semibold text-gray-400 hover:text-orange-400" >Log out <span aria-hidden="true">&rarr;</span></a>
+			<a class="text-sm/6 font-semibold text-gray-400 hover:text-orange-400" onclick={log_out}>Log out <span aria-hidden="true">&rarr;</span></a>
 				{:else}
 				<a href="/sign_in" class="text-sm/6 font-semibold text-gray-400 hover:text-orange-400" >Log in <span aria-hidden="true">&rarr;</span></a>
 				{/if}

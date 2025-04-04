@@ -48,7 +48,7 @@ export const actions = {
 
         // redirect(302, '/posts')
 
-        // if success, pass auth token to internal home component we're moving to
+        // if success, pass log_out token to internal home component we're moving to
 
 
     }

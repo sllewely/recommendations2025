@@ -3,6 +3,7 @@ class UsersController < ApplicationController
   # Create a user is a part of Registrations controller
 
   def index
+    render json: User.all, status: :ok
 
   end
 
@@ -34,7 +35,7 @@ class UsersController < ApplicationController
   private
 
   def updatable_params
-    params.permit(:name)
+    params.permit(:name, :username, :email, :blurb)
   end
 
 end

@@ -1,6 +1,8 @@
 class FriendCode < ApplicationRecord
   belongs_to :user
 
+  before_save :persist_with_random_token!
+
   validates_uniqueness_of :token
 
   def persist_with_random_token!(attempts = 10)

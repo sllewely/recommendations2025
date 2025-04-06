@@ -24,8 +24,26 @@ RSpec.describe "Friendships", type: :request do
 
       expect(response).to have_http_status(:created)
       res = JSON.parse(response.body)
-      expect(res['id']).to_not be_nil
+      expect(res['id']).to eq(new_friend.id)
+    end
 
+    it 'error if invalid token' do
+      new_friend = create(:user)
+      token = '12345'
+      post "/friendships", params: { token: token }, headers: @headers
+
+      expect(response).to have_http_status(:unprocessable_content)
+      res = JSON.parse(response.body)
+      expect(res['error']).to eq("user with friend code not found")
+    end
+
+    it 'error if nil token' do
+      new_friend = create(:user)
+      post "/friendships", params: {}, headers: @headers
+
+      expect(response).to have_http_status(:unprocessable_content)
+      res = JSON.parse(response.body)
+      expect(res['error']).to eq("friend token required")
     end
 
   end

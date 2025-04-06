@@ -43,6 +43,7 @@ class User < ApplicationRecord
   end
 
   def friend_code
+    # Called safe navigation operator &.
     self.friend_codes.where('active = true').first&.token
   end
 

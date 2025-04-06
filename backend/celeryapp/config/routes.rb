@@ -19,4 +19,5 @@ Rails.application.routes.draw do
   resources :posts
   resources :rsvps
   resources :users, only: [:index, :show, :update]
+  resources :friendships
 end

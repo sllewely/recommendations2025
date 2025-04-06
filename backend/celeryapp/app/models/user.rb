@@ -6,6 +6,8 @@ class User < ApplicationRecord
   has_many :events
   has_many :rsvps
   has_many :friend_codes
+  has_many :friendships
+  has_many :friends, through: :friendships
 
   generates_token_for :email_verification, expires_in: 2.days do
     email
@@ -40,11 +42,18 @@ class User < ApplicationRecord
     }
   end
 
-  def my_friend_code
-    self.friend_codes.where('active = true').first_or_create!
+  def friend_code
+    self.friend_codes.where('active = true').first&.token
+  end
+
+  def first_or_create_friend_code!
+    token = self.friend_code
+    return token if !token.nil?
+    FriendCode.persist_with_random_token!(self)
+    self.friend_code
   end
 
   def attributes
-    super.except!('password_digest').merge!({ friend_code: my_friend_code })
+    super.except!('password_digest').merge!({ friend_code: first_or_create_friend_code! })
   end
 end

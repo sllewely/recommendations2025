@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_04_164927) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_06_165628) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -31,6 +31,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_04_164927) do
     t.index ["is_public"], name: "index_events_on_is_public"
     t.index ["start_date_time"], name: "index_events_on_start_date_time"
     t.index ["user_id"], name: "index_events_on_user_id"
+  end
+
+  create_table "friend_codes", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.boolean "active", default: true
+    t.string "token", null: false
+    t.index ["token"], name: "index_friend_codes_on_token", unique: true
+    t.index ["user_id"], name: "index_friend_codes_on_user_id"
   end
 
   create_table "post_recommendations", force: :cascade do |t|
@@ -96,6 +106,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_04_164927) do
   end
 
   add_foreign_key "events", "users"
+  add_foreign_key "friend_codes", "users"
   add_foreign_key "posts", "users"
   add_foreign_key "recommendations", "users"
   add_foreign_key "rsvps", "events"

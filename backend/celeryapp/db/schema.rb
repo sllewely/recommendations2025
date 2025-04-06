@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_06_170807) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_06_184028) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -50,6 +50,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_06_170807) do
     t.integer "friend_id", null: false
     t.index ["user_id", "friend_id"], name: "index_friendships_on_user_id_and_friend_id", unique: true
     t.index ["user_id"], name: "index_friendships_on_user_id"
+  end
+
+  create_table "notifications", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.string "message", null: false
+    t.boolean "active", default: true
+    t.json "extras", default: {}
+    t.integer "notif_type", null: false
+    t.index ["user_id"], name: "index_notifications_on_user_id"
   end
 
   create_table "post_recommendations", force: :cascade do |t|
@@ -117,6 +128,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_06_170807) do
   add_foreign_key "events", "users"
   add_foreign_key "friend_codes", "users"
   add_foreign_key "friendships", "users"
+  add_foreign_key "notifications", "users"
   add_foreign_key "posts", "users"
   add_foreign_key "recommendations", "users"
   add_foreign_key "rsvps", "events"

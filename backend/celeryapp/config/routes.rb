@@ -20,4 +20,7 @@ Rails.application.routes.draw do
   resources :rsvps
   resources :users, only: [:index, :show, :update]
   resources :friendships
+  post 'friendships/new_request', to: 'friendships#new_request'
+  resources :notifications
+
 end

@@ -17,40 +17,50 @@ RSpec.describe "Friendships", type: :request do
       @headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{auth_token}" }
     end
 
-    it 'creates a new friendship' do
+    it 'creates a new friendship from friend request' do
       new_friend = create(:user)
-      token = new_friend.attributes[:friend_code]
-      post "/friendships", params: { token: token }, headers: @headers
+      create(:friend_request, user: @my_user, incoming_friend: new_friend)
+      post "/friendships", params: { friend_id: new_friend.id }, headers: @headers
 
       expect(response).to have_http_status(:created)
       res = JSON.parse(response.body)
       expect(res['id']).to eq(new_friend.id)
     end
 
-    it 'error if invalid token' do
+    it 'errors if there is no friend request' do
       new_friend = create(:user)
-      token = '12345'
-      post "/friendships", params: { token: token }, headers: @headers
+
+      post "/friendships", params: { friend_id: new_friend.id }, headers: @headers
 
       expect(response).to have_http_status(:unprocessable_content)
       res = JSON.parse(response.body)
-      expect(res['error']).to eq("user with friend code not found")
+      expect(res['error']).to eq("pending friend request not found")
     end
 
-    it 'error if nil token' do
-      new_friend = create(:user)
-      post "/friendships", params: {}, headers: @headers
+    # it 'error if invalid token' do
+    #   new_friend = create(:user)
+    #   token = '12345'
+    #   post "/friendships", params: { token: token }, headers: @headers
+    #
+    #   expect(response).to have_http_status(:unprocessable_content)
+    #   res = JSON.parse(response.body)
+    #   expect(res['error']).to eq("user with friend code not found")
+    # end
 
-      expect(response).to have_http_status(:unprocessable_content)
-      res = JSON.parse(response.body)
-      expect(res['error']).to eq("friend token required")
-    end
+    # it 'error if nil token' do
+    #   new_friend = create(:user)
+    #   post "/friendships", params: {}, headers: @headers
+    #
+    #   expect(response).to have_http_status(:unprocessable_content)
+    #   res = JSON.parse(response.body)
+    #   expect(res['error']).to eq("friend token required")
+    # end
 
     it 'error if friendship already exists' do
       new_friend = create(:user)
-      token = new_friend.attributes[:friend_code]
-      post "/friendships", params: { token: token }, headers: @headers
-      post "/friendships", params: { token: token }, headers: @headers
+      create(:friend_request, user: @my_user, incoming_friend: new_friend)
+      post "/friendships", params: { friend_id: new_friend.id }, headers: @headers
+      post "/friendships", params: { friend_id: new_friend.id }, headers: @headers
 
       expect(response).to have_http_status(:unprocessable_content)
       res = JSON.parse(response.body)

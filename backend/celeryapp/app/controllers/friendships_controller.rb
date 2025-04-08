@@ -2,7 +2,8 @@ class FriendshipsController < ApplicationController
   class FriendRequestNotFound < StandardError
   end
 
-  def show
+  def index
+    render json: current_user.friends.map { |f| f.public_attributes }, status: :ok
   end
 
   def create

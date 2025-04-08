@@ -3,7 +3,29 @@ require 'json'
 
 RSpec.describe "Friendships", type: :request do
   describe "GET /index" do
-    pending "add some examples (or delete) #{__FILE__}"
+    before(:context) do
+      @my_user = create(:user)
+
+      headers = { 'ACCEPT' => 'application/json' }
+      post "/sign_in", params: { email: @my_user.email, password: @my_user.password }, headers: headers
+
+      auth_token = JSON.parse(response.body)["auth_token"]
+      @headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{auth_token}" }
+    end
+
+    it 'lists my friends' do
+      friend = create(:user)
+      friend2 = create(:user)
+      create(:friendship, user: @my_user, friend: friend)
+      create(:friendship, user: @my_user, friend: friend2)
+
+      get '/friendships', headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      res = JSON.parse(response.body)
+      expect(res.size).to eq(2)
+      expect(res.first.keys).to include("name")
+    end
   end
 
   describe "POST /friendships" do

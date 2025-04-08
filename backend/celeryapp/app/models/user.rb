@@ -8,6 +8,7 @@ class User < ApplicationRecord
   has_many :friend_codes
   has_many :friendships
   has_many :friends, through: :friendships
+  has_many :friend_requests
   has_many :notifications
 
   generates_token_for :email_verification, expires_in: 2.days do

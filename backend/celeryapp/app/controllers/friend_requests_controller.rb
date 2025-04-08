@@ -1,5 +1,9 @@
 class FriendRequestsController < ApplicationController
 
+  def index
+    render json: FriendRequest.all.map { |fr| fr.incoming_friend.public_attributes }, status: :ok
+  end
+
   def create
     # TODO friend request other ways
     # validate friend code

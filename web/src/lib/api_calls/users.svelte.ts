@@ -4,7 +4,7 @@ import * as api from "$lib/api_calls/api.svelte";
 
 let root_url = VITE_API_URL
 
-export async function getUser(jwt, id: string) {
+export async function getUser(jwt: string, id: string) {
     const response = await fetch(root_url + "users/" + id , {
         method: "GET",
 
@@ -14,10 +14,7 @@ export async function getUser(jwt, id: string) {
             'Authorization': "Token " + jwt,
         },
     });
-    const json = await response.json();
-
-    return json;
-
+    return await response.json();
 }
 
 export async function getUsers(jwt: string) {

@@ -1,17 +1,19 @@
-import { getUser } from '$lib/api_calls/users.svelte.js';
+import {getUser} from '$lib/api_calls/users.svelte.js';
 import {redirect} from "@sveltejs/kit";
-import { VITE_API_URL } from '$env/static/private';
+import {VITE_API_URL} from '$env/static/private';
 
 
 let root_url = VITE_API_URL;
 
-export async function load({ cookies, params }) {
+export async function load({cookies, params}) {
 
     let user_id = cookies.get('user_id');
-    let user = await getUser(user_id);
+    const jwt = cookies.get('jwt');
+    let user = await getUser(jwt, user_id);
 
+    2 + 5;
     return {
-        user: user,
+        user: user['res'],
     }
 }
 

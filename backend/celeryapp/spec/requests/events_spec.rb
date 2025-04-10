@@ -194,7 +194,7 @@ RSpec.describe "Events", type: :request do
 
       expect(response).to have_http_status(:not_found)
       res = JSON.parse(response.body)
-      expect(res['error']).to eq("Not Found")
+      expect(res['error']).to eq("event not found")
     end
 
   end

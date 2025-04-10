@@ -1,4 +1,4 @@
-import { VITE_API_URL } from '$env/static/private';
+import {VITE_API_URL} from '$env/static/private';
 import * as api from "$lib/api_calls/api.svelte.js";
 import {readable_backend_date} from "$lib/utils/dates.svelte";
 
@@ -32,23 +32,10 @@ export async function getCommunityEvents(jwt: string) {
     return response;
 }
 
-export async function getEvent(jwt) {
-    let res = await api.get(`events/${params.slug}`, jwt)
+export async function getEvent(jwt: string, id: string) {
+    let res = await api.get(`events/${id}`, jwt)
 
-    const response = await fetch(root_url + "events", {
-        method: "GET",
-
-        headers: {
-            'Content-Type': 'application/json',
-            'ACCEPT': 'application/json',
-            'Authorization': "Token " + jwt,
-        },
-    });
-    const json = await response.json();
-
-    // TODO: catch error and display in UI
-
-    return json;
+    return res;
 }
 
 // Inserts Date Headers into events

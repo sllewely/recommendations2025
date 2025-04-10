@@ -20,6 +20,13 @@ class PostsController < ApplicationController
   end
 
   def show
+    post_id = params[:id]
+    @post = Post.find(post_id)
+    if @post
+      render json: @post, status: :ok
+    else
+      render json: { error: "post not found" }, status: :ok
+    end
 
   end
 

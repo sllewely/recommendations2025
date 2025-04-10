@@ -6,14 +6,12 @@
 
     let {event_item} = $props();
 
-    // console.log(event_item.current_user_rsvp);
 </script>
 
 <div class="p-2">
     <div class="p-2 my-2 border-bottom-2 border-gray-600 rounded-lg shadow-md">
 
     <p>posted by <Link url="/users/{event_item.creator_id}">{event_item.creator_name}</Link></p>
-<!--        <a href="/events/{event_item.id}">-->
 
         <div class="p-2">
 
@@ -37,6 +35,5 @@
             </Card>
                     </a>
         </div>
-<!--        </a>-->
 </div>
 </div>

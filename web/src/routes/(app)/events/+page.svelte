@@ -23,17 +23,17 @@
 
 </script>
 
-<div >
+<div>
     <div class="flex justify-center">
-    <H1>Community Events</H1>
-        </div>
+        <H1>Community Events</H1>
+    </div>
     <div>
-    <div class="grid grid-cols-3">
-        <div>
+        <div class="grid grid-cols-3">
+            <div>
 
-            {#if creating }
-                <p>creating...</p>
-            {/if}
+                {#if creating }
+                    <p>creating...</p>
+                {/if}
                 <form
                         method="POST"
                         action="?/create_event"
@@ -60,12 +60,12 @@
                         <Card>
                             <H1>Create an event</H1>
                             <p class="text-xs">You'll need to be logged in to make an event!</p>
-                            <InputCheckbox name="public" label="Public event" value="true" />
+                            <InputCheckbox name="public" label="Public event" value="true"/>
 
                             <Input name="title" label="Title:" value={form?.title}/>
-                            <InputDateTime date_value={form?.date_input} time_value="{form?.time_input}" />
-<!--                            <InputDateTime name="end" date_value={form?.date_input} time_value="{form?.time_input}" />-->
-                            <Input name="description" label="Description:" />
+                            <InputDateTime date_value={form?.date_input} time_value="{form?.time_input}"/>
+                            <!--                            <InputDateTime name="end" date_value={form?.date_input} time_value="{form?.time_input}" />-->
+                            <Input name="description" label="Description:"/>
                             <Input name="address" label="Address:" value={form?.address}/>
                             <Input name="url" label="URL:" value={form?.url}/>
                             <Input name="event_type" label="Event Type:" value={form?.event_type}/>
@@ -73,23 +73,22 @@
                     </div>
                     <FormButton>Create event</FormButton>
                 </form>
+            </div>
+
+            <div class="col-span-2">
+                <H1>Events</H1>
+                {#each data.events as event_item}
+                    {#if !!event_item['date_header']}
+                        <DateHeader event_item={event_item}/>
+                    {:else}
+                        <EventFeedItem event_item={event_item}/>
+                    {/if}
+                {/each}
+
+            </div>
+
+
         </div>
-
-        <div class="col-span-2">
-            <H1>Events</H1>
-            {#each data.events as event_item}
-                {#if !!event_item['date_header']}
-                    <DateHeader event_item={event_item} />
-                {:else}
-                    <EventFeedItem event_item={event_item}/>
-                {/if}
-            {/each}
-
-        </div>
-
-
-
-    </div>
 
     </div>
 

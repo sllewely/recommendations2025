@@ -7,7 +7,7 @@
     import EventFeedItem from "$lib/components/posts/EventFeedItem.svelte";
 
 
-    let { data } = $props();
+    let {data} = $props();
 
 </script>
 
@@ -20,19 +20,19 @@
 </div>
 
 <div class="grid grid-cols-3">
-<div class="col-span-2 flex flex-col">
-    <H2>the feed</H2>
-    {#each data.posts as feed_item}
-        <FeedItem feed_item={feed_item} />
+    <div class="col-span-2 flex flex-col">
+        <H2>the feed</H2>
+        {#each data.posts as feed_item}
+            <FeedItem feed_item={feed_item}/>
 
-    {/each}
+        {/each}
 
-</div>
+    </div>
     <div class="flex flex-col">
         <H2>Events</H2>
         {#each data.events as event_item}
             {#if event_item['date_header']}
-                <DateHeader event_item={event_item} />
+                <DateHeader event_item={event_item}/>
             {:else}
                 <EventFeedItem event_item={event_item}/>
             {/if}

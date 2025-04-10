@@ -1,5 +1,5 @@
 <script>
-    import { browser } from '$app/environment';
+    import {browser} from '$app/environment';
 
     import H1 from '$lib/components/text/H1.svelte';
     import H2 from '$lib/components/text/H2.svelte';
@@ -11,7 +11,7 @@
     import TestRecommendationCard from "./TestRecommendationCard.svelte";
     import DateHeader from "$lib/components/posts/DateHeader.svelte";
 
-    let { data } = $props();
+    let {data} = $props();
 
 
     let posts = data.posts ?? [];
@@ -31,27 +31,27 @@
     <div class="col-span-2 flex flex-col">
         <H2>the feed</H2>
         {#each posts as feed_item}
-<!--            <Card>-->
-<!--                <H1>{feed_item.title ?? feed_item.post_title}</H1>-->
-<!--            </Card>-->
+            <!--            <Card>-->
+            <!--                <H1>{feed_item.title ?? feed_item.post_title}</H1>-->
+            <!--            </Card>-->
             {#if feed_item.class_name !== 'Recommendation'}
-            <TestFeedItem feed_item={feed_item} />
-                {:else}
-                <TestRecommendationCard feed_item={feed_item} />
-                {/if}
+                <TestFeedItem feed_item={feed_item}/>
+            {:else}
+                <TestRecommendationCard feed_item={feed_item}/>
+            {/if}
         {/each}
 
     </div>
     <div class="flex flex-col">
         <H2>Events</H2>
-                {#each data.events as event_item}
-                    {#if !!event_item['date_header']}
-                        {console.log(event_item)}
-                        <EventFeedItem event_item={event_item}/>
-                        <DateHeader event_item={event_item} />
-                    {:else}
-                        <EventFeedItem event_item={event_item}/>
-                    {/if}
-                {/each}
+        {#each data.events as event_item}
+            {#if !!event_item['date_header']}
+                {console.log(event_item)}
+                <EventFeedItem event_item={event_item}/>
+                <DateHeader event_item={event_item}/>
+            {:else}
+                <EventFeedItem event_item={event_item}/>
+            {/if}
+        {/each}
     </div>
 </div>

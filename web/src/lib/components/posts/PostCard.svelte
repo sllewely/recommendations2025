@@ -22,7 +22,7 @@
 </script>
 <div>
     <div class="flex flex-row justify-between">
-        <div><span class="font-bold"><Link url="/users/{feed_item.creator_id}">{feed_item.creator_name}</Link></span> posted</div>
+        <div><span class="font-bold"><a class="text-teal-400 hover:text-orange-400" href="/users/{feed_item.creator_id}">{feed_item.creator_name}</a></span> posted</div>
         <div><span class="text-sm">at {feed_item.create_date_string} {feed_item.create_time_string}</span></div>
     </div>
 

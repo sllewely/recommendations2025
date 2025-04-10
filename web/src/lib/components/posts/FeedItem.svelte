@@ -32,10 +32,7 @@
 
             {:else}
         <div>
-        <div class="flex flex-row justify-between">
-            <div><span class="font-bold"><Link url="/users/{feed_item.creator_id}">{feed_item.creator_name}</Link></span> posted an upcoming event</div>
-            <div><span class="text-sm">at {feed_item.create_date_string} {feed_item.create_time_string}</span></div>
-        </div>
+
         <EventCard feed_item={feed_item} />
         </div>
         {/if}

@@ -23,7 +23,7 @@ class PostsController < ApplicationController
     post_id = params[:id]
     @post = Post.find(post_id)
     if @post
-      render json: @post, status: :ok
+      render json: @post.attributes, status: :ok
     else
       render json: { error: "post not found" }, status: :ok
     end

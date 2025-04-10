@@ -1,8 +1,7 @@
-
 import {getRecommendation} from "$lib/api_calls/recommendations.svelte.js";
-import { getUser } from '$lib/api_calls/users.svelte.js';
+import {getUser} from '$lib/api_calls/users.svelte.js';
 
-export async function load({ cookies, params }) {
+export async function load({cookies, params}) {
 
     const jwt = cookies.get('jwt');
     const user_id = cookies.get('user_id');
@@ -14,7 +13,7 @@ export async function load({ cookies, params }) {
 
     return {
         recommendation: recommendation,
-        user: user,
+        user: user['res'],
         my_user_id: my_user_id,
     }
 }

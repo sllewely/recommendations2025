@@ -1,7 +1,4 @@
 import * as api from "$lib/api_calls/api.svelte.js";
-import {getPosts} from "$lib/api_calls/posts.svelte.js";
-import {getCommunityEvents, getEvent, process_dates} from "$lib/api_calls/events.svelte.js";
-import {getUser} from "$lib/api_calls/users.svelte.js";
 import {getEvent} from "$lib/api_calls/events.svelte.js";
 
 export async function load({locals, cookies, params}) {
@@ -9,7 +6,6 @@ export async function load({locals, cookies, params}) {
     const jwt = cookies.get('jwt');
     const event_id = params.id;
 
-    // let user = await getUser(jwt, user_id);
     let event = await getEvent(jwt, event_id);
 
     return {

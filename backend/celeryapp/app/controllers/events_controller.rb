@@ -51,7 +51,7 @@ class EventsController < ApplicationController
   private
 
   def event_params
-    params.permit(:title, :description, :start_date_time, :address, :url, :event_type, :end_date_time, :is_public)
+    params.except(:id).permit(:title, :description, :start_date_time, :address, :url, :event_type, :end_date_time, :is_public)
   end
 
 end

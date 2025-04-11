@@ -20,6 +20,13 @@ class PostsController < ApplicationController
   end
 
   def show
+    post_id = params[:id]
+    @post = Post.find(post_id)
+    if @post
+      render json: @post.attributes, status: :ok
+    else
+      render json: { error: "post not found" }, status: :unprocessable_content
+    end
 
   end
 
@@ -29,6 +36,19 @@ class PostsController < ApplicationController
       render json: @post, status: :created
     else
       render json: { error: @post.errors_to_s }, status: :unprocessable_content
+    end
+  end
+
+  def update
+    post_id = params[:id]
+    post = current_user.posts.find(post_id)
+    if post.nil?
+      render json: { error: "post not found" }, status: :unprocessable_content and return
+    end
+    if post.update(post_params)
+      render json: post.attributes, status: :ok
+    else
+      render json: "error updating post", status: :unprocessable_content
     end
   end
 
@@ -55,6 +75,7 @@ class PostsController < ApplicationController
   private
 
   def post_params
+    # TODO: should have named this field title instead of post_title
     params.permit(:post_title, :content)
   end
 

@@ -151,4 +151,52 @@ RSpec.describe "Posts", type: :request do
 
   end
 
+  describe "GET /posts/:id" do
+    before(:context) do
+      @my_user = create(:user)
+
+      headers = { 'ACCEPT' => 'application/json' }
+      post "/sign_in", params: { email: @my_user.email, password: @my_user.password }, headers: headers
+
+      auth_token = JSON.parse(response.body)["auth_token"]
+      @headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{auth_token}" }
+    end
+
+    it 'gets the post' do
+      post = create(:post)
+      get "/posts/#{post.id}", params: {}, headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      res = JSON.parse(response.body)
+      expect(res['post_title']).to_not be_nil
+      expect(res['content']).to_not be_nil
+      expect(res['creator_id']).to_not be_nil
+    end
+
+  end
+
+  describe "POST /posts/:id" do
+    before(:context) do
+      @my_user = create(:user)
+
+      headers = { 'ACCEPT' => 'application/json' }
+      post "/sign_in", params: { email: @my_user.email, password: @my_user.password }, headers: headers
+
+      auth_token = JSON.parse(response.body)["auth_token"]
+      @headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{auth_token}" }
+    end
+
+    it 'updates the post' do
+      post = create(:post, user: @my_user)
+      patch "/posts/#{post.id}", params: { post_title: "beep boop" }, headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      res = JSON.parse(response.body)
+      expect(res['post_title']).to eq("beep boop")
+      expect(res['content']).to eq(post.content)
+      expect(res['creator_id']).to_not be_nil
+    end
+
+  end
+
 end

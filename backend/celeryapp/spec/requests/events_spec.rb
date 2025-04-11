@@ -163,4 +163,39 @@ RSpec.describe "Events", type: :request do
     end
 
   end
+
+  describe 'update' do
+    let(:other_user) { create(:user) }
+
+    before(:all) do
+      @my_user = create(:user)
+
+      headers = { 'ACCEPT' => 'application/json' }
+      post "/sign_in", params: { email: @my_user.email, password: @my_user.password }, headers: headers
+
+      auth_token = JSON.parse(response.body)["auth_token"]
+      @headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{auth_token}" }
+    end
+
+    it 'updates my event' do
+      event = create(:event, user: @my_user)
+
+      patch "/events/#{event.id}", params: { title: "new title" }, headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      res = JSON.parse(response.body)
+      expect(res['title']).to eq("new title")
+    end
+
+    it 'fails if editing someone elses event' do
+      event = create(:event)
+
+      patch "/events/#{event.id}", params: { title: "new title" }, headers: @headers
+
+      expect(response).to have_http_status(:not_found)
+      res = JSON.parse(response.body)
+      expect(res['error']).to eq("event not found")
+    end
+
+  end
 end

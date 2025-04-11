@@ -32,6 +32,19 @@ class EventsController < ApplicationController
     else
       render json: @event.errors, status: :not_found
     end
+  end
+
+  def update
+    # find will raise; find_by_id will return nil if the object not found
+    @event = current_user.events.find_by_id(params[:id])
+    if @event.nil?
+      render json: { error: "event not found" }, status: :not_found and return
+    end
+    if @event.update(event_params)
+      render json: @event.attributes, status: :ok
+    else
+      render json: @event.errors, status: :unprocessable_content
+    end
 
   end
 

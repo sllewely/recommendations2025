@@ -16,7 +16,8 @@
     let {data, form} = $props();
 
     let creating = $state(false);
-    let status = $state(RecommendationStatus.Interested);
+
+    let post = data.post;
 
     // TODO:
     // List of types, one can be selected
@@ -29,7 +30,7 @@
 
 <div>
 
-    <H1>Create a post</H1>
+    <H1>Edit your post</H1>
 
     {#if creating }
         <p>creating post...</p>
@@ -37,7 +38,7 @@
     <Card>
         <form
                 method="POST"
-                action="?/create_post"
+                action="?/update_post"
                 use:enhance={() => {
             creating = true;
             return async ({update, result}) => {
@@ -45,10 +46,10 @@
                 creating = false;
                 let res = result.data;
             if (res.success) {
-                toasts.toast = newToast("You have successfully created a post!!!!");
+                toasts.toast = newToast("You have successfully updated a post!!!!");
                 goto("/posts")
             } else {
-                toasts.toast = newToast("Error creating a post: " + res.message, ToastType.Error);
+                toasts.toast = newToast("Error updating a post: " + res.message, ToastType.Error);
             }
             };
 
@@ -57,11 +58,12 @@
         >
 
             <div class="flex flex-col">
+                <input type="hidden" name="post_id" value={post.id}/>
                 <!--            <InputCheckbox name="recommendation_only" label="Don't post publicly, just save for me (TODO: not implemented):" />-->
-                <Input name="post_title" label="Post Title:" value={form?.post_title}/>
-                <Input name="content" label="Content" value={form?.content}/>
+                <Input name="post_title" label="Post Title:" value={form?.post_title ?? post.post_title}/>
+                <Input name="content" label="Content" value={form?.content ?? post.content}/>
             </div>
-            <FormButton>Create post</FormButton>
+            <FormButton>Update post</FormButton>
         </form>
     </Card>
 

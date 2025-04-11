@@ -20,6 +20,7 @@
 <H1>Create account</H1>
 
     <p>todo: if form fails, keep values</p>
+    <p>todo: form validations</p>
     <p>Sorry, for now you must have both a name and username, but name will be shown to your friends</p>
 
 {#if creating }
@@ -53,7 +54,7 @@
         <Input name="name" input_type="text" label="Name:" value="{form?.name}" required=true />
         <Input name="username" label="Username:" value={form?.username} required=true />
         <Input name="email" label="E-mail:" value={form?.email} required=true />
-        <Input name="password" label="Password:" input_type="password" required=true />
+        <Input name="password" label="Password: (minimum 6 characters)" input_type="password" required=true />
 
     </div>
     <FormButton>Create account</FormButton>

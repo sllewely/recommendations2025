@@ -28,7 +28,7 @@
 
 <div class="app">
     <Header/>
-    <PendingFriendRequestNotification />
+<!--    <PendingFriendRequestNotification />-->
     <Toast />
 
 

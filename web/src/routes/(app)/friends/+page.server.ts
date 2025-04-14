@@ -7,11 +7,16 @@ export async function load({cookies, params}) {
     const jwt = cookies.get('jwt');
     const my_user_id = cookies.get('user_id');
 
+    const friends = await api.get('friendships', jwt);
+    const friends_hash = new Map(friends['res'].map(f => [f.id, f]));
+
     // TODO: error handling ... with errors?
     let user_res = await getUser(jwt, my_user_id);
 
     return {
         my_user: user_res,
+        friends: friends,
+        friends_map: friends_hash,
     }
 }
 
@@ -25,7 +30,7 @@ export const actions = {
         const response = await api.post(
             'friend_requests',
             {
-                token: data.get('friend_code'),
+                user_id: data.get('user_id'),
             },
             jwt,
         );

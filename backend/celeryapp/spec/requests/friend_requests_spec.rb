@@ -41,8 +41,7 @@ RSpec.describe "FriendRequests", type: :request do
 
     it 'creates a new friendship request' do
       new_friend = create(:user)
-      token = new_friend.attributes[:friend_code]
-      post "/friend_requests", params: { token: token }, headers: @headers
+      post "/friend_requests", params: { user_id: new_friend.id }, headers: @headers
 
       expect(response).to have_http_status(:created)
       res = JSON.parse(response.body)

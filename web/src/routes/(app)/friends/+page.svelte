@@ -12,6 +12,8 @@
     let {data, form} = $props();
 
     let my_user = data.my_user;
+    let friends = data.friends;
+    const friends_map = data.friends_map;
 
     let creating = $state(false);
     let searching = $state(false);

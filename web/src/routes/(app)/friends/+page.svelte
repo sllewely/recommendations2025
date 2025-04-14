@@ -7,6 +7,7 @@
     import Input from "$lib/components/form/Input.svelte";
     import FormButton from "$lib/components/form/FormButton.svelte";
     import H2 from "$lib/components/text/H2.svelte";
+    import UserSearchResult from "$lib/components/users/UserSearchResult.svelte";
 
     let {data, form} = $props();
 
@@ -53,14 +54,17 @@
                 >
 
                     <Input name="search" label="by name:" value={form?.search} placeholder="sarah"/>
-                    <FormButton>Search</FormButton>
+                    <div class="mb-6">
+                        <FormButton>Search</FormButton>
+                    </div>
 
                 </form>
 
                 <div>
                     {#each users as user}
                         <div>
-                            <p>{user.name}</p>
+                            <UserSearchResult {user}/>
+
 
                         </div>
 

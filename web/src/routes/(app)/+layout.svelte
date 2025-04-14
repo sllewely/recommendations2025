@@ -4,18 +4,39 @@
     import '../../app.css';
     import Toast from "$lib/components/Toast.svelte";
     import { current_user, isSignedIn } from '$lib/state/current_user.svelte.js';
+    import PendingFriendRequestNotification from "$lib/components/PendingFriendRequestNotification.svelte";
+    import {invalidate} from "$app/navigation";
+    import {onMount} from "svelte";
 
     let { children, data } = $props();
 
     current_user.id = data.current_user_id;
 
+    // every 10 seconds, poll notifications
+    onMount( () => {
+        const interval = setInterval(() => {
+            invalidate('data:reload_test');
+        }, 100);
+
+        return () => {
+            clearInterval(interval);
+        }
+        }
+    );
+    let num_test = data.reload_test;
+
+    $inspect(num_test);
 </script>
 
 <div class="app">
     <Header/>
+    <PendingFriendRequestNotification />
     <Toast />
 
+
+
     <main>
+        <p>{num_test}</p>
         {@render children()}
     </main>
 

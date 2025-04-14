@@ -1,33 +1,32 @@
 import * as api from '$lib/api_calls/api.svelte';
+import {getRecommendation} from "$lib/api_calls/recommendations.svelte.js";
+import {getUser} from '$lib/api_calls/users.svelte.js';
 
-export async function load({ cookies, params }) {
+
+export async function load({cookies, params}) {
 
     const jwt = cookies.get('jwt');
     const my_user_id = cookies.get('user_id');
-    const event_id = params.id;
 
-    let res = await api.get(`events/` + event_id, jwt)
+    // TODO: error handling ... with errors?
+    let user_res = await getUser(jwt, my_user_id);
 
     return {
-        event: res['res'],
-        // user: user,
-        my_user_id: my_user_id,
+        my_user: user_res,
     }
 }
 
 // named action for sign in form
 export const actions = {
-    update_rsvp: async ({cookies, request}) => {
+    add_friend: async ({cookies, request}) => {
         const data = await request.formData();
 
         const jwt = cookies.get('jwt');
 
         const response = await api.post(
-            'rsvps',
+            'friend_requests',
             {
-                status: data.get('rsvp_status'),
-                event_id: data.get('event_id'),
-                user_id: data.get('user_id'),
+                token: data.get('friend_code'),
             },
             jwt,
         );

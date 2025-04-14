@@ -21,8 +21,8 @@
 
 </script>
 
-<header class="bg-gray-800 text-white py-4 px-3">
-    <div class="container mx-auto flex items-center justify-between">
+<header class="text-white p-0">
+    <div class="m-0 w-full flex items-center justify-between  py-4 bg-gray-800 ">
         <div class="w-full  md:text-center md:mb-0 mb-8">
             <a href="/"><p class="text-gray-400 text-xl">Recommendations and Events</p></a>
         </div>
@@ -57,5 +57,15 @@
             {/if}
         </div>
     </div>
+    <div class="mx-auto flex items-center justify-between  py-2 px-3 bg-gray-600 ">
+        <div></div>
+        <div>
+            <ul class="list-reset flex justify-center flex-wrap text-xs md:text-sm gap-3">
+                <li><a href="/friends" class="text-gray-400 hover:text-white">Friends</a></li>
+            </ul>
+        </div>
+        <div></div>
+    </div>
 </header>
+
 

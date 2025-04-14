@@ -8,6 +8,8 @@ class User < ApplicationRecord
   has_many :friend_codes
   has_many :friendships
   has_many :friends, through: :friendships
+  has_many :friend_requests
+  has_many :notifications
 
   generates_token_for :email_verification, expires_in: 2.days do
     email
@@ -34,6 +36,10 @@ class User < ApplicationRecord
     sessions.where.not(id: Current.session).delete_all
   end
 
+  def active_notifications
+    self.notifications.where('active = true').order(created_at: :desc)
+  end
+
   def public_attributes
     {
       id: id,
@@ -43,6 +49,7 @@ class User < ApplicationRecord
   end
 
   def friend_code
+    # Called safe navigation operator &.
     self.friend_codes.where('active = true').first&.token
   end
 

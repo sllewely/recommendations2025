@@ -1,11 +1,7 @@
-import {redirect} from "@sveltejs/kit";
-import { VITE_API_URL } from '$env/static/private';
 import * as api from "$lib/api_calls/api.svelte.js";
 
 
-let root_url = VITE_API_URL;
-
-// named action for sign in form
+// named action for create events
 export const actions = {
     create_event: async ({cookies, request}) => {
         const data = await request.formData();

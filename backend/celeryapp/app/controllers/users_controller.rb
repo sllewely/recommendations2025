@@ -3,7 +3,8 @@ class UsersController < ApplicationController
   # Create a user is a part of Registrations controller
 
   def index
-    render json: User.all, status: :ok
+    search = params[:search]
+    render json: User.by_name(search).map(&:public_attributes), status: :ok
 
   end
 

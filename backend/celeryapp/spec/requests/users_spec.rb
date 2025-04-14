@@ -89,4 +89,55 @@ RSpec.describe "User", type: :request do
 
   end
 
+  describe "GET /users/[:id]" do
+    before(:context) do
+      @my_user = create(:user)
+
+      headers = { 'ACCEPT' => 'application/json' }
+      post "/sign_in", params: { email: @my_user.email, password: @my_user.password }, headers: headers
+
+      auth_token = JSON.parse(response.body)["auth_token"]
+      @headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{auth_token}" }
+    end
+
+    it 'gets user matching search query' do
+      create(:user, name: "tom harp")
+      create(:user, name: "thom sharp")
+      create(:user, name: "tomathy barp")
+      create(:user, name: "Tommy harpy")
+
+      get "/users/?search=Tom", headers: @headers
+      res = JSON.parse(response.body)
+
+      expect(res.size).to eq(3)
+    end
+
+    it 'gets user matching search query' do
+      create(:user, name: "tom harp")
+      create(:user, name: "thom sharp")
+      create(:user, name: "tomathy barp")
+      create(:user, name: "Tommy harpy")
+
+      get "/users/?search=om", headers: @headers
+      res = JSON.parse(response.body)
+
+      # 4 or 5 cuz sometimes the current user matches
+      expect(res.size).to eq(4) or eq(5)
+    end
+
+    it 'gets user matching search query' do
+      create(:user, name: "tom harp")
+      create(:user, name: "thom sharp")
+      create(:user, name: "tomathy barp")
+      create(:user, name: "Tommy harpy")
+
+      get "/users/?search=arp", headers: @headers
+      res = JSON.parse(response.body)
+
+      # 4 or 5 cuz sometimes the current user matches
+      expect(res.size).to eq(4) or eq(5)
+    end
+
+  end
+
 end

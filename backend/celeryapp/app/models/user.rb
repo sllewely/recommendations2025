@@ -11,6 +11,8 @@ class User < ApplicationRecord
   has_many :friend_requests
   has_many :notifications
 
+  scope :by_name, ->(search) { where('LOWER(name) LIKE LOWER(?)', "%#{search}%") }
+
   generates_token_for :email_verification, expires_in: 2.days do
     email
   end

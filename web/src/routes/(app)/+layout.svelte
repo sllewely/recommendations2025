@@ -12,20 +12,18 @@
 
     current_user.id = data.current_user_id;
 
-    // every 10 seconds, poll notifications
-    onMount( () => {
-        const interval = setInterval(() => {
-            invalidate('data:reload_test');
-        }, 100);
+    // // every 10 seconds, poll notifications
+    // onMount( () => {
+    //     const interval = setInterval(() => {
+    //         invalidate('data:reload_test');
+    //     }, 100);
+    //
+    //     return () => {
+    //         clearInterval(interval);
+    //     }
+    //     }
+    // );
 
-        return () => {
-            clearInterval(interval);
-        }
-        }
-    );
-    let num_test = data.reload_test;
-
-    $inspect(num_test);
 </script>
 
 <div class="app">
@@ -36,7 +34,6 @@
 
 
     <main>
-        <p>{num_test}</p>
         {@render children()}
     </main>
 

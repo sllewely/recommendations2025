@@ -1,5 +1,4 @@
 import * as api from '$lib/api_calls/api.svelte';
-import {getRecommendation} from "$lib/api_calls/recommendations.svelte.js";
 import {getUser} from '$lib/api_calls/users.svelte.js';
 
 
@@ -30,6 +29,17 @@ export const actions = {
             },
             jwt,
         );
+
+        return response;
+    },
+    search_users: async ({cookies, request}) => {
+        const data = await request.formData();
+        const jwt = cookies.get('jwt');
+        const query = data.get('search')
+
+        const response = await api.get(
+            'users?search=' + query,
+            jwt);
 
         return response;
     }

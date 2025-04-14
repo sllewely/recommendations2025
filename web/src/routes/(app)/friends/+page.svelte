@@ -14,6 +14,8 @@
 
     let creating = $state(false);
     let searching = $state(false);
+
+    let users = $state([]);
 </script>
 
 <div>
@@ -24,22 +26,24 @@
             <Card>
                 <H2>Search for a user</H2>
 
-                <p>
 
-                    {#if searching }
-                        <p>searching...</p>
-                    {/if}
+                {#if searching }
+                    <p>searching...</p>
+                {/if}
                 <form
                         method="POST"
                         action="?/search_users"
                         use:enhance={() => {
                     creating = true;
                     return async ({update, result}) => {
-                        await update();
+                        // Do not clear form on success
+                        await update({reset: false});
                         creating = false;
                         let res = result.data;
                         if (res.success) {
                             //toasts.toast = newToast("Success updating your rsvp");
+                            users = res['res'];
+                            console.log(res['res']);
                         } else {
                             toasts.toast = newToast("Error searching: " + res.message, ToastType.Error);
                         }
@@ -48,10 +52,21 @@
         }}
                 >
 
-                    <Input name="friend_code" label="by name:" value={form?.friend_code} placeholder="sarah"/>
+                    <Input name="search" label="by name:" value={form?.search} placeholder="sarah"/>
                     <FormButton>Search</FormButton>
 
                 </form>
+
+                <div>
+                    {#each users as user}
+                        <div>
+                            <p>{user.name}</p>
+
+                        </div>
+
+
+                    {/each}
+                </div>
 
             </Card>
         </div>

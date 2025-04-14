@@ -28,6 +28,7 @@
         <div class="flex-auto">
             <Card>
                 <H2>Search for a user</H2>
+                <p>//TODO: add debounce to query, search on type</p>
 
 
                 {#if searching }

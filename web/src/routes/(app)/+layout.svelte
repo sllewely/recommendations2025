@@ -5,30 +5,47 @@
     import Toast from "$lib/components/Toast.svelte";
     import { current_user, isSignedIn } from '$lib/state/current_user.svelte.js';
     import PendingFriendRequestNotification from "$lib/components/PendingFriendRequestNotification.svelte";
-    import {invalidate} from "$app/navigation";
+    import {goto, invalidate} from "$app/navigation";
     import {onMount} from "svelte";
 
     let { children, data } = $props();
 
     current_user.id = data.current_user_id;
 
-    // // every 10 seconds, poll notifications
-    // onMount( () => {
-    //     const interval = setInterval(() => {
-    //         invalidate('data:reload_test');
-    //     }, 100);
-    //
-    //     return () => {
-    //         clearInterval(interval);
-    //     }
-    //     }
-    // );
+    let notifications = $state([]);
+
+    // every 10 seconds, poll notifications
+    onMount( () => {
+
+        let fetch_notifs = async () => {
+            const response = await fetch('/api/fetch_notifications', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const res = await response.json();
+            notifications = res['res'] ?? [];
+            console.log('interval')
+        }
+        fetch_notifs();
+            const interval = setInterval(() => {
+                fetch_notifs();
+            }, 1000 * 60 * 5); // 5 minutes
+
+
+            return () => {
+                clearInterval(interval);
+            }
+        }
+    );
 
 </script>
 
 <div class="app">
     <Header/>
 <!--    <PendingFriendRequestNotification />-->
+    {notifications}
     <Toast />
 
 

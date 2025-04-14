@@ -37,7 +37,7 @@
                 <li><a href="/about" class="text-gray-400 hover:text-white">About</a></li>
 
                 {#if !signed_in}
-                    <li><a href="/sign_up" class="text-gray-400 hover:text-white">Sign up</a></li>
+                    <li><a href="/create_account" class="text-gray-400 hover:text-white">Sign up</a></li>
                 {/if}
             </ul>
         </div>

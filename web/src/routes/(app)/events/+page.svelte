@@ -63,7 +63,7 @@
                             <InputCheckbox name="public" label="Public event" value="true"/>
 
                             <Input name="title" label="Title:" value={form?.title}/>
-                            <InputDateTime date_value={form?.date_input} time_value="{form?.time_input}"/>
+                            <InputDateTime date_value={form?.date_input} time_value={form?.time_input}/>
                             <!--                            <InputDateTime name="end" date_value={form?.date_input} time_value="{form?.time_input}" />-->
                             <Input name="description" label="Description:"/>
                             <Input name="address" label="Address:" value={form?.address}/>

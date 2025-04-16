@@ -4,15 +4,15 @@
     import '../../app.css';
     import Toast from "$lib/components/Toast.svelte";
     import { current_user, isSignedIn } from '$lib/state/current_user.svelte.js';
-    import PendingFriendRequestNotification from "$lib/components/PendingFriendRequestNotification.svelte";
-    import {goto, invalidate} from "$app/navigation";
+    import { notifs } from '$lib/state/notifications.svelte';
     import {onMount} from "svelte";
+    import BannerNotifications from "$lib/components/notifications/BannerNotifications.svelte";
 
     let { children, data } = $props();
 
     current_user.id = data.current_user_id;
 
-    let notifications = $state([]);
+    // let notifications = $state([]);
 
     // every 10 seconds, poll notifications
     onMount( () => {
@@ -25,8 +25,21 @@
                 }
             });
             const res = await response.json();
-            notifications = res['res'] ?? [];
-            console.log('interval')
+            if (res['res']) {
+                let notif_map = res['res'].map((notif_json) =>
+                    ({
+                        id: notif_json.id,
+                        notif_type: notif_json.notif_type,
+                        message: notif_json.message,
+                        extras: notif_json.extras,
+                        created_at: notif_json.created_at,
+                    })
+                );
+                // console.log(notif_map)
+                notifs.notifs = notif_map;
+            } else {
+                console.log('error getting notifications ' + res);
+            }
         }
         fetch_notifs();
             const interval = setInterval(() => {
@@ -44,8 +57,7 @@
 
 <div class="app">
     <Header/>
-<!--    <PendingFriendRequestNotification />-->
-    {notifications}
+    <BannerNotifications />
     <Toast />
 
 

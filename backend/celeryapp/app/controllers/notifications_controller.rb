@@ -1,7 +1,7 @@
 class NotificationsController < ApplicationController
 
   def index
-    render json: current_user.notifications, status: :ok
+    render json: current_user.notifications.active, status: :ok
   end
 
   def update
@@ -17,7 +17,7 @@ class NotificationsController < ApplicationController
   private
 
   def notif_params
-    params.permit(:active)
+    params.except(:id).permit(:active)
   end
 
 end

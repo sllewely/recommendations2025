@@ -3,7 +3,6 @@
     import {current_user, isSignedIn} from '$lib/state/current_user.svelte.js';
 
     let user_id = current_user.id;
-    console.log(user_id);
 
     let signed_in = $derived(current_user.id !== '');
 

@@ -6,6 +6,7 @@
     import FormButton from "$lib/components/form/FormButton.svelte";
     import Form from "$lib/components/form/Form.svelte";
     import {rails_datetime_pretty} from "$lib/utils/dates.svelte";
+    import {goto} from "$app/navigation";
 
     let {pending_friend} = $props();
 
@@ -33,12 +34,13 @@
             return async ({update, result}) => {
                 await update();
                 updating = false;
-                let res = result.data;
-                        if (res.success) {
-                            toasts.toast = newToast("Accepted friend request");
-                        } else {
-                            toasts.toast = newToast("Error accepting friend request: " + res.message, ToastType.Error);
-                        }
+            let res = result.data;
+                    if (res.success) {
+                    toasts.toast = newToast("Accepted friend request");
+                    } else {
+                        toasts.toast = newToast("Error accepting friend request: " + res.message, ToastType.Error);
+                    }
+                    await goto("/friends");
             };
         }}
         >

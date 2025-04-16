@@ -83,7 +83,7 @@
                 <div>
                     {#each users as user}
                         <div>
-                            <UserSearchResult {user}/>
+                            <UserSearchResult {user} is_friend={friends_map.has(user.id.toString())}/>
                         </div>
                     {/each}
                 </div>

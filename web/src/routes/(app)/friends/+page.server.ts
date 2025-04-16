@@ -8,7 +8,7 @@ export async function load({cookies, params}) {
     const my_user_id = cookies.get('user_id');
 
     const friends = await api.get('friendships', jwt);
-    const friends_hash = new Map(friends['res'].map(f => [f.id, f]));
+    const friends_hash = new Map(friends['res'].map(f => [f.id.toString(), f]));
 
     const friend_requests_response = await api.get('friend_requests', jwt);
 

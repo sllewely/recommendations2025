@@ -6,10 +6,9 @@
     import FormButton from "$lib/components/form/FormButton.svelte";
     import Form from "$lib/components/form/Form.svelte";
 
-    let {user} = $props();
+    let {user, is_friend} = $props();
 
     let updating = $state(false);
-
 
 </script>
 
@@ -17,11 +16,13 @@
     <div>
         <Link url="/users/{user.id}"><p>{user.name}</p></Link>
     </div>
-    <div>
-        <form
-                method="POST"
-                action="?/add_friend"
-                use:enhance={() => {
+    {#if (!is_friend)}
+
+        <div>
+            <form
+                    method="POST"
+                    action="?/add_friend"
+                    use:enhance={() => {
             updating = true;
             return async ({update, result}) => {
                 await update();
@@ -34,9 +35,12 @@
                         }
             };
         }}
-        >
-            <input type="hidden" name="user_id" value={user.id}/>
-            <FormButton>Add friend</FormButton>
-        </form>
-    </div>
+            >
+                <input type="hidden" name="user_id" value={user.id}/>
+                <FormButton>Add friend</FormButton>
+            </form>
+        </div>
+    {:else }
+        <div><p>Friend!</p></div>
+    {/if}
 </div>

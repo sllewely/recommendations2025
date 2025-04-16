@@ -8,12 +8,14 @@
     import FormButton from "$lib/components/form/FormButton.svelte";
     import H2 from "$lib/components/text/H2.svelte";
     import UserSearchResult from "$lib/components/users/UserSearchResult.svelte";
+    import PendingFriendRequest from "$lib/components/users/PendingFriendRequest.svelte";
 
     let {data, form} = $props();
 
     let my_user = data.my_user;
     let friends = data.friends;
     const friends_map = data.friends_map;
+    const pending_friends = data.friend_requests_response['res'] ?? [];
 
     let creating = $state(false);
     let searching = $state(false);
@@ -23,6 +25,18 @@
 
 <div>
     <H1>Friends!</H1>
+
+    {#if pending_friends.length > 0}
+
+        <div>
+            <H2>Pending friend requests</H2>
+
+            {#each pending_friends as pending_friend}
+                <PendingFriendRequest {pending_friend}/>
+            {/each}
+        </div>
+    {/if}
+
 
     <div class="flex">
         <div class="flex-auto">

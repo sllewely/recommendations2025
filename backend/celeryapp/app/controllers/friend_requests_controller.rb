@@ -1,7 +1,8 @@
 class FriendRequestsController < ApplicationController
 
+  # Returns users instead of friend request objects
   def index
-    render json: FriendRequest.all.map { |fr| fr.incoming_friend.public_attributes }, status: :ok
+    render json: current_user.friend_requests.all.map { |fr| fr.incoming_friend.public_attributes }, status: :ok
   end
 
   def create

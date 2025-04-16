@@ -1,5 +1,6 @@
 <script lang="ts">
     import {fly} from 'svelte/transition';
+    import Link from "$lib/components/text/Link.svelte";
 
     interface Props {
         notif: Notification;
@@ -16,7 +17,9 @@
         </div>
 
         <div class="flex">
-            <div><p>accept friend request</p></div>
+            <div>
+                <Link url="/friends">accept friend request</Link>
+            </div>
             <div class="px-4">
                 <button class="hover:text-orange-500 text-xl" onclick={() => {}}>x</button>
             </div>

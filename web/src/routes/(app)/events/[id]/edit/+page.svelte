@@ -24,10 +24,6 @@
 <div>
     <H1>Edit Event {event.title}</H1>
 
-    {console.log(event)}
-    {console.log(date_string)}
-    {console.log(time_string)}
-
     <div>
 
         <Card>

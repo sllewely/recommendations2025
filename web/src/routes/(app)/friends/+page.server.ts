@@ -10,6 +10,8 @@ export async function load({cookies, params}) {
     const friends = await api.get('friendships', jwt);
     const friends_hash = new Map(friends['res'].map(f => [f.id, f]));
 
+    const friend_requests_response = await api.get('friend_requests', jwt);
+
     // TODO: error handling ... with errors?
     let user_res = await getUser(jwt, my_user_id);
 
@@ -17,6 +19,7 @@ export async function load({cookies, params}) {
         my_user: user_res,
         friends: friends,
         friends_map: friends_hash,
+        friend_requests_response: friend_requests_response,
     }
 }
 
@@ -47,5 +50,21 @@ export const actions = {
             jwt);
 
         return response;
+    },
+    accept_friend_request: async ({cookies, request}) => {
+        const data = await request.formData();
+
+        const jwt = cookies.get('jwt');
+
+        const response = await api.post(
+            'friendships',
+            {
+                friend_id: data.get('user_id'),
+            },
+            jwt,
+        );
+
+        return response;
     }
+
 }

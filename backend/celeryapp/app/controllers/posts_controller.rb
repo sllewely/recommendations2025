@@ -1,4 +1,19 @@
 class PostsController < ApplicationController
+  def delete
+    post_id = params[:id]
+    post = current_user.posts.find_by(id: post_id)
+    if !post
+      render json: { error: "post not found" }, status: :unprocessable_content
+      return
+    end
+
+    if post.delete
+      render status: :delete
+    else
+      render json: { error: "unable to delete" }, status: :unprocessable_content
+    end
+  end
+
   def index
     user_id = params[:user_id]
 

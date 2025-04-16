@@ -17,7 +17,7 @@ export async function load({cookies, params}) {
 
     return {
         my_user: user_res,
-        friends: friends,
+        friends_response: friends,
         friends_map: friends_hash,
         friend_requests_response: friend_requests_response,
     }

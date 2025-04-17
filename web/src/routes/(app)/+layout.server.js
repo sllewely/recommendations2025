@@ -8,15 +8,13 @@ export function load({locals, cookies, depends}) {
         redirect(301, '/');
     }
 
-    depends('data:reload_test');
-
+    // depends('data:reload_test');
     // Lux TODO: polling backend API for updates (like websockets)
     // Frontend subscribes to backend
-    const num = Math.random();
+    // const num = Math.random();
 
     return {
         current_user_id: cookies.get('user_id'),
-        reload_test: num,
     }
 
 }

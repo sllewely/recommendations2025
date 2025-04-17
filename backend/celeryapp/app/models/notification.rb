@@ -3,6 +3,8 @@ class Notification < ApplicationRecord
 
   enum :notif_type, [:pending_friend_request, :accepted_friend_request]
 
+  scope :active, -> { where(active: true) }
+
   # @param friend is a user model
   def self.accepted_friendship_notification(friend)
     Notification.new(

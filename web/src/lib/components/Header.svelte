@@ -3,7 +3,6 @@
     import {current_user, isSignedIn} from '$lib/state/current_user.svelte.js';
 
     let user_id = current_user.id;
-    console.log(user_id);
 
     let signed_in = $derived(current_user.id !== '');
 
@@ -37,7 +36,7 @@
                 <li><a href="/about" class="text-gray-400 hover:text-white">About</a></li>
 
                 {#if !signed_in}
-                    <li><a href="/sign_up" class="text-gray-400 hover:text-white">Sign up</a></li>
+                    <li><a href="/create_account" class="text-gray-400 hover:text-white">Sign up</a></li>
                 {/if}
             </ul>
         </div>

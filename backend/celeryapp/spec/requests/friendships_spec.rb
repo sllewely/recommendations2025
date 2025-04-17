@@ -86,7 +86,7 @@ RSpec.describe "Friendships", type: :request do
 
       expect(response).to have_http_status(:unprocessable_content)
       res = JSON.parse(response.body)
-      expect(res['error']).to include('duplicate key value violates unique constraint')
+      expect(res['error']).to include('pending friend request not found')
     end
 
   end

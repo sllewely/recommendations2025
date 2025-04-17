@@ -12,8 +12,6 @@
 
     current_user.id = data.current_user_id;
 
-    // let notifications = $state([]);
-
     // every 10 seconds, poll notifications
     onMount( () => {
 
@@ -35,7 +33,6 @@
                         created_at: notif_json.created_at,
                     })
                 );
-                // console.log(notif_map)
                 notifs.notifs = notif_map;
             } else {
                 console.log('error getting notifications ' + res);

@@ -47,5 +47,15 @@ RSpec.describe "FriendRequests", type: :request do
       res = JSON.parse(response.body)
       expect(res['id']).to eq(new_friend.id)
     end
+
+    it 'fails if a friend request already exists' do
+      new_friend = create(:user)
+      post "/friend_requests", params: { user_id: new_friend.id }, headers: @headers
+      post "/friend_requests", params: { user_id: new_friend.id }, headers: @headers
+
+      expect(response).to have_http_status(:unprocessable_content)
+      res = JSON.parse(response.body)
+      expect(res['error']).to include('duplicate key value violates unique constraint')
+    end
   end
 end

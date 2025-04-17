@@ -9,6 +9,7 @@ class FriendRequestsController < ApplicationController
     friend_id = params['user_id']
     user = User.find_by(id: friend_id)
     render json: { error: "Cannot send friend request: user not found" }, status: :unprocessable_content and return if user.nil?
+    render json: { error: "Cannot send friend request: already friends" }, status: :unprocessable_content and return if current_user.friends.find_by(id: friend_id).present?
     # TODO: check if friend already or pending already
     ActiveRecord::Base.transaction do
       user.friend_requests.create!(incoming_friend_id: current_user.id)

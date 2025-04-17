@@ -14,18 +14,17 @@ RSpec.describe "Posts", type: :request do
 
     it 'delete post' do
       my_post = create(:post, user: @my_user)
-      delete "/post/#{my_post.__id__}", params: {}, headers: headers
-      expect(response).to have_http_status(:deleted)
+      delete "/posts/#{my_post.id}", headers: @headers
+      expect(response).to have_http_status(:no_content)
     end
 
     it "error if deleting other person's post" do
       new_user = create(:user)
-      my_post = create(:post, user:new_user)
-      delete "/post/#{my_post.__id__}", params: {}, headers: headers
-      expect(response).to have_http_status(:unauthorized)
+      my_post = create(:post, user: new_user)
+      delete "/posts/#{my_post.id}", params: {}, headers: @headers
+      expect(response).to have_http_status(:not_found)
     end
   end
-
 
   describe "POST /posts" do
 

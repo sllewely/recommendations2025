@@ -21,7 +21,7 @@ class PostsController < ApplicationController
 
   def show
     post_id = params[:id]
-    @post = Post.find(post_id)
+    @post = Post.find_by(id: post_id)
     if @post
       render json: @post.attributes, status: :ok
     else
@@ -41,7 +41,7 @@ class PostsController < ApplicationController
 
   def update
     post_id = params[:id]
-    post = current_user.posts.find(post_id)
+    post = current_user.posts.find_by(id: post_id)
     if post.nil?
       render json: { error: "post not found" }, status: :unprocessable_content and return
     end

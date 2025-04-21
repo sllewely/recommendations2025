@@ -15,7 +15,7 @@ class RecommendationsController < ApplicationController
   end
 
   def show
-    @recommendation = Recommendation.find(params[:id])
+    @recommendation = Recommendation.find_by(id: params[:id])
     if @recommendation.nil?
       render json: {}, status: :not_found and return
     end
@@ -24,7 +24,7 @@ class RecommendationsController < ApplicationController
   end
 
   def update
-    @recommendation = current_user.recommendations.find(params[:id])
+    @recommendation = current_user.recommendations.find_by(id: params[:id])
     if @recommendation.nil?
       render json: { error: "recommendation not found" }, status: :not_found and return
     end
@@ -40,7 +40,6 @@ class RecommendationsController < ApplicationController
     else
       render json: { error: @recommendation.errors_to_s }, status: :unprocessable_content
     end
-
   end
 
   private

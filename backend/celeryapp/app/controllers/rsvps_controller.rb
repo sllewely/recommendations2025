@@ -15,7 +15,7 @@ class RsvpsController < ApplicationController
   end
 
   def show
-    @rsvp = Rsvp.find(params[:id])
+    @rsvp = Rsvp.find_by(id: params[:id])
     if @rsvp.nil?
       render json: {}, status: :not_found and return
     end

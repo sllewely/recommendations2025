@@ -14,7 +14,7 @@ class UsersController < ApplicationController
     if current_user.id == user_id.to_i
       render json: current_user.attributes, status: :ok and return
     end
-    @user = User.find(user_id)
+    @user = User.find_by(id: user_id)
     render json: {}, status: :not_found and return if @user.nil?
 
     # TODO: show something different if friend vs not

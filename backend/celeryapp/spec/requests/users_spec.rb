@@ -122,7 +122,7 @@ RSpec.describe "User", type: :request do
       res = JSON.parse(response.body)
 
       # 4 or 5 cuz sometimes the current user matches
-      expect(res.size).to eq(4) or eq(5)
+      expect(res.size).to be_in([4, 5])
     end
 
     it 'gets user matching search query' do

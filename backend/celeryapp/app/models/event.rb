@@ -2,6 +2,7 @@ class Event < ApplicationRecord
   include DateHelper
   belongs_to :user
   has_many :rsvps
+  has_many :comments, as: :commentable
 
   before_save :ensure_end_time
 

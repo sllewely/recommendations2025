@@ -3,6 +3,7 @@ class Recommendation < ApplicationRecord
   has_many :post_recommendations
   has_many :posts, through: :post_recommendations
   belongs_to :user
+  has_many :comments, as: :commentable
 
   enum :status, [:interested, :watching, :recommend]
 

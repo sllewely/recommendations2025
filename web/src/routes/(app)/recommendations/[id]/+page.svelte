@@ -9,9 +9,6 @@
     let user = data.user;
     let recommendation = data.recommendation;
 
-    console.log(user);
-    console.log(data.my_user_id);
-
 
 </script>
 

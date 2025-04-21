@@ -40,7 +40,6 @@ class RecommendationsController < ApplicationController
     else
       render json: { error: @recommendation.errors_to_s }, status: :unprocessable_content
     end
-
   end
 
   private

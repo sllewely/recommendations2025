@@ -10,6 +10,7 @@ class User < ApplicationRecord
   has_many :friends, through: :friendships
   has_many :friend_requests
   has_many :notifications
+  has_many :comments
 
   scope :by_name, ->(search) { where('LOWER(name) LIKE LOWER(?)', "%#{search}%") }
 

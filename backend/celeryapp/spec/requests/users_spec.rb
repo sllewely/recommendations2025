@@ -91,6 +91,9 @@ RSpec.describe "User", type: :request do
 
   describe "GET /users/[:id]" do
     before(:context) do
+      # users created in before(:contexts) may persist
+      User.destroy_all
+
       @my_user = create(:user)
 
       headers = { 'ACCEPT' => 'application/json' }

@@ -1,14 +1,14 @@
 class CommentsController < ApplicationController
 
-  # def update
-  #   @recommendation = current_user.recommendations.find(params[:id])
-  #   if @recommendation.nil?
-  #     render json: { error: "recommendation not found" }, status: :not_found and return
-  #   end
-  #   @recommendation.update(recommendation_params)
-  #   render json: @recommendation.attributes, status: :ok
-  #
-  # end
+  def update
+    @comment = current_user.comments.find_by(id: params[:id])
+    if @comment.nil?
+      render json: { error: "comment not found" }, status: :not_found and return
+    end
+    @comment.update(body: params[:body])
+    render json: @comment, status: :ok
+
+  end
 
   def create
     # TODO: Can only post on comment within friends

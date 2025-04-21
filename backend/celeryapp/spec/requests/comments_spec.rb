@@ -47,5 +47,31 @@ RSpec.describe "Comments", type: :request do
       expect(res['commentable_id']).to eq(recommendation.id)
     end
   end
+
+  describe 'update' do
+
+    before(:all) do
+      @my_user = create(:user)
+
+      headers = { 'ACCEPT' => 'application/json' }
+      post "/sign_in", params: { email: @my_user.email, password: @my_user.password }, headers: headers
+
+      auth_token = JSON.parse(response.body)["auth_token"]
+      @headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{auth_token}" }
+    end
+
+    it 'updates a comment on an event' do
+      event = create(:event)
+      comment = create(:comment, :for_event, commentable: event, user: @my_user)
+
+      patch "/comments/#{comment.id}", params: { body: 'hoo boy I sure love stew' }, headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      res = JSON.parse(response.body)
+      expect(res['body']).to eq('hoo boy I sure love stew')
+      expect(res['commentable_id']).to eq(event.id)
+    end
+
+  end
 end
 

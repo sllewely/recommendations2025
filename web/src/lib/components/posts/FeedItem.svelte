@@ -6,6 +6,8 @@
     import PostCard from "$lib/components/posts/PostCard.svelte";
     import EventCard from "$lib/components/posts/EventCard.svelte";
 
+    import * as Collapsible from "$lib/components/ui/collapsible";
+
     let {feed_item} = $props();
 
     let by_line = ' posted';
@@ -22,18 +24,26 @@
     //TODO: different component based on which type
 
 
-
 </script>
 <div class="p-2 my-2 border-bottom-2 border-gray-600 rounded-lg shadow-md">
-    {#if feed_item.class_name === 'Recommendation'}
-        <RecommendationCard feed_item={feed_item} />
+    <Collapsible.Root>
+        {#if feed_item.class_name === 'Recommendation'}
+            <RecommendationCard feed_item={feed_item}/>
         {:else if feed_item.class_name === 'Post'}
-                <PostCard feed_item={feed_item} />
+            <PostCard feed_item={feed_item}/>
 
-            {:else}
-        <div>
+        {:else}
+            <div>
 
-        <EventCard feed_item={feed_item} />
-        </div>
+                <EventCard feed_item={feed_item}/>
+            </div>
         {/if}
-    </div>
+        <Collapsible.Trigger>
+            Comments
+        </Collapsible.Trigger>
+        <Collapsible.Content>
+            I had some thoughts about this
+        </Collapsible.Content>
+
+    </Collapsible.Root>
+</div>

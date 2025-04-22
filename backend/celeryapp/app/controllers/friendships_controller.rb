@@ -22,4 +22,12 @@ class FriendshipsController < ApplicationController
     render json: user.public_attributes, status: :created
     # TODO Error handling maybe?
   end
+
+  # This is to create a map of { id: friend } for quick lookup
+  def friends_map
+    friends_m = current_user.friends.each_with_object({}) do |friend, h|
+      h[friend.id] = friend.public_attributes
+    end
+    render json: friends_m, status: :ok
+  end
 end

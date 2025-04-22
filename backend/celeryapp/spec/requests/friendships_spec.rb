@@ -91,4 +91,32 @@ RSpec.describe "Friendships", type: :request do
 
   end
 
+  describe "GET /friends_map" do
+    before(:context) do
+      @my_user = create(:user)
+
+      headers = { 'ACCEPT' => 'application/json' }
+      post "/sign_in", params: { email: @my_user.email, password: @my_user.password }, headers: headers
+
+      auth_token = JSON.parse(response.body)["auth_token"]
+      @headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{auth_token}" }
+    end
+
+    it 'lists my friends' do
+      friend = create(:user)
+      friend2 = create(:user)
+      friend3 = create(:user)
+      Friendship.create_bidirectional_friendship!(@my_user, friend)
+      Friendship.create_bidirectional_friendship!(@my_user, friend2)
+      Friendship.create_bidirectional_friendship!(@my_user, friend3)
+
+      get '/friendships/friends_map', headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      res = JSON.parse(response.body)
+      expect(res.size).to eq(3)
+      expect(res.values.first).to include("name")
+    end
+  end
+
 end

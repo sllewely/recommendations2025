@@ -25,10 +25,13 @@
 
     let posting = $state(false);
 
+    const num_comments = feed_item['comments']?.length;
+
     //TODO: Style the shadcn Button component to be a fun color!!
 
 
 </script>
+{console.log(feed_item['comments'])}
 <div class="p-2 my-2 border-bottom-2 border-gray-600 rounded-lg shadow-md">
     <Collapsible.Root>
         {#if feed_item.class_name === 'Recommendation'}
@@ -42,35 +45,47 @@
                 <EventCard feed_item={feed_item}/>
             </div>
         {/if}
+        <div>
+            {#if feed_item.comments.length > 0}
+                <p>{feed_item.comments[0].body}</p>
+            {/if}
+        </div>
         <Collapsible.Trigger>
 
             <Link>
                 <div class="flex">
-                    Comments
+                    {num_comments} Comments
                     <MessageCircleMore/>
                 </div>
 
             </Link>
         </Collapsible.Trigger>
         <Collapsible.Content>
-            <form
-                    method="POST"
-                    action="?/submit_comment"
-                    use:enhance={() => {
+            <div>
+                <div>
+                    {#each feed_item.comments as comment}
+                        <p>{comment.body}</p>
+                    {/each}
+                </div>
+                <form
+                        method="POST"
+                        action="?/submit_comment"
+                        use:enhance={() => {
             posting = true;
             return async ({update}) => {
                 await update();
                 posting = false;
             };
         }}
-            >
-                <input type="hidden" name="commentable_id" value={feed_item.id}/>
-                <input type="hidden" name="commentable_type" value={feed_item.class_name}/>
-                <Textarea name="body" placeholder="I was thinking..."/>
-                <div class="flex justify-center pt-2">
-                    <Button type="submit" className=" bg-lime-200 ">*~Submit Comment~*</Button>
-                </div>
-            </form>
+                >
+                    <input type="hidden" name="commentable_id" value={feed_item.id}/>
+                    <input type="hidden" name="commentable_type" value={feed_item.class_name}/>
+                    <Textarea name="body" placeholder="I was thinking..."/>
+                    <div class="flex justify-center pt-2">
+                        <Button type="submit" className=" bg-lime-200 ">*~Submit Comment~*</Button>
+                    </div>
+                </form>
+            </div>
         </Collapsible.Content>
 
     </Collapsible.Root>

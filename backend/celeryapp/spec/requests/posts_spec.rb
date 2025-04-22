@@ -74,11 +74,14 @@ RSpec.describe "Posts", type: :request do
 
       auth_token = JSON.parse(response.body)["auth_token"]
       @headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{auth_token}" }
+
+      @friend = create(:user)
+      Friendship.create_bidirectional_friendship!(@my_user, @friend)
     end
 
     it 'gets all posts' do
       3.times do
-        create(:post)
+        create(:post, user: @friend)
       end
       get "/posts", params: {}, headers: @headers
 
@@ -91,9 +94,8 @@ RSpec.describe "Posts", type: :request do
     end
 
     it 'gets all posts and recommendations' do
-      user = create(:user)
-      create(:post, user: user)
-      create(:recommendation, user: user)
+      create(:post, user: @friend)
+      create(:recommendation, user: @friend)
       create(:post, user: @my_user)
 
       get "/posts", params: {}, headers: @headers
@@ -109,10 +111,9 @@ RSpec.describe "Posts", type: :request do
     end
 
     it 'gets all posts, recommendations, and events' do
-      user = create(:user)
-      create(:post, user: user)
-      create(:recommendation, user: user)
-      create(:event, user: user)
+      create(:post, user: @friend)
+      create(:recommendation, user: @friend)
+      create(:event, user: @friend)
       create(:post, user: @my_user)
 
       get "/posts", params: {}, headers: @headers

@@ -1,7 +1,8 @@
 class PostsController < ApplicationController
   def index
+    friend_ids = current_user.friend_ids
     user_id = params[:user_id]
-    posts = Post.all.order(created_at: :desc)
+    posts = Post.by_friends(friend_ids).order(created_at: :desc)
     posts = posts.where(user_id: user_id) if user_id
     recommendations = Recommendation.all.order(created_at: :desc)
     recommendations = recommendations.where(user_id: user_id) if user_id

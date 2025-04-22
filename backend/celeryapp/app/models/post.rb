@@ -10,6 +10,8 @@ class Post < ApplicationRecord
 
   validates :post_title, presence: true
 
+  scope :by_friends, ->(friend_ids) { where(user_id: friend_ids) }
+
   def attributes
     super.merge(
       { recommendations: recommendations,

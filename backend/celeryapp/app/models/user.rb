@@ -39,6 +39,11 @@ class User < ApplicationRecord
     sessions.where.not(id: Current.session).delete_all
   end
 
+  # friends and myself
+  def friend_ids
+    friends.pluck(:friend_id) << id
+  end
+
   def active_notifications
     self.notifications.where('active = true').order(created_at: :desc)
   end

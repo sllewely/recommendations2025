@@ -1,9 +1,10 @@
-import { getPosts } from '$lib/api_calls/posts.svelte.js';
-import { getEvents, process_dates } from '$lib/api_calls/events.svelte.js';
-import { readable_backend_date } from '$lib/utils/dates.svelte';
+import {getPosts} from '$lib/api_calls/posts.svelte.js';
+import {getEvents, process_dates} from '$lib/api_calls/events.svelte.js';
+import {readable_backend_date} from '$lib/utils/dates.svelte';
 import {redirect} from "@sveltejs/kit";
 import {RecommendationStatus} from "$lib/enums.js";
-import { VITE_API_URL } from '$env/static/private';
+import {VITE_API_URL} from '$env/static/private';
+import * as api from "$lib/api_calls/api.svelte";
 
 
 let root_url = VITE_API_URL
@@ -61,6 +62,24 @@ export const actions = {
         //TODO: Success toast
 
         redirect(302, '/posts')
+    },
+    submit_comment: async ({cookies, request}) => {
+        const data = await request.formData();
+        const jwt = cookies.get('jwt');
+
+        const response = await api.post(
+            'comments',
+            {
+                body: data.get('body'),
+                commentable_id: data.get('commentable_id'),
+                commentable_type: data.get('commentable_type'),
+            },
+            jwt,
+        );
+
+        return response;
+
+
     }
 }
 

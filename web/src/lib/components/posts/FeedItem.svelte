@@ -7,6 +7,7 @@
     import EventCard from "$lib/components/posts/EventCard.svelte";
 
     import * as Collapsible from "$lib/components/ui/collapsible";
+    import {MessageCircleMore} from '@lucide/svelte';
 
     let {feed_item} = $props();
 
@@ -39,7 +40,14 @@
             </div>
         {/if}
         <Collapsible.Trigger>
-            Comments
+
+            <Link>
+                <div class="flex">
+                    Comments
+                    <MessageCircleMore/>
+                </div>
+
+            </Link>
         </Collapsible.Trigger>
         <Collapsible.Content>
             I had some thoughts about this

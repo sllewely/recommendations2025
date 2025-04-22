@@ -7,6 +7,7 @@
     import EventCard from "$lib/components/posts/EventCard.svelte";
 
     import * as Collapsible from "$lib/components/ui/collapsible";
+    import {Textarea} from "$lib/components/ui/textarea";
     import {MessageCircleMore} from '@lucide/svelte';
 
     let {feed_item} = $props();
@@ -50,7 +51,7 @@
             </Link>
         </Collapsible.Trigger>
         <Collapsible.Content>
-            I had some thoughts about this
+            <Textarea placeholder="I was thinking..."/>
         </Collapsible.Content>
 
     </Collapsible.Root>

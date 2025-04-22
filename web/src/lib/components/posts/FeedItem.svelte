@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Card from '$lib/components/Card.svelte';
+    import {enhance} from '$app/forms';
     import Link from '$lib/components/text/Link.svelte';
     import H2 from "$lib/components/text/H2.svelte";
     import RecommendationCard from "$lib/components/posts/RecommendationCard.svelte";
@@ -8,6 +8,7 @@
 
     import * as Collapsible from "$lib/components/ui/collapsible";
     import {Textarea} from "$lib/components/ui/textarea";
+    import {Button} from "$lib/components/ui/button";
     import {MessageCircleMore} from '@lucide/svelte';
 
     let {feed_item} = $props();
@@ -22,8 +23,9 @@
         border_color = "border-orange-500";
     }
 
+    let posting = $state(false);
 
-    //TODO: different component based on which type
+    //TODO: Style the shadcn Button component to be a fun color!!
 
 
 </script>
@@ -51,7 +53,24 @@
             </Link>
         </Collapsible.Trigger>
         <Collapsible.Content>
-            <Textarea placeholder="I was thinking..."/>
+            <form
+                    method="POST"
+                    action="?/add_comment"
+                    use:enhance={() => {
+            posting = true;
+            return async ({update}) => {
+                await update();
+                posting = false;
+            };
+        }}
+            >
+                <input type="hidden" name="commentable_id" value={feed_item.id}/>
+                <input type="hidden" name="commentable_type" value={feed_item.class_name}/>
+                <Textarea placeholder="I was thinking..."/>
+                <div class="flex justify-center pt-2">
+                    <Button className=" bg-lime-200 ">*~Submit Comment~*</Button>
+                </div>
+            </form>
         </Collapsible.Content>
 
     </Collapsible.Root>

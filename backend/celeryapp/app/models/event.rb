@@ -10,7 +10,7 @@ class Event < ApplicationRecord
   validates :start_date_time, presence: true
 
   scope :by_friends, ->(friend_ids) { where(user_id: friend_ids) }
-  
+
   def rsvp_status_for_current_user(current_user)
     self.rsvps.where(user_id: current_user.id).first&.status
   end
@@ -38,13 +38,13 @@ class Event < ApplicationRecord
         ON events.id = r.event_id
 "
     )
-    debugger
   end
 
   def total_rsvp
     self.rsvps.count
   end
 
+  # TODO: limit # of comments
   def attributes
     super.merge({
                   user: user.public_attributes,
@@ -56,6 +56,7 @@ class Event < ApplicationRecord
                   create_date_string: get_date_string(created_at),
                   create_time_string: get_time_string(created_at),
                   rsvps_count: total_rsvp,
+                  comments: comments,
                 }
     )
   end

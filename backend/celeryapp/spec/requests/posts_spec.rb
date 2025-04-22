@@ -149,6 +149,20 @@ RSpec.describe "Posts", type: :request do
       expect(res[0]['class_name']).to eq('Event')
     end
 
+    it 'gets posts with comments' do
+      post1 = create(:post, user: @friend)
+      create(:comment, :for_post, commentable: post1, user: @my_user)
+      create(:comment, :for_post, commentable: post1, user: @friend)
+
+      get "/posts", params: {}, headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      res = JSON.parse(response.body)
+      expect(res.size).to eq(1)
+      expect(res[0]['comments'].size).to eq(2)
+      expect(res[0]['comments'][0]['body']).to_not be_nil
+    end
+
   end
 
   describe "GET /posts/:id" do

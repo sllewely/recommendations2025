@@ -2,11 +2,11 @@ class PostsController < ApplicationController
   def index
     friend_ids = current_user.friend_ids
     user_id = params[:user_id]
-    posts = Post.by_friends(friend_ids).order(created_at: :desc)
+    posts = Post.includes(:comments).by_friends(friend_ids).order(created_at: :desc)
     posts = posts.where(user_id: user_id) if user_id
-    recommendations = Recommendation.by_friends(friend_ids).order(created_at: :desc)
+    recommendations = Recommendation.includes(:comments).by_friends(friend_ids).order(created_at: :desc)
     recommendations = recommendations.where(user_id: user_id) if user_id
-    events = Event.by_friends(friend_ids).includes(:rsvps).order(created_at: :desc)
+    events = Event.includes(:comments, :rsvps).by_friends(friend_ids).order(created_at: :desc)
     events = events.where(user_id: user_id) if user_id
     feed = merge_by_time(posts, recommendations)
     feed = merge_by_time(feed, events)

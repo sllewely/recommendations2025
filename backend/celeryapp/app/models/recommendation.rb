@@ -23,6 +23,7 @@ class Recommendation < ApplicationRecord
                   create_time_string: get_time_string(created_at),
                   creator_id: user.id,
                   creator_name: user.name,
+                  comments: comments,
                 })
   end
 end

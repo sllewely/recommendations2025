@@ -11,6 +11,8 @@
     import {Button} from "$lib/components/ui/button";
     import {MessageCircleMore} from '@lucide/svelte';
 
+    import {friends_map} from "$lib/state/friends_map.svelte";
+
     let {feed_item} = $props();
 
     let by_line = ' posted';
@@ -31,7 +33,6 @@
 
 
 </script>
-{console.log(feed_item['comments'])}
 <div class="p-2 my-2 border-bottom-2 border-gray-600 rounded-lg shadow-md">
     <Collapsible.Root>
         {#if feed_item.class_name === 'Recommendation'}
@@ -64,6 +65,7 @@
             <div>
                 <div>
                     {#each feed_item.comments as comment}
+                        <p>{friends_map.friends_map[comment.user_id] ?? 'not found'}</p>
                         <p>{comment.body}</p>
                     {/each}
                 </div>

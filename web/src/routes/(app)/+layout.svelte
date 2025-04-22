@@ -5,6 +5,7 @@
     import Toast from "$lib/components/Toast.svelte";
     import { current_user, isSignedIn } from '$lib/state/current_user.svelte.js';
     import { notifs } from '$lib/state/notifications.svelte';
+    import { friends_map } from "$lib/state/friends_map.svelte";
     import {onMount} from "svelte";
     import BannerNotifications from "$lib/components/notifications/BannerNotifications.svelte";
 
@@ -15,6 +16,23 @@
     // every 10 seconds, poll notifications
     onMount( () => {
 
+        // TODO: switch to SSE instead of polling
+        let fetch_friends_map = async () => {
+            const response = await fetch('/api/friends_map', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const res = await response.json();
+            if (res['res']) {
+                console.log('ok fm');
+                friends_map.friends_map = res['res'];
+            } else {
+                console.log('not okay fm ');
+                console.log('error getting friends_map ' + res);
+            }
+        }
         let fetch_notifs = async () => {
             const response = await fetch('/api/fetch_notifications', {
                 method: 'GET',
@@ -40,6 +58,7 @@
         }
         fetch_notifs();
             const interval = setInterval(() => {
+                fetch_friends_map();
                 fetch_notifs();
             }, 1000 * 60 * 5); // 5 minutes
 

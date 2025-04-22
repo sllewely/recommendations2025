@@ -114,7 +114,7 @@ RSpec.describe "Friendships", type: :request do
 
       expect(response).to have_http_status(:ok)
       res = JSON.parse(response.body)
-      expect(res.size).to eq(3)
+      expect(res.size).to eq(4)
       expect(res.values.first).to include("name")
     end
   end

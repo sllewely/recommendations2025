@@ -22,6 +22,7 @@ export async function load({locals, cookies}) {
     } else {
         events_with_dates_headers = process_dates(events);
     }
+
     return {
         posts: posts,
         events: events_with_dates_headers,

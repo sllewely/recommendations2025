@@ -9,6 +9,8 @@ class Event < ApplicationRecord
   validates :title, presence: true
   validates :start_date_time, presence: true
 
+  scope :by_friends, ->(friend_ids) { where(user_id: friend_ids) }
+  
   def rsvp_status_for_current_user(current_user)
     self.rsvps.where(user_id: current_user.id).first&.status
   end

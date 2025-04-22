@@ -4,9 +4,9 @@ class PostsController < ApplicationController
     user_id = params[:user_id]
     posts = Post.by_friends(friend_ids).order(created_at: :desc)
     posts = posts.where(user_id: user_id) if user_id
-    recommendations = Recommendation.all.order(created_at: :desc)
+    recommendations = Recommendation.by_friends(friend_ids).order(created_at: :desc)
     recommendations = recommendations.where(user_id: user_id) if user_id
-    events = Event.all.includes(:rsvps).order(created_at: :desc)
+    events = Event.by_friends(friend_ids).includes(:rsvps).order(created_at: :desc)
     events = events.where(user_id: user_id) if user_id
     feed = merge_by_time(posts, recommendations)
     feed = merge_by_time(feed, events)

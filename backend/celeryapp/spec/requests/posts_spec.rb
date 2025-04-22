@@ -129,8 +129,7 @@ RSpec.describe "Posts", type: :request do
     end
 
     it 'gets events' do
-      user = create(:user)
-      create(:event, user: user)
+      create(:event, user: @friend)
       create(:event, user: @my_user)
 
       get "/posts", params: {}, headers: @headers

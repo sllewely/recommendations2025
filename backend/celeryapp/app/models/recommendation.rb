@@ -9,6 +9,8 @@ class Recommendation < ApplicationRecord
 
   validates :title, presence: true
 
+  scope :by_friends, ->(friend_ids) { where(user_id: friend_ids) }
+
   def unrated?
     rating == 0 || rating.nil?
   end

@@ -13,6 +13,8 @@ export async function load({cookies, params}) {
     // TODO: Will crash if backend not running
     let res = await getPost(jwt, post_id);
 
+    console.log("posts/id load reloaded")
+    
     return {
         post: res['res'],
         my_user_id: my_user_id,

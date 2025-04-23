@@ -10,6 +10,8 @@ class Post < ApplicationRecord
 
   validates :post_title, presence: true
 
+  scope :by_friends, ->(friend_ids) { where(user_id: friend_ids) }
+
   def attributes
     super.merge(
       { recommendations: recommendations,
@@ -19,6 +21,7 @@ class Post < ApplicationRecord
         create_time_string: get_time_string(created_at),
         creator_id: user.id,
         creator_name: user.name,
+        comments: comments,
       })
   end
 

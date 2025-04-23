@@ -1,5 +1,6 @@
 import {getRecommendation} from "$lib/api_calls/recommendations.svelte.js";
 import {getUser} from '$lib/api_calls/users.svelte.js';
+import * as api from "$lib/api_calls/api.svelte.js";
 
 export async function load({cookies, params}) {
 
@@ -16,4 +17,21 @@ export async function load({cookies, params}) {
         user: user['res'],
         my_user_id: my_user_id,
     }
+}
+
+export const actions = {
+    submit_comment: async ({cookies, request}) => {
+        const data = await request.formData();
+        const jwt = cookies.get('jwt');
+
+        return await api.post(
+            'comments',
+            {
+                body: data.get('body'),
+                commentable_id: data.get('commentable_id'),
+                commentable_type: data.get('commentable_type'),
+            },
+            jwt,
+        );
+    },
 }

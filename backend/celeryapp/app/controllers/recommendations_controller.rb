@@ -15,9 +15,9 @@ class RecommendationsController < ApplicationController
   end
 
   def show
-    @recommendation = Recommendation.find_by(id: params[:id])
+    @recommendation = Recommendation.includes(:comments).by_friends(current_user.friend_ids).find_by(id: params[:id])
     if @recommendation.nil?
-      render json: {}, status: :not_found and return
+      render json: { error: 'not found' }, status: :not_found and return
     end
     # TODO permissions
     render json: @recommendation.attributes, status: :ok

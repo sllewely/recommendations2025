@@ -135,10 +135,13 @@ RSpec.describe "Events", type: :request do
 
       auth_token = JSON.parse(response.body)["auth_token"]
       @headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{auth_token}" }
+
+      @friend = create(:user)
+      Friendship.create_bidirectional_friendship!(@my_user, @friend)
     end
 
     it 'gets a specific event' do
-      event = create(:event)
+      event = create(:event, user: @my_user)
 
       get "/events/#{event.id}", headers: @headers
 
@@ -150,7 +153,7 @@ RSpec.describe "Events", type: :request do
     end
 
     it 'gets an event with rsvps' do
-      event = create(:event)
+      event = create(:event, user: @friend)
       create(:rsvp, user: @my_user, event: event)
 
       get "/events/#{event.id}", headers: @headers

@@ -30,7 +30,7 @@
                 friends_map.friends_map = res['res'];
             } else {
                 console.log('not okay fm ');
-                console.log('error getting friends_map ' + res);
+                console.log('error getting friends_map ' + res['error']);
             }
         };
         let fetch_notifs = async () => {
@@ -53,7 +53,7 @@
                 );
                 notifs.notifs = notif_map;
             } else {
-                console.log('error getting notifications ' + res);
+                console.log('error getting notifications ' + res['error']);
             }
         };
         fetch_friends_map();

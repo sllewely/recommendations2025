@@ -25,7 +25,7 @@ class FriendshipsController < ApplicationController
 
   # This is to create a map of { id: friend } for quick lookup
   def friends_map
-    friends_m = (current_user.friends << current_user).each_with_object({}) do |friend, h|
+    friends_m = (current_user.friends.to_a << current_user).each_with_object({}) do |friend, h|
       h[friend.id] = friend.public_attributes
     end
     render json: friends_m, status: :ok

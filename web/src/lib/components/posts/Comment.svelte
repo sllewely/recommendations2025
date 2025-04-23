@@ -1,12 +1,10 @@
 <script lang="ts">
     import {friends_map} from "$lib/state/friends_map.svelte";
-    import {rails_date_pretty, rails_datetime_pretty} from "$lib/utils/dates.svelte";
+    import {rails_datetime_pretty} from "$lib/utils/dates.svelte";
 
     const {comment} = $props();
     const author = $derived(friends_map.friends_map[comment.user_id] ?? {});
 </script>
-{console.log(comment.user_id)}
-{console.log(author)}
 
 <div class="flex justify-left">
     <article class="p-6 text-base bg-white rounded-lg dark:bg-gray-900">

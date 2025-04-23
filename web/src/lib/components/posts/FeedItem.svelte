@@ -11,7 +11,6 @@
     import {Button} from "$lib/components/ui/button";
     import {MessageCircleMore} from '@lucide/svelte';
 
-    import {friends_map} from "$lib/state/friends_map.svelte";
     import Comment from "$lib/components/posts/Comment.svelte";
 
     let {feed_item} = $props();
@@ -59,7 +58,6 @@
             </Link>
             <div>
                 {#if feed_item.comments.length > 0}
-                    <!--                    <p>{friends_map.friends_map[feed_item.user_id].name}: {feed_item.comments[0].body}</p>-->
                     <Comment comment={feed_item.comments[0]}/>
                 {/if}
             </div>
@@ -68,7 +66,6 @@
             <div>
                 <div>
                     {#each feed_item.comments.slice(1) as comment}
-                        <!--                        <p>{friends_map.friends_map[feed_item.user_id].name}: {comment.body}</p>-->
                         <Comment {comment}/>
                     {/each}
                 </div>

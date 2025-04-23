@@ -46,11 +46,7 @@
                 <EventCard feed_item={feed_item}/>
             </div>
         {/if}
-        <div>
-            {#if feed_item.comments.length > 0}
-                <p>{friends_map.friends_map[feed_item.user_id].name}: {feed_item.comments[0].body}</p>
-            {/if}
-        </div>
+
         <Collapsible.Trigger>
 
             <Link>
@@ -60,6 +56,11 @@
                 </div>
 
             </Link>
+            <div>
+                {#if feed_item.comments.length > 0}
+                    <p>{friends_map.friends_map[feed_item.user_id].name}: {feed_item.comments[0].body}</p>
+                {/if}
+            </div>
         </Collapsible.Trigger>
         <Collapsible.Content>
             <div>

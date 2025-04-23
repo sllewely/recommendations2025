@@ -26,7 +26,12 @@ export function rails_datetime_moment(raw_date: string) {
     return moment(raw_date, moment.ISO_8601);
 }
 
-export function rails_datetime_pretty(raw_date: string) {
+export function rails_date_pretty(raw_date: string) {
     const moment_datetime = rails_datetime_moment(raw_date);
     return moment_datetime.format('MMM D, YYYY');
+}
+
+export function rails_datetime_pretty(raw_date: string) {
+    const moment_datetime = rails_datetime_moment(raw_date);
+    return moment_datetime.format('MMM D, YYYY h:mm:ss a');
 }

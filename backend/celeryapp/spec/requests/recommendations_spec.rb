@@ -110,6 +110,16 @@ RSpec.describe "Recommendations", type: :request do
       expect(res['title']).to eq(recommendation.title)
     end
 
+    it 'will not get the recommendation if not by my friend' do
+      recommendation = create(:recommendation)
+
+      get "/recommendations/#{recommendation.id}", headers: @headers
+
+      expect(response).to have_http_status(:not_found)
+      res = JSON.parse(response.body)
+      expect(res['error']).to eq('not found')
+    end
+
     it 'fails if the recommendation does not exist' do
       create(:recommendation, user: @my_user)
 

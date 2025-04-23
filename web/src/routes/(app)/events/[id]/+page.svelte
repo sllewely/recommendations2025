@@ -99,6 +99,5 @@
         </div>
 
         <SubmitComment feed_item={event}/>
-
     </div>
 </div>

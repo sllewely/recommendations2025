@@ -24,7 +24,7 @@ class EventsController < ApplicationController
   end
 
   def show
-    @event = Event.find_by(id: params[:id])
+    @event = Event.includes(:comments).by_friends(current_user.friend_ids).find_by(id: params[:id])
     # TODO: PERMISSIONS
     if @event
       status = @event.rsvp_status_for_current_user(current_user)

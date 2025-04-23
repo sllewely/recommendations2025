@@ -3,7 +3,6 @@
     import {Button} from "$lib/components/ui/button";
     import {Textarea} from "$lib/components/ui/textarea";
     import {newToast, toasts, ToastType} from "$lib/state/toast.svelte";
-    import {invalidateAll} from "$app/navigation";
 
     let {feed_item} = $props();
 

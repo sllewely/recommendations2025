@@ -4,16 +4,30 @@
     import EventCard from "$lib/components/posts/EventCard.svelte";
     import {newToast, toasts, ToastType} from "$lib/state/toast.svelte";
     import {goto} from "$app/navigation";
+    import {MessageCircleMore} from "@lucide/svelte";
+    import SubmitComment from "$lib/components/posts/SubmitComment.svelte";
+    import Comment from "$lib/components/posts/Comment.svelte";
 
     let {data} = $props();
     // let user = data.user;
     let my_user_id = data.my_user_id;
-    let event = data.event;
-
-    let rsvp = event.current_user_rsvp;
 
 
     let creating = $state(false);
+
+    // Svelte pitfall.  Page updates are not triggered by load data prop change!!
+    // This is the workaround
+    let event = $state(data.event);
+    $effect(() => {
+        event = data.event;
+    })
+
+    let comments = $derived(event.comments);
+
+    let num_comments = $derived(comments.length);
+
+    let rsvp = $derived(event.current_user_rsvp);
+
 
 </script>
 
@@ -72,5 +86,19 @@
                 {/each}
             </div>
         </div>
+    </div>
+    <div>
+        <div class="flex">
+            {num_comments} Comments
+            <MessageCircleMore/>
+        </div>
+        <div>
+            {#each comments as comment}
+                <Comment {comment}/>
+            {/each}
+        </div>
+
+        <SubmitComment feed_item={event}/>
+
     </div>
 </div>

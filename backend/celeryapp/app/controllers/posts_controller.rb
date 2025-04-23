@@ -22,11 +22,11 @@ class PostsController < ApplicationController
 
   def show
     post_id = params[:id]
-    @post = Post.find_by(id: post_id)
+    @post = Post.includes(:comments).by_friends(current_user.friend_ids).find_by(id: post_id)
     if @post
       render json: @post.attributes, status: :ok
     else
-      render json: { error: "post not found" }, status: :unprocessable_content
+      render json: { error: "post not found" }, status: :not_found
     end
 
   end

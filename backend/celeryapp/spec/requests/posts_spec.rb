@@ -174,10 +174,13 @@ RSpec.describe "Posts", type: :request do
 
       auth_token = JSON.parse(response.body)["auth_token"]
       @headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{auth_token}" }
+
+      @friend = create(:user)
+      Friendship.create_bidirectional_friendship!(@my_user, @friend)
     end
 
     it 'gets the post' do
-      post = create(:post)
+      post = create(:post, user: @friend)
       get "/posts/#{post.id}", params: {}, headers: @headers
 
       expect(response).to have_http_status(:ok)
@@ -185,6 +188,32 @@ RSpec.describe "Posts", type: :request do
       expect(res['post_title']).to_not be_nil
       expect(res['content']).to_not be_nil
       expect(res['creator_id']).to_not be_nil
+    end
+
+    it 'gets the post with comments' do
+      post1 = create(:post, user: @friend)
+      create(:comment, :for_post, commentable: post1, user: @my_user)
+      create(:comment, :for_post, commentable: post1, user: @friend)
+
+      get "/posts/#{post1.id}", params: {}, headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      res = JSON.parse(response.body)
+      expect(res['post_title']).to_not be_nil
+      expect(res['content']).to_not be_nil
+      expect(res['creator_id']).to_not be_nil
+
+      expect(res['comments'].size).to eq(2)
+    end
+
+    it 'will not return the post if not friends' do
+      post1 = create(:post)
+
+      get "/posts/#{post1.id}", params: {}, headers: @headers
+
+      expect(response).to have_http_status(:not_found)
+      res = JSON.parse(response.body)
+      expect(res['error']).to eq('post not found')
     end
 
   end

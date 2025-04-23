@@ -48,7 +48,7 @@
         {/if}
         <div>
             {#if feed_item.comments.length > 0}
-                <p>{feed_item.comments[0].body}</p>
+                <p>{friends_map.friends_map[feed_item.user_id].name}: {feed_item.comments[0].body}</p>
             {/if}
         </div>
         <Collapsible.Trigger>
@@ -64,9 +64,8 @@
         <Collapsible.Content>
             <div>
                 <div>
-                    {#each feed_item.comments as comment}
-                        <p>{friends_map.friends_map[comment.user_id] ?? 'not found'}</p>
-                        <p>{comment.body}</p>
+                    {#each feed_item.comments.slice(1) as comment}
+                        <p>{friends_map.friends_map[feed_item.user_id].name}: {comment.body}</p>
                     {/each}
                 </div>
                 <form

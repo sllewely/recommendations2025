@@ -32,7 +32,7 @@
                 console.log('not okay fm ');
                 console.log('error getting friends_map ' + res);
             }
-        }
+        };
         let fetch_notifs = async () => {
             const response = await fetch('/api/fetch_notifications', {
                 method: 'GET',
@@ -55,9 +55,10 @@
             } else {
                 console.log('error getting notifications ' + res);
             }
-        }
+        };
+        fetch_friends_map();
         fetch_notifs();
-            const interval = setInterval(() => {
+        const interval = setInterval(() => {
                 fetch_friends_map();
                 fetch_notifs();
             }, 1000 * 60 * 5); // 5 minutes
@@ -69,7 +70,10 @@
         }
     );
 
+    $inspect(friends_map.friends_map);
+
 </script>
+
 
 <div class="app">
     <Header/>

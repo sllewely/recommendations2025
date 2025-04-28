@@ -43,6 +43,15 @@
         </div>
         <div class="flex flex-col">
             <H2>Events</H2>
+            {#if data.events.length === 0}
+                <div class="flex justify-center bg-lime-200 border-1 border-gray-800 rounded-sm font-bold p-2 mb-2">
+                    <p>
+                        No upcoming events.
+                        <Link url="/events/create">Create a new event</Link>
+                    </p>
+
+                </div>
+            {/if}
             {#each data.events as event_item}
                 {#if !!event_item['date_header']}
                     <DateHeader event_item={event_item}/>

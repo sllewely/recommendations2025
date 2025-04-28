@@ -1,6 +1,6 @@
 import {fail} from '@sveltejs/kit';
 import * as api from '$lib/api_calls/api.svelte.js';
-import { VITE_API_URL } from '$env/static/private';
+import {VITE_API_URL} from '$env/static/private';
 
 
 let root_url = VITE_API_URL
@@ -17,11 +17,10 @@ export const actions = {
         const response = await api.post(
             'sign_up',
             {
-            username: data.get('username'),
-            name: data.get('name'),
-            email: data.get('email'),
-            password: data.get('password'),
-        },
+                name: data.get('name'),
+                email: data.get('email'),
+                password: data.get('password'),
+            },
             null,
         );
 

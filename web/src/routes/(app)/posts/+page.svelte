@@ -27,6 +27,15 @@
     <div class="grid grid-cols-3">
         <div class="col-span-2 flex flex-col">
             <H2>the feed</H2>
+            {#if data.posts.length === 0}
+                <div class="flex justify-center bg-lime-200 border-1 border-gray-800 rounded-sm font-bold p-2 mb-2">
+                    <p>
+                        Your feed is empty!
+                        <Link url="/friends">Add friends!!</Link>
+                    </p>
+
+                </div>
+            {/if}
             {#each data.posts as feed_item}
                 <FeedItem feed_item={feed_item}/>
             {/each}

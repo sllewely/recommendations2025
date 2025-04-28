@@ -56,17 +56,19 @@
             {/if}
         </div>
     </div>
-    <div class="mx-auto flex items-center justify-between  py-2 px-3 bg-gray-600 ">
-        <div></div>
-        <div>
-            <ul class="list-reset flex justify-center flex-wrap text-xs md:text-sm gap-3">
-                <li><a href="/friends" class="text-gray-400 hover:text-white">Friends</a></li>
-                <li><a href="/recommendations/users/{user_id}"
-                       class="text-gray-400 hover:text-white">Recommendations</a></li>
-            </ul>
+    {#if signed_in}
+        <div class="mx-auto flex items-center justify-between  py-2 px-3 bg-gray-600 ">
+            <div></div>
+            <div>
+                <ul class="list-reset flex justify-center flex-wrap text-xs md:text-sm gap-3">
+                    <li><a href="/friends" class="text-gray-400 hover:text-white">Friends</a></li>
+                    <li><a href="/recommendations/users/{user_id}"
+                           class="text-gray-400 hover:text-white">Recommendations</a></li>
+                </ul>
+            </div>
+            <div></div>
         </div>
-        <div></div>
-    </div>
+    {/if}
 </header>
 
 

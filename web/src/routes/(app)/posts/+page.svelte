@@ -7,7 +7,7 @@
     import EventFeedItem from "$lib/components/posts/EventFeedItem.svelte";
     import Link from "$lib/components/text/Link.svelte";
     import {Button, buttonVariants} from "$lib/components/ui/button/index.js";
-    import {CalendarPlus2} from '@lucide/svelte';
+    import {CalendarPlus2, MessageCircleHeart, MessageSquareText} from '@lucide/svelte';
 
     let {data} = $props();
 
@@ -18,17 +18,21 @@
         <Link url="/friends">Add friends!!</Link>
     </div>
 
-    <div>
-        <LinkButton color="yellow" url="/recommendations/create">&#10133; Recommendation</LinkButton>
-        <LinkButton color="orange" url="/events/create">&#10133; Event</LinkButton>
-        <LinkButton color="blue" url="/posts/create">&#10133; Post</LinkButton>
-    </div>
-
-    <H1>Posts</H1>
 
     <div class="grid grid-cols-3">
         <div class="col-span-2 flex flex-col">
-            <H2>the feed</H2>
+            <H1>Posts</H1>
+
+            <div class="flex justify-center pt-2 pb-2 space-x-2">
+                <Button href="/posts/create" class={buttonVariants({ variant: "post" })}>
+                    <MessageSquareText/> &nbsp;
+                    New post
+                </Button>
+                <Button href="/recommendations/create" class={buttonVariants({ variant: "recommendation" })}>
+                    <MessageCircleHeart/> &nbsp;
+                    Share a recommendation
+                </Button>
+            </div>
             {#if data.posts.length === 0}
                 <div class="flex justify-center bg-lime-200 border-1 border-gray-800 rounded-sm font-bold p-2 mb-2">
                     <p>
@@ -43,14 +47,15 @@
             {/each}
 
         </div>
-        <div class="flex flex-col">
-            <div class="flex justify-center pt-2">
+        <div class="flex flex-col pl-2">
+            <H1>Events</H1>
+
+            <div class="flex justify-center pt-2 pb-2">
                 <Button href="/events/create" class={buttonVariants({ variant: "event" })}>
                     <CalendarPlus2/> &nbsp;
-                    Create Event
+                    Create event
                 </Button>
             </div>
-            <H2>Events</H2>
             {#if data.events.length === 0}
                 <div class="flex justify-center bg-lime-200 border-1 border-gray-800 rounded-sm font-bold p-2 mb-2">
                     <p>

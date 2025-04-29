@@ -52,6 +52,14 @@ const config = {
                     DEFAULT: "hsl(var(--event) / <alpha-value>)",
                     foreground: "hsl(var(--primary-foreground) / <alpha-value>)"
                 },
+                post: {
+                    DEFAULT: "hsl(var(--post) / <alpha-value>)",
+                    foreground: "hsl(var(--primary-foreground) / <alpha-value>)"
+                },
+                recommendation: {
+                    DEFAULT: "hsl(var(--recommendation) / <alpha-value>)",
+                    foreground: "hsl(var(--primary-foreground) / <alpha-value>)"
+                },
             },
             borderRadius: {
                 lg: "var(--radius)",

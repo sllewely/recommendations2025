@@ -14,6 +14,8 @@ const buttonVariants = tv({
             ghost: "hover:bg-accent hover:text-accent-foreground",
             link: "text-primary underline-offset-4 hover:underline",
             event: "bg-event text-primary-foreground hover:bg-event/90",
+            post: "bg-post text-primary-foreground hover:bg-post/90",
+            recommendation: "bg-recommendation text-primary-foreground hover:bg-recommendation/90",
         },
         size: {
             default: "h-10 px-4 py-2",

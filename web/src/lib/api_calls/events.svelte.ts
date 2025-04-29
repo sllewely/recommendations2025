@@ -43,12 +43,14 @@ export function process_dates(events) {
     // TODO: I should have done all of this on the backend lol
 
     let events_and_dates = [];
-    let today = new Date();
-    let dd = String(today.getDate()).padStart(2, '0');
-    let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    let yyyy = today.getFullYear();
-    let current_date_string = mm + '/' + dd + '/' + yyyy;
-    events_and_dates.push({date_header: current_date_string});
+    // let today = new Date();
+    // let dd = String(today.getDate()).padStart(2, '0');
+    // let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    // let yyyy = today.getFullYear();
+    // let current_date_string = mm + '/' + dd + '/' + yyyy;
+    // events_and_dates.push({date_header: current_date_string});
+
+    let current_date_string = '';
 
     for (const event of events) {
         let {date_string, time_string} = readable_backend_date(event['start_date_time']);

@@ -19,12 +19,13 @@ RSpec.describe "Registrations", type: :request do
       expect(response).to have_http_status(:created)
     end
 
-    it "returns error without username" do
-      headers = { 'ACCEPT' => 'application/json' }
-      post "/sign_up", params: { name: Faker::Name.name, email: 'registration@gmail.com', password: 'testtesttest77' }, headers: headers
-
-      expect(response).to have_http_status(:unprocessable_content)
-    end
+    # Dropped username requirement
+    # it "returns error without username" do
+    #   headers = { 'ACCEPT' => 'application/json' }
+    #   post "/sign_up", params: { name: Faker::Name.name, email: 'registration@gmail.com', password: 'testtesttest77' }, headers: headers
+    #
+    #   expect(response).to have_http_status(:unprocessable_content)
+    # end
 
     it "returns error without name" do
       headers = { 'ACCEPT' => 'application/json' }
@@ -58,14 +59,15 @@ RSpec.describe "Registrations", type: :request do
       expect(res['error']).to include("email: has already been taken")
     end
 
-    it 'returns error if user with same username exists' do
-      headers = { 'ACCEPT' => 'application/json' }
-      post "/sign_up", params: { name: Faker::Name.name, username: other_user.username, email: 'testemail@gmail.com', password: 'testtesttest77', password_confirmation: 'testtesttest77' }, headers: headers
-
-      expect(response).to have_http_status(:unprocessable_content)
-      res = JSON.parse(response.body)
-      expect(res['error']).to include("username: has already been taken")
-    end
+    # Dropped username requirement
+    # it 'returns error if user with same username exists' do
+    #   headers = { 'ACCEPT' => 'application/json' }
+    #   post "/sign_up", params: { name: Faker::Name.name, username: other_user.username, email: 'testemail@gmail.com', password: 'testtesttest77', password_confirmation: 'testtesttest77' }, headers: headers
+    #
+    #   expect(response).to have_http_status(:unprocessable_content)
+    #   res = JSON.parse(response.body)
+    #   expect(res['error']).to include("username: has already been taken")
+    # end
   end
 
 end

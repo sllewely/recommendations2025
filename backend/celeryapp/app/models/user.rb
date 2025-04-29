@@ -1,15 +1,15 @@
 class User < ApplicationRecord
   has_secure_password
 
-  has_many :recommendations
+  has_many :recommendations, dependent: :destroy
   has_many :posts
   has_many :events
-  has_many :rsvps
+  has_many :rsvps, dependent: :destroy
   has_many :friend_codes
-  has_many :friendships
+  has_many :friendships, dependent: :destroy
   has_many :friends, through: :friendships
-  has_many :friend_requests
-  has_many :notifications
+  has_many :friend_requests, dependent: :destroy
+  has_many :notifications, dependent: :destroy
   has_many :comments
 
   scope :by_name, ->(search) { where('LOWER(name) LIKE LOWER(?)', "%#{search}%") }
@@ -25,7 +25,7 @@ class User < ApplicationRecord
   has_many :sessions, dependent: :destroy
 
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
-  validates :username, presence: true, uniqueness: true
+  # validates :username, presence: true, uniqueness: true
   validates :name, presence: true
   validates :password, allow_nil: true, length: { minimum: 6 }
 

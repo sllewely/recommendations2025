@@ -3,6 +3,7 @@
     import {Button} from "$lib/components/ui/button";
     import {Textarea} from "$lib/components/ui/textarea";
     import {newToast, toasts, ToastType} from "$lib/state/toast.svelte";
+    import {MessageCirclePlus} from "@lucide/svelte";
 
     let {feed_item} = $props();
 
@@ -34,7 +35,9 @@
         <input type="hidden" name="commentable_type" value={feed_item.class_name}/>
         <Textarea name="body" placeholder="I was thinking..."/>
         <div class="flex justify-center pt-2">
-            <Button type="submit" className=" bg-lime-200 ">*~Submit Comment~*</Button>
+            <Button type="submit" className=" bg-lime-200 ">
+                <MessageCirclePlus/> &nbsp; Submit Comment
+            </Button>
         </div>
     </form>
 </div>

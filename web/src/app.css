@@ -19,7 +19,7 @@
         --border: 214.3 31.8% 91.4%;
         --input: 214.3 31.8% 91.4%;
 
-        --primary: 222.2 47.4% 11.2%;
+        --primary: 177 70.6% 29.3%;
         --primary-foreground: 210 40% 98%;
 
         --secondary: 210 40% 96.1%;
@@ -30,6 +30,12 @@
 
         --destructive: 0 72.2% 50.6%;
         --destructive-foreground: 210 40% 98%;
+
+        --event: 81 70.6% 40.6%;
+
+        --post: 207 70.6% 44.6%;
+
+        --recommendation: 40 79% 50.5%;
 
         --ring: 222.2 84% 4.9%;
 
@@ -63,6 +69,8 @@
 
         --destructive: 0 62.8% 30.6%;
         --destructive-foreground: 210 40% 98%;
+
+        --event: 222 70.6% 29.3%;
 
         --ring: 212.7 26.8% 83.9%;
     }

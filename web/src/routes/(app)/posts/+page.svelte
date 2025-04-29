@@ -6,6 +6,8 @@
     import DateHeader from "$lib/components/posts/DateHeader.svelte";
     import EventFeedItem from "$lib/components/posts/EventFeedItem.svelte";
     import Link from "$lib/components/text/Link.svelte";
+    import {Button} from "$lib/components/ui/button/index.js";
+    import {CalendarPlus2} from '@lucide/svelte';
 
     let {data} = $props();
 
@@ -42,6 +44,12 @@
 
         </div>
         <div class="flex flex-col">
+            <div class="flex justify-center pt-2">
+                <Button href="/events/create">
+                    <CalendarPlus2/> &nbsp;
+                    Create Event
+                </Button>
+            </div>
             <H2>Events</H2>
             {#if data.events.length === 0}
                 <div class="flex justify-center bg-lime-200 border-1 border-gray-800 rounded-sm font-bold p-2 mb-2">

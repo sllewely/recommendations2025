@@ -24,12 +24,14 @@ export const actions = {
         const data = await request.formData();
         const user_id = cookies.get('user_id');
         const jwt = cookies.get('jwt');
+        const tags = data.get('tags').split(",");
 
         return await api.patch(
             'users/' + user_id,
             {
                 name: data.get('name'),
                 blurb: data.get('blurb'),
+                tags: tags,
             },
             jwt,
         );

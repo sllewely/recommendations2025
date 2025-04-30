@@ -5,6 +5,6 @@ class Tag < ApplicationRecord
   before_save :convert_lowercase
 
   def convert_lowercase
-    self.tag = self.tag.downcase
+    self.tag = self.tag.downcase.strip
   end
 end

@@ -52,6 +52,8 @@
                     <Label for="blurb">About me:</Label>
                     <Textarea id="blurb" name="blurb" value={form?.blurb ?? user.blurb}
                               placeholder="What do you want to share?"/>
+                    <Label for="tags">Tags:</Label>
+                    <Input id="tags" name="tags" value={form?.tags ?? user.tags.join(", ")} autocomplete="off"/>
                     <FormButton>
                         Update
                     </FormButton>

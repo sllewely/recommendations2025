@@ -11,6 +11,8 @@ class User < ApplicationRecord
   has_many :friend_requests, dependent: :destroy
   has_many :notifications, dependent: :destroy
   has_many :comments
+  has_many :user_tags
+  has_many :tags, through: :user_tags
 
   scope :by_name, ->(search) { where('LOWER(name) LIKE LOWER(?)', "%#{search}%") }
 
@@ -52,7 +54,8 @@ class User < ApplicationRecord
     {
       id: id,
       username: username,
-      name: name
+      name: name,
+      tags: tags.map(&:tag)
     }
   end
 
@@ -69,6 +72,10 @@ class User < ApplicationRecord
   end
 
   def attributes
-    super.except!('password_digest').merge!({ friend_code: first_or_create_friend_code! })
+    a = super.except!('password_digest').merge!({
+                                                  friend_code: first_or_create_friend_code!,
+                                                })
+    a[:tags] = tags.map(&:tag)
+    a
   end
 end

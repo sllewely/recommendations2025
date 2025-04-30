@@ -60,7 +60,7 @@ RSpec.describe "User", type: :request do
     end
   end
 
-  describe "PUT /users/:id" do
+  describe "PATCH /users/:id" do
     before(:context) do
       @my_update_user = create(:user)
 
@@ -72,7 +72,7 @@ RSpec.describe "User", type: :request do
     end
 
     it 'updates my name' do
-      put "/users/#{@my_update_user.id}", params: { name: "New Name" }, headers: @update_headers
+      patch "/users/#{@my_update_user.id}", params: { name: "New Name" }, headers: @update_headers
 
       expect(response).to have_http_status(:ok)
       res = JSON.parse(response.body)
@@ -80,9 +80,18 @@ RSpec.describe "User", type: :request do
       expect(res['name']).to eq("New Name")
     end
 
+    it 'adds tags' do
+      patch "/users/#{@my_update_user.id}", params: { tags: ['recurse', 'gangout'] }, headers: @update_headers
+
+      expect(response).to have_http_status(:ok)
+      res = JSON.parse(response.body)
+
+      expect(res['tags']).to eq(['recurse', 'gangout'])
+    end
+
     it 'cannot update someone else' do
       other_user = create(:user)
-      put "/users/#{other_user.id}", params: { name: "New Name" }, headers: @update_headers
+      patch "/users/#{other_user.id}", params: { name: "New Name" }, headers: @update_headers
 
       expect(response).to have_http_status(:unauthorized)
     end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_21_213610) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_29_201606) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -109,6 +109,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_21_213610) do
     t.integer "status", default: 0
     t.integer "rating", default: 0
     t.bigint "user_id", null: false
+    t.string "url"
     t.index ["user_id", "title", "media_type"], name: "index_recommendations_on_user_id_and_title_and_media_type", unique: true
     t.index ["user_id"], name: "index_recommendations_on_user_id"
   end
@@ -131,6 +132,23 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_21_213610) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_sessions_on_user_id"
+  end
+
+  create_table "tags", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "tag", null: false
+    t.index ["tag"], name: "index_tags_on_tag"
+  end
+
+  create_table "user_tags", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.bigint "tag_id", null: false
+    t.index ["tag_id"], name: "index_user_tags_on_tag_id"
+    t.index ["user_id", "tag_id"], name: "index_user_tags_on_user_id_and_tag_id", unique: true
+    t.index ["user_id"], name: "index_user_tags_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -156,4 +174,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_21_213610) do
   add_foreign_key "rsvps", "events"
   add_foreign_key "rsvps", "users"
   add_foreign_key "sessions", "users"
+  add_foreign_key "user_tags", "tags"
+  add_foreign_key "user_tags", "users"
 end

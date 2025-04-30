@@ -29,9 +29,11 @@ Things you may want to cover:
 
 ### Tests
 
-```bundle exec rspec```
+```rspec```
 
-```bundle exec rspec spec\requests```
+```rspec spec\requests```
+
+```rspec spec/requests/users_spec.rb -e "adds tags"```
 
 Clear test db
 ```bundle exec rails db:reset RAILS_ENV=test```

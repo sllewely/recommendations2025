@@ -55,7 +55,8 @@ class User < ApplicationRecord
       id: id,
       username: username,
       name: name,
-      tags: tags.map(&:tag)
+      tags: tags.map(&:tag),
+      blurb: blurb,
     }
   end
 

@@ -11,6 +11,7 @@
     import {Label} from "$lib/components/ui/label/index.js";
     import {newToast, toasts, ToastType} from "$lib/state/toast.svelte";
     import {goto} from "$app/navigation";
+    import {Textarea} from "$lib/components/ui/textarea";
 
     let {data, form} = $props();
     let creating = $state(false);
@@ -48,6 +49,9 @@
                 <div class="flex flex-col space-y-2">
                     <Label for="name">Name:</Label>
                     <Input id="name" name="name" value={form?.name ?? user.name} autocomplete="off"/>
+                    <Label for="blurb">About me:</Label>
+                    <Textarea id="blurb" name="blurb" value={form?.blurb ?? user.blurb}
+                              placeholder="What do you want to share?"/>
                     <FormButton>
                         Update
                     </FormButton>

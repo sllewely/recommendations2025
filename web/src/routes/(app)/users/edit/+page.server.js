@@ -29,6 +29,7 @@ export const actions = {
             'users/' + user_id,
             {
                 name: data.get('name'),
+                blurb: data.get('blurb'),
             },
             jwt,
         );

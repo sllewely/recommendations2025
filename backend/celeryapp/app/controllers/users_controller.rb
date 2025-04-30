@@ -26,8 +26,10 @@ class UsersController < ApplicationController
       render json: {}, status: :unauthorized and return
     end
     current_user.update(updatable_params)
-    tags = params[:tags].map { |t| Tag.find_or_create_by(tag: t) }
-    current_user.tags = tags
+    if params[:tags]
+      tags = (params[:tags]).map { |t| Tag.find_or_create_by(tag: t) }
+      current_user.tags = tags
+    end
     if current_user.save
       render json: current_user.attributes, status: :ok
     else

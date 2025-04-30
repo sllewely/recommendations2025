@@ -75,12 +75,21 @@
 
         }}
                 >
-                    <div>
-                        <Label for="search">by name:</Label>
-                        <Input id="search" name="search" label="by name:" placeholder="sarah"
-                               autofocus
-                               autocomplete="off"
-                               on:keyup={() => {document.getElementById("user_search").requestSubmit()}}/>
+                    <div class="flex row justify-between space-x-4">
+                        <div class="flex-auto">
+                            <Label for="search">by name:</Label>
+                            <Input id="search" name="search" placeholder="sarah"
+                                   autofocus
+                                   autocomplete="off"
+                                   on:keyup={() => {document.getElementById("user_search").requestSubmit()}}/>
+                        </div>
+                        <div class="flex-1">
+                            <Label for="tag">by tag:</Label>
+                            <Input id="tag" name="tag" placeholder="nyc"
+                                   autofocus
+                                   autocomplete="off"
+                            />
+                        </div>
                     </div>
                     <div class="mb-6">
                         <FormButton>Search</FormButton>

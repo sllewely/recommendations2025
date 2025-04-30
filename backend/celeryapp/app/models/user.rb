@@ -15,6 +15,7 @@ class User < ApplicationRecord
   has_many :tags, through: :user_tags
 
   scope :by_name, ->(search) { where('LOWER(name) LIKE LOWER(?)', "%#{search}%") }
+  scope :by_tag, ->(tag) { joins(:tags).where('tags.tag LIKE (?)', tag) }
 
   generates_token_for :email_verification, expires_in: 2.days do
     email

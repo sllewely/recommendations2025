@@ -4,6 +4,8 @@ class UsersController < ApplicationController
 
   def index
     search = params[:search]
+    query = User.all
+    
     render json: User.by_name(search).map(&:public_attributes), status: :ok
 
   end

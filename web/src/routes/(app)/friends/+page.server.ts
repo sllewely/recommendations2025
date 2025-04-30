@@ -43,10 +43,20 @@ export const actions = {
     search_users: async ({cookies, request}) => {
         const data = await request.formData();
         const jwt = cookies.get('jwt');
-        const query = data.get('search')
+        const query = data.get('search');
+        const tag_query = data.get('tag');
+
+        let paramsObj = {};
+        if (query) {
+            paramsObj['search'] = query;
+        }
+        if (tag_query) {
+            paramsObj['tag'] = tag_query;
+        }
+        const searchParams = new URLSearchParams(paramsObj);
 
         const response = await api.get(
-            'users?search=' + query,
+            'users?' + searchParams.toString(),
             jwt);
 
         return response;

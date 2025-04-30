@@ -4,7 +4,8 @@
     import H1 from "$lib/components/text/H1.svelte";
     import Card from "$lib/components/Card.svelte";
     import {newToast, toasts, ToastType} from "$lib/state/toast.svelte";
-    import Input from "$lib/components/form/Input.svelte";
+    import {Input} from "$lib/components/ui/input/index.js";
+    import {Label} from "$lib/components/ui/label/index.js";
     import FormButton from "$lib/components/form/FormButton.svelte";
     import H2 from "$lib/components/text/H2.svelte";
     import UserSearchResult from "$lib/components/users/UserSearchResult.svelte";
@@ -52,6 +53,8 @@
                     <p>searching...</p>
                 {/if}
                 <form
+                        id="user_search"
+                        bind:this={form}
                         method="POST"
                         action="?/search_users"
                         use:enhance={() => {
@@ -72,8 +75,13 @@
 
         }}
                 >
-
-                    <Input name="search" label="by name:" value={form?.search} placeholder="sarah"/>
+                    <div>
+                        <Label for="search">by name:</Label>
+                        <Input id="search" name="search" label="by name:" placeholder="sarah"
+                               autofocus
+                               autocomplete="off"
+                               on:keyup={() => {document.getElementById("user_search").requestSubmit()}}/>
+                    </div>
                     <div class="mb-6">
                         <FormButton>Search</FormButton>
                     </div>

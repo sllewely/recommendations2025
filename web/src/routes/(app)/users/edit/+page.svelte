@@ -3,7 +3,6 @@
 
     import H1 from '$lib/components/text/H1.svelte'
     import Card from "$lib/components/Card.svelte";
-    // import Input from "$lib/components/form/Input.svelte";
     import FormButton from "$lib/components/form/FormButton.svelte";
     import {current_user} from '$lib/state/current_user.svelte';
 
@@ -62,9 +61,9 @@
                     <Input id="tags" name="tags"
                            placeholder="examples are the name of your town, college, or friend group"
                            value={form?.tags ?? user.tags.join(", ")} autocomplete="off"/>
-                    <div>
+                    <div class="space-x-2">
                         {#each tags as tag}
-                            <Badge variant="outline">{tag}</Badge>
+                            <Badge>{tag}</Badge>
                         {/each}
                     </div>
                     <FormButton>

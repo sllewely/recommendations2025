@@ -12,11 +12,17 @@
     import {newToast, toasts, ToastType} from "$lib/state/toast.svelte";
     import {goto} from "$app/navigation";
     import {Textarea} from "$lib/components/ui/textarea";
+    import {Badge} from "$lib/components/ui/badge/index.js";
 
     let {data, form} = $props();
     let creating = $state(false);
 
     let user = data.user;
+
+    let tags = $state(user.tags);
+    $effect(() => {
+        tags = data.user.tags;
+    })
 
 </script>
 <div>
@@ -52,8 +58,15 @@
                     <Label for="blurb">About me:</Label>
                     <Textarea id="blurb" name="blurb" value={form?.blurb ?? user.blurb}
                               placeholder="What do you want to share?"/>
-                    <Label for="tags">Tags:</Label>
-                    <Input id="tags" name="tags" value={form?.tags ?? user.tags.join(", ")} autocomplete="off"/>
+                    <Label for="tags">Tags (to help people search for you):</Label>
+                    <Input id="tags" name="tags"
+                           placeholder="examples are the name of your town, college, or friend group"
+                           value={form?.tags ?? user.tags.join(", ")} autocomplete="off"/>
+                    <div>
+                        {#each tags as tag}
+                            <Badge variant="outline">{tag}</Badge>
+                        {/each}
+                    </div>
                     <FormButton>
                         Update
                     </FormButton>

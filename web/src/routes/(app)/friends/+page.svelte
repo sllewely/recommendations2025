@@ -59,9 +59,6 @@
         <div class="flex-auto">
             <Card>
                 <H2>Search for a user</H2>
-                <p>//TODO: add debounce to query, search on type. Also this box feels way too big & takes up too much of
-                    the page</p>
-
 
                 {#if searching }
                     <p>searching...</p>
@@ -104,7 +101,7 @@
                             />
                         </div>
                     </div>
-                    <div class="mb-6">
+                    <div class="my-6">
                         <FormButton>Search</FormButton>
                     </div>
 
@@ -112,7 +109,7 @@
 
                 <div>
                     {#each users as user}
-                        <div>
+                        <div class="">
                             <UserSearchResult {user} is_friend={friends_map.has(user.id.toString())}/>
                         </div>
                     {/each}

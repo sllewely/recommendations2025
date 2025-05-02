@@ -12,10 +12,10 @@
 
 </script>
 
-<div class="p-4 border-1 border-gray-200 rounded-sm flex flex-row justify-between">
-    <div>
+<div class="p-2 my-2 border-1 border-gray-200 rounded-sm flex flex-row justify-between items-center">
+    <span>
         <Link url="/users/{user.id}"><p>{user.name}</p></Link>
-    </div>
+    </span>
     {#if (!is_friend)}
 
         <div>

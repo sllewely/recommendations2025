@@ -5,7 +5,7 @@
 
     let user_id = current_user.id;
 
-    let signed_in = $derived(current_user.id !== '');
+    let signed_in = $derived(current_user && current_user.id !== '');
 
     let log_out = async () => {
         const response = await fetch('/api/log_out', {
@@ -41,7 +41,7 @@
                 {/if}
             </ul>
         </div>
-        <div class="flex items-center space-x-2 w-full md:text-center md:mb-0 mb-8 justify-end whitespace-nowrap">
+        <div class="flex items-center space-x-2 w-full md:text-center md:mb-0 mb-8 justify-end whitespace-nowrap pe-2">
             <a class="text-sm/6 font-semibold text-gray-400 hover:text-orange-400" href="/bug_report">Report a
                 bug</a>
             <span>|</span>

@@ -47,6 +47,11 @@ class User < ApplicationRecord
     friends.pluck(:friend_id) << id
   end
 
+  def update_tags(tag_names)
+    tags = (tag_names).map { |t| Tag.find_or_create_by(tag: t) }
+    self.tags = tags
+  end
+
   def active_notifications
     self.notifications.where('active = true').order(created_at: :desc)
   end

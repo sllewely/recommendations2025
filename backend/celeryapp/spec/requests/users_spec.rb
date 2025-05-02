@@ -98,7 +98,7 @@ RSpec.describe "User", type: :request do
 
   end
 
-  describe "GET /users/[:id]" do
+  describe "GET /users/" do
     before(:context) do
       # users created in before(:contexts) may persist
       User.destroy_all
@@ -130,11 +130,25 @@ RSpec.describe "User", type: :request do
       create(:user, name: "tomathy barp")
       create(:user, name: "Tommy harpy")
 
-      get "/users/?search=om", headers: @headers
+      get "/users/?search=Tom", headers: @headers
       res = JSON.parse(response.body)
 
-      # 4 or 5 cuz sometimes the current user matches
-      expect(res.size).to be_in([4, 5])
+      expect(res.size).to eq(3)
+    end
+
+    it 'gets user matching tags' do
+      tag_user1 = create(:user, name: "tom harp")
+      tag_user1.update_tags(['nyc', 'recurse'])
+      tag_user2 = create(:user, name: "thom sharp")
+      tag_user2.update_tags(['nyc'])
+      tag_user3 = create(:user, name: "tomathy barp")
+      tag_user3.update_tags(['recurse'])
+      tag_user4 = create(:user, name: "Tommy harpy")
+
+      get "/users/?tag=nyc", headers: @headers
+      res = JSON.parse(response.body)
+
+      expect(res.size).to eq(2)
     end
 
     it 'gets user matching search query' do

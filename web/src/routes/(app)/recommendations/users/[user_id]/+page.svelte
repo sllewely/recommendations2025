@@ -6,6 +6,7 @@
     import DateHeader from "$lib/components/posts/DateHeader.svelte";
     import EventFeedItem from "$lib/components/posts/EventFeedItem.svelte";
 
+
     import {current_user} from '$lib/state/current_user.svelte.js';
 
     import * as Table from "$lib/components/ui/table";

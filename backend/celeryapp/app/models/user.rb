@@ -11,8 +11,11 @@ class User < ApplicationRecord
   has_many :friend_requests, dependent: :destroy
   has_many :notifications, dependent: :destroy
   has_many :comments
+  has_many :user_tags
+  has_many :tags, through: :user_tags
 
   scope :by_name, ->(search) { where('LOWER(name) LIKE LOWER(?)', "%#{search}%") }
+  scope :by_tag, ->(tag) { joins(:tags).where('tags.tag LIKE (?)', tag) }
 
   generates_token_for :email_verification, expires_in: 2.days do
     email
@@ -44,6 +47,11 @@ class User < ApplicationRecord
     friends.pluck(:friend_id) << id
   end
 
+  def update_tags(tag_names)
+    tags = (tag_names).map { |t| Tag.find_or_create_by(tag: t) }
+    self.tags = tags
+  end
+
   def active_notifications
     self.notifications.where('active = true').order(created_at: :desc)
   end
@@ -52,7 +60,9 @@ class User < ApplicationRecord
     {
       id: id,
       username: username,
-      name: name
+      name: name,
+      tags: tags.map(&:tag),
+      blurb: blurb,
     }
   end
 
@@ -69,6 +79,10 @@ class User < ApplicationRecord
   end
 
   def attributes
-    super.except!('password_digest').merge!({ friend_code: first_or_create_friend_code! })
+    a = super.except!('password_digest').merge!({
+                                                  friend_code: first_or_create_friend_code!,
+                                                })
+    a[:tags] = tags.map(&:tag)
+    a
   end
 end

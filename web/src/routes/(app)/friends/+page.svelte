@@ -4,7 +4,8 @@
     import H1 from "$lib/components/text/H1.svelte";
     import Card from "$lib/components/Card.svelte";
     import {newToast, toasts, ToastType} from "$lib/state/toast.svelte";
-    import Input from "$lib/components/form/Input.svelte";
+    import {Input} from "$lib/components/ui/input/index.js";
+    import {Label} from "$lib/components/ui/label/index.js";
     import FormButton from "$lib/components/form/FormButton.svelte";
     import H2 from "$lib/components/text/H2.svelte";
     import UserSearchResult from "$lib/components/users/UserSearchResult.svelte";
@@ -23,6 +24,20 @@
     let searching = $state(false);
 
     let users = $state([]);
+
+    function debounce(func, timeout = 300) {
+        let timer;
+        return (...args) => {
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                func.apply(this, args);
+            }, timeout);
+        };
+    }
+
+    function submitForm() {
+        document.getElementById('search_form').requestSubmit();
+    }
 </script>
 
 <div>
@@ -52,28 +67,43 @@
                     <p>searching...</p>
                 {/if}
                 <form
+                        id="search_form"
                         method="POST"
                         action="?/search_users"
+                        bind:this={form}
                         use:enhance={() => {
-                    creating = true;
-                    return async ({update, result}) => {
-                        // Do not clear form on success
-                        await update({reset: false});
-                        creating = false;
-                        let res = result.data;
-                        if (res.success) {
-                            //toasts.toast = newToast("Success updating your rsvp");
-                            users = res['res'];
-                            console.log(res['res']);
-                        } else {
-                            toasts.toast = newToast("Error searching: " + res.message, ToastType.Error);
-                        }
-                    };
+                            creating = true;
+                            return async ({update, result}) => {
+                            // Do not clear form on success
+                            await update({reset: false});
+                            creating = false;
+                            let res = result.data;
+                            if (res.success) {
+                                users = res['res'];
+                                console.log(res['res']);
+                            } else {
+                                toasts.toast = newToast("Error searching: " + res.message, ToastType.Error);
+                            }
+                        };
 
-        }}
+                    }}
                 >
-
-                    <Input name="search" label="by name:" value={form?.search} placeholder="sarah"/>
+                    <div class="flex row justify-between space-x-4">
+                        <div class="flex-auto">
+                            <Label for="search">by name:</Label>
+                            <Input id="search" name="search" placeholder="sarah"
+                                   autofocus
+                                   autocomplete="off"
+                                   on:keyup={() => {document.getElementById("search_form").requestSubmit()}}/>
+                        </div>
+                        <div class="flex-1">
+                            <Label for="tag">by tag:</Label>
+                            <Input id="tag" name="tag" placeholder="nyc"
+                                   autofocus
+                                   autocomplete="off"
+                            />
+                        </div>
+                    </div>
                     <div class="mb-6">
                         <FormButton>Search</FormButton>
                     </div>

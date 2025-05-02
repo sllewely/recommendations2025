@@ -1,6 +1,7 @@
 <script lang="ts">
     import {goto} from '$app/navigation';
     import {current_user, isSignedIn} from '$lib/state/current_user.svelte.js';
+    import {Settings} from "@lucide/svelte";
 
     let user_id = current_user.id;
 
@@ -40,16 +41,18 @@
                 {/if}
             </ul>
         </div>
-        <div class="w-full  md:text-center md:mb-0 mb-8 justify-end">
-            <a class="text-sm/6 font-semibold text-gray-400 hover:text-orange-400" href="/bug_report">Report a bug</a>
-            |
+        <div class="flex items-center space-x-2 w-full md:text-center md:mb-0 mb-8 justify-end whitespace-nowrap">
+            <a class="text-sm/6 font-semibold text-gray-400 hover:text-orange-400" href="/bug_report">Report a
+                bug</a>
+            <span>|</span>
             {#if signed_in}
                 <a class="text-sm/6 font-semibold text-gray-400 hover:text-orange-400" href="/users/edit">
-                    &#9881;
+                    <Settings/>
                 </a>
-                |
-                <a class="text-sm/6 font-semibold text-gray-400 hover:text-orange-400" onclick={log_out}>Log out <span
-                        aria-hidden="true">&rarr;</span></a>
+                <span>|</span>
+                <a class="text-sm/6 font-semibold text-gray-400 hover:text-orange-400" onclick={log_out}>Log out
+                    <span
+                            aria-hidden="true">&rarr;</span></a>
             {:else}
                 <a href="/sign_in" class="text-sm/6 font-semibold text-gray-400 hover:text-orange-400">Log in <span
                         aria-hidden="true">&rarr;</span></a>

@@ -3,8 +3,14 @@ class UsersController < ApplicationController
   # Create a user is a part of Registrations controller
 
   def index
+    # TODO: this will need to be paginated
     search = params[:search]
-    render json: User.by_name(search).map(&:public_attributes), status: :ok
+    query = User.all
+    if params[:tag]
+      query = query.by_tag(params[:tag])
+    end
+
+    render json: query.by_name(search).map(&:public_attributes), status: :ok
 
   end
 
@@ -26,6 +32,9 @@ class UsersController < ApplicationController
       render json: {}, status: :unauthorized and return
     end
     current_user.update(updatable_params)
+    if params[:tags]
+      current_user.update_tags(params[:tags])
+    end
     if current_user.save
       render json: current_user.attributes, status: :ok
     else
@@ -36,7 +45,7 @@ class UsersController < ApplicationController
   private
 
   def updatable_params
-    params.permit(:name, :username, :email, :blurb)
+    params.permit(:name, :username, :email, :blurb, :tags)
   end
 
 end

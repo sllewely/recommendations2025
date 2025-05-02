@@ -8,6 +8,8 @@
     import ToggleButton from '$lib/components/form/ToggleButton.svelte'
     import Card from '$lib/components/Card.svelte';
     import LinkButton from "$lib/components/text/LinkButton.svelte";
+    import * as RadioGroup from "$lib/components/ui/radio-group/index.js";
+    import {Label} from "$lib/components/ui/label/index.js";
 
     import {RecommendationStatus} from "$lib/enums";
     import {current_user} from "$lib/state/current_user.svelte";
@@ -30,19 +32,20 @@
 
 <div>
 
-<H1>Create a recommendation post</H1>
+    <H1>Create a recommendation post</H1>
 
     <p>Hey btw not all of the fields are implemented.</p>
-    <p>Would love a volunteer to let me sit with them as they fill out recommendations & to hear your thoughts, so I can figure out the UX</p>
+    <p>Would love a volunteer to let me sit with them as they fill out recommendations & to hear your thoughts, so I can
+        figure out the UX</p>
 
-{#if creating }
-    <p>signing in...</p>
-{/if}
-<Card>
-    <form
-            method="POST"
-            action="?/create_recommendation"
-            use:enhance={() => {
+    {#if creating }
+        <p>signing in...</p>
+    {/if}
+    <Card>
+        <form
+                method="POST"
+                action="?/create_recommendation"
+                use:enhance={() => {
             creating = true;
             return async ({update, result}) => {
                 await update();
@@ -59,52 +62,73 @@
                 }
             };
         }}
-    >
+        >
 
-        <div class="flex flex-col">
-            <InputCheckbox name="recommendation_only" label="Don't post publicly, just save for me (TODO: not implemented):" />
-            <Card>
-                <Input name="title" label="Title:" value={form?.title}/>
-                <H1>Recommendation</H1>
-                <Input name="media_type" label="Type:" placeholder="book, movie, other" value={form?.media_type} list="mediaTypeList"/>
-                <datalist id="mediaTypeList">
-                    <option value="book" />
-                    <option value="tv show" />
-                    <option value="movie" />
-                    <option value="video game" />
-                    <option value="board game" />
-                    <option value="artist" />
-                    <option value="artist, music" />
-                    <option value="theatre" />
-                    <option value="food" />
-                    <option value="article" />
-                    <option value="author" />
-
-                </datalist>
-                <input type="hidden" name="status" value={status} />
-                <div>
-                    <span onclick={() => status = RecommendationStatus.Interested}><ToggleButton color="yellow" selected={status === RecommendationStatus.Interested}>&#10133; Interested</ToggleButton></span>
-                    <span onclick={() => status = RecommendationStatus.Watching}><ToggleButton color="orange" selected={status === RecommendationStatus.Watching}>&#10133; Watching</ToggleButton></span>
-                    <span onclick={() => status = RecommendationStatus.Recommend}><ToggleButton color="blue" selected={status === RecommendationStatus.Recommend}>&#10133; Recommend</ToggleButton></span>
-                </div>
-
-                <p>TODO: Should be text area</p>
-                <Input name="notes" label="Notes:" />
+            <div class="flex flex-col">
+                <InputCheckbox name="recommendation_only"
+                               label="Don't post publicly, just save for me (TODO: not implemented):"/>
                 <Card>
+                    <Input name="title" label="Title:" value={form?.title}/>
+                    <H1>Recommendation</H1>
+                    <!--                <Input name="media_type" label="Type:" placeholder="book, movie, other" value={form?.media_type} list="mediaTypeList"/>-->
+                    <!--                <datalist id="mediaTypeList">-->
+                    <!--                    <option value="book" />-->
+                    <!--                    <option value="tv show" />-->
+                    <!--                    <option value="movie" />-->
+                    <!--                    <option value="video game" />-->
+                    <!--                    <option value="board game" />-->
+                    <!--                    <option value="artist" />-->
+                    <!--                    <option value="artist, music" />-->
+                    <!--                    <option value="theatre" />-->
+                    <!--                    <option value="food" />-->
+                    <!--                    <option value="article" />-->
+                    <!--                    <option value="author" />-->
 
-                    <H1>Extras</H1>
-                    <Input name="author" label="Author/Artist/Creator:" />
-                    <Input name="rating" label="Rating:" placeholder="1-5"/>
-                    <Input name="completed" label="Completed?" placeholder="yes/no" />
-                    <Input name="who_recommended" label="Who recommended?:" />
+                    <!--                </datalist>-->
+
+                    <RadioGroup.Root value="comfortable">
+                        <div class="flex items-center space-x-2">
+                            <RadioGroup.Item value="default" id="r1"/>
+                            <Label for="r1">Default</Label>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <RadioGroup.Item value="comfortable" id="r2"/>
+                            <Label for="r2">Comfortable</Label>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <RadioGroup.Item value="compact" id="r3"/>
+                            <Label for="r3">Compact</Label>
+                        </div>
+                        <RadioGroup.Input name="spacing"/>
+                    </RadioGroup.Root>
+
+
+                    <input type="hidden" name="status" value={status}/>
+                    <div>
+                        <span onclick={() => status = RecommendationStatus.Interested}><ToggleButton color="yellow"
+                                                                                                     selected={status === RecommendationStatus.Interested}>&#10133; Interested</ToggleButton></span>
+                        <span onclick={() => status = RecommendationStatus.Watching}><ToggleButton color="orange"
+                                                                                                   selected={status === RecommendationStatus.Watching}>&#10133; Watching</ToggleButton></span>
+                        <span onclick={() => status = RecommendationStatus.Recommend}><ToggleButton color="blue"
+                                                                                                    selected={status === RecommendationStatus.Recommend}>&#10133; Recommend</ToggleButton></span>
+                    </div>
+
+                    <p>TODO: Should be text area</p>
+                    <Input name="notes" label="Notes:"/>
+                    <Card>
+
+                        <H1>Extras</H1>
+                        <Input name="author" label="Author/Artist/Creator:"/>
+                        <Input name="rating" label="Rating:" placeholder="1-5"/>
+                        <Input name="completed" label="Completed?" placeholder="yes/no"/>
+                        <Input name="who_recommended" label="Who recommended?:"/>
+                    </Card>
+
+
                 </Card>
-
-
-
-            </Card>
-        </div>
-        <FormButton>Create recommendation</FormButton>
-    </form>
-</Card>
+            </div>
+            <FormButton>Create recommendation</FormButton>
+        </form>
+    </Card>
 
 </div>

@@ -1,5 +1,5 @@
 import {redirect} from "@sveltejs/kit";
-import { VITE_API_URL } from '$env/static/private';
+import {VITE_API_URL} from '$env/static/private';
 import * as api from "$lib/api_calls/api.svelte.js";
 
 
@@ -18,6 +18,7 @@ export const actions = {
                 notes: data.get('notes'),
                 media_type: data.get('media_type'),
                 who_recommended: data.get('who_recommended'),
+                rating: data.get('rating'),
             },
             jwt,
         );

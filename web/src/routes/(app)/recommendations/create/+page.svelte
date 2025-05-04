@@ -16,7 +16,8 @@
     import {current_user} from "$lib/state/current_user.svelte";
     import {goto} from "$app/navigation";
     import {newToast, toasts, ToastType} from "$lib/state/toast.svelte";
-    import {Book, Clapperboard, Gamepad2, MonitorPlay, Link} from "@lucide/svelte";
+    import {Book, Clapperboard, Gamepad2, MonitorPlay, Link, Soup} from "@lucide/svelte";
+    import {Badge} from "$lib/components/ui/badge";
 
     let {data, form} = $props();
 
@@ -25,6 +26,11 @@
 
     // TODO: save & remember the user's last selection
     let media_type = $state('book');
+
+    let tags = $state([]);
+    // $effect(() => {
+    //     tags = data.user.tags;
+    // })
 
     // TODO:
     // List of types, one can be selected
@@ -106,17 +112,44 @@
                         <Link/>
                     </Button>
                     <Button
+                            onclick={() => media_type = 'restaurant'}
+                            variant={media_type === 'restaurant' ? 'secondary' : "outline" }
+                            aria-label="restaurant">
+                        <Soup/>
+                    </Button>
+                    <Button
                             onclick={() => media_type = 'other'}
                             variant={media_type === 'other' ? 'secondary' : "outline" }
                             aria-label="other"><Input name="other_media_type" placeholder="other" class=""/>
                     </Button>
+
                 </div>
 
                 <Label for="notes">Notes:</Label>
                 <Textarea name="notes" value={form?.title} placeholder="What do you think???"/>
+                <div class="flex flex-row justify-between">
+                    <div>
+                        <Label for="tags">Tags: #TODO not implemented</Label>
+                        <Input id="tags" name="tags"
+                               placeholder="scifi, nyc, storyrich"
+                               value={form?.tags} autocomplete="off"/>
+                        <div class="space-x-2">
+                            {#each tags as tag}
+                                <Badge>{tag}</Badge>
+                            {/each}
+                        </div>
+                    </div>
+                    <div>
+                        <Label for="who_recommended">Who recommended?:</Label>
+                        <Input id="who_recommended" name="who_recommended"
+                               placeholder="sarah"
+                               value={form?.who_recommended} autocomplete="off"/>
+                    </div>
+                </div>
 
-                <FormButton>Create recommendation</FormButton>
-                
+
+                <FormButton>Save recommendation</FormButton>
+
             </div>
         </form>
     </Card>

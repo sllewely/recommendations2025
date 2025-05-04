@@ -16,7 +16,17 @@
     import {current_user} from "$lib/state/current_user.svelte";
     import {goto} from "$app/navigation";
     import {newToast, toasts, ToastType} from "$lib/state/toast.svelte";
-    import {Book, Clapperboard, Gamepad2, MonitorPlay, Link, Soup} from "@lucide/svelte";
+    import {
+        Book,
+        Clapperboard,
+        Gamepad2,
+        MonitorPlay,
+        Link,
+        Soup,
+        Star,
+        BookmarkPlus,
+        MessageCircleHeart
+    } from "@lucide/svelte";
     import {Badge} from "$lib/components/ui/badge";
 
     let {data, form} = $props();
@@ -32,11 +42,24 @@
     //     tags = data.user.tags;
     // })
 
+    let rating = $state(0);
+
     // TODO:
     // List of types, one can be selected
     // One selected: interested, watching, recommend
     // who recommended appears if interested
     // rating appears if recommend or watching
+
+    function setStar(set_rating) {
+
+        return () => {
+            if (rating === set_rating) {
+                rating = 0;
+            } else {
+                rating = set_rating;
+            }
+        }
+    }
 
 
 </script>
@@ -120,14 +143,14 @@
                     <Button
                             onclick={() => media_type = 'other'}
                             variant={media_type === 'other' ? 'secondary' : "outline" }
-                            aria-label="other"><Input name="other_media_type" placeholder="other" class=""/>
+                            aria-label="other"><Input name="other_media_type" placeholder="other..." class=""/>
                     </Button>
 
                 </div>
 
                 <Label for="notes">Notes:</Label>
                 <Textarea name="notes" value={form?.title} placeholder="What do you think???"/>
-                <div class="flex flex-row justify-between">
+                <div class="flex flex-row justify-between items-center">
                     <div>
                         <Label for="tags">Tags: #TODO not implemented</Label>
                         <Input id="tags" name="tags"
@@ -139,16 +162,35 @@
                             {/each}
                         </div>
                     </div>
+                    <div class="flex flex-row">
+                        <input type="hidden" name="rating" value={rating}/>
+                        <Star fill={ rating >= 1 ? 'yellow' : 'white' } onclick={setStar(1)}/>
+                        <Star fill={ rating >= 2 ? 'yellow' : 'white' } onclick={setStar(2)}/>
+                        <Star fill={ rating >= 3 ? 'yellow' : 'white' } onclick={setStar(3)}/>
+                        <Star fill={ rating >= 4 ? 'yellow' : 'white' } onclick={setStar(4)}/>
+                        <Star fill={ rating >= 5 ? 'yellow' : 'white' } onclick={setStar(5)}/>
+                    </div>
                     <div>
                         <Label for="who_recommended">Who recommended?:</Label>
                         <Input id="who_recommended" name="who_recommended"
-                               placeholder="sarah"
+                               placeholder="I use this for remembering which friend recommended something to me"
                                value={form?.who_recommended} autocomplete="off"/>
                     </div>
                 </div>
+                <hr/>
 
 
-                <FormButton>Save recommendation</FormButton>
+                <div class="flex flex-row justify-center space-x-4">
+                    <Button type="submit" className=" bg-lime-200 ">
+                        <MessageCircleHeart/> &nbsp; Share recommendation
+                    </Button>
+                    <Button>
+                        <BookmarkPlus/>
+                        &nbsp; Save for later
+                    </Button>
+
+                </div>
+
 
             </div>
         </form>

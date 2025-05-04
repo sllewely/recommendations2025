@@ -35,14 +35,14 @@
     let status = $state(RecommendationStatus.Interested);
 
     // TODO: save & remember the user's last selection
-    let media_type = $state('book');
+    let media_type = $state(form?.media_type ?? 'book');
 
     let tags = $state([]);
     // $effect(() => {
     //     tags = data.user.tags;
     // })
 
-    let rating = $state(0);
+    let rating = $state(form?.rating ?? 0);
 
     // TODO:
     // List of types, one can be selected
@@ -61,6 +61,18 @@
         }
     }
 
+    function submitWithStatus(set_status) {
+        return () => {
+            if (set_status === 'interested_in') {
+                status = RecommendationStatus.Interested;
+            } else {
+                status = RecommendationStatus.Recommend;
+            }
+            document.getElementById("recommendation_form").requestSubmit();
+
+        }
+    }
+
 
 </script>
 
@@ -75,6 +87,7 @@
     {/if}
     <Card>
         <form
+                id="recommendation_form"
                 method="POST"
                 action="?/create_recommendation"
                 use:enhance={() => {
@@ -181,12 +194,13 @@
 
 
                 <div class="flex flex-row justify-center space-x-4">
-                    <Button type="submit" className=" bg-lime-200 ">
-                        <MessageCircleHeart/> &nbsp; Share recommendation
+                    <input type="hidden" name="status" value={status}/>
+                    <Button onclick={submitWithStatus('recommend')}>
+                        <MessageCircleHeart/> &nbsp; Share a review
                     </Button>
-                    <Button>
+                    <Button onclick={submitWithStatus('interested_in')}>
                         <BookmarkPlus/>
-                        &nbsp; Save for later
+                        &nbsp; Interested in
                     </Button>
 
                 </div>

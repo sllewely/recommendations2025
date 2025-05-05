@@ -1,6 +1,3 @@
-import {getPosts} from '$lib/api_calls/posts.svelte.js';
-import {getEvents} from '$lib/api_calls/events.svelte.js';
-import {readable_backend_date} from '$lib/utils/dates.svelte';
 import * as api from "$lib/api_calls/api.svelte.js";
 
 export async function load({cookies, params}) {
@@ -21,7 +18,32 @@ export async function load({cookies, params}) {
 
     return {
         user: user_response['res'],
-        recommendations: recommendations_response['res'],
+        recommendations_response: recommendations_response['res'],
     }
 
+}
+
+export const actions = {
+    fetch_recommendation_page: async ({cookies, request}) => {
+        const data = await request.formData();
+        const jwt = cookies.get('jwt');
+        const user_id = data.get('user_id');
+        const page = data.get('page');
+
+        let paramsObj = {};
+        if (user_id) {
+            paramsObj['user_id'] = user_id;
+        }
+        if (page) {
+            paramsObj['page'] = page;
+        }
+        const searchParams = new URLSearchParams(paramsObj);
+
+        const recommendations_response = await api.get(
+            'recommendations?' + searchParams.toString(),
+            jwt,
+        );
+
+        return recommendations_response;
+    }
 }

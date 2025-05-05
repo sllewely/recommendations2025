@@ -1,10 +1,6 @@
 <script>
     import H1 from '$lib/components/text/H1.svelte';
-    import H2 from '$lib/components/text/H2.svelte';
-    import LinkButton from '$lib/components/text/LinkButton.svelte';
-    import FeedItem from "$lib/components/posts/FeedItem.svelte";
-    import DateHeader from "$lib/components/posts/DateHeader.svelte";
-    import EventFeedItem from "$lib/components/posts/EventFeedItem.svelte";
+    import {enhance} from '$app/forms';
 
 
     import {current_user} from '$lib/state/current_user.svelte.js';
@@ -23,12 +19,17 @@
         BookmarkPlus,
         MessageCircleHeart
     } from "@lucide/svelte";
+    import {newToast, toasts, ToastType} from "$lib/state/toast.svelte.js";
 
 
     let {data} = $props();
+    let myPage = $state(1);
 
     const user = data.user;
-    const recommendations = data.recommendations;
+    let recommendations = $state(data.recommendations_response['recommendations']);
+    const pagy = data.recommendations_response['pagy'];
+
+    let updating = $state(false);
 
 </script>
 
@@ -111,10 +112,36 @@
                 {/each}
             </Table.Body>
         </Table.Root>
-        <Pagination.Root count={100} perPage={10} let:pages let:currentPage>
+        {#if updating}
+            searching...
+        {/if}
+        <Pagination.Root count={pagy['count']} perPage={pagy['limit']} let:pages bind:page={myPage}>
             <Pagination.Content>
                 <Pagination.Item>
-                    <Pagination.PrevButton/>
+                    <form
+                            method="POST"
+                            action="?/fetch_recommendation_page"
+                            id="prev"
+                            use:enhance={() => {
+                            updating = true;
+                            return async ({update, result}) => {
+                            // Do not clear form on success
+                            await update({reset: false});
+                            updating = false;
+                            let res = result.data;
+                            if (res.success) {
+                                recommendations = res['res']['recommendations'];
+                            } else {
+                                toasts.toast = newToast("Error searching: " + res.message, ToastType.Error);
+                            }
+                        };
+
+                    }}
+                    >
+                        <input type="hidden" name="user_id" id="user_id" value={user.id}/>
+                        <input type="hidden" name="page" id="page" value={myPage -1}/>
+                        <Pagination.PrevButton on:click={() => {document.getElementById("prev").requestSubmit()}}/>
+                    </form>
                 </Pagination.Item>
                 {#each pages as page (page.key)}
                     {#if page.type === "ellipsis"}
@@ -122,8 +149,9 @@
                             <Pagination.Ellipsis/>
                         </Pagination.Item>
                     {:else}
-                        <Pagination.Item isVisible={currentPage == page.value}>
-                            <Pagination.Link {page} isActive={currentPage == page.value}>
+                        {console.log(page.value)}
+                        <Pagination.Item isVisible={myPage == page.value}>
+                            <Pagination.Link {page} isActive={myPage == page.value}>
                                 {page.value}
                             </Pagination.Link>
                         </Pagination.Item>

@@ -115,14 +115,11 @@
         {#if updating}
             searching...
         {/if}
-        <Pagination.Root count={pagy['count']} perPage={pagy['limit']} let:pages bind:page={myPage}>
-            <Pagination.Content>
-                <Pagination.Item>
-                    <form
-                            method="POST"
-                            action="?/fetch_recommendation_page"
-                            id="prev"
-                            use:enhance={() => {
+        <form
+                method="POST"
+                action="?/fetch_recommendation_page"
+                id="fetch_recommendations"
+                use:enhance={() => {
                             updating = true;
                             return async ({update, result}) => {
                             // Do not clear form on success
@@ -137,31 +134,45 @@
                         };
 
                     }}
-                    >
-                        <input type="hidden" name="user_id" id="user_id" value={user.id}/>
-                        <input type="hidden" name="page" id="page" value={myPage -1}/>
-                        <Pagination.PrevButton on:click={() => {document.getElementById("prev").requestSubmit()}}/>
-                    </form>
-                </Pagination.Item>
-                {#each pages as page (page.key)}
-                    {#if page.type === "ellipsis"}
-                        <Pagination.Item>
-                            <Pagination.Ellipsis/>
-                        </Pagination.Item>
-                    {:else}
-                        {console.log(page.value)}
-                        <Pagination.Item isVisible={myPage == page.value}>
-                            <Pagination.Link {page} isActive={myPage == page.value}>
-                                {page.value}
-                            </Pagination.Link>
-                        </Pagination.Item>
-                    {/if}
-                {/each}
-                <Pagination.Item>
-                    <Pagination.NextButton/>
-                </Pagination.Item>
-            </Pagination.Content>
-        </Pagination.Root>
+        >
+            <input type="hidden" name="user_id" id="user_id" value={user.id}/>
+            <input type="hidden" name="page" id="page" value={myPage -1}/>
+            <Pagination.Root count={pagy['count']} perPage={pagy['limit']} let:pages bind:page={myPage}>
+                <Pagination.Content>
+                    <Pagination.Item>
+
+                        <Pagination.PrevButton on:click={() => {
+                            document.getElementById("page").value = myPage -1;
+                            document.getElementById("fetch_recommendations").requestSubmit();
+                        }}/>
+                    </Pagination.Item>
+                    {#each pages as page (page.key)}
+                        {#if page.type === "ellipsis"}
+                            <Pagination.Item>
+                                <Pagination.Ellipsis/>
+                            </Pagination.Item>
+                        {:else}
+                            {console.log(page.value)}
+                            <Pagination.Item isVisible={myPage == page.value}>
+                                <Pagination.Link {page} isActive={myPage == page.value} on:click={() => {
+                            document.getElementById("page").value = page.value;
+                            document.getElementById("fetch_recommendations").requestSubmit();
+                        }}>
+                                    {page.value}
+                                </Pagination.Link>
+                            </Pagination.Item>
+                        {/if}
+                    {/each}
+                    <Pagination.Item>
+                        <Pagination.NextButton on:click={() => {
+                            document.getElementById("page").value = myPage +1;
+                            document.getElementById("fetch_recommendations").requestSubmit();
+                        }}/>
+                    </Pagination.Item>
+                </Pagination.Content>
+            </Pagination.Root>
+        </form>
+
 
     </div>
 

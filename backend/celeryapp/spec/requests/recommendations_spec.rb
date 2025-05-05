@@ -81,6 +81,7 @@ RSpec.describe "Recommendations", type: :request do
 
       expect(response).to have_http_status(:ok)
       res = JSON.parse(response.body)
+      debugger
       expect(res.size).to eq(2)
     end
 

@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::API
   include ActionController::HttpAuthentication::Token::ControllerMethods
+  include Pagy::Backend
 
   rescue_from ActiveRecord::RecordNotUnique, with: :render_non_unique_error
 

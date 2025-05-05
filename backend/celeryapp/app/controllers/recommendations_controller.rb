@@ -5,12 +5,16 @@ class RecommendationsController < ApplicationController
     if user_id.nil?
       render json: { error: "Error expected param user_id" }, status: :bad_request and return
     end
-    @recommendations = User.find(user_id).recommendations.order(created_at: :desc)
+    recommendations = User.find(user_id).recommendations.order(created_at: :desc)
     if params['status']
-      @recommendations = @recommendations.where(status: params['status'])
+      recommendations = recommendations.where(status: params['status'])
     end
     # TODO permission and pagination
-    render json: @recommendations.limit(100).map(&:attributes), status: :ok
+    @pagy, @recommendations = pagy(recommendations, limit: 30)
+    render json: {
+      recommendations: @recommendations.map(&:attributes),
+      pagy: @pagy,
+    }, status: :ok
 
   end
 

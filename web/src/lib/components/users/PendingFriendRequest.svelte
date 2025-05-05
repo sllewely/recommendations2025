@@ -7,6 +7,7 @@
     import Form from "$lib/components/form/Form.svelte";
     import {rails_date_pretty} from "$lib/utils/dates.svelte";
     import {goto} from "$app/navigation";
+    import {friends_map, fetch_friends_map} from "$lib/state/friends_map.svelte";
 
     let {pending_friend} = $props();
 
@@ -37,6 +38,7 @@
             let res = result.data;
                     if (res.success) {
                     toasts.toast = newToast("Accepted friend request");
+                    await fetch_friends_map();
                     } else {
                         toasts.toast = newToast("Error accepting friend request: " + res.message, ToastType.Error);
                     }

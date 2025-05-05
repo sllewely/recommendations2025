@@ -11,19 +11,26 @@
     import UserSearchResult from "$lib/components/users/UserSearchResult.svelte";
     import PendingFriendRequest from "$lib/components/users/PendingFriendRequest.svelte";
     import Friend from "$lib/components/users/Friend.svelte";
+    import {friends_map, fetch_friends_map} from "$lib/state/friends_map.svelte";
 
     let {data, form} = $props();
 
     let my_user = data.my_user;
-    let friends = data.friends_response['res'] ?? [];
 
-    const friends_map = data.friends_map;
-    const pending_friends = data.friend_requests_response['res'] ?? [];
+    let pending_friends = $state(data.friend_requests_response['res'] ?? []);
+    $effect(() => {
+        pending_friends = data.friend_requests_response['res'] ?? [];
+    })
 
     let creating = $state(false);
     let searching = $state(false);
 
     let users = $state([]);
+
+    let friends = $state(data.friends_response['res'] ?? []);
+    $effect(() => {
+        friends = data.friends_response['res'] ?? [];
+    })
 
     function debounce(func, timeout = 300) {
         let timer;
@@ -38,6 +45,8 @@
     function submitForm() {
         document.getElementById('search_form').requestSubmit();
     }
+
+    $inspect(friends_map.friends_map);
 </script>
 
 <div>
@@ -110,7 +119,7 @@
                 <div>
                     {#each users as user}
                         <div class="">
-                            <UserSearchResult {user} is_friend={friends_map.has(user.id.toString())}/>
+                            <UserSearchResult {user} is_friend={user.id in friends_map.friends_map}/>
                         </div>
                     {/each}
                 </div>

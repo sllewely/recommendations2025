@@ -112,7 +112,7 @@
             <div class="flex flex-col space-y-2">
 
                 <Label for="title">Title:</Label>
-                <Input name="title" label="Title:" value={form?.title}/>
+                <Input name="title" value={form?.title}/>
 
                 <Label for="media_type">Media type:</Label>
                 <input type="hidden" name="media_type" value={media_type}/>
@@ -162,7 +162,9 @@
                 </div>
 
                 <Label for="notes">Notes:</Label>
-                <Textarea name="notes" value={form?.title} placeholder="What do you think???"/>
+                <Textarea name="notes" value={form?.notes} placeholder="What do you think???"/>
+                <Label for="url">Link:</Label>
+                <Input name="url" value={form?.url}/>
                 <div class="flex flex-row justify-between items-center">
                     <div>
                         <Label for="tags">Tags: #TODO not implemented</Label>

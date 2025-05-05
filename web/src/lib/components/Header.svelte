@@ -66,7 +66,7 @@
                 <ul class="list-reset flex justify-center flex-wrap text-xs md:text-sm gap-3">
                     <li><a href="/friends" class="text-gray-400 hover:text-white">Friends</a></li>
                     <li><a href="/recommendations/users/{user_id}"
-                           class="text-gray-400 hover:text-white">Recommendations</a></li>
+                           class="text-gray-400 hover:text-white">Saved Recommendations</a></li>
                 </ul>
             </div>
             <div></div>

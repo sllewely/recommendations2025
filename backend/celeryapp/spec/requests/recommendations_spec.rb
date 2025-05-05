@@ -33,6 +33,16 @@ RSpec.describe "Recommendations", type: :request do
       expect(res['status']).to eq('watching')
     end
 
+    it 'creates a new recommendation with url' do
+      post "/recommendations", params: { title: "Annihilation", notes: "A book I like", url: "https://en.wikipedia.org/wiki/Annihilation_(VanderMeer_novel)" }, headers: @headers
+
+      expect(response).to have_http_status(:created)
+      res = JSON.parse(response.body)
+      expect(res['id']).to_not be_nil
+      expect(res['title']).to eq("Annihilation")
+      expect(res['url']).to eq("https://en.wikipedia.org/wiki/Annihilation_(VanderMeer_novel)")
+    end
+
     it 'requires a title' do
       post "/recommendations", params: { notes: "A book I like" }, headers: @headers
 
@@ -129,7 +139,7 @@ RSpec.describe "Recommendations", type: :request do
     end
   end
 
-  describe "POST /recommendations/:id" do
+  describe "PATCH /recommendations/:id" do
 
     before(:context) do
       @my_user = create(:user)

@@ -17,14 +17,20 @@
 
     let my_user = data.my_user;
 
-    const pending_friends = data.friend_requests_response['res'] ?? [];
+    let pending_friends = $state(data.friend_requests_response['res'] ?? []);
+    $effect(() => {
+        pending_friends = data.friend_requests_response['res'] ?? [];
+    })
 
     let creating = $state(false);
     let searching = $state(false);
 
     let users = $state([]);
 
-    let friends = data.friends_response['res'] ?? [];
+    let friends = $state(data.friends_response['res'] ?? []);
+    $effect(() => {
+        friends = data.friends_response['res'] ?? [];
+    })
 
     function debounce(func, timeout = 300) {
         let timer;

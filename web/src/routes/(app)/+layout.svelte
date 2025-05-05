@@ -13,10 +13,10 @@
 
     current_user.id = data.current_user_id;
 
-    fetch_friends_map();
 
     // every 10 seconds, poll notifications
     onMount( () => {
+        fetch_friends_map();
 
         // TODO: switch to SSE instead of polling
         let fetch_notifs = async () => {

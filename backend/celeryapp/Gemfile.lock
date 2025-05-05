@@ -139,6 +139,7 @@ GEM
       racc (~> 1.4)
     nokogiri (1.18.2-x86_64-linux-gnu)
       racc (~> 1.4)
+    pagy (9.3.4)
     pg (1.5.3)
     pp (0.6.2)
       prettyprint
@@ -234,6 +235,7 @@ DEPENDENCIES
   debug
   factory_bot_rails
   faker
+  pagy (~> 9.3)
   pg
   puma (~> 6.0)
   rails (~> 8.0)

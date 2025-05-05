@@ -99,8 +99,6 @@
                 if (res.success) {
                     current_user.auth_token = res['auth_token'];
                     current_user.id = res['user_id'];
-                    console.log(res);
-                    goto("/posts");
                     toasts.toast = newToast("You have successfully created a recommendation");
                 } else {
                     toasts.toast = newToast("Error creating recommendation: " + res.message, ToastType.Error);

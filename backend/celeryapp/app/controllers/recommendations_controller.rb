@@ -10,7 +10,7 @@ class RecommendationsController < ApplicationController
       recommendations = recommendations.where(status: params['status'])
     end
     # TODO permission and pagination
-    @pagy, @recommendations = pagy(recommendations, limit: 6)
+    @pagy, @recommendations = pagy(recommendations, limit: 30)
     render json: {
       recommendations: @recommendations.map(&:attributes),
       pagy: @pagy,

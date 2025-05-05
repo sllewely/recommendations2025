@@ -28,6 +28,7 @@
         MessageCircleHeart
     } from "@lucide/svelte";
     import {Badge} from "$lib/components/ui/badge";
+    import * as Tooltip from "$lib/components/ui/tooltip";
 
     let {data, form} = $props();
 
@@ -115,47 +116,82 @@
                 <Label for="media_type">Media type:</Label>
                 <input type="hidden" name="media_type" value={media_type}/>
                 <div>
-                    <Button
-                            onclick={() => media_type = 'book'}
-                            variant={media_type === 'book' ? 'secondary' : "outline" }
-                            aria-label="book">
-                        <Book/>
-                    </Button>
-                    <Button
-                            onclick={() => media_type = 'movie'}
-                            variant={media_type === 'movie' ? 'secondary' : "outline" }
-                            aria-label="movie">
-                        <Clapperboard/>
-                    </Button>
-                    <Button
-                            onclick={() => media_type = 'tv_show'}
-                            variant={media_type === 'tv_show' ? 'secondary' : "outline" }
-                            aria-label="tv show">
-                        <MonitorPlay/>
-                    </Button>
-                    <Button
-                            onclick={() => media_type = 'video_game'}
-                            variant={media_type === 'video_game' ? 'secondary' : "outline" }
-                            aria-label="video game">
-                        <Gamepad2/>
-                    </Button>
-                    <Button
-                            onclick={() => media_type = 'url'}
-                            variant={media_type === 'url' ? 'secondary' : "outline" }
-                            aria-label="web page">
-                        <Link/>
-                    </Button>
-                    <Button
-                            onclick={() => media_type = 'restaurant'}
-                            variant={media_type === 'restaurant' ? 'secondary' : "outline" }
-                            aria-label="restaurant">
-                        <Soup/>
-                    </Button>
-                    <Button
-                            onclick={() => media_type = 'other'}
-                            variant={media_type === 'other' ? 'secondary' : "outline" }
-                            aria-label="other"><Input name="other_media_type" placeholder="other..." class=""/>
-                    </Button>
+                    <Tooltip.Root>
+                        <Tooltip.Trigger>
+                            <Button
+                                    onclick={() => media_type = 'book'}
+                                    variant={media_type === 'book' ? 'secondary' : "outline" }
+                                    aria-label="book">
+                                <Book/>
+                            </Button>
+                        </Tooltip.Trigger>
+                        <Tooltip.Content><p>Book</p></Tooltip.Content>
+                    </Tooltip.Root>
+                    <Tooltip.Root>
+                        <Tooltip.Trigger>
+                            <Button
+                                    onclick={() => media_type = 'movie'}
+                                    variant={media_type === 'movie' ? 'secondary' : "outline" }
+                                    aria-label="movie">
+                                <Clapperboard/>
+                            </Button>
+                        </Tooltip.Trigger>
+                        <Tooltip.Content><p>Movie</p></Tooltip.Content>
+                    </Tooltip.Root>
+                    <Tooltip.Root>
+                        <Tooltip.Trigger>
+                            <Button
+                                    onclick={() => media_type = 'tv_show'}
+                                    variant={media_type === 'tv_show' ? 'secondary' : "outline" }
+                                    aria-label="tv show">
+                                <MonitorPlay/>
+                            </Button>
+                        </Tooltip.Trigger>
+                        <Tooltip.Content><p>Tv show</p></Tooltip.Content>
+                    </Tooltip.Root>
+                    <Tooltip.Root>
+                        <Tooltip.Trigger>
+                            <Button
+                                    onclick={() => media_type = 'video_game'}
+                                    variant={media_type === 'video_game' ? 'secondary' : "outline" }
+                                    aria-label="video game">
+                                <Gamepad2/>
+                            </Button>
+                        </Tooltip.Trigger>
+                        <Tooltip.Content><p>Video game</p></Tooltip.Content>
+                    </Tooltip.Root>
+                    <Tooltip.Root>
+                        <Tooltip.Trigger>
+                            <Button
+                                    onclick={() => media_type = 'url'}
+                                    variant={media_type === 'url' ? 'secondary' : "outline" }
+                                    aria-label="web page">
+                                <Link/>
+                            </Button>
+                        </Tooltip.Trigger>
+                        <Tooltip.Content><p>Web article</p></Tooltip.Content>
+                    </Tooltip.Root>
+                    <Tooltip.Root>
+                        <Tooltip.Trigger>
+                            <Button
+                                    onclick={() => media_type = 'restaurant'}
+                                    variant={media_type === 'restaurant' ? 'secondary' : "outline" }
+                                    aria-label="restaurant">
+                                <Soup/>
+                            </Button>
+                        </Tooltip.Trigger>
+                        <Tooltip.Content><p>Restaurant</p></Tooltip.Content>
+                    </Tooltip.Root>
+                    <Tooltip.Root>
+                        <Tooltip.Trigger>
+                            <Button
+                                    onclick={() => media_type = 'other'}
+                                    variant={media_type === 'other' ? 'secondary' : "outline" }
+                                    aria-label="other"><Input name="other_media_type" placeholder="other..." class=""/>
+                            </Button>
+                        </Tooltip.Trigger>
+                        <Tooltip.Content><p>Other</p></Tooltip.Content>
+                    </Tooltip.Root>
 
                 </div>
 
@@ -184,9 +220,10 @@
                         <Star fill={ rating >= 5 ? 'yellow' : 'white' } onclick={setStar(5)}/>
                     </div>
                     <div>
-                        <Label for="who_recommended">Who recommended?:</Label>
+
+                        <Label for="who_recommended">Who recommended to you?:</Label>
                         <Input id="who_recommended" name="who_recommended"
-                               placeholder="I use this for remembering which friend recommended something to me"
+                               placeholder="useful for remembering"
                                value={form?.who_recommended} autocomplete="off"/>
                     </div>
                 </div>

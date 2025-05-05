@@ -21,11 +21,14 @@
 
 <div>
     <H1>{user.name}'s saved recommendations</H1>
+    <p>&nbsp;</p>
+    
 
     <p>Save the things you love, track what you want to enjoy next, share interests with your friends</p>
 
     <div>
         <Link url="/recommendations/create">Create a new recommendation</Link>
+
     </div>
     <hr/>
 

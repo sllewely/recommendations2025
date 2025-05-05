@@ -19,6 +19,7 @@ export const actions = {
                 media_type: data.get('media_type'),
                 who_recommended: data.get('who_recommended'),
                 rating: data.get('rating'),
+                url: data.get('url'),
             },
             jwt,
         );

@@ -5,8 +5,9 @@
     import {newToast, toasts, ToastType} from "$lib/state/toast.svelte";
     import FormButton from "$lib/components/form/FormButton.svelte";
     import Form from "$lib/components/form/Form.svelte";
+    import {Button} from "$lib/components/ui/button";
 
-    let {user, is_friend} = $props();
+    let {user, is_friend, is_pending} = $props();
 
     let updating = $state(false);
 
@@ -37,7 +38,11 @@
         }}
             >
                 <input type="hidden" name="user_id" value={user.id}/>
-                <FormButton>Add friend</FormButton>
+                {#if is_pending}
+                    <Button type="button" disabled>Friend request pending</Button>
+                {:else}
+                    <Button type="submit">Add friend</Button>
+                {/if}
             </form>
         </div>
     {:else }

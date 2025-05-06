@@ -46,7 +46,6 @@
         <H2>Events</H2>
         {#each data.events as event_item}
             {#if !!event_item['date_header']}
-                {console.log(event_item)}
                 <EventFeedItem event_item={event_item}/>
                 <DateHeader event_item={event_item}/>
             {:else}

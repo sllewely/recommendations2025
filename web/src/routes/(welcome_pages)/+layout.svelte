@@ -7,7 +7,7 @@
 
     let { children, data } = $props();
 
-    $effect(() => current_user.id = data.current_user_id);
+    current_user.id = data.current_user_id;
 
 </script>
 <div class="bg-teal-100"></div>

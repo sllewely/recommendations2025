@@ -11,7 +11,7 @@
 
     let { children, data } = $props();
 
-     $effect(() => current_user.id = data.current_user_id);
+     current_user.id = data.current_user_id;
 
 
     // every 10 seconds, poll notifications

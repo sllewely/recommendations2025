@@ -1,11 +1,11 @@
 <script lang="ts">
     import {goto} from '$app/navigation';
-    import {current_user, isSignedIn} from '$lib/state/current_user.svelte.js';
+    import {current_user} from '$lib/state/current_user.svelte.js';
     import {Settings} from "@lucide/svelte";
 
     let user_id = current_user.id;
 
-    let signed_in = $derived(current_user && current_user.auth_token !== '');
+    let signed_in = $derived(current_user && current_user.id);
 
     let log_out = async () => {
         const response = await fetch('/api/log_out', {
@@ -24,7 +24,7 @@
 <header class="text-white p-0">
     <div class="m-0 w-full flex items-center justify-between  py-4 bg-gray-800 ">
         <div class="w-full  md:text-center md:mb-0 mb-8">
-            <a href="/"><p class="text-gray-400 text-xl">Recommendations and Events</p></a>
+            <a href="/"><p class="text-yellow-400 text-xl">BumbleBeans</p></a>
         </div>
         <div class="w-full md:text-center md:mb-0 mb-8">
             <ul class="list-reset flex justify-center flex-wrap text-xs md:text-sm gap-3">

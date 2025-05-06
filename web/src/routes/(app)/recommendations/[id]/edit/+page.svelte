@@ -17,8 +17,6 @@
     let starting_status = (recommendation.status === 'interested' ? RecommendationStatus.Interested :
         recommendation.status === 'recommend' ? RecommendationStatus.Recommend : RecommendationStatus.Watching);
     let status = $state(starting_status);
-    console.log(recommendation.status)
-
 
     // TODO:
     // List of types, one can be selected

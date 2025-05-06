@@ -17,9 +17,9 @@
 
     let my_user = data.my_user;
 
-    let pending_friends = $state(data.friend_requests_response['res'] ?? []);
+    let pending_friends = $state(data.friend_requests_response['res']['incoming_friend_requests'] ?? []);
     $effect(() => {
-        pending_friends = data.friend_requests_response['res'] ?? [];
+        pending_friends = data.friend_requests_response['res']['incoming_friend_requests'] ?? [];
     })
 
     let creating = $state(false);
@@ -46,7 +46,6 @@
         document.getElementById('search_form').requestSubmit();
     }
 
-    $inspect(friends_map.friends_map);
 </script>
 
 <div>
@@ -86,7 +85,6 @@
                             let res = result.data;
                             if (res.success) {
                                 users = res['res'];
-                                console.log(res['res']);
                             } else {
                                 toasts.toast = newToast("Error searching: " + res.message, ToastType.Error);
                             }
@@ -119,7 +117,8 @@
                 <div>
                     {#each users as user}
                         <div class="">
-                            <UserSearchResult {user} is_friend={user.id in friends_map.friends_map}/>
+                            <UserSearchResult {user} is_friend={user.id in friends_map.friends_map}
+                                              is_pending="{data.outgoing_friend_request_map.has(user.id.toString())}"/>
                         </div>
                     {/each}
                 </div>

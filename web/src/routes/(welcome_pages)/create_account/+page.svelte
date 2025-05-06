@@ -10,8 +10,6 @@
 
     let {data, form} = $props();
 
-    console.log(form);
-
     let creating = $state(false);
 
 </script>

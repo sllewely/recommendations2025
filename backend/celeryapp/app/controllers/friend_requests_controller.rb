@@ -3,7 +3,10 @@ class FriendRequestsController < ApplicationController
   # Returns the user associated with the friend request.
   # TODO: return friend request and user, so that we can reject friend requests.  Low priority
   def index
-    render json: current_user.friend_requests.all.map { |fr| fr.incoming_friend.public_attributes }, status: :ok
+    render json: {
+      incoming_friend_requests: current_user.friend_requests.map { |fr| fr.incoming_friend.public_attributes },
+      outgoing_friend_requests: current_user.outgoing_friend_requests.map { |fr| fr.user.public_attributes },
+    }, status: :ok
   end
 
   def create

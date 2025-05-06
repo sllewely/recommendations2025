@@ -152,7 +152,6 @@
                                 <Pagination.Ellipsis/>
                             </Pagination.Item>
                         {:else}
-                            {console.log(page.value)}
                             <Pagination.Item isVisible={myPage == page.value}>
                                 <Pagination.Link {page} isActive={myPage == page.value} on:click={() => {
                             document.getElementById("page").value = page.value;

@@ -55,8 +55,6 @@
         }
     );
 
-    $inspect(friends_map.friends_map);
-
 </script>
 
 

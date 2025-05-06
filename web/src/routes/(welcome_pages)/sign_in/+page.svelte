@@ -33,12 +33,10 @@
             return async ({update, result}) => {
                 await update();
                 creating = false;
-                console.log(result)
                 let res = result.data
                 if (res.success) {
                     current_user.auth_token = res['auth_token'];
                     current_user.id = res['user_id'];
-                    console.log(res);
                     goto("/posts");
                     toasts.toast = newToast("You have successfully signed in");
                 } else {

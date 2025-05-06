@@ -23,7 +23,23 @@ RSpec.describe "FriendRequests", type: :request do
       expect(response).to have_http_status(:ok)
       res = JSON.parse(response.body)
       expect(res.size).to eq(2)
-      expect(res.first.keys).to include("name")
+      expect(res['incoming_friend_requests'].size).to eq(2)
+      expect(res['incoming_friend_requests'].first.keys).to include("name")
+      expect(res['outgoing_friend_requests'].size).to eq(0)
+    end
+
+    it 'lists my friend requests' do
+      new_friend = create(:user)
+      new_friend2 = create(:user)
+      create(:friend_request, user: new_friend, incoming_friend: @my_user)
+      create(:friend_request, user: new_friend2, incoming_friend: @my_user)
+      get "/friend_requests", params: {}, headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      res = JSON.parse(response.body)
+      expect(res.size).to eq(2)
+      expect(res['outgoing_friend_requests'].size).to eq(2)
+      expect(res['outgoing_friend_requests'].first.keys).to include("name")
     end
 
   end

@@ -17,9 +17,9 @@
 
     let my_user = data.my_user;
 
-    let pending_friends = $state(data.friend_requests_response['res'] ?? []);
+    let pending_friends = $state(data.friend_requests_response['res']['incoming_friend_requests'] ?? []);
     $effect(() => {
-        pending_friends = data.friend_requests_response['res'] ?? [];
+        pending_friends = data.friend_requests_response['res']['incoming_friend_requests'] ?? [];
     })
 
     let creating = $state(false);

@@ -42,6 +42,10 @@ class User < ApplicationRecord
     sessions.where.not(id: Current.session).delete_all
   end
 
+  def outgoing_friend_requests
+    FriendRequest.where(incoming_friend_id: id)
+  end
+
   # friends and myself
   def friend_ids
     friends.pluck(:friend_id) << id

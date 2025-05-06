@@ -3,7 +3,7 @@
     import Footer from '$lib/components/Footer.svelte';
     import '../../app.css';
     import Toast from "$lib/components/Toast.svelte";
-    import { current_user, isSignedIn } from '$lib/state/current_user.svelte.js';
+    import { current_user } from '$lib/state/current_user.svelte.js';
     import { notifs } from '$lib/state/notifications.svelte';
     import { friends_map, fetch_friends_map } from "$lib/state/friends_map.svelte";
     import {onMount} from "svelte";
@@ -11,7 +11,7 @@
 
     let { children, data } = $props();
 
-    current_user.id = data.current_user_id;
+     $effect(() => current_user.id = data.current_user_id);
 
 
     // every 10 seconds, poll notifications

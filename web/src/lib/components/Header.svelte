@@ -5,7 +5,7 @@
 
     let user_id = current_user.id;
 
-    let signed_in = $derived(current_user && current_user.id !== '');
+    let signed_in = $derived(current_user && current_user.auth_token !== '');
 
     let log_out = async () => {
         const response = await fetch('/api/log_out', {

@@ -23,6 +23,20 @@ Things you may want to cover:
 
 * ...
 
+## Installation
+
+<lots of details missing ...>
+
+- install ruby with your choice of version manager (I used rvm)
+- bundle install
+- rails db:migrate
+
+**install redis**
+
+```brew install redis```
+
+[redis installation guide](https://redis.io/docs/latest/operate/oss_and_stack/install/archive/install-redis/install-redis-on-mac-os/)
+
 ### DB
 
 ```rails db:migrate```
@@ -59,3 +73,19 @@ include FactoryBot::Syntax::Methods
 
 ```
 
+### redis and sidekiq
+
+**start redis**
+
+```redis-server``` to run in terminal or to run in the background:
+```brew services start redis```
+
+[more redis start, stop, etc commands](https://redis.io/docs/latest/operate/oss_and_stack/install/archive/install-redis/install-redis-on-mac-os/)
+
+**start sidekiq**
+
+You will also need to start sidekiq.
+
+```bundle exec sidekiq```
+
+[sidekiq getting started guide](https://github.com/sidekiq/sidekiq/wiki/Getting-Started)

@@ -1,4 +1,8 @@
+require "sidekiq/web" # require the web UI
+
 Rails.application.routes.draw do
+  mount Sidekiq::Web => "/sidekiq" # access it at http://localhost:3000/sidekiq
+  
   post "sign_in", to: "sessions#create"
   post "sign_up", to: "registrations#create"
   resources :sessions, only: [:index, :show, :destroy]

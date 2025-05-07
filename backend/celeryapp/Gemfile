@@ -54,3 +54,5 @@ end
 gem "authentication-zero", "~> 4.0"
 
 gem "pagy", "~> 9.3"
+
+gem "sidekiq", "~> 8.0"

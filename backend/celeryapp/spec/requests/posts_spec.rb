@@ -2,6 +2,31 @@ require 'rails_helper'
 require 'json'
 
 RSpec.describe "Posts", type: :request do
+  describe "DELETE /posts" do
+
+    before(:context) do
+      @my_user = create(:user)
+      headers = { 'ACCEPT' => 'application/json' }
+      post "/sign_in", params: { email: @my_user.email, password: @my_user.password }, headers: headers
+      auth_token = JSON.parse(response.body)["auth_token"]
+      @headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{auth_token}" }
+    end
+
+    it 'delete post' do
+      my_post = create(:post, user: @my_user)
+      delete "/post/#{my_post.__id__}", params: {}, headers: headers
+      expect(response).to have_http_status(:deleted)
+    end
+
+    it "error if deleting other person's post" do
+      new_user = create(:user)
+      my_post = create(:post, user:new_user)
+      delete "/post/#{my_post.__id__}", params: {}, headers: headers
+      expect(response).to have_http_status(:unauthorized)
+    end
+  end
+
+
   describe "POST /posts" do
 
     before(:context) do

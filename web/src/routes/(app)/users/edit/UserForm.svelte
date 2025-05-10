@@ -17,6 +17,7 @@
     import {newToast, toasts, ToastType} from "$lib/state/toast.svelte";
     import * as Tabs from "$lib/components/ui/tabs";
     import * as Card from "$lib/components/ui/card";
+    import {Button} from "$lib/components/ui/button/index.js";
 
     interface Props {
         form_data: SuperValidated<Infer<FormSchema>>;
@@ -32,6 +33,7 @@
     const {form: formData} = form;
 
     let creating = $state(false);
+    let edit_password = $state(false);
 
 </script>
 
@@ -104,16 +106,6 @@
 
 
                     <div class="flex flex-col space-y-2">
-                        <!--                        <Label for="name">Name:</Label>-->
-                        <!--                        <Input id="name" name="name" value={form?.name ?? user.name} autocomplete="off"/>-->
-                        <!--                        <Label for="blurb">About me:</Label>-->
-                        <!--                        <Textarea id="blurb" name="blurb" value={form?.blurb ?? user.blurb}-->
-                        <!--                                  placeholder="What do you want to share?"/>-->
-                        <!--                        <Label for="tags">Tags (to help people search for you):</Label>-->
-                        <!--                        <Input id="tags" name="tags"-->
-                        <!--                               placeholder="examples are the name of your town, college, or friend group"-->
-                        <!--                               value={form?.tags ?? user.tags.join(", ")} autocomplete="off"/>-->
-
 
                         <Form.Button on:click={() => {console.log("click!!")}}>
                             Update
@@ -139,10 +131,23 @@
                         <Form.Description>Your account email.</Form.Description>
                         <Form.FieldErrors/>
                     </Form.Field>
+                    <Button type="button" on:click={edit_password = !edit_password}>Edit password</Button>
+                    {#if edit_password}
+                        <Form.Field {form} name="password">
+                            <Form.Control let:attrs>
+                                <Form.Label>Set password</Form.Label>
+                                <Input {...attrs} bind:value={$formData.password}/>
+                            </Form.Control>
+                            <Form.Description>Overwrite your old password</Form.Description>
+                            <Form.FieldErrors/>
+                        </Form.Field>
+                    {/if}
 
-                    <Form.Button on:click={() => {console.log("click!!")}}>
-                        Update
-                    </Form.Button>
+                    <div class="flex flex-col mt-4">
+                        <Form.Button on:click={() => {console.log("click!!")}}>
+                            Update
+                        </Form.Button>
+                    </div>
 
                 </Card.Content>
             </Card.Root>

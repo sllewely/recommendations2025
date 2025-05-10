@@ -31,11 +31,12 @@ class UsersController < ApplicationController
     if params[:id].to_i != current_user.id
       render json: {}, status: :unauthorized and return
     end
-    updatable_params[:password] = params[:password] if params[:password].present?
     current_user.update(updatable_params)
     if params[:tags]
       current_user.update_tags(params[:tags])
     end
+    current_user.password = params[:password] if params[:password].present?
+    
     if current_user.save
       render json: current_user.attributes, status: :ok
     else
@@ -46,7 +47,7 @@ class UsersController < ApplicationController
   private
 
   def updatable_params
-    params.permit(:name, :username, :email, :blurb, :tags)
+    params.except(:password).permit(:name, :username, :email, :blurb, :tags)
   end
 
 end

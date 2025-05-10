@@ -1,20 +1,19 @@
 import {getUser} from '$lib/api_calls/users.svelte.js';
-import {redirect} from "@sveltejs/kit";
-import {VITE_API_URL} from '$env/static/private';
 import * as api from "$lib/api_calls/api.svelte.js";
+import type {PageServerLoad} from "./$types.js";
+import {superValidate} from "sveltekit-superforms";
+import {profileFormSchema} from "./schema";
+import {zod} from "sveltekit-superforms/adapters";
 
-
-let root_url = VITE_API_URL;
-
-export async function load({cookies, params}) {
+export const load: PageServerLoad = async ({cookies, params}) => {
 
     let user_id = cookies.get('user_id');
     const jwt = cookies.get('jwt');
     let user = await getUser(jwt, user_id);
 
-    2 + 5;
     return {
         user: user['res'],
+        form: await superValidate(user['res'], zod(profileFormSchema)),
     }
 }
 

@@ -32,7 +32,7 @@
 
 
     <div>
-        <UserForm form_data={data.form}/>
+        <UserForm form_data={data.form} {tags}/>
 
     </div>
 

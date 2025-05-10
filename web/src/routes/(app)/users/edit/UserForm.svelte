@@ -20,9 +20,10 @@
 
     interface Props {
         form_data: SuperValidated<Infer<FormSchema>>;
+        tags: string[],
     }
 
-    let {form_data}: Props = $props();
+    let {form_data, tags}: Props = $props();
 
     const form = superForm(form_data, {
         validators: zodClient(profileFormSchema),
@@ -31,6 +32,7 @@
     const {form: formData} = form;
 
     let creating = $state(false);
+
 </script>
 
 {#if creating }
@@ -94,6 +96,11 @@
                         </Form.Description>
                         <Form.FieldErrors/>
                     </Form.Field>
+                    <div class="space-x-2 mb-4">
+                        {#each tags as tag}
+                            <Badge>{tag}</Badge>
+                        {/each}
+                    </div>
 
 
                     <div class="flex flex-col space-y-2">
@@ -106,15 +113,10 @@
                         <!--                        <Input id="tags" name="tags"-->
                         <!--                               placeholder="examples are the name of your town, college, or friend group"-->
                         <!--                               value={form?.tags ?? user.tags.join(", ")} autocomplete="off"/>-->
-                        <!--                        <div class="space-x-2">-->
-                        <!--                            {#each tags as tag}-->
-                        <!--                                <Badge>{tag}</Badge>-->
-                        <!--                            {/each}-->
-                        <!--                        </div>-->
-                        <FormButton on:click={() => {document.getElementById("user_form").requestSubmit()}}>
+
+
+                        <Form.Button on:click={() => {console.log("click!!")}}>
                             Update
-                        </FormButton>
-                        <Form.Button on:click={() => {console.log("click!!")}}>Submit
                         </Form.Button>
 
                     </div>
@@ -138,11 +140,14 @@
                         <Form.FieldErrors/>
                     </Form.Field>
 
+                    <Form.Button on:click={() => {console.log("click!!")}}>
+                        Update
+                    </Form.Button>
+
                 </Card.Content>
             </Card.Root>
 
         </Tabs.Content>
 
     </Tabs.Root>
-    <Form.Button>Submit</Form.Button>
 </form>

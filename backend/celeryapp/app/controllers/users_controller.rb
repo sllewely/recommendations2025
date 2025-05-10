@@ -31,6 +31,7 @@ class UsersController < ApplicationController
     if params[:id].to_i != current_user.id
       render json: {}, status: :unauthorized and return
     end
+    updatable_params[:password] = params[:password] if params[:password].present?
     current_user.update(updatable_params)
     if params[:tags]
       current_user.update_tags(params[:tags])

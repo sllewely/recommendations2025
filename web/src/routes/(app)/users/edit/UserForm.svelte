@@ -1,4 +1,5 @@
 <script lang="ts">
+    import {enhance} from '$app/forms';
     import * as Form from "$lib/components/ui/form";
     import {Input} from "$lib/components/ui/input";
     import {profileFormSchema, type FormSchema} from "./schema";
@@ -27,7 +28,7 @@
         validators: zodClient(profileFormSchema),
     });
 
-    const {form: formData, enhance} = form;
+    const {form: formData} = form;
 
     let creating = $state(false);
 </script>
@@ -37,12 +38,13 @@
 {/if}
 
 <form
+        id="user_form"
         method="POST"
         action="?/update_user"
         use:enhance={() => {
             creating = true;
             return async ({update, result}) => {
-                await update({reset: false});
+                await update();
                 creating = false;
                 let res = result.data;
                 if (res.success) {
@@ -82,6 +84,17 @@
                         <Form.FieldErrors/>
                     </Form.Field>
 
+                    <Form.Field {form} name="string_tags">
+                        <Form.Control let:attrs>
+                            <Form.Label>Tags</Form.Label>
+                            <Input {...attrs} bind:value={$formData.string_tags}/>
+                        </Form.Control>
+                        <Form.Description>To help people search for you. @xamples are the name of your town, college, or
+                            friend group
+                        </Form.Description>
+                        <Form.FieldErrors/>
+                    </Form.Field>
+
 
                     <div class="flex flex-col space-y-2">
                         <!--                        <Label for="name">Name:</Label>-->
@@ -98,9 +111,11 @@
                         <!--                                <Badge>{tag}</Badge>-->
                         <!--                            {/each}-->
                         <!--                        </div>-->
-                        <FormButton>
+                        <FormButton on:click={() => {document.getElementById("user_form").requestSubmit()}}>
                             Update
                         </FormButton>
+                        <Form.Button on:click={() => {console.log("click!!")}}>Submit
+                        </Form.Button>
 
                     </div>
 
@@ -114,6 +129,14 @@
                     <H1>Edit your account details</H1>
                 </Card.Header>
                 <Card.Content>
+                    <Form.Field {form} name="email">
+                        <Form.Control let:attrs>
+                            <Form.Label>Email</Form.Label>
+                            <Input {...attrs} bind:value={$formData.email}/>
+                        </Form.Control>
+                        <Form.Description>Your account email.</Form.Description>
+                        <Form.FieldErrors/>
+                    </Form.Field>
 
                 </Card.Content>
             </Card.Root>
@@ -121,4 +144,5 @@
         </Tabs.Content>
 
     </Tabs.Root>
+    <Form.Button>Submit</Form.Button>
 </form>

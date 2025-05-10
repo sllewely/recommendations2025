@@ -136,7 +136,7 @@
                         <Form.Field {form} name="password">
                             <Form.Control let:attrs>
                                 <Form.Label>Set password</Form.Label>
-                                <Input {...attrs} bind:value={$formData.password}/>
+                                <Input type="password" {...attrs} bind:value={$formData.password}/>
                             </Form.Control>
                             <Form.Description>Overwrite your old password</Form.Description>
                             <Form.FieldErrors/>
@@ -144,7 +144,7 @@
                     {/if}
 
                     <div class="flex flex-col mt-4">
-                        <Form.Button on:click={() => {console.log("click!!")}}>
+                        <Form.Button>
                             Update
                         </Form.Button>
                     </div>

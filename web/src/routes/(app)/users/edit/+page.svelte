@@ -2,7 +2,7 @@
     import {enhance} from '$app/forms';
 
     import H1 from '$lib/components/text/H1.svelte'
-    import Card from "$lib/components/Card.svelte";
+    import * as Card from "$lib/components/ui/card";
     import FormButton from "$lib/components/form/FormButton.svelte";
     import {Input} from "$lib/components/ui/input/index.js";
     import {Label} from "$lib/components/ui/label/index.js";
@@ -24,7 +24,7 @@
 
 </script>
 <div>
-    <p>your info</p>
+    <p>#TODO page needs a fun background!!</p>
     <H1>{user.name}</H1>
 
     {#if creating }
@@ -38,11 +38,16 @@
                 <Tabs.Trigger value="account">Account</Tabs.Trigger>
             </Tabs.List>
             <Tabs.Content value="profile">
-                <Card>
-                    <form
-                            method="POST"
-                            action="?/update_user"
-                            use:enhance={() => {
+                <Card.Root>
+                    <Card.Header>
+                        <H1>Edit your profile</H1>
+                    </Card.Header>
+                    <Card.Content>
+
+                        <form
+                                method="POST"
+                                action="?/update_user"
+                                use:enhance={() => {
             creating = true;
             return async ({update, result}) => {
                 await update({reset: false});
@@ -55,33 +60,42 @@
                 }
             };
         }}
-                    >
-                        <div class="flex flex-col space-y-2">
-                            <Label for="name">Name:</Label>
-                            <Input id="name" name="name" value={form?.name ?? user.name} autocomplete="off"/>
-                            <Label for="blurb">About me:</Label>
-                            <Textarea id="blurb" name="blurb" value={form?.blurb ?? user.blurb}
-                                      placeholder="What do you want to share?"/>
-                            <Label for="tags">Tags (to help people search for you):</Label>
-                            <Input id="tags" name="tags"
-                                   placeholder="examples are the name of your town, college, or friend group"
-                                   value={form?.tags ?? user.tags.join(", ")} autocomplete="off"/>
-                            <div class="space-x-2">
-                                {#each tags as tag}
-                                    <Badge>{tag}</Badge>
-                                {/each}
+                        >
+                            <div class="flex flex-col space-y-2">
+                                <Label for="name">Name:</Label>
+                                <Input id="name" name="name" value={form?.name ?? user.name} autocomplete="off"/>
+                                <Label for="blurb">About me:</Label>
+                                <Textarea id="blurb" name="blurb" value={form?.blurb ?? user.blurb}
+                                          placeholder="What do you want to share?"/>
+                                <Label for="tags">Tags (to help people search for you):</Label>
+                                <Input id="tags" name="tags"
+                                       placeholder="examples are the name of your town, college, or friend group"
+                                       value={form?.tags ?? user.tags.join(", ")} autocomplete="off"/>
+                                <div class="space-x-2">
+                                    {#each tags as tag}
+                                        <Badge>{tag}</Badge>
+                                    {/each}
+                                </div>
+                                <FormButton>
+                                    Update
+                                </FormButton>
+
                             </div>
-                            <FormButton>
-                                Update
-                            </FormButton>
 
-                        </div>
-
-                    </form>
-
-                </Card>
+                        </form>
+                    </Card.Content>
+                </Card.Root>
             </Tabs.Content>
             <Tabs.Content value="account">
+
+                <Card.Root>
+                    <Card.Header>
+                        <H1>Edit your account details</H1>
+                    </Card.Header>
+                    <Card.Content>
+
+                    </Card.Content>
+                </Card.Root>
 
             </Tabs.Content>
 

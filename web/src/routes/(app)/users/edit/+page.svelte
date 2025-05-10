@@ -4,14 +4,13 @@
     import H1 from '$lib/components/text/H1.svelte'
     import Card from "$lib/components/Card.svelte";
     import FormButton from "$lib/components/form/FormButton.svelte";
-    import {current_user} from '$lib/state/current_user.svelte';
-
     import {Input} from "$lib/components/ui/input/index.js";
     import {Label} from "$lib/components/ui/label/index.js";
     import {newToast, toasts, ToastType} from "$lib/state/toast.svelte";
-    import {goto} from "$app/navigation";
     import {Textarea} from "$lib/components/ui/textarea";
     import {Badge} from "$lib/components/ui/badge/index.js";
+
+    import * as Tabs from "$lib/components/ui/tabs";
 
     let {data, form} = $props();
     let creating = $state(false);
@@ -33,11 +32,17 @@
     {/if}
 
     <div>
-        <Card>
-            <form
-                    method="POST"
-                    action="?/update_user"
-                    use:enhance={() => {
+        <Tabs.Root value="profile" class="">
+            <Tabs.List class="grid w-full grid-cols-2">
+                <Tabs.Trigger value="profile">Profile</Tabs.Trigger>
+                <Tabs.Trigger value="account">Account</Tabs.Trigger>
+            </Tabs.List>
+            <Tabs.Content value="profile">
+                <Card>
+                    <form
+                            method="POST"
+                            action="?/update_user"
+                            use:enhance={() => {
             creating = true;
             return async ({update, result}) => {
                 await update({reset: false});
@@ -50,31 +55,37 @@
                 }
             };
         }}
-            >
-                <div class="flex flex-col space-y-2">
-                    <Label for="name">Name:</Label>
-                    <Input id="name" name="name" value={form?.name ?? user.name} autocomplete="off"/>
-                    <Label for="blurb">About me:</Label>
-                    <Textarea id="blurb" name="blurb" value={form?.blurb ?? user.blurb}
-                              placeholder="What do you want to share?"/>
-                    <Label for="tags">Tags (to help people search for you):</Label>
-                    <Input id="tags" name="tags"
-                           placeholder="examples are the name of your town, college, or friend group"
-                           value={form?.tags ?? user.tags.join(", ")} autocomplete="off"/>
-                    <div class="space-x-2">
-                        {#each tags as tag}
-                            <Badge>{tag}</Badge>
-                        {/each}
-                    </div>
-                    <FormButton>
-                        Update
-                    </FormButton>
+                    >
+                        <div class="flex flex-col space-y-2">
+                            <Label for="name">Name:</Label>
+                            <Input id="name" name="name" value={form?.name ?? user.name} autocomplete="off"/>
+                            <Label for="blurb">About me:</Label>
+                            <Textarea id="blurb" name="blurb" value={form?.blurb ?? user.blurb}
+                                      placeholder="What do you want to share?"/>
+                            <Label for="tags">Tags (to help people search for you):</Label>
+                            <Input id="tags" name="tags"
+                                   placeholder="examples are the name of your town, college, or friend group"
+                                   value={form?.tags ?? user.tags.join(", ")} autocomplete="off"/>
+                            <div class="space-x-2">
+                                {#each tags as tag}
+                                    <Badge>{tag}</Badge>
+                                {/each}
+                            </div>
+                            <FormButton>
+                                Update
+                            </FormButton>
 
-                </div>
+                        </div>
 
-            </form>
+                    </form>
 
-        </Card>
+                </Card>
+            </Tabs.Content>
+            <Tabs.Content value="account">
+
+            </Tabs.Content>
+
+        </Tabs.Root>
 
     </div>
 

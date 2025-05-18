@@ -27,7 +27,7 @@
             <a href="/"><p class="text-yellow-400 text-xl">BumbleBeans</p></a>
         </div>
         <div class="w-full text-center px-1">
-            <ul class="list-reset flex justify-center flex-wrap text-xs sm:text-sm gap-3">
+            <ul class="list-reset flex justify-center flex-wrap text-xs md:text-sm gap-3">
                 {#if signed_in}
                     <li><a href="/posts" class="text-gray-400 hover:text-white">Posts</a></li>
                     <li><a href="/users/{user_id}" class="text-gray-400 hover:text-white">My profile</a></li>
@@ -41,7 +41,7 @@
                 {/if}
             </ul>
         </div>
-        <div class="flex items-center space-x-2 w-full sm:text-sm/6 text-xs md:text-center justify-end whitespace-nowrap pe-2">
+        <div class="flex items-center space-x-2 w-full md:text-sm/6 text-xs md:text-center justify-end whitespace-nowrap pe-2">
             <a class="font-semibold text-gray-400 hover:text-orange-400" href="/bug_report">Report a
                 bug</a>
             <span>|</span>

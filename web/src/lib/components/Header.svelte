@@ -22,12 +22,12 @@
 </script>
 
 <header class="text-white p-0">
-    <div class="m-0 w-full flex items-center justify-between  py-4 bg-gray-800 ">
-        <div class="w-full  md:text-center md:mb-0 mb-8">
+    <div class="m-0 w-full flex items-center justify-between py-4 bg-gray-800 ">
+        <div class="w-full text-center">
             <a href="/"><p class="text-yellow-400 text-xl">BumbleBeans</p></a>
         </div>
-        <div class="w-full md:text-center md:mb-0 mb-8">
-            <ul class="list-reset flex justify-center flex-wrap text-xs md:text-sm gap-3">
+        <div class="w-full text-center px-1">
+            <ul class="list-reset flex justify-center flex-wrap text-xs sm:text-sm gap-3">
                 {#if signed_in}
                     <li><a href="/posts" class="text-gray-400 hover:text-white">Posts</a></li>
                     <li><a href="/users/{user_id}" class="text-gray-400 hover:text-white">My profile</a></li>
@@ -41,20 +41,20 @@
                 {/if}
             </ul>
         </div>
-        <div class="flex items-center space-x-2 w-full md:text-center md:mb-0 mb-8 justify-end whitespace-nowrap pe-2">
-            <a class="text-sm/6 font-semibold text-gray-400 hover:text-orange-400" href="/bug_report">Report a
+        <div class="flex items-center space-x-2 w-full sm:text-sm/6 text-xs md:text-center justify-end whitespace-nowrap pe-2">
+            <a class="font-semibold text-gray-400 hover:text-orange-400" href="/bug_report">Report a
                 bug</a>
             <span>|</span>
             {#if signed_in}
-                <a class="text-sm/6 font-semibold text-gray-400 hover:text-orange-400" href="/users/edit">
+                <a class="font-semibold text-gray-400 hover:text-orange-400" href="/users/edit">
                     <Settings/>
                 </a>
                 <span>|</span>
-                <a class="text-sm/6 font-semibold text-gray-400 hover:text-orange-400" onclick={log_out}>Log out
+                <button type="button" class="cursor-pointer font-semibold text-gray-400 hover:text-orange-400" onclick={log_out}>Log out
                     <span
-                            aria-hidden="true">&rarr;</span></a>
+                            aria-hidden="true">&rarr;</span></button>
             {:else}
-                <a href="/sign_in" class="text-sm/6 font-semibold text-gray-400 hover:text-orange-400">Log in <span
+                <a href="/sign_in" class="font-semibold text-gray-400 hover:text-orange-400">Log in <span
                         aria-hidden="true">&rarr;</span></a>
             {/if}
         </div>
@@ -66,7 +66,7 @@
                 <ul class="list-reset flex justify-center flex-wrap text-xs md:text-sm gap-3">
                     <li><a href="/friends" class="text-gray-400 hover:text-white">Friends</a></li>
                     <li><a href="/recommendations/users/{user_id}"
-                           class="text-gray-400 hover:text-white">Saved Recommendations</a></li>
+                        class="text-gray-400 hover:text-white">Saved Recommendations</a></li>
                 </ul>
             </div>
             <div></div>

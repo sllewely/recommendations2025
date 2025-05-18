@@ -6,6 +6,7 @@
     import {newToast, toasts, ToastType} from "$lib/state/toast.svelte";
     import {Input} from "$lib/components/ui/input/index.js";
     import {Label} from "$lib/components/ui/label/index.js";
+    import {Button} from "$lib/components/ui/button/index.js";
     import FormButton from "$lib/components/form/FormButton.svelte";
     import H2 from "$lib/components/text/H2.svelte";
     import UserSearchResult from "$lib/components/users/UserSearchResult.svelte";
@@ -84,7 +85,9 @@
                             creating = false;
                             let res = result.data;
                             if (res.success) {
-                                users = res['res'];
+                                users = res['res'].filter(user => {
+                                    return user.id !== my_user.res.id;
+                                });
                             } else {
                                 toasts.toast = newToast("Error searching: " + res.message, ToastType.Error);
                             }
@@ -92,24 +95,37 @@
 
                     }}
                 >
-                    <div class="flex row justify-between space-x-4">
+                    <div class="flex flex-col sm:flex-row justify-between sm:space-x-4">
                         <div class="flex-auto">
                             <Label for="search">by name:</Label>
                             <Input id="search" name="search" placeholder="sarah"
-                                   autofocus
-                                   autocomplete="off"
-                                   on:keyup={() => {document.getElementById("search_form").requestSubmit()}}/>
+                                autofocus
+                                autocomplete="off"
+                                on:keyup={() => {document.getElementById("search_form").requestSubmit()}}/>
                         </div>
                         <div class="flex-1">
                             <Label for="tag">by tag:</Label>
                             <Input id="tag" name="tag" placeholder="nyc"
-                                   autofocus
-                                   autocomplete="off"
+                                autofocus
+                                autocomplete="off"
                             />
                         </div>
                     </div>
-                    <div class="my-6">
-                        <FormButton>Search</FormButton>
+                    <div class="flex row gap-2">
+                        <div class="my-6">
+                            <Button type="submit" class="rounded hover:bg-orange-500 text-teal-700 font-semibold hover:text-white py-2 px-4 border border-teal-500 hover:border-transparent" variant="outline">Search</Button>
+                        </div>
+                        <div class="my-6">
+                            <Button 
+                                type="button" 
+                                class="rounded hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent" 
+                                variant="outline" 
+                                on:click={() => {
+                                    document.getElementById("search_form").reset();
+                                    users = [];
+                                    document.getElementById("search").focus();
+                                }}>Clear</Button>
+                        </div>
                     </div>
 
                 </form>
@@ -118,7 +134,7 @@
                     {#each users as user}
                         <div class="">
                             <UserSearchResult {user} is_friend={user.id in friends_map.friends_map}
-                                              is_pending="{data.outgoing_friend_request_map.has(user.id.toString())}"/>
+                                is_pending="{data.outgoing_friend_request_map.has(user.id.toString())}"/>
                         </div>
                     {/each}
                 </div>
@@ -128,8 +144,11 @@
 
     </div>
 
-    <div>
+    <div class="pt-4">
         <H2>Your friends</H2>
+        {#if friends.length === 0}
+            <p>You have no friends yet! Make some new ones :)</p>
+        {/if}
         <div>
             {#each friends as friend}
                 <Friend user={friend}/>

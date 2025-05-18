@@ -11,13 +11,13 @@
             if (toasts.toast.time == curr_message) {
                 toasts.toast.message = '';
             }
-        }, 8000);
+        }, 3000);
     })
 
 </script>
 
 {#if show_toast}
-<header class="{toast_color} text-black py-4 px-3" transition:fly={{x: 200, duration: 2000}}>
+<header class="{toast_color} text-black py-4 px-3" transition:fly={{x: 200, delay: 150, duration: 1000}}>
     <div class="container mx-auto flex items-center justify-between">
         <div>
         <p>{toasts.toast.message}</p>
@@ -28,4 +28,3 @@
     </div>
 </header>
 {/if}
-

@@ -1,14 +1,30 @@
-<footer class="bg-gray-800 text-white py-4 px-3 mt-16">
-    <div class="container mx-auto flex flex-wrap items-center justify-between">
-        <div class="w-full md:w-1/2 md:text-center md:mb-0 mb-8">
-            <p class="text-xs text-gray-400 md:text-sm">recommendations and events for friends, by celery</p>
-        </div>
-        <div class="w-full md:w-1/2 md:text-center md:mb-0 mb-8">
-            <ul class="list-reset flex justify-center flex-wrap text-xs md:text-sm gap-3">
-                <li><a href="https://github.com/sllewely/recommendations2025" class="text-gray-400 hover:text-white">Github</a></li>
-                <li class="mx-4"><a href="/bug_report" class="text-gray-400 hover:text-white">Report Bug</a></li>
-                <li><a href="/roadmap" class="text-gray-400 hover:text-white">Feature Roadmap</a></li>
-            </ul>
+<footer class="bg-gray-800 text-white py-6 px-4 mt-16">
+    <div class="max-w-6xl mx-auto">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-3">
+            <div class="w-full md:w-auto text-center md:text-left">
+                <p class="text-sm text-gray-400">
+                    recommendations and events for friends, by celery
+                </p>
+            </div>
+            <nav>
+                <ul class="flex flex-wrap justify-center gap-x-6 gap-y-2 md:text-sm text-xs">
+                    <li>
+                        <a href="https://github.com/sllewely/recommendations2025" class="text-gray-400 hover:text-white transition-colors">
+                            Github
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/bug_report" class="text-gray-400 hover:text-white transition-colors">
+                            Report Bug
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/roadmap" class="text-gray-400 hover:text-white transition-colors">
+                            Feature Roadmap
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
 </footer>

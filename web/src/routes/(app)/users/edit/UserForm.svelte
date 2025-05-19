@@ -14,7 +14,7 @@
     import H1 from "$lib/components/text/H1.svelte";
     import {Label} from "$lib/components/ui/label";
     import {Textarea} from "$lib/components/ui/textarea";
-    import {newToast, toasts, ToastType} from "$lib/state/toast.svelte";
+    import {newToast, ToastType} from "$lib/state/toast.svelte";
     import * as Tabs from "$lib/components/ui/tabs";
     import * as Card from "$lib/components/ui/card";
     import {Button} from "$lib/components/ui/button/index.js";
@@ -52,9 +52,9 @@
                 creating = false;
                 let res = result.data;
                 if (res.success) {
-                    toasts.toast = newToast("You have successfully updated your user");
+                    newToast("You have successfully updated your user");
                 } else {
-                    toasts.toast = newToast("Error updating " + res.message, ToastType.Error);
+                    newToast("Error updating " + res.message, ToastType.Error);
                 }
             };
         }}

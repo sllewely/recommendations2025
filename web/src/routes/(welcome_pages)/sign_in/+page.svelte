@@ -7,12 +7,9 @@
     import Link from '$lib/components/text/Link.svelte'
 
     import {current_user} from '$lib/state/current_user.svelte';
-    import {toasts, newToast, ToastType} from "$lib/state/toast.svelte";
-
+    import {setPendingToast, newToast, ToastType} from "$lib/state/toast.svelte";
 
     let {data, form} = $props();
-
-
     let creating = $state(false);
 
 </script>
@@ -37,15 +34,13 @@
                 if (res.success) {
                     current_user.auth_token = res['auth_token'];
                     current_user.id = res['user_id'];
+                    setPendingToast("You have successfully signed in!", ToastType.Success);
                     goto("/posts");
-                    toasts.toast = newToast("You have successfully signed in");
                 } else {
-                    toasts.toast = newToast("Error signing in: " + res.message, ToastType.Error);
+                    newToast("Error signing in: " + res.message, ToastType.Error);
                 }
             };
-
         }}
-
     >
 
         <div class="flex flex-col">

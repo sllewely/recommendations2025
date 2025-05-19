@@ -19,7 +19,7 @@
         BookmarkPlus,
         MessageCircleHeart
     } from "@lucide/svelte";
-    import {newToast, toasts, ToastType} from "$lib/state/toast.svelte.js";
+    import {newToast, ToastType} from "$lib/state/toast.svelte.js";
 
 
     let {data} = $props();
@@ -129,7 +129,7 @@
                             if (res.success) {
                                 recommendations = res['res']['recommendations'];
                             } else {
-                                toasts.toast = newToast("Error searching: " + res.message, ToastType.Error);
+                                newToast("Error searching: " + res.message, ToastType.Error);
                             }
                         };
 

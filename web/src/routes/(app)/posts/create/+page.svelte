@@ -10,7 +10,7 @@
     import LinkButton from "$lib/components/text/LinkButton.svelte";
 
     import {RecommendationStatus} from "$lib/enums";
-    import {newToast, toasts, ToastType} from "$lib/state/toast.svelte";
+    import {newToast, ToastType} from "$lib/state/toast.svelte";
     import {goto} from "$app/navigation";
 
     let {data, form} = $props();
@@ -45,10 +45,10 @@
                 creating = false;
                 let res = result.data;
             if (res.success) {
-                toasts.toast = newToast("You have successfully created a post!!!!");
+                newToast("You have successfully created a post!!!!");
                 goto("/posts")
             } else {
-                toasts.toast = newToast("Error creating a post: " + res.message, ToastType.Error);
+                newToast("Error creating a post: " + res.message, ToastType.Error);
             }
             };
 

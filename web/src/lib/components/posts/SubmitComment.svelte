@@ -2,7 +2,7 @@
     import {enhance} from '$app/forms';
     import {Button} from "$lib/components/ui/button";
     import {Textarea} from "$lib/components/ui/textarea";
-    import {newToast, toasts, ToastType} from "$lib/state/toast.svelte";
+    import {newToast, ToastType} from "$lib/state/toast.svelte";
     import {MessageCirclePlus} from "@lucide/svelte";
 
     let {feed_item} = $props();
@@ -24,9 +24,9 @@
                 posting = false;
                 let res = result.data;
                 if (res.success) {
-                    toasts.toast = newToast("You have successfully created a comment ~~!");
+                    newToast("You have successfully created a comment ~~!", ToastType.Success);
                 } else {
-                    toasts.toast = newToast("Error creating a comment: " + res.message, ToastType.Error);
+                    newToast("Error creating a comment: " + res.message, ToastType.Error);
                 }
             };
         }}
@@ -35,7 +35,7 @@
         <input type="hidden" name="commentable_type" value={feed_item.class_name}/>
         <Textarea name="body" placeholder="I was thinking..."/>
         <div class="flex justify-center pt-2">
-            <Button type="submit" className=" bg-lime-200 ">
+            <Button type="submit">
                 <MessageCirclePlus/> &nbsp; Submit Comment
             </Button>
         </div>

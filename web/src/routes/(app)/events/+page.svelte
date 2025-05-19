@@ -9,7 +9,7 @@
 
     import Card from '$lib/components/Card.svelte';
 
-    import {newToast, toasts, ToastType} from "$lib/state/toast.svelte";
+    import {newToast, ToastType} from "$lib/state/toast.svelte";
     import {goto} from "$app/navigation";
     import DateHeader from "$lib/components/posts/DateHeader.svelte";
 
@@ -45,10 +45,10 @@
                 let res = result.data;
                 if (res.success) {
                     console.log("success create event")
-                    toasts.toast = newToast("You have successfully created an event!!");
+                    newToast("You have successfully created an event!!");
                     goto("/events")
                 } else {
-                    toasts.toast = newToast("Error creating an event: " + res.message, ToastType.Error);
+                    newToast("Error creating an event: " + res.message, ToastType.Error);
                 }
             };
 

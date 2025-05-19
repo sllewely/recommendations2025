@@ -2,7 +2,7 @@
     import {enhance} from '$app/forms';
     import LinkButton from "$lib/components/text/LinkButton.svelte";
     import EventCard from "$lib/components/posts/EventCard.svelte";
-    import {newToast, toasts, ToastType} from "$lib/state/toast.svelte";
+    import {newToast, ToastType} from "$lib/state/toast.svelte";
     import {goto} from "$app/navigation";
     import {MessageCircleMore} from "@lucide/svelte";
     import SubmitComment from "$lib/components/posts/SubmitComment.svelte";
@@ -56,9 +56,9 @@
                         creating = false;
                         let res = result.data;
                         if (res.success) {
-                            toasts.toast = newToast("Success updating your rsvp");
+                            newToast("Success updating your rsvp");
                         } else {
-                            toasts.toast = newToast("Error updating rsvp: " + res.message, ToastType.Error);
+                            newToast("Error updating rsvp: " + res.message, ToastType.Error);
                         }
                     };
 

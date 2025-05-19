@@ -1,7 +1,7 @@
 <script lang="ts">
     import {enhance} from '$app/forms';
     import H1 from "$lib/components/text/H1.svelte";
-    import {newToast, toasts, ToastType} from "$lib/state/toast.svelte";
+    import {newToast, ToastType} from "$lib/state/toast.svelte";
     import {goto} from "$app/navigation";
     import Card from "$lib/components/Card.svelte";
     import Input from "$lib/components/form/Input.svelte";
@@ -38,10 +38,10 @@
                 let res = result.data;
                 if (res.success) {
                     console.log("success update event")
-                    toasts.toast = newToast("You have successfully updated an event!!");
+                    newToast("You have successfully updated an event!!");
                     goto("/posts")
                 } else {
-                    toasts.toast = newToast("Error updating an event: " + res.message, ToastType.Error);
+                    newToast("Error updating an event: " + res.message, ToastType.Error);
                 }
             };
 

@@ -1,6 +1,7 @@
 <script lang="ts">
     import {goto} from '$app/navigation';
     import {current_user} from '$lib/state/current_user.svelte.js';
+    import { setPendingToast, ToastType } from '$lib/state/toast.svelte';
     import {Settings} from "@lucide/svelte";
 
     let user_id = current_user.id;
@@ -16,6 +17,7 @@
         });
         current_user.id = '';
         current_user.auth_token = '';
+        setPendingToast('You have been signed out!', ToastType.Info);
         await goto('/');
     }
 

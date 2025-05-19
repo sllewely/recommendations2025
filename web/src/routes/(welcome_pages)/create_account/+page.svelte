@@ -36,10 +36,10 @@
                 creating = false;
                 let res = result.data;
             if (res.success) {
-                toasts.toast = newToast("You have successfully created an account!!!!");
+                newToast("You have successfully created an account!!!!");
                 goto("/sign_in")
             } else {
-                toasts.toast = newToast("Error creating an account: " + res.message, ToastType.Error);
+                newToast("Error creating an account: " + res.message, ToastType.Error);
             }
             };
 

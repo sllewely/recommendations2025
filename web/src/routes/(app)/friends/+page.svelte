@@ -3,7 +3,7 @@
 
     import H1 from "$lib/components/text/H1.svelte";
     import Card from "$lib/components/Card.svelte";
-    import {newToast, toasts, ToastType} from "$lib/state/toast.svelte";
+    import {newToast, ToastType} from "$lib/state/toast.svelte";
     import {Input} from "$lib/components/ui/input/index.js";
     import {Label} from "$lib/components/ui/label/index.js";
     import {Button} from "$lib/components/ui/button/index.js";
@@ -89,7 +89,7 @@
                                     return user.id !== my_user.res.id;
                                 });
                             } else {
-                                toasts.toast = newToast("Error searching: " + res.message, ToastType.Error);
+                                newToast("Error searching: " + res.message, ToastType.Error);
                             }
                         };
 

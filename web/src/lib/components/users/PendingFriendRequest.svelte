@@ -2,7 +2,7 @@
     import {enhance} from '$app/forms';
     import Link from "$lib/components/text/Link.svelte";
     import PlusCircle from "$lib/components/posts/PlusCircle.svelte";
-    import {newToast, toasts, ToastType} from "$lib/state/toast.svelte";
+    import {newToast, ToastType} from "$lib/state/toast.svelte";
     import FormButton from "$lib/components/form/FormButton.svelte";
     import Form from "$lib/components/form/Form.svelte";
     import {rails_date_pretty} from "$lib/utils/dates.svelte";
@@ -37,10 +37,10 @@
                 updating = false;
             let res = result.data;
                     if (res.success) {
-                    toasts.toast = newToast("Accepted friend request");
-                    await fetch_friends_map();
+                        newToast("Accepted friend request");
+                        await fetch_friends_map();
                     } else {
-                        toasts.toast = newToast("Error accepting friend request: " + res.message, ToastType.Error);
+                        newToast("Error accepting friend request: " + res.message, ToastType.Error);
                     }
                     await goto("/friends");
             };

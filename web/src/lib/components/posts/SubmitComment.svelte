@@ -35,7 +35,7 @@
         <input type="hidden" name="commentable_type" value={feed_item.class_name}/>
         <Textarea name="body" placeholder="I was thinking..."/>
         <div class="flex justify-center pt-2">
-            <Button type="submit" className="bg-lime-200">
+            <Button type="submit">
                 <MessageCirclePlus/> &nbsp; Submit Comment
             </Button>
         </div>

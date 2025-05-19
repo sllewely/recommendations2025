@@ -2,12 +2,14 @@
     import Header from '$lib/components/Header.svelte';
     import Footer from '$lib/components/Footer.svelte';
     import '../../app.css';
-    import Toast from "$lib/components/Toast.svelte";
     import { current_user } from '$lib/state/current_user.svelte.js';
     import { notifs } from '$lib/state/notifications.svelte';
     import { friends_map, fetch_friends_map } from "$lib/state/friends_map.svelte";
     import {onMount} from "svelte";
     import BannerNotifications from "$lib/components/notifications/BannerNotifications.svelte";
+    import { afterNavigate } from '$app/navigation';
+    import { checkAndShowPendingToasts } from '$lib/state/toast.svelte';
+    import { Toaster } from '$lib/components/ui/sonner';
 
     let { children, data } = $props();
 
@@ -55,20 +57,23 @@
         }
     );
 
+    afterNavigate(() => {
+        checkAndShowPendingToasts();
+    })
+
 </script>
 
 
 <div class="app">
     <Header/>
     <BannerNotifications />
-    <Toast />
-
-
-
+    <Toaster
+        closeButton={true}
+        richColors={true}
+    />
     <main>
         {@render children()}
     </main>
-
     <Footer />
 </div>
 

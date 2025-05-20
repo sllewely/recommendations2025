@@ -1,4 +1,20 @@
 import * as api from "$lib/api_calls/api.svelte.js";
+import type {PageServerLoad} from "./$types.js";
+import {getUser} from "$lib/api_calls/users.svelte";
+import {superValidate} from "sveltekit-superforms";
+import {eventsFormSchema} from "../schema";
+import {zod} from "sveltekit-superforms/adapters";
+
+export const load: PageServerLoad = async ({cookies}) => {
+    let user_id = cookies.get('user_id');
+    const jwt = cookies.get('jwt');
+    let user = await getUser(jwt, user_id);
+
+    return {
+        user: user['res'],
+        form: await superValidate(zod(eventsFormSchema)),
+    }
+}
 
 // named action for create events
 export const actions = {

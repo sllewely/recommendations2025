@@ -1,14 +1,9 @@
 <script lang="ts">
+	import RecommendationForm from "../RecommendationForm.svelte";
 
-    import RecommendationForm from "../RecommendationForm.svelte";
-
-    let {data, form} = $props();
-
-
+	let { data, form } = $props();
 </script>
 
 <div>
-
-    <RecommendationForm/>
-
+	<RecommendationForm />
 </div>

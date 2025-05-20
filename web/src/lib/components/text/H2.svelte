@@ -1,3 +1,3 @@
 <h1 class="text-xl">
-    <slot />
+	<slot />
 </h1>

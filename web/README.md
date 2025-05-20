@@ -43,21 +43,15 @@ To debug the svelte server, run dev in debug mode.
 
 [Jetbrains Webstorm instructions](https://www.jetbrains.com/help/webstorm/svelte.html#ws_svelte_debug).
 
-
-
-
-
 ## First time setup
 
 - Assuming you have
-- ```npm i```
-- ```npm run dev```
+- `npm i`
+- `npm run dev`
 
 ### Connecting to the backend server
 
 You will also need to connect to the API to use and test the app.
-By default, I've configured the dev buid to point at a local rails server, and the deployed prod build to point at a deployed backend url.  This is through VITE_API_URL in the .env files.
+By default, I've configured the dev buid to point at a local rails server, and the deployed prod build to point at a deployed backend url. This is through VITE_API_URL in the .env files.
 
-See the rails readme for instructions on running the rails server locally.  Otherwise you will need to point to the deployed rails app.
-
-
+See the rails readme for instructions on running the rails server locally. Otherwise you will need to point to the deployed rails app.

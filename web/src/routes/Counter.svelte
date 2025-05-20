@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Spring } from 'svelte/motion';
+	import { Spring } from "svelte/motion";
 
 	const count = new Spring(0);
 	const offset = $derived(modulo(count.current, 1));

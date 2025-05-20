@@ -25,7 +25,7 @@
 			variant: isActive ? "outline" : "ghost",
 			size,
 		}),
-		className
+		className,
 	)}
 	{...$$restProps}
 	on:click

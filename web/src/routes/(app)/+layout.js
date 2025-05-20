@@ -1,9 +1,8 @@
-export async function load({data, depends}) {
+export async function load({ data, depends }) {
+	// Note for when I build polling for notification
 
-    // Note for when I build polling for notification
-
-    return {
-        ...data,
-        // reload_test: num,
-    };
+	return {
+		...data,
+		// reload_test: num,
+	};
 }

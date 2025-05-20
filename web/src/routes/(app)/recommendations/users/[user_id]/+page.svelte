@@ -20,6 +20,7 @@
         MessageCircleHeart
     } from "@lucide/svelte";
     import {newToast, ToastType} from "$lib/state/toast.svelte.js";
+    import {Button, buttonVariants} from "$lib/components/ui/button/index.js";
 
 
     let {data} = $props();
@@ -36,6 +37,13 @@
 <div>
     <H1>{user.name}'s saved recommendations</H1>
     <p>&nbsp;</p>
+
+    <div class="flex justify-center">
+        <Button href="/recommendations/create" class={buttonVariants({ variant: "recommendation" })}>
+            <MessageCircleHeart/> &nbsp;
+            Save a recommendation
+        </Button>
+    </div>
 
 
     <p>Save the things you love, track what you want to enjoy next, share interests with your friends</p>

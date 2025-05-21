@@ -1,27 +1,26 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
 
-Things you may want to cover:
+## First time setup
 
-* Ruby version
+Install rbenv/rvm/other to install ruby version ```3.2.2```
 
-* System dependencies
+Install postgres
 
-* Configuration
+Install bundler and run ```bundle install```
 
-* Database creation
+...
 
-* Database initialization
+```rails db:create```
 
-* How to run the test suite
+```rails db:migrate```
 
-* Services (job queues, cache servers, search engines, etc.)
 
-* Deployment instructions
+Run with ```rails s```
 
-* ...
+
+## Development
+
 
 ### DB
 
@@ -29,10 +28,13 @@ Things you may want to cover:
 
 ### Tests
 
+To run all tests:
 ```rspec```
 
+To run all api tests:
 ```rspec spec\requests```
 
+To run a specific test case
 ```rspec spec/requests/users_spec.rb -e "adds tags"```
 
 Clear test db

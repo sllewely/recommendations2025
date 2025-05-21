@@ -10,7 +10,8 @@ RSpec.describe "SendEmailHelper", type: :helper do
 
     end
 
-    it 'emails me' do
+    skip 'emails me' do
+      # skip so I don't get email
       SendEmailHelper.send_test_email(@my_user)
     end
 

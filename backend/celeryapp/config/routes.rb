@@ -27,6 +27,6 @@ Rails.application.routes.draw do
   resources :friend_requests
   resources :notifications
   resources :comments
-  resources :user_statuses, only: [:create]
+  resources :user_statuses, only: [:create, :index]
 
 end

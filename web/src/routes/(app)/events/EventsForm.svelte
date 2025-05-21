@@ -11,6 +11,7 @@
     import {Input} from "$lib/components/ui/input";
     import * as Form from "$lib/components/ui/form";
     import {Card} from "$lib/components/ui/card";
+    import { Calendar } from "$lib/components/ui/calendar/index.js";
 
     import type {DateRange} from "bits-ui";
     import {
@@ -97,47 +98,45 @@
                 <div class="flex justify-between space-x-4">
                     <div class="flex-1">
                         <Form.Field {form} name="start_date" class="flex flex-col">
-                            <Form.Control let:attrs>
+                            <Form.Control>
                                 <Form.Label>Date</Form.Label>
                                 <Popover.Root>
                                     <Popover.Trigger
+                                            {...props}
                                             class={cn(
-        buttonVariants({ variant: "outline" }),
-        !value && "text-muted-foreground"
-      )}
+              buttonVariants({ variant: "outline" }),
+              "w-[280px] justify-start pl-4 text-left font-normal",
+              !value && "text-muted-foreground"
+            )}
                                     >
-                                        <CalendarRange/>
-                                        {#if value && value.start}
-                                            {#if value.end && !(value.start.toString() === value.end.toString())}
-                                                {df.format(value.start.toDate(getLocalTimeZone()))} - {df.format(
-                                                value.end.toDate(getLocalTimeZone())
-                                            )}
-                                            {:else}
-                                                {df.format(value.start.toDate(getLocalTimeZone()))}
-                                            {/if}
-                                        {:else if startValue}
-                                            {df.format(startValue.toDate(getLocalTimeZone()))}
-                                        {:else}
-                                            Pick a date
-                                        {/if}
+                                        {value
+                                            ? df.format(value.toDate(getLocalTimeZone()))
+                                            : "Pick a date"}
+                                        <CalendarIcon class="ml-auto size-4 opacity-50" />
                                     </Popover.Trigger>
-                                    <Popover.Content class="w-auto p-0" align="start">
-                                        <RangeCalendar
-                                                bind:value
-                                                onStartValueChange={(v) => {
-                                                    $formData.start_date = v.toString();
-                                                      startValue = v;
-                                                    }}
-                                                onEndValueChange={(v) => {
-                                                    $formData.end_date = v.toString();
-                                                    }}
-                                                numberOfMonths={2}
+                                    <Popover.Content class="w-auto p-0" side="top">
+                                        <Calendar
+                                                type="single"
+                                                value={value as DateValue}
+                                                bind:placeholder
+                                                minValue={new CalendarDate(1900, 1, 1)}
+                                                maxValue={today(getLocalTimeZone())}
+                                                calendarLabel="Date of birth"
+                                                onValueChange={(v) => {
+                if (v) {
+                  $formData.dob = v.toString();
+                } else {
+                  $formData.dob = "";
+                }
+              }}
                                         />
                                     </Popover.Content>
                                 </Popover.Root>
-                                <Form.FieldErrors/>
-                                <input hidden value={$formData.start_date} name="start_date"/>
-                                <!--                                <input hidden value={value.end ?? value.end.toString()} name="end_date"/>-->
+                                <Form.Description
+                                >Your date of birth is used to calculator your age</Form.Description
+                                >
+                                <Form.FieldErrors />
+                                <input hidden value={$formData.dob} name={props.name} />
                             </Form.Control>
                         </Form.Field>
                     </div>

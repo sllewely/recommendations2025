@@ -1,55 +1,50 @@
-import {fail} from '@sveltejs/kit';
-import { redirect } from '@sveltejs/kit';
-import { VITE_API_URL } from '$env/static/private';
+import { fail } from "@sveltejs/kit";
+import { redirect } from "@sveltejs/kit";
+import { VITE_API_URL } from "$env/static/private";
 
+let root_url = VITE_API_URL;
 
-let root_url = VITE_API_URL
-
-export function load() {
-
-}
-
+export function load() {}
 
 // named action for sign in form
 export const actions = {
-    signin: async ({locals, cookies, request}) => {
-        const data = await request.formData();
+	signin: async ({ locals, cookies, request }) => {
+		const data = await request.formData();
 
-        try {
-            const response = await fetch(root_url + "sign_in", {
-                method: "POST",
-                body: JSON.stringify({
-                    email: data.get('email'),
-                    password: data.get('password'),
-                }),
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                },
-            });
+		try {
+			const response = await fetch(root_url + "sign_in", {
+				method: "POST",
+				body: JSON.stringify({
+					email: data.get("email"),
+					password: data.get("password"),
+				}),
+				headers: {
+					"Content-Type": "application/json",
+					Accept: "application/json",
+				},
+			});
 
-            const json = await response.json();
+			const json = await response.json();
 
-            if (!response.ok) {
-                return { success: false, message: json['error']};
-            } else {
+			if (!response.ok) {
+				return { success: false, message: json["error"] };
+			} else {
+				cookies.set("jwt", json["auth_token"], { path: "/" });
+				cookies.set("user_id", json["user_id"], { path: "/" });
+				return {
+					success: true,
+					res: {
+						my_user_id: json["user_id"],
+					},
+				};
+			}
+		} catch (error) {
+			console.error(error.message);
+			return { success: false, message: error.message };
+		}
 
-                cookies.set('jwt', json['auth_token'], { path: '/' });
-                cookies.set('user_id', json['user_id'], { path: '/' });
-                return { success: true, res: {
-                    my_user_id: json['user_id'],
-                    }};
-            }
+		// redirect(302, '/posts')
 
-        } catch (error) {
-            console.error(error.message);
-            return { success: false, message: error.message};
-        }
-
-        // redirect(302, '/posts')
-
-        // if success, pass log_out token to internal home component we're moving to
-
-
-    }
-}
+		// if success, pass log_out token to internal home component we're moving to
+	},
+};

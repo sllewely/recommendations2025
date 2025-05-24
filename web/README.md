@@ -1,22 +1,24 @@
-# sv
+# BumbleBeans 🐝 Frontend
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+Welcome to the BumbleBeans frontend!!!
 
-## Creating a project
+## First time setup
 
-If you're seeing this, you've probably already done this step. Congrats!
+- Assuming you have run -
+- `npm i`
+- `npm i -D`
+- `npm run dev`
 
-```bash
-# create a new project in the current directory
-npx sv create
+### Connecting to the backend server
 
-# create a new project in my-app
-npx sv create my-app
-```
+You will also need to connect to the API to use and test the app.
+By default, I've configured the dev buid to point at a local rails server, and the deployed prod build to point at a deployed backend url. This is through VITE_API_URL in the .env files.
+
+See the rails readme for instructions on running the rails server locally. Otherwise you will need to point to the deployed rails app.
 
 ## Developing
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Once you've downloaded the project and installed dependencies with `npm install` (or `pnpm install` or `yarn`) and the `devDependencies` with `npm i -D`, start a development server:
 
 ```bash
 npm run dev
@@ -25,9 +27,15 @@ npm run dev
 npm run dev -- --open
 ```
 
+### Formatting
+
+Ensure that you've installed the `devDependencies` for the project using `npm install --save-dev` or `npm i -D`. The `devDependencies` includes `prettier`, `husky` and `lint-staged` which will help ensure consistent code formatting for the project across developers.
+
+You can also install the `editorconfig` [plugin](https://editorconfig.org/#download) to enable your editor of choice to read the `.editorconfig` file and adhere to defined styles.
+
 ## Building
 
-To create a production version of your app:
+To create a production version of BumbleBeans:
 
 ```bash
 npm run build
@@ -42,22 +50,3 @@ You can preview the production build with `npm run preview`.
 To debug the svelte server, run dev in debug mode.
 
 [Jetbrains Webstorm instructions](https://www.jetbrains.com/help/webstorm/svelte.html#ws_svelte_debug).
-
-
-
-
-
-## First time setup
-
-- Assuming you have
-- ```npm i```
-- ```npm run dev```
-
-### Connecting to the backend server
-
-You will also need to connect to the API to use and test the app.
-By default, I've configured the dev buid to point at a local rails server, and the deployed prod build to point at a deployed backend url.  This is through VITE_API_URL in the .env files.
-
-See the rails readme for instructions on running the rails server locally.  Otherwise you will need to point to the deployed rails app.
-
-

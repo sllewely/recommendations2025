@@ -1,10 +1,5 @@
 <script lang="ts">
-
-    let {recommendation} = $props();
-
+	let { recommendation } = $props();
 </script>
 
-
-<div>
-    
-</div>
+<div></div>

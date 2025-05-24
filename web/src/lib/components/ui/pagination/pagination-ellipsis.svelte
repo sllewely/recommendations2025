@@ -1,20 +1,20 @@
 <script lang="ts">
-    import type {HTMLAttributes} from "svelte/elements";
-    import {cn} from "$lib/utils.js";
-    import {Ellipsis} from "lucide-svelte";
+	import type { HTMLAttributes } from "svelte/elements";
+	import { cn } from "$lib/utils.js";
+	import { Ellipsis } from "lucide-svelte";
 
-    type $$Props = HTMLAttributes<HTMLSpanElement>;
+	type $$Props = HTMLAttributes<HTMLSpanElement>;
 
-    let className: $$Props["class"] = undefined;
-    export {className as class};
+	let className: $$Props["class"] = undefined;
+	export { className as class };
 </script>
 
 <span
-        aria-hidden="true"
-        class={cn("flex h-9 w-9 items-center justify-center", className)}
-        {...$$restProps}
+	aria-hidden="true"
+	class={cn("flex h-9 w-9 items-center justify-center", className)}
+	{...$$restProps}
 >
-	<Ellipsis class="h-4 w-4"/>
+	<Ellipsis class="h-4 w-4" />
 
 	<span class="sr-only">More pages</span>
 </span>

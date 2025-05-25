@@ -73,5 +73,17 @@ RSpec.describe "FriendRequests", type: :request do
       res = JSON.parse(response.body)
       expect(res['error']).to include('duplicate key value violates unique constraint')
     end
+
+    it 'sends a pending friend request email' do
+      new_friend = create(:user)
+      post "/friend_requests", params: { user_id: new_friend.id }, headers: @headers
+
+      expect(response).to have_http_status(:created)
+      res = JSON.parse(response.body)
+      expect(res['id']).to eq(new_friend.id)
+
+      email = ActionMailer::Base.deliveries.last
+      assert_includes email.body.to_s, "You have a new friend request!"
+    end
   end
 end

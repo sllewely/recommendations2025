@@ -1,6 +1,5 @@
 # README
 
-
 ## First time setup
 
 Install rbenv/rvm/other to install ruby version ```3.2.2```
@@ -15,12 +14,12 @@ Install bundler and run ```bundle install```
 
 ```rails db:migrate```
 
-
 Run with ```rails s```
 
+Set resend api key
+```export RESEND_API_KEY=<ask sarah>```
 
 ## Development
-
 
 ### DB
 
@@ -56,6 +55,7 @@ Open rails console to inspect or call anything in the rails app
 Factories are defined in /spec/factories and are used for testing. To access factory bot create factories in rails c,
 
 ```shell
+
 require 'factory_bot'
 include FactoryBot::Syntax::Methods
 

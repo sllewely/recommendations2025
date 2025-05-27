@@ -13,6 +13,7 @@ class User < ApplicationRecord
   has_many :comments
   has_many :user_tags
   has_many :tags, through: :user_tags
+  has_many :user_statuses, dependent: :destroy
 
   scope :by_name, ->(search) { where('LOWER(name) LIKE LOWER(?)', "%#{search}%") }
   scope :by_tag, ->(tag) { joins(:tags).where('tags.tag LIKE (?)', tag) }

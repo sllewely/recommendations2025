@@ -65,9 +65,7 @@
 					<Form.Label>Password</Form.Label>
 					<Input {...attrs} bind:value={$formData.password} type="password" />
 				</Form.Control>
-				<Form.Description
-					>Message Sarah if you forgot your password and want it reset
-				</Form.Description>
+				<Form.Description>Message Sarah if you forgot your password</Form.Description>
 				<Form.FieldErrors />
 			</Form.Field>
 		</div>

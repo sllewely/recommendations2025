@@ -5,6 +5,7 @@ import { superValidate } from "sveltekit-superforms";
 import { profileFormSchema } from "./schema";
 import { zod } from "sveltekit-superforms/adapters";
 import { fail } from "@sveltejs/kit";
+import { generateUploadURL } from "$lib/utils/s3";
 
 export const load: PageServerLoad = async ({ cookies, params }) => {
 	let user_id = cookies.get("user_id");
@@ -17,6 +18,7 @@ export const load: PageServerLoad = async ({ cookies, params }) => {
 	return {
 		user: user_obj,
 		form: await superValidate(user["res"], zod(profileFormSchema)),
+		upload_url: await generateUploadURL(),
 	};
 };
 

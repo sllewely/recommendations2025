@@ -35,9 +35,6 @@
 		use:enhance={() => {
 			creating = true;
 			return async ({ update, result }) => {
-				{
-					console.log(result);
-				}
 				await update();
 				creating = false;
 				let res = result.data;
@@ -47,7 +44,9 @@
 					setPendingToast("You have successfully signed in!", ToastType.Success);
 					goto("/posts");
 				} else {
-					newToast("Error signing in: " + res.message, ToastType.Error);
+					if (res.message) {
+						newToast("Error signing in: " + res.message, ToastType.Error);
+					}
 				}
 			};
 		}}

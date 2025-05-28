@@ -1,16 +1,13 @@
 <script lang="ts">
 	import { enhance } from "$app/forms";
 	import { goto } from "$app/navigation";
-	import FormButton from "$lib/components/form/FormButton.svelte";
-	import H1 from "$lib/components/text/H1.svelte";
 	import * as Form from "$lib/components/ui/form/index.js";
 	import { Input } from "$lib/components/ui/input/index.js";
 	import { signupFormSchema, type SignupFormSchema } from "./schema";
 	import { type SuperValidated, type Infer, superForm } from "sveltekit-superforms";
 	import { zodClient } from "sveltekit-superforms/adapters";
 
-	import { current_user } from "$lib/state/current_user.svelte";
-	import { setPendingToast, newToast, ToastType } from "$lib/state/toast.svelte";
+	import { newToast, ToastType } from "$lib/state/toast.svelte";
 
 	let creating = $state(false);
 

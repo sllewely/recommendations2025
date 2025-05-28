@@ -1,12 +1,9 @@
 import { fail } from "@sveltejs/kit";
 import * as api from "$lib/api_calls/api.svelte.js";
-import { VITE_API_URL } from "$env/static/private";
 import { signupFormSchema } from "./schema";
 import { zod } from "sveltekit-superforms/adapters";
 import { superValidate } from "sveltekit-superforms";
 import type { PageServerLoad } from "./$types.js";
-
-let root_url = VITE_API_URL;
 
 export const load: PageServerLoad = async () => {
 	return {

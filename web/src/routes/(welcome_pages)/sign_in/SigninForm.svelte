@@ -15,9 +15,9 @@
 
 	let creating = $state(false);
 
-	let { data }: { data: { form: SuperValidated<Infer<SigninFormSchema>> } } = $props();
+	let { form_data }: { form_data: SuperValidated<Infer<SigninFormSchema>> } = $props();
 
-	const form = superForm(data.form, {
+	const form = superForm(form_data, {
 		validators: zodClient(signinFormSchema),
 	});
 
@@ -35,6 +35,9 @@
 		use:enhance={() => {
 			creating = true;
 			return async ({ update, result }) => {
+				{
+					console.log(result);
+				}
 				await update();
 				creating = false;
 				let res = result.data;
@@ -51,27 +54,23 @@
 	>
 		<div class="flex flex-col">
 			<Form.Field {form} name="email">
-				<Form.Control>
-					{#snippet children({ props })}
-						<Form.Label>E-mail</Form.Label>
-						<Input {...props} bind:value={$formData.email} />
-					{/snippet}
+				<Form.Control let:attrs>
+					<Form.Label>E-mail</Form.Label>
+					<Input {...attrs} bind:value={$formData.email} />
 				</Form.Control>
 				<Form.FieldErrors />
 			</Form.Field>
 			<Form.Field {form} name="password">
-				<Form.Control>
-					{#snippet children({ props })}
-						<Form.Label>Password</Form.Label>
-						<Input {...props} bind:value={$formData.password} input_type="password" />
-					{/snippet}
+				<Form.Control let:attrs>
+					<Form.Label>Password</Form.Label>
+					<Input {...attrs} bind:value={$formData.password} type="password" />
 				</Form.Control>
 				<Form.Description
-					>Message Sarah if you forgot your password and want it reset.
+					>Message Sarah if you forgot your password and want it reset
 				</Form.Description>
 				<Form.FieldErrors />
 			</Form.Field>
 		</div>
-		<FormButton>Sign in</FormButton>
+		<Form.Button>Sign in</Form.Button>
 	</form>
 </div>

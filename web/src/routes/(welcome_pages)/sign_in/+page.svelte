@@ -13,6 +13,6 @@
 	<Link url="/create_account">Or create an account</Link>
 
 	<div>
-		<SigninForm {data} />
+		<SigninForm form_data={data.form} />
 	</div>
 </div>

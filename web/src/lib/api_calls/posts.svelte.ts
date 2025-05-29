@@ -1,39 +1,71 @@
-import { VITE_API_URL } from "$env/static/private";
-import * as api from "$lib/api_calls/api.svelte";
+import * as api from "./api.svelte";
+import type { ApiResponse, Post } from "./types";
 
-let root_url = VITE_API_URL;
+const ENDPOINT = "posts";
 
-export async function getPosts(jwt) {
-	const response = await fetch(root_url + "posts", {
-		method: "GET",
-
-		headers: {
-			"Content-Type": "application/json",
-			ACCEPT: "application/json",
-			Authorization: "Token " + jwt,
-		},
-	});
-	const json = await response.json();
-
-	return json;
+/**
+ * Fetches all posts
+ * @param token - JWT token for authentication
+ * @returns Promise with posts data or error
+ */
+export async function getPosts(token: string): Promise<ApiResponse<Post[]>> {
+	return api.get<Post[]>(ENDPOINT, token);
 }
 
-export async function getPost(jwt: string, id: string) {
-	const response = await api.get(`posts/${id}`, jwt);
-
-	return response;
+/**
+ * Fetches a single post by ID
+ * @param id - Post ID
+ * @param token - JWT token for authentication
+ * @returns Promise with post data or error
+ */
+export async function getPost(id: number, token: string): Promise<ApiResponse<Post>> {
+	return api.get<Post>(`${ENDPOINT}/${id}`, token);
 }
 
-export async function getPostsForUser(jwt, user_id: string) {
-	const response = await fetch(root_url + "posts?user_id=" + user_id, {
-		method: "GET",
-		headers: {
-			"Content-Type": "application/json",
-			ACCEPT: "application/json",
-			Authorization: "Token " + jwt,
-		},
-	});
-	const json = await response.json();
+/**
+ * Fetches posts for a specific user
+ * @param userId - User ID to fetch posts for
+ * @param token - JWT token for authentication
+ * @returns Promise with posts data or error
+ */
+export async function getPostsForUser(userId: number, token: string): Promise<ApiResponse<Post[]>> {
+	return api.get<Post[]>(`${ENDPOINT}?user_id=${userId}`, token);
+}
 
-	return json;
+/**
+ * Creates a new post
+ * @param data - Post data
+ * @param token - JWT token for authentication
+ * @returns Promise with created post data or error
+ */
+export async function createPost(
+	data: { title: string; body: string },
+	token: string,
+): Promise<ApiResponse<Post>> {
+	return api.post<Post>(ENDPOINT, data, token);
+}
+
+/**
+ * Updates an existing post
+ * @param id - Post ID
+ * @param data - Updated post data
+ * @param token - JWT token for authentication
+ * @returns Promise with updated post data or error
+ */
+export async function updatePost(
+	id: number,
+	data: Partial<Post>,
+	token: string,
+): Promise<ApiResponse<Post>> {
+	return api.patch<Post>(`${ENDPOINT}/${id}`, data, token);
+}
+
+/**
+ * Deletes a post
+ * @param id - Post ID
+ * @param token - JWT token for authentication
+ * @returns Promise with success status or error
+ */
+export async function deletePost(id: number, token: string): Promise<ApiResponse<void>> {
+	return api.del(`${ENDPOINT}/${id}`, token);
 }

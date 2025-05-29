@@ -1,26 +1,24 @@
-<script>
-	import H1 from "$lib/components/text/H1.svelte";
-	import H2 from "$lib/components/text/H2.svelte";
-	import LinkButton from "$lib/components/text/LinkButton.svelte";
-	import FeedItem from "$lib/components/posts/FeedItem.svelte";
+<script lang="ts">
 	import DateHeader from "$lib/components/posts/DateHeader.svelte";
 	import EventFeedItem from "$lib/components/posts/EventFeedItem.svelte";
+	import FeedItem from "$lib/components/posts/FeedItem.svelte";
+	import H1 from "$lib/components/text/H1.svelte";
 	import Link from "$lib/components/text/Link.svelte";
 	import { Button, buttonVariants } from "$lib/components/ui/button/index.js";
 	import { CalendarPlus2, MessageCircleHeart, MessageSquareText } from "@lucide/svelte";
-
-	let { data } = $props();
+	import type { PageProps } from "./$types";
+	let { data }: PageProps = $props();
 </script>
 
 <div>
 	<div
-		class="flex justify-center bg-lime-200 border-1 border-gray-800 rounded-sm font-bold p-2 mb-2"
+		class="flex justify-center p-2 mb-2 font-bold border-gray-800 rounded-sm bg-lime-200 border-1"
 	>
 		<Link url="/friends">Add friends!!</Link>
 	</div>
 
 	<div class="grid grid-cols-3">
-		<div class="col-span-2 flex flex-col">
+		<div class="flex flex-col col-span-2">
 			<H1>Posts</H1>
 
 			<div class="flex justify-center pt-2 pb-2 space-x-2">
@@ -36,7 +34,7 @@
 			</div>
 			{#if data.posts.length === 0}
 				<div
-					class="flex justify-center bg-lime-200 border-1 border-gray-800 rounded-sm font-bold p-2 mb-2"
+					class="flex justify-center p-2 mb-2 font-bold border-gray-800 rounded-sm bg-lime-200 border-1"
 				>
 					<p>
 						Your feed is empty!
@@ -58,7 +56,7 @@
 			</div>
 			{#if data.events.length === 0}
 				<div
-					class="flex justify-center bg-lime-200 border-1 border-gray-800 rounded-sm font-bold p-2 mb-2"
+					class="flex justify-center p-2 mb-2 font-bold border-gray-800 rounded-sm bg-lime-200 border-1"
 				>
 					<p>
 						No upcoming events.

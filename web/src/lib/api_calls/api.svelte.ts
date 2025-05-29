@@ -1,45 +1,106 @@
-import { error } from "@sveltejs/kit";
 import { VITE_API_URL } from "$env/static/private";
+import type { ApiError, ApiResponse } from "./types";
 
-let root_url = VITE_API_URL;
+const root_url = VITE_API_URL;
+type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 
-async function send({ method, path, data, token }) {
-	const opts = { method, headers: {} };
+interface RequestOptions<T = unknown> {
+	method: HttpMethod;
+	path: string;
+	data?: T;
+	token?: string;
+}
+
+/**
+ * Sends an HTTP request to the API
+ * @throws {Error} If the request fails
+ */
+async function send<T = unknown, D = unknown>({
+	method,
+	path,
+	data,
+	token,
+}: RequestOptions<D>): Promise<ApiResponse<T>> {
+	const headers = new Headers();
+
+	const opts: RequestInit = {
+		method,
+		headers,
+	};
 
 	if (data) {
-		opts.headers["Content-Type"] = "application/json";
+		headers.set("Content-Type", "application/json");
 		opts.body = JSON.stringify(data);
 	}
 
 	if (token) {
-		opts.headers["Authorization"] = `Token ${token}`;
+		headers.set("Authorization", `Token ${token}`);
 	}
 
-	const res = await fetch(`${root_url}/${path}`, opts);
-	let json = await res.json();
-	if (res.ok) {
-		return { success: true, res: json };
-	} else {
-		return { success: false, message: json["exception"] ?? json["error"] };
+	try {
+		const res = await fetch(`${root_url}/${path}`, opts);
+		const json = await res.json();
+
+		if (res.ok) {
+			return { success: true, res: json as T };
+		} else {
+			const error = json as ApiError;
+			return {
+				success: false,
+				message: error.exception ?? error.error ?? "An unknown error occurred",
+			};
+		}
+	} catch (e) {
+		return {
+			success: false,
+			message: e instanceof Error ? e.message : "Network error occurred",
+		};
 	}
 }
 
-export function get(path, token) {
-	return send({ method: "GET", path, token });
+/**
+ * Makes a GET request to the API
+ */
+export function get<T = unknown>(path: string, token?: string): Promise<ApiResponse<T>> {
+	return send<T>({ method: "GET", path, token });
 }
 
-export function del(path, token) {
-	return send({ method: "DELETE", path, token });
+/**
+ * Makes a DELETE request to the API
+ */
+export function del<T = unknown>(path: string, token?: string): Promise<ApiResponse<T>> {
+	return send<T>({ method: "DELETE", path, token });
 }
 
-export function post(path, data, token) {
-	return send({ method: "POST", path, data, token });
+/**
+ * Makes a POST request to the API
+ */
+export function post<T = unknown, D = unknown>(
+	path: string,
+	data: D,
+	token?: string,
+): Promise<ApiResponse<T>> {
+	return send<T, D>({ method: "POST", path, data, token });
 }
 
-export function put(path, data, token) {
-	return send({ method: "PUT", path, data, token });
+/**
+ * Makes a PUT request to the API
+ */
+export function put<T = unknown, D = unknown>(
+	path: string,
+	data: D,
+	token?: string,
+): Promise<ApiResponse<T>> {
+	return send<T, D>({ method: "PUT", path, data, token });
 }
 
-export function patch(path, data, token) {
-	return send({ method: "PATCH", path, data, token });
+/**
+ * Makes a PATCH request to the API
+ */
+export function patch<T = unknown, D = unknown>(
+	path: string,
+	data: D,
+	token?: string,
+): Promise<ApiResponse<T>> {
+	return send<T, D>({ method: "PATCH", path, data, token });
 }

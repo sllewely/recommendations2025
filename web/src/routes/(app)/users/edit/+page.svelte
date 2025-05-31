@@ -16,6 +16,7 @@
 		let image = e.target.files[0];
 		let reader = new FileReader();
 		reader.readAsDataURL(image);
+
 		reader.onload = (e) => {
 			avatar = e.target.result;
 		};

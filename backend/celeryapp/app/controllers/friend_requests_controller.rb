@@ -1,5 +1,12 @@
 class FriendRequestsController < ApplicationController
 
+  def show
+    # do I have a friend request to this user?
+    user = User.find(params[:id])
+    friend_request = user.friend_requests.where(incoming_friend_id: current_user.id)&.first
+    render json: { friend_request: friend_request }, status: :ok
+  end
+
   # Returns the user associated with the friend request.
   # TODO: return friend request and user, so that we can reject friend requests.  Low priority
   def index

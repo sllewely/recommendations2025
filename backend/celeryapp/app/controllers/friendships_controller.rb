@@ -17,6 +17,8 @@ class FriendshipsController < ApplicationController
       Friendship.create_bidirectional_friendship!(current_user, user)
       current_user.notifications << Notification.accepted_friendship_notification(user)
       user.notifications << Notification.accepted_friendship_notification(current_user)
+      # clear pending friend request notifs
+      current_user.notifications.active.pending_friend_requests.update_all(active: false)
       friend_request.delete
     end
     render json: user.public_attributes, status: :created

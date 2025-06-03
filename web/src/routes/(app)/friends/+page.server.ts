@@ -28,7 +28,6 @@ export async function load({ cookies, params }) {
 	};
 }
 
-// named action for sign in form
 export const actions = {
 	add_friend: async ({ cookies, request }) => {
 		const data = await request.formData();

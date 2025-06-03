@@ -3,12 +3,18 @@
 	import H2 from "$lib/components/text/H2.svelte";
 	import { Badge } from "$lib/components/ui/badge";
 	import { friends_map } from "$lib/state/friends_map.svelte";
+	import { newToast, ToastType } from "$lib/state/toast.svelte";
+	import { Button } from "$lib/components/ui/button";
+	import { enhance } from "$app/forms";
 
 	let { data } = $props();
 	let user = data.user;
 	const tags = user.tags;
-	const is_friends = friends_map.friends_map[user.id];
+	const is_friends = user.id in friends_map.friends_map;
+	let updating = $state(false);
 </script>
+
+{console.log(is_friends)}
 
 <div>
 	<div class="flex space-x-2 mb-4 items-baseline">
@@ -23,9 +29,36 @@
 	</div>
 	<div>
 		{#if is_friends}
-			<div>friends</div>
+			<div>
+				<Badge variant="secondary">friends</Badge>
+			</div>
 		{:else}
-			<div>not friends</div>
+			<div>
+				<form
+					method="POST"
+					action="?/add_friend"
+					use:enhance={() => {
+						updating = true;
+						return async ({ update, result }) => {
+							await update();
+							updating = false;
+							let res = result.data;
+							if (res.success) {
+								newToast("Sent a new friend request");
+							} else {
+								newToast("Error sending friend request: " + res.message, ToastType.Error);
+							}
+						};
+					}}
+				>
+					<input type="hidden" name="user_id" value={user.id} />
+					{#if false}
+						<Button type="button" disabled>Friend request pending</Button>
+					{:else}
+						<Button type="submit">Add friend</Button>
+					{/if}
+				</form>
+			</div>
 		{/if}
 	</div>
 	<div>{user.blurb}</div>

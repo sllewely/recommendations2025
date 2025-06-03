@@ -8,9 +8,11 @@ export async function load({ cookies, params }) {
 
 	let user_id = params.user_id;
 	let user = await getUser(jwt, user_id);
+	let pending_friend_request = await api.get(`friend_requests/${user_id}`, jwt);
 
 	return {
 		user: user["res"],
+		pending_friend_request: pending_friend_request["res"],
 	};
 }
 

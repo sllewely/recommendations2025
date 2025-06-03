@@ -11,6 +11,7 @@
 	let user = data.user;
 	const tags = user.tags;
 	const is_friends = user.id in friends_map.friends_map;
+	const friend_request = data.pending_friend_request["friend_request"];
 	let updating = $state(false);
 </script>
 
@@ -52,7 +53,7 @@
 					}}
 				>
 					<input type="hidden" name="user_id" value={user.id} />
-					{#if false}
+					{#if friend_request !== null}
 						<Button type="button" disabled>Friend request pending</Button>
 					{:else}
 						<Button type="submit">Add friend</Button>

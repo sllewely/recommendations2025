@@ -1,6 +1,7 @@
 <script lang="ts">
 	import H1 from "$lib/components/text/H1.svelte";
 	import UserForm from "./UserForm.svelte";
+	import { goto } from "$app/navigation";
 
 	let { data, form } = $props();
 	let user = data.user;
@@ -12,18 +13,28 @@
 
 	let avatar, fileinput;
 
-	const onFileSelected = (e) => {
-		let image = e.target.files[0];
-		let reader = new FileReader();
-		reader.readAsDataURL(image);
+	let upload_photo = async (file) => {
+		const response = await fetch("/api/upload_profile_picture", {
+			method: "POST",
+			body: JSON.stringify({ file: file }),
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+	};
 
-		reader.onload = (e) => {
-			avatar = e.target.result;
-		};
+	const onFileSelected = (e: Event) => {
+		let image = e.target.files[0];
+		// let reader = new FileReader();
+		// reader.readAsDataURL(image);
+
+		upload_photo(image);
+
+		// reader.onload = (e) => {
+		// 	avatar = e.target.result;
+		// };
 	};
 </script>
-
-{console.log(data.upload_url)}
 
 <div>
 	<p>#TODO page needs a fun background!!</p>

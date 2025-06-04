@@ -2,7 +2,7 @@ class ImagesController < ApplicationController
   include S3ImageHelper
 
   def upload_url
-    object_key = "profile_image/#{current_user.id}"
+    object_key = "profile_image-#{current_user.id}"
     render json: { upload_url: S3ImageHelper.get_presigned_url(object_key) }, status: :ok
   end
 

@@ -15,10 +15,12 @@ export const load: PageServerLoad = async ({ cookies, params }) => {
 	const string_tags = user["res"]["tags"] ? user["res"]["tags"].join(", ") : "";
 	user_obj.string_tags = string_tags;
 
+	const upload_url = await api.get("images/upload_url", jwt);
+
 	return {
 		user: user_obj,
 		form: await superValidate(user["res"], zod(profileFormSchema)),
-		upload_url: await generateUploadURL(),
+		upload_url: upload_url["res"]["upload_url"],
 	};
 };
 

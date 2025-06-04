@@ -27,5 +27,10 @@ Rails.application.routes.draw do
   resources :friend_requests
   resources :notifications
   resources :comments
+  resources :images do
+    collection do
+      get 'upload_url'
+    end
+  end
 
 end

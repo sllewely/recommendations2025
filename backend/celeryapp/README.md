@@ -16,8 +16,12 @@ Install bundler and run ```bundle install```
 
 Run with ```rails s```
 
+### environment variables
+
 Set resend api key
 ```export RESEND_API_KEY=<ask sarah>```
+
+To get it to work in rubymine, edit ```~/.bash_profile```
 
 ## Development
 

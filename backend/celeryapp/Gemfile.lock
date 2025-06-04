@@ -274,7 +274,7 @@ DEPENDENCIES
   bcrypt (~> 3.1.7)
   bootsnap
   database_cleaner
-  debug
+  debug (>= 1.0.0)
   factory_bot_rails
   faker
   letter_opener

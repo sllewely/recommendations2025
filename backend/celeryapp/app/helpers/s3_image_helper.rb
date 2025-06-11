@@ -22,6 +22,13 @@ module S3ImageHelper
     )
   end
 
+  def self.get_object(object_key)
+    s3_client.get_object(
+      bucket: BUCKET,
+      key: object_key
+    )
+  end
+
   def self.get_presigned_url(object_key)
     signer = Aws::S3::Presigner.new(client: s3_client)
 

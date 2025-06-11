@@ -18,26 +18,6 @@
 	const { form: formData } = form;
 
 	let creating = $state(false);
-
-	let avatar, fileinput;
-	let upload_photo = async (file) => {
-		const response = await fetch("/api/upload_profile_picture", {
-			method: "POST",
-			body: JSON.stringify({ file: file }),
-			headers: {
-				"Content-Type": "application/json",
-			},
-		});
-	};
-	const onFileSelected = (e: Event) => {
-		let image = e.target.files[0];
-		// let reader = new FileReader();
-		// reader.readAsDataURL(image);
-		upload_photo(image);
-		// reader.onload = (e) => {
-		// 	avatar = e.target.result;
-		// };
-	};
 </script>
 
 <div>

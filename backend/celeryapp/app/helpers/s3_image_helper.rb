@@ -29,6 +29,8 @@ module S3ImageHelper
     )
   end
 
+  # This... could be used to upload files directly from the frontend without sending to the backend
+  # but I got a 403 Forbidden error with no further details when I tried
   def self.get_presigned_url(object_key)
     signer = Aws::S3::Presigner.new(client: s3_client)
 

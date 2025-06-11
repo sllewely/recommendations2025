@@ -43,13 +43,5 @@ export const actions = {
 		});
 
 		return response;
-
-		// return await api.post(
-		// 	"images/profile_picture",
-		// 	{
-		// 		image: form.data.image,
-		// 	},
-		// 	jwt,
-		// );
 	},
 };

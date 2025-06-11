@@ -51,12 +51,12 @@
 			return async ({ update, result }) => {
 				await update();
 				creating = false;
-				let res = result.data;
-				if (res.success) {
-					newToast("You have successfully updated your user");
-				} else {
-					newToast("Error updating " + res.message, ToastType.Error);
-				}
+				// let res = result.data;
+				// if (res.success) {
+				// 	newToast("You have successfully updated your user");
+				// } else {
+				// 	newToast("Error updating " + res.message, ToastType.Error);
+				// }
 			};
 		}}
 	>

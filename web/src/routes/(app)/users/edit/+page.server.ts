@@ -6,6 +6,7 @@ import { profileFormSchema } from "./schema";
 import { zod } from "sveltekit-superforms/adapters";
 import { fail } from "@sveltejs/kit";
 import { generateUploadURL } from "$lib/utils/s3";
+import { patch_multipart } from "$lib/api_calls/api.svelte.js";
 
 export const load: PageServerLoad = async ({ cookies, params }) => {
 	let user_id = cookies.get("user_id");
@@ -35,7 +36,7 @@ export const actions = {
 		const jwt = cookies.get("jwt");
 		const tags = (form.data.string_tags ?? "").split(",");
 
-		return await api.patch(
+		return await api.patch_multipart(
 			"users/" + user_id,
 			{
 				name: form.data.name,
@@ -43,6 +44,7 @@ export const actions = {
 				tags: tags,
 				email: form.data.email,
 				password: form.data.password,
+				file: form.data.file,
 			},
 			jwt,
 		);

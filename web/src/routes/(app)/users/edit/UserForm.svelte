@@ -38,6 +38,7 @@
 
 <form
 	id="user_form"
+	enctype="multipart/form-data"
 	method="POST"
 	action="?/update_user"
 	use:enhance={() => {
@@ -55,9 +56,10 @@
 	}}
 >
 	<Tabs.Root value="profile" class="">
-		<Tabs.List class="grid w-full grid-cols-2">
+		<Tabs.List class="grid w-full grid-cols-3">
 			<Tabs.Trigger value="profile">Profile</Tabs.Trigger>
 			<Tabs.Trigger value="account">Account</Tabs.Trigger>
+			<Tabs.Trigger value="photo">photo</Tabs.Trigger>
 		</Tabs.List>
 		<Tabs.Content value="profile">
 			<Card.Root>
@@ -140,6 +142,33 @@
 
 					<div class="flex flex-col mt-4">
 						<Form.Button>Update</Form.Button>
+					</div>
+				</Card.Content>
+			</Card.Root>
+		</Tabs.Content>
+		<Tabs.Content value="photo">
+			<Card.Root>
+				<Card.Header>
+					<H1>Edit your profile</H1>
+				</Card.Header>
+				<Card.Content>
+					<Form.Field {form} name="file">
+						<Form.Control let:attrs>
+							<Form.Label>photo</Form.Label>
+							<Input type="file" {...attrs} bind:value={$formData.file} />
+						</Form.Control>
+						<Form.Description>Upload a profile photo.</Form.Description>
+						<Form.FieldErrors />
+					</Form.Field>
+
+					<div class="flex flex-col space-y-2">
+						<Form.Button
+							on:click={() => {
+								console.log("click!!");
+							}}
+						>
+							Update
+						</Form.Button>
 					</div>
 				</Card.Content>
 			</Card.Root>

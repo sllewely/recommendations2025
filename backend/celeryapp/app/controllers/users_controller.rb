@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  include S3ImageHelper
 
   # Create a user is a part of Registrations controller
 
@@ -28,6 +29,7 @@ class UsersController < ApplicationController
   end
 
   def update
+    up = user_params
     if params[:id].to_i != current_user.id
       render json: {}, status: :unauthorized and return
     end
@@ -36,7 +38,12 @@ class UsersController < ApplicationController
       current_user.update_tags(params[:tags])
     end
     current_user.password = params[:password] if params[:password].present?
-    
+
+    if up[:file]
+      object_key = "#{Rails.env == "development" ? "dev/" : ""}profile_photo/#{current_user.id}"
+      res = S3ImageHelper.put_object(object_key, up[:file])
+    end
+
     if current_user.save
       render json: current_user.attributes, status: :ok
     else
@@ -46,8 +53,12 @@ class UsersController < ApplicationController
 
   private
 
+  def user_params
+    params.permit(:id, :username, :name, :email, :password, :file, :tags, :blurb)
+  end
+
   def updatable_params
-    params.except(:password).permit(:name, :username, :email, :blurb, :tags)
+    params.except(:password, :file, :tags).permit(:name, :username, :email, :blurb)
   end
 
 end

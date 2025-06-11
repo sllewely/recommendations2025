@@ -43,3 +43,25 @@ export function put(path, data, token) {
 export function patch(path, data, token) {
 	return send({ method: "PATCH", path, data, token });
 }
+
+export async function patch_multipart(path, data, token) {
+	const method = "PATCH";
+	const opts = { method, headers: {} };
+
+	if (data) {
+		opts.headers["Content-Type"] = "multipart/form-data";
+		opts.body = JSON.stringify(data);
+	}
+
+	if (token) {
+		opts.headers["Authorization"] = `Token ${token}`;
+	}
+
+	const res = await fetch(`${root_url}/${path}`, opts);
+	let json = await res.json();
+	if (res.ok) {
+		return { success: true, res: json };
+	} else {
+		return { success: false, message: json["exception"] ?? json["error"] };
+	}
+}

@@ -19,6 +19,8 @@ export async function POST({ request, cookies }) {
 		});
 
 		if (!response.ok) {
+			2 + 5;
+			console.log(response);
 			throw new Error(`Upload failed: ${response.status} ${response.statusText}`);
 		}
 	} catch (error) {

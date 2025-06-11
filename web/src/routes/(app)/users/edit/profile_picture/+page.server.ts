@@ -5,6 +5,7 @@ import { superValidate } from "sveltekit-superforms";
 import { imageFormSchema } from "./schema";
 import { zod } from "sveltekit-superforms/adapters";
 import { fail } from "@sveltejs/kit";
+import { VITE_API_URL } from "$env/static/private";
 
 export const load: PageServerLoad = async ({ cookies, params }) => {
 	let user_id = cookies.get("user_id");
@@ -29,14 +30,26 @@ export const actions = {
 		2 + 5;
 		const user_id = cookies.get("user_id");
 		const jwt = cookies.get("jwt");
-		const tags = (form.data.string_tags ?? "").split(",");
 
-		return await api.patch(
-			"images/profile_picture",
-			{
-				image: form.data.image,
+		const formData = new FormData();
+		formData.append("file", form.data.image);
+
+		const response = await fetch(VITE_API_URL + "images/profile_picture", {
+			method: "POST",
+			headers: {
+				Authorization: "Token " + jwt,
 			},
-			jwt,
-		);
+			body: formData,
+		});
+
+		return response;
+
+		// return await api.post(
+		// 	"images/profile_picture",
+		// 	{
+		// 		image: form.data.image,
+		// 	},
+		// 	jwt,
+		// );
 	},
 };

@@ -11,7 +11,7 @@ export async function load({ cookies, params }) {
 	const friend_requests_response = await api.get("friend_requests", jwt);
 
 	// TODO: error handling ... with errors?
-	let user_res = await getUser(jwt, my_user_id);
+	let user_res = await getUser(my_user_id, jwt);
 
 	const outgoing_friend_requests =
 		friend_requests_response["res"]["outgoing_friend_requests"] ?? [];

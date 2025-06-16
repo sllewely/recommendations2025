@@ -26,7 +26,7 @@
 	import { Button, buttonVariants } from "$lib/components/ui/button/index.js";
 	import { RangeCalendar } from "$lib/components/ui/range-calendar/index.js";
 	import * as Popover from "$lib/components/ui/popover/index.js";
-	import { CalendarRange } from "lucide-svelte";
+	import { CalendarIcon, CalendarRange } from "lucide-svelte";
 
 	interface Props {
 		form_data: SuperValidated<Infer<EventsFormSchema>>;
@@ -131,7 +131,7 @@
 										>Your date of birth is used to calculator your age</Form.Description
 									>
 									<Form.FieldErrors />
-									<input hidden value={$formData.start_date} name={props.name} />
+									<!--									<input hidden value={$formData.start_date} name={props.name} />-->
 								{/snippet}
 							</Form.Control>
 						</Form.Field>

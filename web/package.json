@@ -25,7 +25,7 @@
 		"@sveltejs/adapter-node": "^5.2.12",
 		"@sveltejs/kit": "^2.16.0",
 		"@sveltejs/vite-plugin-svelte": "^5.0.0",
-		"bits-ui": "^0.22.0",
+		"bits-ui": "^2.8.0",
 		"clsx": "^2.1.1",
 		"formsnap": "^1.0.1",
 		"husky": "^9.1.7",

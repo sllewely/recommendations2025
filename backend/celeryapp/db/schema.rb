@@ -10,9 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_21_184152) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_18_161512) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+  enable_extension "pgcrypto"
 
   create_table "comments", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -21,8 +22,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_184152) do
     t.string "commentable_type", null: false
     t.bigint "user_id", null: false
     t.text "body", null: false
+    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.index ["commentable_id", "commentable_type"], name: "index_comments_on_commentable_id_and_commentable_type"
     t.index ["user_id"], name: "index_comments_on_user_id"
+    t.index ["uuid"], name: "index_comments_on_uuid", unique: true
   end
 
   create_table "events", force: :cascade do |t|
@@ -37,11 +40,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_184152) do
     t.bigint "user_id", null: false
     t.datetime "end_date_time"
     t.boolean "is_public", default: false
+    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.index ["end_date_time"], name: "index_events_on_end_date_time"
     t.index ["event_type"], name: "index_events_on_event_type"
     t.index ["is_public"], name: "index_events_on_is_public"
     t.index ["start_date_time"], name: "index_events_on_start_date_time"
     t.index ["user_id"], name: "index_events_on_user_id"
+    t.index ["uuid"], name: "index_events_on_uuid", unique: true
   end
 
   create_table "friend_codes", force: :cascade do |t|
@@ -59,9 +64,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_184152) do
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.integer "incoming_friend_id", null: false
+    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.index ["incoming_friend_id"], name: "index_friend_requests_on_incoming_friend_id"
     t.index ["user_id", "incoming_friend_id"], name: "index_friend_requests_on_user_id_and_incoming_friend_id", unique: true
     t.index ["user_id"], name: "index_friend_requests_on_user_id"
+    t.index ["uuid"], name: "index_friend_requests_on_uuid", unique: true
   end
 
   create_table "friendships", force: :cascade do |t|
@@ -69,8 +76,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_184152) do
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.integer "friend_id", null: false
+    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.index ["user_id", "friend_id"], name: "index_friendships_on_user_id_and_friend_id", unique: true
     t.index ["user_id"], name: "index_friendships_on_user_id"
+    t.index ["uuid"], name: "index_friendships_on_uuid", unique: true
   end
 
   create_table "notifications", force: :cascade do |t|
@@ -81,7 +90,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_184152) do
     t.boolean "active", default: true
     t.json "extras", default: {}
     t.integer "notif_type", null: false
+    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.index ["user_id"], name: "index_notifications_on_user_id"
+    t.index ["uuid"], name: "index_notifications_on_uuid", unique: true
   end
 
   create_table "post_recommendations", force: :cascade do |t|
@@ -97,7 +108,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_184152) do
     t.string "post_title"
     t.text "content"
     t.bigint "user_id"
+    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.index ["user_id"], name: "index_posts_on_user_id"
+    t.index ["uuid"], name: "index_posts_on_uuid", unique: true
   end
 
   create_table "recommendations", force: :cascade do |t|
@@ -111,8 +124,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_184152) do
     t.integer "rating", default: 0
     t.bigint "user_id", null: false
     t.string "url"
+    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.index ["user_id", "title", "media_type"], name: "index_recommendations_on_user_id_and_title_and_media_type", unique: true
     t.index ["user_id"], name: "index_recommendations_on_user_id"
+    t.index ["uuid"], name: "index_recommendations_on_uuid", unique: true
   end
 
   create_table "rsvps", force: :cascade do |t|
@@ -121,9 +136,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_184152) do
     t.bigint "user_id", null: false
     t.bigint "event_id", null: false
     t.integer "status", default: 0
+    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.index ["event_id"], name: "index_rsvps_on_event_id"
     t.index ["user_id", "event_id"], name: "index_rsvps_on_user_id_and_event_id", unique: true
     t.index ["user_id"], name: "index_rsvps_on_user_id"
+    t.index ["uuid"], name: "index_rsvps_on_uuid", unique: true
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -139,7 +156,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_184152) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "tag", null: false
+    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.index ["tag"], name: "index_tags_on_tag"
+    t.index ["uuid"], name: "index_tags_on_uuid", unique: true
   end
 
   create_table "user_statuses", force: :cascade do |t|
@@ -147,7 +166,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_184152) do
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.string "status", null: false
+    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.index ["user_id"], name: "index_user_statuses_on_user_id"
+    t.index ["uuid"], name: "index_user_statuses_on_uuid", unique: true
   end
 
   create_table "user_tags", force: :cascade do |t|
@@ -155,9 +176,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_184152) do
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.bigint "tag_id", null: false
+    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.index ["tag_id"], name: "index_user_tags_on_tag_id"
     t.index ["user_id", "tag_id"], name: "index_user_tags_on_user_id_and_tag_id", unique: true
     t.index ["user_id"], name: "index_user_tags_on_user_id"
+    t.index ["uuid"], name: "index_user_tags_on_uuid", unique: true
   end
 
   create_table "users", force: :cascade do |t|
@@ -169,7 +192,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_184152) do
     t.string "username"
     t.string "name"
     t.text "blurb"
+    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["uuid"], name: "index_users_on_uuid", unique: true
   end
 
   add_foreign_key "comments", "users"

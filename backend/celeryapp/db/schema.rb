@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_23_200810) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_23_202301) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -20,7 +20,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_23_200810) do
     t.datetime "updated_at", null: false
     t.bigint "commentable_id", null: false
     t.string "commentable_type", null: false
-    t.bigint "numeric_user_id", null: false
+    t.integer "numeric_user_id"
     t.text "body", null: false
     t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.uuid "user_id"
@@ -38,7 +38,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_23_200810) do
     t.string "address"
     t.string "url"
     t.string "event_type"
-    t.bigint "numeric_user_id", null: false
+    t.integer "numeric_user_id"
     t.datetime "end_date_time"
     t.boolean "is_public", default: false
     t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
@@ -54,7 +54,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_23_200810) do
   create_table "friend_codes", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "numeric_user_id"
+    t.integer "numeric_user_id"
     t.boolean "active", default: true
     t.string "token", null: false
     t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
@@ -67,7 +67,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_23_200810) do
   create_table "friend_requests", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "numeric_user_id", null: false
+    t.integer "numeric_user_id"
     t.integer "numeric_incoming_friend_id", null: false
     t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.uuid "user_id"
@@ -81,7 +81,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_23_200810) do
   create_table "friendships", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "numeric_user_id", null: false
+    t.integer "numeric_user_id"
     t.integer "numeric_friend_id", null: false
     t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.uuid "user_id"
@@ -94,7 +94,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_23_200810) do
   create_table "notifications", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "numeric_user_id", null: false
+    t.integer "numeric_user_id"
     t.string "message", null: false
     t.boolean "active", default: true
     t.json "extras", default: {}
@@ -119,7 +119,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_23_200810) do
     t.datetime "updated_at", null: false
     t.string "post_title"
     t.text "content"
-    t.bigint "numeric_user_id"
+    t.integer "numeric_user_id"
     t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.uuid "user_id"
     t.index ["numeric_user_id"], name: "index_posts_on_numeric_user_id"
@@ -135,7 +135,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_23_200810) do
     t.string "who_recommended"
     t.integer "status", default: 0
     t.integer "rating", default: 0
-    t.bigint "numeric_user_id", null: false
+    t.integer "numeric_user_id"
     t.string "url"
     t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.uuid "user_id"
@@ -147,7 +147,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_23_200810) do
   create_table "rsvps", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "numeric_user_id", null: false
+    t.integer "numeric_user_id"
     t.bigint "event_id", null: false
     t.integer "status", default: 0
     t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
@@ -159,7 +159,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_23_200810) do
   end
 
   create_table "sessions", force: :cascade do |t|
-    t.bigint "numeric_user_id", null: false
+    t.integer "numeric_user_id"
     t.string "user_agent"
     t.string "ip_address"
     t.datetime "created_at", null: false
@@ -182,7 +182,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_23_200810) do
   create_table "user_statuses", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "numeric_user_id", null: false
+    t.integer "numeric_user_id"
     t.string "status", null: false
     t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.uuid "user_id"
@@ -193,7 +193,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_23_200810) do
   create_table "user_tags", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "numeric_user_id", null: false
+    t.integer "numeric_user_id"
     t.bigint "tag_id", null: false
     t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.uuid "user_id"

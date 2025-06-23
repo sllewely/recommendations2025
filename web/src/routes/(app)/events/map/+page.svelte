@@ -2,6 +2,7 @@
 	import pkg from "mapbox-gl";
 	import "mapbox-gl/dist/mapbox-gl.css";
 	import { onMount, onDestroy } from "svelte";
+	import { env } from "$env/dynamic/public";
 
 	const { Map } = pkg;
 
@@ -18,7 +19,7 @@
 	onMount(() => {
 		map = new Map({
 			container: mapContainer,
-			accessToken: "",
+			accessToken: env.PUBLIC_MAPBOX_PK,
 			center: [initialState.lng, initialState.lat],
 			zoom: initialState.zoom,
 		});

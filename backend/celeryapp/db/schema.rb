@@ -55,8 +55,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_18_161512) do
     t.bigint "user_id"
     t.boolean "active", default: true
     t.string "token", null: false
+    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.index ["token"], name: "index_friend_codes_on_token", unique: true
     t.index ["user_id"], name: "index_friend_codes_on_user_id"
+    t.index ["uuid"], name: "index_friend_codes_on_uuid", unique: true
   end
 
   create_table "friend_requests", force: :cascade do |t|
@@ -100,6 +102,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_18_161512) do
     t.integer "recommendation_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
+    t.index ["uuid"], name: "index_post_recommendations_on_uuid", unique: true
   end
 
   create_table "posts", force: :cascade do |t|
@@ -149,7 +153,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_18_161512) do
     t.string "ip_address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.index ["user_id"], name: "index_sessions_on_user_id"
+    t.index ["uuid"], name: "index_sessions_on_uuid", unique: true
   end
 
   create_table "tags", force: :cascade do |t|

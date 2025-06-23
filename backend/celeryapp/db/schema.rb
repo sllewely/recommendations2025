@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_18_161512) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_23_200810) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -20,11 +20,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_18_161512) do
     t.datetime "updated_at", null: false
     t.bigint "commentable_id", null: false
     t.string "commentable_type", null: false
-    t.bigint "user_id", null: false
+    t.bigint "numeric_user_id", null: false
     t.text "body", null: false
     t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
+    t.uuid "user_id"
     t.index ["commentable_id", "commentable_type"], name: "index_comments_on_commentable_id_and_commentable_type"
-    t.index ["user_id"], name: "index_comments_on_user_id"
+    t.index ["numeric_user_id"], name: "index_comments_on_numeric_user_id"
     t.index ["uuid"], name: "index_comments_on_uuid", unique: true
   end
 
@@ -37,63 +38,70 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_18_161512) do
     t.string "address"
     t.string "url"
     t.string "event_type"
-    t.bigint "user_id", null: false
+    t.bigint "numeric_user_id", null: false
     t.datetime "end_date_time"
     t.boolean "is_public", default: false
     t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
+    t.uuid "user_id"
     t.index ["end_date_time"], name: "index_events_on_end_date_time"
     t.index ["event_type"], name: "index_events_on_event_type"
     t.index ["is_public"], name: "index_events_on_is_public"
+    t.index ["numeric_user_id"], name: "index_events_on_numeric_user_id"
     t.index ["start_date_time"], name: "index_events_on_start_date_time"
-    t.index ["user_id"], name: "index_events_on_user_id"
     t.index ["uuid"], name: "index_events_on_uuid", unique: true
   end
 
   create_table "friend_codes", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "user_id"
+    t.bigint "numeric_user_id"
     t.boolean "active", default: true
     t.string "token", null: false
     t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
+    t.uuid "user_id"
+    t.index ["numeric_user_id"], name: "index_friend_codes_on_numeric_user_id"
     t.index ["token"], name: "index_friend_codes_on_token", unique: true
-    t.index ["user_id"], name: "index_friend_codes_on_user_id"
     t.index ["uuid"], name: "index_friend_codes_on_uuid", unique: true
   end
 
   create_table "friend_requests", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "user_id", null: false
-    t.integer "incoming_friend_id", null: false
+    t.bigint "numeric_user_id", null: false
+    t.integer "numeric_incoming_friend_id", null: false
     t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
-    t.index ["incoming_friend_id"], name: "index_friend_requests_on_incoming_friend_id"
-    t.index ["user_id", "incoming_friend_id"], name: "index_friend_requests_on_user_id_and_incoming_friend_id", unique: true
-    t.index ["user_id"], name: "index_friend_requests_on_user_id"
+    t.uuid "user_id"
+    t.uuid "incoming_friend_id"
+    t.index ["numeric_incoming_friend_id"], name: "index_friend_requests_on_numeric_incoming_friend_id"
+    t.index ["numeric_user_id", "numeric_incoming_friend_id"], name: "idx_on_numeric_user_id_numeric_incoming_friend_id_334efb41da", unique: true
+    t.index ["numeric_user_id"], name: "index_friend_requests_on_numeric_user_id"
     t.index ["uuid"], name: "index_friend_requests_on_uuid", unique: true
   end
 
   create_table "friendships", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "user_id", null: false
-    t.integer "friend_id", null: false
+    t.bigint "numeric_user_id", null: false
+    t.integer "numeric_friend_id", null: false
     t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
-    t.index ["user_id", "friend_id"], name: "index_friendships_on_user_id_and_friend_id", unique: true
-    t.index ["user_id"], name: "index_friendships_on_user_id"
+    t.uuid "user_id"
+    t.uuid "friend_id"
+    t.index ["numeric_user_id", "numeric_friend_id"], name: "index_friendships_on_numeric_user_id_and_numeric_friend_id", unique: true
+    t.index ["numeric_user_id"], name: "index_friendships_on_numeric_user_id"
     t.index ["uuid"], name: "index_friendships_on_uuid", unique: true
   end
 
   create_table "notifications", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "user_id", null: false
+    t.bigint "numeric_user_id", null: false
     t.string "message", null: false
     t.boolean "active", default: true
     t.json "extras", default: {}
     t.integer "notif_type", null: false
     t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
-    t.index ["user_id"], name: "index_notifications_on_user_id"
+    t.uuid "user_id"
+    t.index ["numeric_user_id"], name: "index_notifications_on_numeric_user_id"
     t.index ["uuid"], name: "index_notifications_on_uuid", unique: true
   end
 
@@ -111,9 +119,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_18_161512) do
     t.datetime "updated_at", null: false
     t.string "post_title"
     t.text "content"
-    t.bigint "user_id"
+    t.bigint "numeric_user_id"
     t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
-    t.index ["user_id"], name: "index_posts_on_user_id"
+    t.uuid "user_id"
+    t.index ["numeric_user_id"], name: "index_posts_on_numeric_user_id"
     t.index ["uuid"], name: "index_posts_on_uuid", unique: true
   end
 
@@ -126,35 +135,38 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_18_161512) do
     t.string "who_recommended"
     t.integer "status", default: 0
     t.integer "rating", default: 0
-    t.bigint "user_id", null: false
+    t.bigint "numeric_user_id", null: false
     t.string "url"
     t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
-    t.index ["user_id", "title", "media_type"], name: "index_recommendations_on_user_id_and_title_and_media_type", unique: true
-    t.index ["user_id"], name: "index_recommendations_on_user_id"
+    t.uuid "user_id"
+    t.index ["numeric_user_id", "title", "media_type"], name: "idx_on_numeric_user_id_title_media_type_02ab1e85f5", unique: true
+    t.index ["numeric_user_id"], name: "index_recommendations_on_numeric_user_id"
     t.index ["uuid"], name: "index_recommendations_on_uuid", unique: true
   end
 
   create_table "rsvps", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "user_id", null: false
+    t.bigint "numeric_user_id", null: false
     t.bigint "event_id", null: false
     t.integer "status", default: 0
     t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
+    t.uuid "user_id"
     t.index ["event_id"], name: "index_rsvps_on_event_id"
-    t.index ["user_id", "event_id"], name: "index_rsvps_on_user_id_and_event_id", unique: true
-    t.index ["user_id"], name: "index_rsvps_on_user_id"
+    t.index ["numeric_user_id", "event_id"], name: "index_rsvps_on_numeric_user_id_and_event_id", unique: true
+    t.index ["numeric_user_id"], name: "index_rsvps_on_numeric_user_id"
     t.index ["uuid"], name: "index_rsvps_on_uuid", unique: true
   end
 
   create_table "sessions", force: :cascade do |t|
-    t.bigint "user_id", null: false
+    t.bigint "numeric_user_id", null: false
     t.string "user_agent"
     t.string "ip_address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
-    t.index ["user_id"], name: "index_sessions_on_user_id"
+    t.uuid "user_id"
+    t.index ["numeric_user_id"], name: "index_sessions_on_numeric_user_id"
     t.index ["uuid"], name: "index_sessions_on_uuid", unique: true
   end
 
@@ -170,26 +182,29 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_18_161512) do
   create_table "user_statuses", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "user_id", null: false
+    t.bigint "numeric_user_id", null: false
     t.string "status", null: false
     t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
-    t.index ["user_id"], name: "index_user_statuses_on_user_id"
+    t.uuid "user_id"
+    t.index ["numeric_user_id"], name: "index_user_statuses_on_numeric_user_id"
     t.index ["uuid"], name: "index_user_statuses_on_uuid", unique: true
   end
 
   create_table "user_tags", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "user_id", null: false
+    t.bigint "numeric_user_id", null: false
     t.bigint "tag_id", null: false
     t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
+    t.uuid "user_id"
+    t.index ["numeric_user_id", "tag_id"], name: "index_user_tags_on_numeric_user_id_and_tag_id", unique: true
+    t.index ["numeric_user_id"], name: "index_user_tags_on_numeric_user_id"
     t.index ["tag_id"], name: "index_user_tags_on_tag_id"
-    t.index ["user_id", "tag_id"], name: "index_user_tags_on_user_id_and_tag_id", unique: true
-    t.index ["user_id"], name: "index_user_tags_on_user_id"
     t.index ["uuid"], name: "index_user_tags_on_uuid", unique: true
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.bigint "numeric_id", default: -> { "nextval('users_id_seq'::regclass)" }, null: false
     t.string "email", null: false
     t.string "password_digest", null: false
     t.boolean "verified", default: false, null: false
@@ -198,23 +213,22 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_18_161512) do
     t.string "username"
     t.string "name"
     t.text "blurb"
-    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["uuid"], name: "index_users_on_uuid", unique: true
+    t.index ["id"], name: "index_users_on_id", unique: true
   end
 
-  add_foreign_key "comments", "users"
-  add_foreign_key "events", "users"
-  add_foreign_key "friend_codes", "users"
-  add_foreign_key "friend_requests", "users"
-  add_foreign_key "friendships", "users"
-  add_foreign_key "notifications", "users"
-  add_foreign_key "posts", "users"
-  add_foreign_key "recommendations", "users"
+  add_foreign_key "comments", "users", on_delete: :cascade
+  add_foreign_key "events", "users", on_delete: :cascade
+  add_foreign_key "friend_codes", "users", on_delete: :cascade
+  add_foreign_key "friend_requests", "users", on_delete: :cascade
+  add_foreign_key "friendships", "users", on_delete: :cascade
+  add_foreign_key "notifications", "users", on_delete: :cascade
+  add_foreign_key "posts", "users", on_delete: :cascade
+  add_foreign_key "recommendations", "users", on_delete: :cascade
   add_foreign_key "rsvps", "events"
-  add_foreign_key "rsvps", "users"
-  add_foreign_key "sessions", "users"
-  add_foreign_key "user_statuses", "users"
+  add_foreign_key "rsvps", "users", on_delete: :cascade
+  add_foreign_key "sessions", "users", on_delete: :cascade
+  add_foreign_key "user_statuses", "users", on_delete: :cascade
   add_foreign_key "user_tags", "tags"
-  add_foreign_key "user_tags", "users"
+  add_foreign_key "user_tags", "users", on_delete: :cascade
 end

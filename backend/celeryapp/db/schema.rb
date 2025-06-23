@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_23_203404) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_23_203912) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -68,7 +68,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_23_203404) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "numeric_user_id"
-    t.integer "numeric_incoming_friend_id", null: false
+    t.integer "numeric_incoming_friend_id"
     t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.uuid "user_id"
     t.uuid "incoming_friend_id"
@@ -82,7 +82,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_23_203404) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "numeric_user_id"
-    t.integer "numeric_friend_id", null: false
+    t.integer "numeric_friend_id"
     t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.uuid "user_id"
     t.uuid "friend_id"

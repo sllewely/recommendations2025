@@ -5,7 +5,7 @@ export async function load({ locals, cookies, params }) {
 	const jwt = cookies.get("jwt");
 	const event_id = params.id;
 
-	let event = await getEvent(jwt, event_id);
+	let event = await getEvent(event_id, jwt);
 
 	return {
 		event: event["res"],

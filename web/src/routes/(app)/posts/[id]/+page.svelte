@@ -21,7 +21,7 @@
 </script>
 
 <div>
-	{#if my_user_id.toString() === post.creator_id.toString()}
+	{#if my_user_id.toString() === post.user_id.toString()}
 		<div class="float-right relative">
 			<LinkButton url="/posts/{post.id}/edit">Edit</LinkButton>
 			<LinkButton url="/posts/{post.id}/delete">Delete</LinkButton>

@@ -39,6 +39,14 @@ To run a specific test case
 Clear test db
 ```bundle exec rails db:reset RAILS_ENV=test```
 
+or
+
+```
+bundle exec rake db:drop RAILS_ENV=test
+bundle exec rake db:create RAILS_ENV=test
+bundle exec rake db:schema:load RAILS_ENV=test
+```
+
 ### Rails
 
 Add a new gem and

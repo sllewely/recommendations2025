@@ -5,5 +5,5 @@
 </script>
 
 <div>
-	<RecommendationForm />
+	<RecommendationForm {data} {form} />
 </div>

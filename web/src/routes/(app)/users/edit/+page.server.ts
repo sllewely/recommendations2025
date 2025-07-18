@@ -1,5 +1,4 @@
 import { getUser, updateUser } from "$lib/api_calls/users.svelte.js";
-import * as api from "$lib/api_calls/api.svelte.js";
 import type { PageServerLoad } from "./$types.js";
 import { superValidate } from "sveltekit-superforms";
 import { profileFormSchema } from "./schema";
@@ -8,8 +7,9 @@ import { fail } from "@sveltejs/kit";
 import { withAuth, type ActionAuthContext, type LoadAuthContext } from "$lib/auth";
 
 export const load: PageServerLoad = withAuth(async ({ jwt, user_id }: LoadAuthContext) => {
-	let user = await getUser(parseInt(user_id), jwt);
+	let user = await getUser(user_id, jwt);
 	const user_obj = user.res;
+
 	const string_tags = user.res?.tags ? user.res.tags.join(", ") : "";
 	if (user_obj) {
 		user_obj.string_tags = string_tags;
@@ -33,7 +33,7 @@ export const actions = {
 		// TODO: can use zod to transform the string_tags to an array of strings
 		const tags = (form.data.string_tags ?? "").split(",");
 		return await updateUser(
-			parseInt(user_id),
+			user_id,
 			{
 				name: form.data.name,
 				blurb: form.data.blurb,

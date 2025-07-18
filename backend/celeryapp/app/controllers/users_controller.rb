@@ -17,7 +17,7 @@ class UsersController < ApplicationController
   def show
     user_id = params[:id]
     # the current user
-    if current_user.id == user_id.to_i
+    if current_user.id == user_id
       render json: current_user.attributes, status: :ok and return
     end
     @user = User.find_by(id: user_id)
@@ -28,7 +28,7 @@ class UsersController < ApplicationController
   end
 
   def update
-    if params[:id].to_i != current_user.id
+    if params[:id] != current_user.id
       render json: {}, status: :unauthorized and return
     end
     current_user.update(updatable_params)
@@ -36,7 +36,7 @@ class UsersController < ApplicationController
       current_user.update_tags(params[:tags])
     end
     current_user.password = params[:password] if params[:password].present?
-    
+
     if current_user.save
       render json: current_user.attributes, status: :ok
     else

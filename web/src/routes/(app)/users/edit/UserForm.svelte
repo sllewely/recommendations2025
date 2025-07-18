@@ -49,6 +49,7 @@
 			if (res.success) {
 				newToast("You have successfully updated your user");
 			} else {
+				console.log(res);
 				newToast("Error updating " + res.message, ToastType.Error);
 			}
 		};
@@ -79,7 +80,7 @@
 							<Form.Label>Blurb</Form.Label>
 							<Textarea {...attrs} bind:value={$formData.blurb} />
 						</Form.Control>
-						<Form.Description>This is your public display name.</Form.Description>
+						<Form.Description>Help people find you :)</Form.Description>
 						<Form.FieldErrors />
 					</Form.Field>
 

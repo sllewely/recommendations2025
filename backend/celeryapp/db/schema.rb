@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_18_202511) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_18_205918) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -75,6 +75,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_18_202511) do
     t.index ["numeric_incoming_friend_id"], name: "index_friend_requests_on_numeric_incoming_friend_id"
     t.index ["numeric_user_id", "numeric_incoming_friend_id"], name: "idx_on_numeric_user_id_numeric_incoming_friend_id_334efb41da", unique: true
     t.index ["numeric_user_id"], name: "index_friend_requests_on_numeric_user_id"
+    t.index ["user_id", "incoming_friend_id"], name: "index_friend_requests_on_user_id_and_incoming_friend_id", unique: true
     t.index ["uuid"], name: "index_friend_requests_on_uuid", unique: true
   end
 

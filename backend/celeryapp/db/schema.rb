@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_18_205918) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_18_210436) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -89,6 +89,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_18_205918) do
     t.uuid "friend_id"
     t.index ["numeric_user_id", "numeric_friend_id"], name: "index_friendships_on_numeric_user_id_and_numeric_friend_id", unique: true
     t.index ["numeric_user_id"], name: "index_friendships_on_numeric_user_id"
+    t.index ["user_id", "friend_id"], name: "index_friendships_on_user_id_and_friend_id", unique: true
     t.index ["uuid"], name: "index_friendships_on_uuid", unique: true
   end
 
@@ -142,6 +143,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_18_205918) do
     t.uuid "user_id"
     t.index ["numeric_user_id", "title", "media_type"], name: "idx_on_numeric_user_id_title_media_type_02ab1e85f5", unique: true
     t.index ["numeric_user_id"], name: "index_recommendations_on_numeric_user_id"
+    t.index ["user_id", "title", "media_type"], name: "index_recommendations_on_user_id_and_title_and_media_type", unique: true
     t.index ["uuid"], name: "index_recommendations_on_uuid", unique: true
   end
 
@@ -156,6 +158,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_18_205918) do
     t.index ["event_id"], name: "index_rsvps_on_event_id"
     t.index ["numeric_user_id", "event_id"], name: "index_rsvps_on_numeric_user_id_and_event_id", unique: true
     t.index ["numeric_user_id"], name: "index_rsvps_on_numeric_user_id"
+    t.index ["user_id", "event_id"], name: "index_rsvps_on_user_id_and_event_id", unique: true
     t.index ["uuid"], name: "index_rsvps_on_uuid", unique: true
   end
 
@@ -201,6 +204,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_18_205918) do
     t.index ["numeric_user_id", "tag_id"], name: "index_user_tags_on_numeric_user_id_and_tag_id", unique: true
     t.index ["numeric_user_id"], name: "index_user_tags_on_numeric_user_id"
     t.index ["tag_id"], name: "index_user_tags_on_tag_id"
+    t.index ["user_id", "tag_id"], name: "index_user_tags_on_user_id_and_tag_id", unique: true
     t.index ["uuid"], name: "index_user_tags_on_uuid", unique: true
   end
 

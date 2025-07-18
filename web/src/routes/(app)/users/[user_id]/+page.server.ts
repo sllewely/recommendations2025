@@ -6,7 +6,7 @@ export async function load({ cookies, params }) {
 	const jwt = cookies.get("jwt");
 
 	let user_id = params.user_id;
-	let user = await getUser(parseInt(user_id), jwt);
+	let user = await getUser(user_id, jwt);
 	let pending_friend_request = await api.get(`friend_requests/${user_id}`, jwt);
 
 	return {

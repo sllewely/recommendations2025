@@ -84,9 +84,7 @@ class User < ApplicationRecord
   end
 
   def attributes
-    a = super.except!('password_digest').merge!({
-                                                  friend_code: first_or_create_friend_code!,
-                                                })
+    a = super.except!('password_digest')
     a[:tags] = tags.map(&:tag)
     a
   end

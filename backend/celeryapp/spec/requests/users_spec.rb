@@ -28,16 +28,6 @@ RSpec.describe "User", type: :request do
       expect(res['email']).to eq(@my_user.email)
     end
 
-    it 'shows my friendcode I view myself' do
-      get "/users/#{@my_user.id}", headers: @headers
-
-      expect(response).to have_http_status(:ok)
-      res = JSON.parse(response.body)
-      expect(res['friend_code']).to_not be_nil
-      expect(res['friend_code']).to_not eq('')
-      expect(res['friend_code']).to eq(@my_user.friend_code)
-    end
-
     it 'shows limited fields when I view someone else' do
       get "/users/#{other_user.id}", headers: @headers
 

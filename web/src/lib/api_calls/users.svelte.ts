@@ -39,7 +39,7 @@ export async function getUsers(token: string): Promise<ApiResponse<User[]>> {
  * @returns Promise with updated user data or error
  */
 export async function updateUser(
-	user_id: number,
+	user_id: string,
 	data: Partial<UserUpdatePayload>,
 	token: string,
 ): Promise<ApiResponse<User>> {

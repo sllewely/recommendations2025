@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_23_203912) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_18_202511) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -204,7 +204,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_23_203912) do
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.bigint "numeric_id", default: -> { "nextval('users_id_seq'::regclass)" }, null: false
+    t.bigint "numeric_id", default: 0
     t.string "email", null: false
     t.string "password_digest", null: false
     t.boolean "verified", default: false, null: false

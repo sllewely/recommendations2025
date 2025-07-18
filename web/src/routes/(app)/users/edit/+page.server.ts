@@ -1,5 +1,4 @@
 import { getUser, updateUser } from "$lib/api_calls/users.svelte.js";
-import * as api from "$lib/api_calls/api.svelte.js";
 import type { PageServerLoad } from "./$types.js";
 import { superValidate } from "sveltekit-superforms";
 import { profileFormSchema } from "./schema";
@@ -8,7 +7,7 @@ import { fail } from "@sveltejs/kit";
 import { withAuth, type ActionAuthContext, type LoadAuthContext } from "$lib/auth";
 
 export const load: PageServerLoad = withAuth(async ({ jwt, user_id }: LoadAuthContext) => {
-	let user = await getUser(parseInt(user_id), jwt);
+	let user = await getUser(user_id, jwt);
 	const user_obj = user.res;
 	const string_tags = user.res?.tags ? user.res.tags.join(", ") : "";
 	if (user_obj) {

@@ -18,7 +18,7 @@ export async function getCurrentUser(token: string): Promise<ApiResponse<User>> 
  * @param token - JWT token for authentication
  * @returns Promise with user data or error
  */
-export async function getUser(id: number, token: string): Promise<ApiResponse<User>> {
+export async function getUser(id: string, token: string): Promise<ApiResponse<User>> {
 	return api.get<User>(`${ENDPOINT}/${id}`, token);
 }
 

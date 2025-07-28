@@ -9,7 +9,7 @@ export async function load({ cookies, params }) {
 	const post_id = params.id;
 
 	// TODO: Will crash if backend not running
-	let res = await getPost(jwt, post_id);
+	let res = await getPost(post_id, jwt);
 
 	console.log("posts/id load reloaded");
 

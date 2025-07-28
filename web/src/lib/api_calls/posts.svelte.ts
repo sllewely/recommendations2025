@@ -18,7 +18,7 @@ export async function getPosts(token: string): Promise<ApiResponse<Post[]>> {
  * @param token - JWT token for authentication
  * @returns Promise with post data or error
  */
-export async function getPost(token: string, id: number): Promise<ApiResponse<Post>> {
+export async function getPost(id: number, token: string): Promise<ApiResponse<Post>> {
 	return api.get<Post>(`${ENDPOINT}/${id}`, token);
 }
 

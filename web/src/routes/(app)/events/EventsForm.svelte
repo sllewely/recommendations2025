@@ -42,51 +42,41 @@
 		}}
 	>
 		<Form.Field {form} name="title">
-			<Form.Control>
-				{#snippet children({ props })}
-					<Form.Label>Title</Form.Label>
-					<Input {...props} bind:value={$formData.title} />
-				{/snippet}
+			<Form.Control let:attrs>
+				<Form.Label>Title</Form.Label>
+				<Input {...attrs} bind:value={$formData.title} />
 			</Form.Control>
 			<Form.Description>Name of the event.</Form.Description>
 			<Form.FieldErrors />
 		</Form.Field>
 		<Form.Field {form} name="description">
-			<Form.Control>
-				{#snippet children({ props })}
-					<Form.Label>Description</Form.Label>
-					<Input {...props} bind:value={$formData.description} />
-				{/snippet}
+			<Form.Control let:attrs>
+				<Form.Label>Description</Form.Label>
+				<Input {...attrs} bind:value={$formData.description} />
 			</Form.Control>
 			<Form.Description>description.</Form.Description>
 			<Form.FieldErrors />
 		</Form.Field>
-		<Form.Field {form} name="Address">
-			<Form.Control>
-				{#snippet children({ props })}
-					<Form.Label>Address</Form.Label>
-					<Input {...props} bind:value={$formData.address} />
-				{/snippet}
+		<Form.Field {form} name="address">
+			<Form.Control let:attrs>
+				<Form.Label>Address</Form.Label>
+				<Input {...attrs} bind:value={$formData.address} />
 			</Form.Control>
 			<Form.Description>Location.</Form.Description>
 			<Form.FieldErrors />
 		</Form.Field>
 		<Form.Field {form} name="url">
-			<Form.Control>
-				{#snippet children({ props })}
-					<Form.Label>Url</Form.Label>
-					<Input {...props} bind:value={$formData.url} />
-				{/snippet}
+			<Form.Control let:attrs>
+				<Form.Label>Url</Form.Label>
+				<Input {...attrs} bind:value={$formData.url} />
 			</Form.Control>
 			<Form.Description>Name of the event.</Form.Description>
 			<Form.FieldErrors />
 		</Form.Field>
 		<Form.Field {form} name="event_type">
-			<Form.Control>
-				{#snippet children({ props })}
-					<Form.Label>Event Type</Form.Label>
-					<Input {...props} bind:value={$formData.event_type} />
-				{/snippet}
+			<Form.Control let:attrs>
+				<Form.Label>Event Type</Form.Label>
+				<Input {...attrs} bind:value={$formData.event_type} />
 			</Form.Control>
 			<Form.Description>Help people find what they're interested in.</Form.Description>
 			<Form.FieldErrors />

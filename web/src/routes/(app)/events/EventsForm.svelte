@@ -12,7 +12,7 @@
 	import { goto } from "$app/navigation";
 	import { Textarea } from "$lib/components/ui/textarea";
 	import { CalendarIcon } from "lucide-svelte";
-	import { type DateValue, DateFormatter, getLocalTimeZone } from "@internationalized/date";
+	import { type DateValue, DateFormatter, getLocalTimeZone, today } from "@internationalized/date";
 
 	let { data }: { data: { form: SuperValidated<Infer<EventsFormSchema>> } } = $props();
 
@@ -28,7 +28,13 @@
 		dateStyle: "long",
 	});
 
-	let value = $state<DateValue>();
+	let default_date = today(getLocalTimeZone()).add({ days: 1 });
+	let value = $state<DateValue>(default_date);
+
+	// TODO:
+	// - start time
+	// default date and time
+	// time zone
 </script>
 
 <div>

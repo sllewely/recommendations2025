@@ -1,12 +1,18 @@
 <script lang="ts">
 	import { enhance } from "$app/forms";
 	import * as Form from "$lib/components/ui/form/index.js";
+	import { Button } from "$lib/components/ui/button/index.js";
+	import { Calendar } from "$lib/components/ui/calendar/index.js";
+	import * as Popover from "$lib/components/ui/popover/index.js";
 	import { Input } from "$lib/components/ui/input/index.js";
 	import { type EventsFormSchema, eventsFormSchema } from "./schema";
 	import { type SuperValidated, type Infer, superForm } from "sveltekit-superforms";
 	import { zodClient } from "sveltekit-superforms/adapters";
 	import { newToast, ToastType } from "$lib/state/toast.svelte";
 	import { goto } from "$app/navigation";
+	import { Textarea } from "$lib/components/ui/textarea";
+	import { CalendarIcon } from "lucide-svelte";
+	import { type DateValue, DateFormatter, getLocalTimeZone } from "@internationalized/date";
 
 	let { data }: { data: { form: SuperValidated<Infer<EventsFormSchema>> } } = $props();
 
@@ -17,6 +23,12 @@
 	const { form: formData } = form;
 
 	let creating = $state(false);
+
+	const df = new DateFormatter("en-US", {
+		dateStyle: "long",
+	});
+
+	let value = $state<DateValue>();
 </script>
 
 <div>
@@ -49,10 +61,42 @@
 			<Form.Description>Name of the event.</Form.Description>
 			<Form.FieldErrors />
 		</Form.Field>
+		<div class="flex flex-row">
+			<Form.Field {form} name="start_date">
+				<Form.Control let:attrs>
+					<Form.Label>Date</Form.Label>
+					<Popover.Root>
+						<Popover.Trigger>
+							<Button variant="outline" {...attrs}>
+								<CalendarIcon class="mr-2 size-4" />
+								{value ? df.format(value.toDate(getLocalTimeZone())) : "Select a date"}
+							</Button>
+						</Popover.Trigger>
+						<Popover.Content class="w-auto p-0">
+							<Calendar
+								bind:value
+								type="single"
+								initialFocus
+								onValueChange={(v) => {
+									if (v) {
+										$formData.start_date = v.toString();
+									} else {
+										$formData.start_date = "";
+									}
+								}}
+							/>
+						</Popover.Content>
+					</Popover.Root>
+					<input hidden value={$formData.start_date} name="start_date" />
+				</Form.Control>
+				<Form.Description>start date.</Form.Description>
+				<Form.FieldErrors />
+			</Form.Field>
+		</div>
 		<Form.Field {form} name="description">
 			<Form.Control let:attrs>
 				<Form.Label>Description</Form.Label>
-				<Input {...attrs} bind:value={$formData.description} />
+				<Textarea {...attrs} bind:value={$formData.description} />
 			</Form.Control>
 			<Form.Description>description.</Form.Description>
 			<Form.FieldErrors />

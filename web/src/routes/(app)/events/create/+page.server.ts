@@ -1,5 +1,16 @@
 import * as api from "$lib/api_calls/api.svelte.js";
 
+import type { PageServerLoad } from "./$types.js";
+import { superValidate } from "sveltekit-superforms";
+import { zod } from "sveltekit-superforms/adapters";
+import { eventsFormSchema } from "../schema";
+
+export const load: PageServerLoad = async () => {
+	return {
+		form: await superValidate(zod(eventsFormSchema)),
+	};
+};
+
 // named action for create events
 export const actions = {
 	create_event: async ({ cookies, request }) => {

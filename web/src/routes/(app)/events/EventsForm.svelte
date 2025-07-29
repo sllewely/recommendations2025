@@ -37,10 +37,11 @@
 	let default_date = today(getLocalTimeZone()).add({ days: 1 });
 	let start_date_value = $state<DateValue>(default_date);
 
+	$effect(() => {
+		$formData.start_date = start_date_value.toString();
+	});
+
 	// TODO:
-	// - start time
-	// default date and time
-	// time zone
 	// error / success popup
 </script>
 
@@ -114,6 +115,12 @@
 				<Form.FieldErrors />
 			</Form.Field>
 		</div>
+		<Form.Field {form} name="time_zone">
+			<Form.Control>
+				<input hidden value={getLocalTimeZone()} name="time_zone" />
+			</Form.Control>
+			<Form.FieldErrors />
+		</Form.Field>
 		<Form.Field {form} name="description">
 			<Form.Control let:attrs>
 				<Form.Label>Description</Form.Label>

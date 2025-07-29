@@ -5,6 +5,7 @@ import { superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
 import { eventsFormSchema } from "../schema";
 import { fail } from "@sveltejs/kit";
+import { fromDate, ZonedDateTime } from "@internationalized/date";
 
 export const load: PageServerLoad = async () => {
 	return {
@@ -15,22 +16,20 @@ export const load: PageServerLoad = async () => {
 // named action for create events
 export const actions = {
 	default: async ({ cookies, request }) => {
-		// const data = await request.formData();
-		// const date = data.get("date_input");
-		// const time = data.get("time_input");
-		// const datetime = new Date(date + " " + time);
-
 		const jwt = cookies.get("jwt");
 
 		const form = await superValidate(request, zod(eventsFormSchema));
-
-		2 + 5;
-
 		if (!form.valid) {
 			return fail(400, {
 				form,
 			});
 		}
+
+		let start_date = form.data.start_date;
+		let start_time = form.data.start_time;
+		let time_zone = form.data.time_zone;
+		let datetime = new Date(`${start_date} ${start_time}`);
+		let zoned_date_time = fromDate(datetime, time_zone);
 
 		const response = await api.post(
 			"events",
@@ -40,6 +39,7 @@ export const actions = {
 				address: form.data.address,
 				url: form.data.url,
 				event_type: form.data.event_type,
+				start_date_time: zoned_date_time.toString(),
 			},
 			jwt,
 		);

@@ -12,7 +12,13 @@
 	import { goto } from "$app/navigation";
 	import { Textarea } from "$lib/components/ui/textarea";
 	import { CalendarIcon } from "lucide-svelte";
-	import { type DateValue, DateFormatter, getLocalTimeZone, today } from "@internationalized/date";
+	import {
+		type DateValue,
+		DateFormatter,
+		getLocalTimeZone,
+		today,
+		Time,
+	} from "@internationalized/date";
 
 	let { data }: { data: { form: SuperValidated<Infer<EventsFormSchema>> } } = $props();
 
@@ -29,12 +35,13 @@
 	});
 
 	let default_date = today(getLocalTimeZone()).add({ days: 1 });
-	let value = $state<DateValue>(default_date);
+	let start_date_value = $state<DateValue>(default_date);
 
 	// TODO:
 	// - start time
 	// default date and time
 	// time zone
+	// error / success popup
 </script>
 
 <div>
@@ -67,7 +74,7 @@
 			<Form.Description>Name of the event.</Form.Description>
 			<Form.FieldErrors />
 		</Form.Field>
-		<div class="flex flex-row">
+		<div class="flex flex-row justify-between">
 			<Form.Field {form} name="start_date">
 				<Form.Control let:attrs>
 					<Form.Label>Date</Form.Label>
@@ -75,12 +82,14 @@
 						<Popover.Trigger>
 							<Button variant="outline" {...attrs}>
 								<CalendarIcon class="mr-2 size-4" />
-								{value ? df.format(value.toDate(getLocalTimeZone())) : "Select a date"}
+								{start_date_value
+									? df.format(start_date_value.toDate(getLocalTimeZone()))
+									: "Select a date"}
 							</Button>
 						</Popover.Trigger>
 						<Popover.Content class="w-auto p-0">
 							<Calendar
-								bind:value
+								bind:value={start_date_value}
 								type="single"
 								initialFocus
 								onValueChange={(v) => {
@@ -95,7 +104,13 @@
 					</Popover.Root>
 					<input hidden value={$formData.start_date} name="start_date" />
 				</Form.Control>
-				<Form.Description>start date.</Form.Description>
+				<Form.FieldErrors />
+			</Form.Field>
+			<Form.Field {form} name="start_time">
+				<Form.Control let:attrs>
+					<Form.Label>Start Time</Form.Label>
+					<input type="time" {...attrs} bind:value={$formData.start_time} />
+				</Form.Control>
 				<Form.FieldErrors />
 			</Form.Field>
 		</div>
@@ -104,7 +119,7 @@
 				<Form.Label>Description</Form.Label>
 				<Textarea {...attrs} bind:value={$formData.description} />
 			</Form.Control>
-			<Form.Description>description.</Form.Description>
+			<Form.Description>Hype it up!!</Form.Description>
 			<Form.FieldErrors />
 		</Form.Field>
 		<Form.Field {form} name="address">
@@ -120,7 +135,7 @@
 				<Form.Label>Url</Form.Label>
 				<Input {...attrs} bind:value={$formData.url} />
 			</Form.Control>
-			<Form.Description>Name of the event.</Form.Description>
+			<Form.Description>Ticket or event link.</Form.Description>
 			<Form.FieldErrors />
 		</Form.Field>
 		<Form.Field {form} name="event_type">

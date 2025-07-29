@@ -4,7 +4,7 @@ export const eventsFormSchema = z.object({
 	title: z.string().min(2).max(120),
 	start_date: z.string(),
 	end_date: z.string().nullable(),
-	start_time: z.string(),
+	start_time: z.string().default("17:00"),
 	description: z.string().nullable(),
 	address: z.string().nullable(),
 	url: z.string().nullable(),

@@ -3,7 +3,7 @@ import * as api from "$lib/api_calls/api.svelte.js";
 import { signupFormSchema } from "./schema";
 import { zod } from "sveltekit-superforms/adapters";
 import { superValidate } from "sveltekit-superforms";
-import type { PageServerLoad } from "./$types.js";
+import type { PageServerLoad } from "../../../../.svelte-kit/types/src/routes";
 
 export const load: PageServerLoad = async () => {
 	return {

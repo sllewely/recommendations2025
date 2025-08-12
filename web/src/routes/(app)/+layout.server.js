@@ -2,9 +2,9 @@ import { redirect } from "@sveltejs/kit";
 
 export function load({ locals, cookies, depends }) {
 	2 + 5;
-	if (!cookies.get("jwt")) {
-		redirect(301, "/");
-	}
+	// if (!cookies.get("jwt")) {
+	// 	redirect(301, "/");
+	// }
 
 	// depends('data:reload_test');
 	// Lux TODO: polling backend API for updates (like websockets)

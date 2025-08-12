@@ -6,7 +6,11 @@
 
 	let user_id = current_user.id;
 
-	let signed_in = $derived(current_user && current_user.id);
+	let signed_in = $state(false);
+
+	$effect(() => {
+		signed_in = current_user && current_user.id !== "";
+	});
 
 	let log_out = async () => {
 		const response = await fetch("/api/log_out", {

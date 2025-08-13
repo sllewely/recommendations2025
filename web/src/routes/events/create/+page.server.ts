@@ -1,6 +1,6 @@
 import * as api from "$lib/api_calls/api.svelte.js";
 
-import type { PageServerLoad } from "../../../../.svelte-kit/types/src/routes";
+import type { PageServerLoad } from "./$types.js";
 import { superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
 import { eventsFormSchema } from "../schema";

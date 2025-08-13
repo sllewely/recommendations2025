@@ -1,4 +1,4 @@
-import type { PageServerLoad } from "../../../../.svelte-kit/types/src/routes";
+import type { PageServerLoad } from "./$types.js";
 import { superValidate } from "sveltekit-superforms";
 import { signinFormSchema } from "./schema";
 import { zod } from "sveltekit-superforms/adapters";

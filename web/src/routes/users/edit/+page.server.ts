@@ -1,5 +1,5 @@
 import { getUser, updateUser } from "$lib/api_calls/users.svelte.js";
-import type { PageServerLoad } from "../../../../.svelte-kit/types/src/routes";
+import type { PageServerLoad } from "./$types.js";
 import { superValidate } from "sveltekit-superforms";
 import { profileFormSchema } from "./schema";
 import { zod } from "sveltekit-superforms/adapters";

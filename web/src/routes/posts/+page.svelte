@@ -6,7 +6,7 @@
 	import Link from "$lib/components/text/Link.svelte";
 	import { Button, buttonVariants } from "$lib/components/ui/button";
 	import { CalendarPlus2, MessageCircleHeart, MessageSquareText } from "@lucide/svelte";
-	import type { PageProps } from "../../../.svelte-kit/types/src/routes";
+	import type { PageProps } from "./$types.js";
 
 	let { data }: PageProps = $props();
 </script>

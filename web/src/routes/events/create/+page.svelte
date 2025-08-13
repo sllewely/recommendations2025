@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { PageData } from "../../../../.svelte-kit/types/src/routes";
+	import type { PageData } from "./$types.js";
 	import EventsForm from "../EventsForm.svelte";
 
 	let { data }: { data: PageData } = $props();

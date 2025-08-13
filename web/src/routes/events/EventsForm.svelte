@@ -105,6 +105,10 @@
 					</Popover.Root>
 					<input hidden value={$formData.start_date} name="start_date" />
 				</Form.Control>
+				<Form.Description
+					>Omg there's something wrong with this date picker in firefox. Please just keep clicking
+					for now until it opens :(.
+				</Form.Description>
 				<Form.FieldErrors />
 			</Form.Field>
 			<Form.Field {form} name="start_time">

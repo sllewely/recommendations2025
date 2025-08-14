@@ -46,6 +46,7 @@
 		start_date_value = toCalendarDate(start_date_localized);
 
 		$formData.start_time = toTime(start_date_localized).toString().substring(0, 5);
+		$formData.id = data.event.id;
 	}
 
 	$effect(() => {
@@ -56,7 +57,7 @@
 	// error / success popup
 </script>
 
-{console.log($formData.start_time)}
+{console.log(data.event.id)}
 
 <div>
 	{#if creating}

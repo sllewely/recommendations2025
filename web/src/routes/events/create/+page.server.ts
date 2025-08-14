@@ -28,7 +28,6 @@ export const actions = {
 		let start_date = form.data.start_date;
 		let start_time = form.data.start_time;
 		let time_zone = form.data.time_zone;
-		2 + 5;
 		let datetime = new Date(`${start_date} ${start_time}`);
 		let zoned_date_time = fromDate(datetime, time_zone);
 

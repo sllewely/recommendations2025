@@ -52,12 +52,7 @@
 	$effect(() => {
 		$formData.start_date = start_date_value.toString();
 	});
-
-	// TODO:
-	// error / success popup
 </script>
-
-{console.log(data.event.id)}
 
 <div>
 	{#if creating}

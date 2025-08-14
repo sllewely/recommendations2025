@@ -19,7 +19,7 @@ class RecommendationsController < ApplicationController
   end
 
   def show
-    @recommendation = Recommendation.includes(:comments).by_friends(current_user.friend_ids).find_by(id: params[:id])
+    @recommendation = Recommendation.includes(:comments).find_by(id: params[:id])
     if @recommendation.nil?
       render json: { error: 'not found' }, status: :not_found and return
     end

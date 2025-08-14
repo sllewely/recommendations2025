@@ -2,11 +2,11 @@ class PostsController < ApplicationController
   def index
     friend_ids = current_user.friend_ids
     user_id = params[:user_id]
-    posts = Post.includes(:comments).by_friends(friend_ids).order(created_at: :desc)
+    posts = Post.includes(:comments).order(created_at: :desc)
     posts = posts.where(user_id: user_id) if user_id
-    recommendations = Recommendation.includes(:comments).by_friends(friend_ids).order(created_at: :desc)
+    recommendations = Recommendation.includes(:comments).order(created_at: :desc)
     recommendations = recommendations.where(user_id: user_id) if user_id
-    events = Event.includes(:comments, :rsvps).by_friends(friend_ids).order(created_at: :desc)
+    events = Event.includes(:comments, :rsvps).order(created_at: :desc)
     events = events.where(user_id: user_id) if user_id
     feed = merge_by_time(posts, recommendations)
     feed = merge_by_time(feed, events)
@@ -22,7 +22,7 @@ class PostsController < ApplicationController
 
   def show
     post_id = params[:id]
-    @post = Post.includes(:comments).by_friends(current_user.friend_ids).find_by(id: post_id)
+    @post = Post.includes(:comments).find_by(id: post_id)
     if @post
       render json: @post.attributes, status: :ok
     else

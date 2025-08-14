@@ -16,7 +16,7 @@ export function parseCookies(cookies: Cookies): { jwt: string | null; user_id: s
  * Ensures the user is authenticated by checking for JWT
  * @param {Cookies} cookies - The cookies object from SvelteKit
  * @returns {{ jwt: string | null, user_id: string | null }} An object with jwt and user_id or null if not found
- * @throws {import("@sveltejs/kit").Redirect} Redirects to login if no JWT found
+ * @throws {import("@sveltejs/kit").Redirect} Redirects to sign_in if no JWT found
  */
 export function requireAuth(cookies: Cookies): { jwt: string; user_id: string } {
 	const { jwt, user_id } = parseCookies(cookies);

@@ -16,11 +16,14 @@
 		type DateValue,
 		DateFormatter,
 		getLocalTimeZone,
+		toCalendarDate,
+		toTime,
 		today,
 		Time,
+		parseAbsoluteToLocal,
 	} from "@internationalized/date";
 
-	let { data }: { data: { form: SuperValidated<Infer<EventsFormSchema>> } } = $props();
+	let { data }: { data: { form: SuperValidated<Infer<EventsFormSchema>>; event: any } } = $props();
 
 	const form = superForm(data.form, {
 		validators: zodClient(eventsFormSchema),
@@ -37,6 +40,14 @@
 	let default_date = today(getLocalTimeZone()).add({ days: 1 });
 	let start_date_value = $state<DateValue>(default_date);
 
+	if (data.event) {
+		let start_date_time = data.event.start_date_time;
+		let start_date_localized = parseAbsoluteToLocal(start_date_time);
+		start_date_value = toCalendarDate(start_date_localized);
+
+		$formData.start_time = toTime(start_date_localized).toString().substring(0, 5);
+	}
+
 	$effect(() => {
 		$formData.start_date = start_date_value.toString();
 	});
@@ -44,6 +55,8 @@
 	// TODO:
 	// error / success popup
 </script>
+
+{console.log($formData.start_time)}
 
 <div>
 	{#if creating}
@@ -74,6 +87,9 @@
 			</Form.Control>
 			<Form.Description>Name of the event.</Form.Description>
 			<Form.FieldErrors />
+		</Form.Field>
+		<Form.Field {form} name="id">
+			<input hidden value={$formData.id} name="id" />
 		</Form.Field>
 		<div class="flex flex-row justify-between">
 			<Form.Field {form} name="start_date">

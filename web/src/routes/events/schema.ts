@@ -11,6 +11,7 @@ export const eventsFormSchema = z.object({
 	url: z.string().nullable(),
 	event_type: z.string().nullable(),
 	is_public: z.boolean().nullable(),
+	id: z.string().nullable(),
 });
 
 export type EventsFormSchema = typeof eventsFormSchema;

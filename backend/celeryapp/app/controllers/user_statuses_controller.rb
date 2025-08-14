@@ -10,7 +10,7 @@ class UserStatusesController < ApplicationController
   end
 
   def index
-    @user_statuses = UserStatus.by_friends(current_user.friends.pluck(:id))
+    @user_statuses = UserStatus
     render json: @user_statuses
   end
 

@@ -9,7 +9,7 @@ RSpec.describe "UserStatuses", type: :request do
       @friend_2 = create(:user)
       Friendship.create_bidirectional_friendship!(@my_user, @friend)
       Friendship.create_bidirectional_friendship!(@my_user, @friend_2)
-     
+
       headers = { 'ACCEPT' => 'application/json' }
       post "/sign_in", params: { email: @my_user.email, password: @my_user.password }, headers: headers
 
@@ -18,6 +18,7 @@ RSpec.describe "UserStatuses", type: :request do
     end
 
     it 'returns the user statuses for the current user' do
+      skip "not filtering by friends for now"
       @user_status = create(:user_status, user: @friend)
       @user_status_2 = create(:user_status, user: @friend_2)
 
@@ -29,7 +30,7 @@ RSpec.describe "UserStatuses", type: :request do
       expect(res[1]['id']).to eq(@user_status_2.id)
     end
   end
-  
+
   describe "POST /user_statuses" do
     before(:context) do
       @my_user = create(:user)

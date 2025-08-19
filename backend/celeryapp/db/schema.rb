@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_19_203751) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_19_204233) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -18,7 +18,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_19_203751) do
   create_table "comments", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "numeric_commentable_id", null: false
+    t.integer "numeric_commentable_id"
     t.string "commentable_type", null: false
     t.integer "numeric_user_id"
     t.text "body", null: false
@@ -118,7 +118,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_19_203751) do
   end
 
   create_table "posts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.bigint "numeric_id", default: -> { "nextval('posts_id_seq'::regclass)" }, null: false
+    t.bigint "numeric_id", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "post_title"
@@ -130,7 +130,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_19_203751) do
   end
 
   create_table "recommendations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.bigint "numeric_id", default: -> { "nextval('recommendations_id_seq'::regclass)" }, null: false
+    t.bigint "numeric_id", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "title", null: false

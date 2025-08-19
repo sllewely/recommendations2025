@@ -4,6 +4,8 @@
 	import { MessageCircleMore } from "@lucide/svelte";
 	import Comment from "$lib/components/posts/Comment.svelte";
 	import SubmitComment from "$lib/components/posts/SubmitComment.svelte";
+	import { goto } from "$app/navigation";
+	import { Button } from "$lib/components/ui/button";
 
 	let { data } = $props();
 	let my_user_id = data.my_user_id;
@@ -18,13 +20,26 @@
 	let comments = $derived(post.comments);
 
 	let num_comments = $derived(comments.length);
+
+	let delete_post = async () => {
+		const response = await fetch("/api/delete_post", {
+			method: "POST",
+			body: JSON.stringify({ id: post.id }),
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+		console.log(response);
+		// notif
+		// await goto("/posts");
+	};
 </script>
 
 <div>
 	{#if my_user_id.toString() === post.user_id.toString()}
 		<div class="float-right relative">
 			<LinkButton url="/posts/{post.id}/edit">Edit</LinkButton>
-			<LinkButton url="/posts/{post.id}/delete">Delete</LinkButton>
+			<Button onclick={delete_post} variant="destructive">Delete</Button>
 		</div>
 	{/if}
 	<PostCard feed_item={post} />

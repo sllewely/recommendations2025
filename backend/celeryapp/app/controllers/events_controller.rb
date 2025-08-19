@@ -1,5 +1,5 @@
 class EventsController < ApplicationController
-  skip_before_action :authenticate, only: [:public_events]
+  skip_before_action :authenticate, only: [:public_events, :show]
 
   def index
     @events = Event.includes(:rsvps).where('start_date_time > ?', DateTime.now).order(start_date_time: :asc)

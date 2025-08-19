@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_18_210436) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_19_193644) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -29,7 +29,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_18_210436) do
     t.index ["uuid"], name: "index_comments_on_uuid", unique: true
   end
 
-  create_table "events", force: :cascade do |t|
+  create_table "events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.bigint "numeric_id", default: -> { "nextval('events_id_seq'::regclass)" }, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "title", null: false
@@ -41,14 +42,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_18_210436) do
     t.integer "numeric_user_id"
     t.datetime "end_date_time"
     t.boolean "is_public", default: false
-    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.uuid "user_id"
     t.index ["end_date_time"], name: "index_events_on_end_date_time"
     t.index ["event_type"], name: "index_events_on_event_type"
+    t.index ["id"], name: "index_events_on_id", unique: true
     t.index ["is_public"], name: "index_events_on_is_public"
     t.index ["numeric_user_id"], name: "index_events_on_numeric_user_id"
     t.index ["start_date_time"], name: "index_events_on_start_date_time"
-    t.index ["uuid"], name: "index_events_on_uuid", unique: true
   end
 
   create_table "friend_codes", force: :cascade do |t|
@@ -151,14 +151,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_18_210436) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "numeric_user_id"
-    t.bigint "event_id", null: false
+    t.bigint "numeric_event_id", null: false
     t.integer "status", default: 0
     t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.uuid "user_id"
-    t.index ["event_id"], name: "index_rsvps_on_event_id"
-    t.index ["numeric_user_id", "event_id"], name: "index_rsvps_on_numeric_user_id_and_event_id", unique: true
+    t.uuid "event_id"
+    t.index ["numeric_event_id"], name: "index_rsvps_on_numeric_event_id"
+    t.index ["numeric_user_id", "numeric_event_id"], name: "index_rsvps_on_numeric_user_id_and_numeric_event_id", unique: true
     t.index ["numeric_user_id"], name: "index_rsvps_on_numeric_user_id"
-    t.index ["user_id", "event_id"], name: "index_rsvps_on_user_id_and_event_id", unique: true
+    t.index ["user_id", "numeric_event_id"], name: "index_rsvps_on_user_id_and_numeric_event_id", unique: true
     t.index ["uuid"], name: "index_rsvps_on_uuid", unique: true
   end
 
@@ -230,7 +231,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_18_210436) do
   add_foreign_key "notifications", "users", on_delete: :cascade
   add_foreign_key "posts", "users", on_delete: :cascade
   add_foreign_key "recommendations", "users", on_delete: :cascade
-  add_foreign_key "rsvps", "events"
   add_foreign_key "rsvps", "users", on_delete: :cascade
   add_foreign_key "sessions", "users", on_delete: :cascade
   add_foreign_key "user_statuses", "users", on_delete: :cascade

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_19_204233) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_19_204422) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -25,6 +25,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_19_204233) do
     t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.uuid "user_id"
     t.uuid "commentable_id"
+    t.index ["commentable_id", "commentable_type"], name: "index_comments_on_commentable_id_and_commentable_type"
     t.index ["numeric_commentable_id", "commentable_type"], name: "index_comments_on_numeric_commentable_id_and_commentable_type"
     t.index ["numeric_user_id"], name: "index_comments_on_numeric_user_id"
     t.index ["uuid"], name: "index_comments_on_uuid", unique: true

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_19_193644) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_19_195148) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -30,7 +30,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_19_193644) do
   end
 
   create_table "events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.bigint "numeric_id", default: -> { "nextval('events_id_seq'::regclass)" }, null: false
+    t.bigint "numeric_id", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "title", null: false
@@ -151,14 +151,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_19_193644) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "numeric_user_id"
-    t.bigint "numeric_event_id", null: false
+    t.integer "numeric_event_id"
     t.integer "status", default: 0
     t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.uuid "user_id"
     t.uuid "event_id"
+    t.index ["event_id"], name: "index_rsvps_on_event_id", unique: true
     t.index ["numeric_event_id"], name: "index_rsvps_on_numeric_event_id"
     t.index ["numeric_user_id", "numeric_event_id"], name: "index_rsvps_on_numeric_user_id_and_numeric_event_id", unique: true
     t.index ["numeric_user_id"], name: "index_rsvps_on_numeric_user_id"
+    t.index ["user_id", "event_id"], name: "index_rsvps_on_user_id_and_event_id", unique: true
     t.index ["user_id", "numeric_event_id"], name: "index_rsvps_on_user_id_and_numeric_event_id", unique: true
     t.index ["uuid"], name: "index_rsvps_on_uuid", unique: true
   end
@@ -231,6 +233,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_19_193644) do
   add_foreign_key "notifications", "users", on_delete: :cascade
   add_foreign_key "posts", "users", on_delete: :cascade
   add_foreign_key "recommendations", "users", on_delete: :cascade
+  add_foreign_key "rsvps", "events", on_delete: :cascade
   add_foreign_key "rsvps", "users", on_delete: :cascade
   add_foreign_key "sessions", "users", on_delete: :cascade
   add_foreign_key "user_statuses", "users", on_delete: :cascade

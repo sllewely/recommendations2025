@@ -3,6 +3,7 @@
 	import Link from "$lib/components/text/Link.svelte";
 	import { current_user } from "$lib/state/current_user.svelte";
 	import { goto } from "$app/navigation";
+	import { fetch_notifs } from "$lib/utils/notifs";
 
 	interface Props {
 		notif: Notification;
@@ -18,6 +19,7 @@
 				"Content-Type": "application/json",
 			},
 		});
+		await fetch_notifs();
 		await goto("/friends");
 	};
 </script>

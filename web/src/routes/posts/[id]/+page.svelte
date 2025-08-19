@@ -6,6 +6,7 @@
 	import SubmitComment from "$lib/components/posts/SubmitComment.svelte";
 	import { goto } from "$app/navigation";
 	import { Button } from "$lib/components/ui/button";
+	import { newToast, ToastType } from "$lib/state/toast.svelte";
 
 	let { data } = $props();
 	let my_user_id = data.my_user_id;
@@ -29,9 +30,13 @@
 				"Content-Type": "application/json",
 			},
 		});
-		console.log(response);
-		// notif
-		// await goto("/posts");
+		let res = await response.json();
+		if (res.success) {
+			newToast("Successfully deleted post");
+			goto("/posts");
+		} else {
+			newToast("Error deleting a post: " + res.message, ToastType.Error);
+		}
 	};
 </script>
 

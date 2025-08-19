@@ -7,8 +7,8 @@ export async function POST({ request, cookies }) {
 
 	const { id } = await request.json();
 
-	// TODO: error handling
+	// {success: true, res: null}
 	const response = await api.del("posts/" + id, jwt);
 
-	return json({ res: response });
+	return json(response);
 }

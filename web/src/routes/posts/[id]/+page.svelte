@@ -4,6 +4,9 @@
 	import { MessageCircleMore } from "@lucide/svelte";
 	import Comment from "$lib/components/posts/Comment.svelte";
 	import SubmitComment from "$lib/components/posts/SubmitComment.svelte";
+	import { goto } from "$app/navigation";
+	import { Button } from "$lib/components/ui/button";
+	import { newToast, ToastType } from "$lib/state/toast.svelte";
 
 	let { data } = $props();
 	let my_user_id = data.my_user_id;
@@ -18,13 +21,30 @@
 	let comments = $derived(post.comments);
 
 	let num_comments = $derived(comments.length);
+
+	let delete_post = async () => {
+		const response = await fetch("/api/delete_post", {
+			method: "POST",
+			body: JSON.stringify({ id: post.id }),
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+		let res = await response.json();
+		if (res.success) {
+			newToast("Successfully deleted post");
+			goto("/posts");
+		} else {
+			newToast("Error deleting a post: " + res.message, ToastType.Error);
+		}
+	};
 </script>
 
 <div>
 	{#if my_user_id.toString() === post.user_id.toString()}
 		<div class="float-right relative">
 			<LinkButton url="/posts/{post.id}/edit">Edit</LinkButton>
-			<LinkButton url="/posts/{post.id}/delete">Delete</LinkButton>
+			<Button onclick={delete_post} variant="destructive">Delete</Button>
 		</div>
 	{/if}
 	<PostCard feed_item={post} />

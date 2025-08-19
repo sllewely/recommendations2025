@@ -53,6 +53,16 @@ class PostsController < ApplicationController
     end
   end
 
+  def destroy
+    post_id = params[:id]
+    post = current_user.posts.find_by(id: post_id)
+    if post.nil?
+      render json: { error: "post not found" }, status: :unprocessable_content and return
+    end
+    post.destroy
+    render json: nil, status: :ok
+  end
+
   def create_post_with_recommendation
 
     begin

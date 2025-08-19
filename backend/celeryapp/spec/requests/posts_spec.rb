@@ -243,4 +243,40 @@ RSpec.describe "Posts", type: :request do
 
   end
 
+  describe "DELETE /posts/:id" do
+    before(:context) do
+      @my_user = create(:user)
+
+      headers = { 'ACCEPT' => 'application/json' }
+      post "/sign_in", params: { email: @my_user.email, password: @my_user.password }, headers: headers
+
+      auth_token = JSON.parse(response.body)["auth_token"]
+      @headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{auth_token}" }
+
+      @friend = create(:user)
+      Friendship.create_bidirectional_friendship!(@my_user, @friend)
+    end
+
+    it 'deletes my post' do
+      p = create(:post, user: @my_user)
+
+      delete "/posts/#{p.id}", params: {}, headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      deleted_post = Post.find_by(id: p.id)
+      expect(deleted_post).to be_nil
+    end
+
+    it 'cannot delete someone elses post' do
+      p = create(:post, user: @friend)
+
+      delete "/posts/#{p.id}", params: {}, headers: @headers
+
+      expect(response).to have_http_status(:unprocessable_content)
+      deleted_post = Post.find_by(id: p.id)
+      expect(deleted_post).to_not be_nil
+    end
+
+  end
+
 end

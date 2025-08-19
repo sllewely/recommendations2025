@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_19_195148) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_19_203123) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -116,19 +116,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_19_195148) do
     t.index ["uuid"], name: "index_post_recommendations_on_uuid", unique: true
   end
 
-  create_table "posts", force: :cascade do |t|
+  create_table "posts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.bigint "numeric_id", default: -> { "nextval('posts_id_seq'::regclass)" }, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "post_title"
     t.text "content"
     t.integer "numeric_user_id"
-    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.uuid "user_id"
+    t.index ["id"], name: "index_posts_on_id", unique: true
     t.index ["numeric_user_id"], name: "index_posts_on_numeric_user_id"
-    t.index ["uuid"], name: "index_posts_on_uuid", unique: true
   end
 
-  create_table "recommendations", force: :cascade do |t|
+  create_table "recommendations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.bigint "numeric_id", default: -> { "nextval('recommendations_id_seq'::regclass)" }, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "title", null: false
@@ -139,12 +140,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_19_195148) do
     t.integer "rating", default: 0
     t.integer "numeric_user_id"
     t.string "url"
-    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.uuid "user_id"
+    t.index ["id"], name: "index_recommendations_on_id", unique: true
     t.index ["numeric_user_id", "title", "media_type"], name: "idx_on_numeric_user_id_title_media_type_02ab1e85f5", unique: true
     t.index ["numeric_user_id"], name: "index_recommendations_on_numeric_user_id"
     t.index ["user_id", "title", "media_type"], name: "index_recommendations_on_user_id_and_title_and_media_type", unique: true
-    t.index ["uuid"], name: "index_recommendations_on_uuid", unique: true
   end
 
   create_table "rsvps", force: :cascade do |t|

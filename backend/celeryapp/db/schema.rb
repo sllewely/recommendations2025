@@ -156,7 +156,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_19_195148) do
     t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.uuid "user_id"
     t.uuid "event_id"
-    t.index ["event_id"], name: "index_rsvps_on_event_id", unique: true
+    t.index ["event_id"], name: "index_rsvps_on_event_id"
     t.index ["numeric_event_id"], name: "index_rsvps_on_numeric_event_id"
     t.index ["numeric_user_id", "numeric_event_id"], name: "index_rsvps_on_numeric_user_id_and_numeric_event_id", unique: true
     t.index ["numeric_user_id"], name: "index_rsvps_on_numeric_user_id"

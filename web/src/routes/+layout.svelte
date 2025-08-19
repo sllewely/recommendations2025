@@ -4,6 +4,7 @@
 	import "../app.css";
 	import { current_user } from "$lib/state/current_user.svelte.js";
 	import { notifs } from "$lib/state/notifications.svelte.js";
+	import { fetch_notifs } from "$lib/utils/notifs";
 	import { friends_map, fetch_friends_map } from "$lib/state/friends_map.svelte.js";
 	import { onMount } from "svelte";
 	import BannerNotifications from "$lib/components/notifications/BannerNotifications.svelte";
@@ -19,40 +20,18 @@
 	onMount(() => {
 		fetch_friends_map();
 
-		// TODO: switch to SSE instead of polling
-		let fetch_notifs = async () => {
-			const response = await fetch("/api/fetch_notifications", {
-				method: "GET",
-				headers: {
-					"Content-Type": "application/json",
-				},
-			});
-			const res = await response.json();
-			if (res["res"]) {
-				let notif_map = res["res"].map((notif_json) => ({
-					id: notif_json.id,
-					notif_type: notif_json.notif_type,
-					message: notif_json.message,
-					extras: notif_json.extras,
-					created_at: notif_json.created_at,
-				}));
-				notifs.notifs = notif_map;
-			} else {
-				console.log("error getting notifications " + res["error"]);
-			}
-		};
 		fetch_friends_map();
 		fetch_notifs();
-		const interval = setInterval(
-			() => {
-				fetch_notifs();
-			},
-			1000 * 60 * 5,
-		); // 5 minutes
-
-		return () => {
-			clearInterval(interval);
-		};
+		// const interval = setInterval(
+		// 	() => {
+		// 		fetch_notifs();
+		// 	},
+		// 	1000 * 60 * 5,
+		// ); // 5 minutes
+		//
+		// return () => {
+		// 	clearInterval(interval);
+		// };
 	});
 
 	afterNavigate(() => {

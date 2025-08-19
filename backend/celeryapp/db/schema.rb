@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_19_204422) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_19_205155) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -107,15 +107,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_19_204422) do
     t.uuid "user_id"
     t.index ["numeric_user_id"], name: "index_notifications_on_numeric_user_id"
     t.index ["uuid"], name: "index_notifications_on_uuid", unique: true
-  end
-
-  create_table "post_recommendations", force: :cascade do |t|
-    t.integer "post_id"
-    t.integer "recommendation_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
-    t.index ["uuid"], name: "index_post_recommendations_on_uuid", unique: true
   end
 
   create_table "posts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

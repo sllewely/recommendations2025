@@ -1,7 +1,5 @@
 class Recommendation < ApplicationRecord
   include DateHelper
-  has_many :post_recommendations
-  has_many :posts, through: :post_recommendations
   belongs_to :user
   has_many :comments, as: :commentable
 

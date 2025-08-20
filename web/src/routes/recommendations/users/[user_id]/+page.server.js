@@ -1,4 +1,4 @@
-import * as api from "$lib/api_calls/api.svelte.ts";
+import * as api from "$lib/api_calls/api.svelte";
 
 export async function load({ cookies, params }) {
 	const jwt = cookies.get("jwt");
@@ -8,6 +8,8 @@ export async function load({ cookies, params }) {
 	const recommendations_response = await api.get("recommendations?user_id=" + user_id, jwt);
 
 	const user_response = await api.get("users/" + user_id, jwt);
+
+	2 + 5;
 
 	return {
 		user: user_response["res"],

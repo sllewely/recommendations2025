@@ -19,7 +19,7 @@ export async function getRecommendations(token: string): Promise<ApiResponse<Rec
  * @returns Promise with recommendation data or error
  */
 export async function getRecommendation(
-	id: number,
+	id: string,
 	token: string,
 ): Promise<ApiResponse<Recommendation>> {
 	return api.get<Recommendation>(`${ENDPOINT}/${id}`, token);

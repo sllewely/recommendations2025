@@ -7,7 +7,7 @@ import { withAuth, type ActionAuthContext, type LoadAuthContext } from "$lib/aut
 
 export const load = withAuth(async ({ jwt, params, user_id }: LoadAuthContext) => {
 	let recommendation_id = params.id;
-	let recommendation = await getRecommendation(parseInt(recommendation_id), jwt);
+	let recommendation = await getRecommendation(recommendation_id, jwt);
 
 	let user = await getUser(recommendation.res.user_id, jwt);
 

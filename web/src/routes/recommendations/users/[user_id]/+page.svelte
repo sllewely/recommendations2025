@@ -30,6 +30,8 @@
 	let updating = $state(false);
 </script>
 
+{console.log(recommendations)}
+
 <div>
 	<H1>{user.name}'s saved recommendations</H1>
 	<p>&nbsp;</p>
@@ -64,6 +66,7 @@
 			</Table.Header>
 			<Table.Body>
 				{#each recommendations as rec}
+					{console.log(rec)}
 					<Table.Row>
 						<Table.Cell class="font-medium">
 							{#if rec.status === "interested"}
@@ -127,46 +130,46 @@
 		>
 			<input type="hidden" name="user_id" id="user_id" value={user.id} />
 			<input type="hidden" name="page" id="page" value={myPage - 1} />
-			<Pagination.Root count={pagy["count"]} perPage={pagy["limit"]} let:pages bind:page={myPage}>
-				<Pagination.Content>
-					<Pagination.Item>
-						<Pagination.PrevButton
-							on:click={() => {
-								document.getElementById("page").value = myPage - 1;
-								document.getElementById("fetch_recommendations").requestSubmit();
-							}}
-						/>
-					</Pagination.Item>
-					{#each pages as page (page.key)}
-						{#if page.type === "ellipsis"}
-							<Pagination.Item>
-								<Pagination.Ellipsis />
-							</Pagination.Item>
-						{:else}
-							<Pagination.Item isVisible={myPage == page.value}>
-								<Pagination.Link
-									{page}
-									isActive={myPage == page.value}
-									on:click={() => {
-										document.getElementById("page").value = page.value;
-										document.getElementById("fetch_recommendations").requestSubmit();
-									}}
-								>
-									{page.value}
-								</Pagination.Link>
-							</Pagination.Item>
-						{/if}
-					{/each}
-					<Pagination.Item>
-						<Pagination.NextButton
-							on:click={() => {
-								document.getElementById("page").value = myPage + 1;
-								document.getElementById("fetch_recommendations").requestSubmit();
-							}}
-						/>
-					</Pagination.Item>
-				</Pagination.Content>
-			</Pagination.Root>
+			<!--			<Pagination.Root count={pagy["count"]} perPage={pagy["limit"]} let:pages bind:page={myPage}>-->
+			<!--				<Pagination.Content>-->
+			<!--					<Pagination.Item>-->
+			<!--						<Pagination.PrevButton-->
+			<!--							on:click={() => {-->
+			<!--								document.getElementById("page").value = myPage - 1;-->
+			<!--								document.getElementById("fetch_recommendations").requestSubmit();-->
+			<!--							}}-->
+			<!--						/>-->
+			<!--					</Pagination.Item>-->
+			<!--					{#each pages as page (page.key)}-->
+			<!--						{#if page.type === "ellipsis"}-->
+			<!--							<Pagination.Item>-->
+			<!--								<Pagination.Ellipsis />-->
+			<!--							</Pagination.Item>-->
+			<!--						{:else}-->
+			<!--							<Pagination.Item isVisible={myPage == page.value}>-->
+			<!--								<Pagination.Link-->
+			<!--									{page}-->
+			<!--									isActive={myPage == page.value}-->
+			<!--									on:click={() => {-->
+			<!--										document.getElementById("page").value = page.value;-->
+			<!--										document.getElementById("fetch_recommendations").requestSubmit();-->
+			<!--									}}-->
+			<!--								>-->
+			<!--									{page.value}-->
+			<!--								</Pagination.Link>-->
+			<!--							</Pagination.Item>-->
+			<!--						{/if}-->
+			<!--					{/each}-->
+			<!--					<Pagination.Item>-->
+			<!--						<Pagination.NextButton-->
+			<!--							on:click={() => {-->
+			<!--								document.getElementById("page").value = myPage + 1;-->
+			<!--								document.getElementById("fetch_recommendations").requestSubmit();-->
+			<!--							}}-->
+			<!--						/>-->
+			<!--					</Pagination.Item>-->
+			<!--				</Pagination.Content>-->
+			<!--			</Pagination.Root>-->
 		</form>
 	</div>
 </div>

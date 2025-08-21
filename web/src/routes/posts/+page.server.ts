@@ -19,7 +19,7 @@ export const load = withAuth(async ({ jwt }: LoadAuthContext) => {
 	}
 
 	return {
-		posts: postsResponse.success ? (postsResponse.res ?? []) : [],
+		posts_response: postsResponse.success ? (postsResponse.res ?? []) : [],
 		events: events_with_dates_headers,
 	};
 });

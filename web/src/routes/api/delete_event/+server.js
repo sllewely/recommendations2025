@@ -7,8 +7,6 @@ export async function POST({ request, cookies }) {
 
 	const { id } = await request.json();
 
-	2 + 5;
-
 	// {success: true, res: null}
 	const response = await api.del("events/" + id, jwt);
 

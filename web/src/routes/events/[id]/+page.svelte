@@ -7,6 +7,7 @@
 	import { MessageCircleMore } from "@lucide/svelte";
 	import SubmitComment from "$lib/components/posts/SubmitComment.svelte";
 	import Comment from "$lib/components/posts/Comment.svelte";
+	import { Button } from "$lib/components/ui/button";
 
 	let { data } = $props();
 	// let user = data.user;
@@ -26,13 +27,30 @@
 	let num_comments = $derived(comments.length);
 
 	let rsvp = $derived(event.current_user_rsvp);
+
+	let delete_event = async () => {
+		const response = await fetch("/api/delete_event", {
+			method: "POST",
+			body: JSON.stringify({ id: event.id }),
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+		let res = await response.json();
+		if (res.success) {
+			newToast("Successfully deleted event");
+			goto("/posts");
+		} else {
+			newToast("Error deleting a event: " + res.message, ToastType.Error);
+		}
+	};
 </script>
 
 <div>
 	{#if my_user_id.toString() === event.creator_id.toString()}
 		<div class="float-right relative">
 			<LinkButton url="/events/{event.id}/edit">Edit</LinkButton>
-			<LinkButton url="/events/{event.id}/delete">Delete</LinkButton>
+			<Button onclick={delete_event} variant="destructive">Delete</Button>
 		</div>
 	{/if}
 	<EventCard feed_item={event} />

@@ -3,6 +3,7 @@ class Event < ApplicationRecord
   belongs_to :user
   has_many :rsvps
   has_many :comments, as: :commentable
+  has_one :feed_item, as: :feedable
 
   before_save :ensure_end_time
 

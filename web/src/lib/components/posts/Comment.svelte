@@ -4,8 +4,11 @@
 	import Link from "$lib/components/text/Link.svelte";
 
 	const { comment } = $props();
+	// TODO: this is bad because it assumes I'm seeing content by people I'm friends with
 	const author = $derived(friends_map.friends_map[comment.user_id] ?? {});
 </script>
+
+{console.log(comment)}
 
 <div class="flex justify-left">
 	<article class="p-2 text-base bg-white rounded-lg dark:bg-gray-900">

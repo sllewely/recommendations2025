@@ -1,7 +1,5 @@
 <script lang="ts">
-	import { enhance } from "$app/forms";
 	import Link from "$lib/components/text/Link.svelte";
-	import H2 from "$lib/components/text/H2.svelte";
 	import RecommendationCard from "$lib/components/posts/RecommendationCard.svelte";
 	import PostCard from "$lib/components/posts/PostCard.svelte";
 	import EventCard from "$lib/components/posts/EventCard.svelte";
@@ -25,8 +23,6 @@
 	} else {
 		border_color = "border-orange-500";
 	}
-
-	let posting = $state(false);
 
 	const num_comments = feed_item["comments"]?.length;
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_19_205155) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_21_183948) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -51,6 +51,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_19_205155) do
     t.index ["is_public"], name: "index_events_on_is_public"
     t.index ["numeric_user_id"], name: "index_events_on_numeric_user_id"
     t.index ["start_date_time"], name: "index_events_on_start_date_time"
+  end
+
+  create_table "feed_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.uuid "feedable_id", null: false
+    t.string "feedable_type", null: false
+    t.uuid "user_id", null: false
+    t.index ["user_id"], name: "index_feed_items_on_user_id"
   end
 
   create_table "friend_codes", force: :cascade do |t|
@@ -220,6 +229,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_19_205155) do
 
   add_foreign_key "comments", "users", on_delete: :cascade
   add_foreign_key "events", "users", on_delete: :cascade
+  add_foreign_key "feed_items", "users"
   add_foreign_key "friend_codes", "users", on_delete: :cascade
   add_foreign_key "friend_requests", "users", on_delete: :cascade
   add_foreign_key "friendships", "users", on_delete: :cascade

@@ -3,6 +3,7 @@ class Post < ApplicationRecord
 
   belongs_to :user
   has_many :comments, as: :commentable
+  has_one :feed_item, as: :feedable
 
   validates :post_title, presence: true
 

@@ -202,4 +202,41 @@ RSpec.describe "Events", type: :request do
     end
 
   end
+
+  describe 'destroy' do
+
+    before(:all) do
+      @my_user = create(:user)
+
+      headers = { 'ACCEPT' => 'application/json' }
+      post "/sign_in", params: { email: @my_user.email, password: @my_user.password }, headers: headers
+
+      auth_token = JSON.parse(response.body)["auth_token"]
+      @headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{auth_token}" }
+
+      @friend = create(:user)
+      Friendship.create_bidirectional_friendship!(@my_user, @friend)
+    end
+
+    it 'deletes my event' do
+      event = create(:event, user: @my_user)
+
+      delete "/events/#{event.id}", params: {}, headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      deleted_event = Event.find_by(id: event.id)
+      expect(deleted_event).to be_nil
+    end
+
+    it 'cannot delete someone elses event' do
+      event = create(:event, user: @friend)
+
+      delete "/events/#{event.id}", params: {}, headers: @headers
+
+      expect(response).to have_http_status(:not_found)
+      deleted_event = Event.find_by(id: event.id)
+      expect(deleted_event).to_not be_nil
+    end
+
+  end
 end

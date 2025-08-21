@@ -49,6 +49,15 @@ class EventsController < ApplicationController
 
   end
 
+  def destroy
+    @event = current_user.events.find_by_id(params[:id])
+    if @event.nil?
+      render json: { error: "event not found" }, status: :not_found and return
+    end
+    @event.destroy
+    render json: nil, status: :ok
+  end
+
   private
 
   def event_params

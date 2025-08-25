@@ -8,5 +8,9 @@ FactoryBot.define do
     event_type { 'concert' }
     is_public { false }
     association :user
+
+    after(:create) do |event|
+      create(:feed_item, feedable: event, user: event.user)
+    end
   end
 end

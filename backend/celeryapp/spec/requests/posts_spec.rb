@@ -87,10 +87,12 @@ RSpec.describe "Posts", type: :request do
 
       expect(response).to have_http_status(:ok)
       res = JSON.parse(response.body)
-      expect(res.size).to eq(3)
-      expect(res.first['post_title']).to_not be_nil
-      expect(res.first['content']).to_not be_nil
-      expect(res.first['user_id']).to_not be_nil
+      expect(res.size).to eq(2)
+      feed_items_res = res['feed_items']
+      expect(feed_items_res.size).to eq(3)
+      expect(feed_items_res.first['post_title']).to_not be_nil
+      expect(feed_items_res.first['content']).to_not be_nil
+      expect(feed_items_res.first['user_id']).to_not be_nil
     end
 
     it 'gets all posts and recommendations' do
@@ -102,12 +104,13 @@ RSpec.describe "Posts", type: :request do
 
       expect(response).to have_http_status(:ok)
       res = JSON.parse(response.body)
-      expect(res.size).to eq(3)
-      expect(res.first['post_title']).to_not be_nil
-      expect(res.first['content']).to_not be_nil
-      expect(res.first['user_id']).to_not be_nil
-      expect(res[1]['title']).to_not be_nil
-      expect(res[1]['status']).to eq("interested")
+      feed_items_res = res['feed_items']
+      expect(feed_items_res.size).to eq(3)
+      expect(feed_items_res.first['post_title']).to_not be_nil
+      expect(feed_items_res.first['content']).to_not be_nil
+      expect(feed_items_res.first['user_id']).to_not be_nil
+      expect(feed_items_res[1]['title']).to_not be_nil
+      expect(feed_items_res[1]['status']).to eq("interested")
     end
 
     it 'gets all posts, recommendations, and events' do
@@ -120,12 +123,12 @@ RSpec.describe "Posts", type: :request do
 
       expect(response).to have_http_status(:ok)
       res = JSON.parse(response.body)
-      expect(res.size).to eq(4)
-      expect(res.first['post_title']).to_not be_nil
-      expect(res.first['content']).to_not be_nil
-      expect(res.first['user_id']).to_not be_nil
-      expect(res[2]['title']).to_not be_nil
-      expect(res[2]['status']).to eq("interested")
+      feed_items_res = res['feed_items']
+      expect(feed_items_res.size).to eq(4)
+      expect(feed_items_res.first['post_title']).to_not be_nil
+      expect(feed_items_res.first['content']).to_not be_nil
+      expect(feed_items_res.first['user_id']).to_not be_nil
+      expect(feed_items_res[2]['title']).to_not be_nil
     end
 
     it 'gets events' do
@@ -136,17 +139,18 @@ RSpec.describe "Posts", type: :request do
 
       expect(response).to have_http_status(:ok)
       res = JSON.parse(response.body)
-      expect(res.size).to eq(2)
-      expect(res[0]['title']).to_not be_nil
-      expect(res[0]['description']).to_not be_nil
-      expect(res[0]['user_id']).to_not be_nil
-      expect(res[0]['creator_name']).to_not be_nil
-      expect(res[0]['address']).to_not be_nil
-      expect(res[0]['url']).to_not be_nil
-      expect(res[0]['start_date_time']).to_not be_nil
-      expect(res[0]['user']['username']).to_not be_nil
-      expect(res[0]['user']['name']).to_not be_nil
-      expect(res[0]['class_name']).to eq('Event')
+      feed_items_res = res['feed_items']
+      expect(feed_items_res.size).to eq(2)
+      expect(feed_items_res[0]['title']).to_not be_nil
+      expect(feed_items_res[0]['description']).to_not be_nil
+      expect(feed_items_res[0]['user_id']).to_not be_nil
+      expect(feed_items_res[0]['creator_name']).to_not be_nil
+      expect(feed_items_res[0]['address']).to_not be_nil
+      expect(feed_items_res[0]['url']).to_not be_nil
+      expect(feed_items_res[0]['start_date_time']).to_not be_nil
+      expect(feed_items_res[0]['user']['username']).to_not be_nil
+      expect(feed_items_res[0]['user']['name']).to_not be_nil
+      expect(feed_items_res[0]['class_name']).to eq('Event')
     end
 
     it 'gets posts with comments' do
@@ -158,9 +162,10 @@ RSpec.describe "Posts", type: :request do
 
       expect(response).to have_http_status(:ok)
       res = JSON.parse(response.body)
-      expect(res.size).to eq(1)
-      expect(res[0]['comments'].size).to eq(2)
-      expect(res[0]['comments'][0]['body']).to_not be_nil
+      feed_items_res = res['feed_items']
+      expect(feed_items_res.size).to eq(1)
+      expect(feed_items_res[0]['comments'].size).to eq(2)
+      expect(feed_items_res[0]['comments'][0]['body']).to_not be_nil
     end
 
   end
@@ -219,7 +224,7 @@ RSpec.describe "Posts", type: :request do
 
   end
 
-  describe "POST /posts/:id" do
+  describe "PATCH /posts/:id" do
     before(:context) do
       @my_user = create(:user)
 

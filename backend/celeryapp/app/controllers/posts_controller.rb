@@ -7,7 +7,13 @@ class PostsController < ApplicationController
 
     @pagy, @feed_items = pagy(feed, limit: 30)
     render json: {
-      feed_items: @feed_items.map { |f| f.feedable.attributes },
+      feed_items: @feed_items.map do |f|
+        row = f.feedable.attributes
+        if (f.feedable.class.name == 'Event')
+          row.merge!({ current_user_status: f.feedable.rsvp_status_for_current_user(current_user) })
+        end
+        row
+      end,
       pagy: @pagy,
     }, status: :ok
 
@@ -47,11 +53,15 @@ class PostsController < ApplicationController
 
   def create
     @post = current_user.posts.new(post_params)
-    if @post.save
-      render json: @post, status: :created
-    else
-      render json: { error: @post.errors_to_s }, status: :unprocessable_content
+    begin
+      ActiveRecord::Base.transaction do
+        @post.save!
+        @post.feed_item = FeedItem.create!(user: current_user, feedable: @post)
+      end
+    rescue ActiveRecord::RecordInvalid => e
+      render json: { error: @post.errors_to_s }, status: :unprocessable_content and return
     end
+    render json: @post, status: :created
   end
 
   def update

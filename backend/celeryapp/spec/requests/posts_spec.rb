@@ -168,6 +168,22 @@ RSpec.describe "Posts", type: :request do
       expect(feed_items_res[0]['comments'][0]['body']).to_not be_nil
     end
 
+    it 'paginates' do
+      create(:post, user: @friend)
+      create(:recommendation, user: @friend)
+      create(:post, user: @my_user)
+      create(:post, user: @friend)
+      create(:post, user: @friend)
+      create(:event, user: @friend)
+
+      get "/posts", params: {}, headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      res = JSON.parse(response.body)
+      feed_items_res = res['feed_items']
+      debugger
+    end
+
   end
 
   describe "GET /posts/:id" do

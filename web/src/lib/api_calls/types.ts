@@ -10,8 +10,13 @@ export interface ApiResponse<T = unknown> {
 	message?: string;
 }
 
+export interface PostsResponse {
+	feed_items: (Post | Event | Recommendation)[];
+	pagy: unknown;
+}
+
 export interface Post {
-	id: number;
+	id: string;
 	created_at: string;
 	updated_at: string;
 	title?: string;
@@ -62,7 +67,7 @@ export interface UserUpdatePayload {
 }
 
 export interface User {
-	id: number;
+	id: string;
 	username: string;
 	name: string;
 	tags: string[];
@@ -71,7 +76,7 @@ export interface User {
 }
 
 export interface Event {
-	id: number;
+	id: string;
 	created_at: Date;
 	updated_at: Date;
 	title: string;

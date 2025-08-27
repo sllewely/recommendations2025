@@ -9,6 +9,11 @@
 	import type { PageProps } from "./$types.js";
 
 	let { data }: PageProps = $props();
+
+	const feed_items = data.posts_response.feed_items;
+	const pagination = data.posts_response.pagy;
+
+	// SARAH!!
 </script>
 
 <div>
@@ -33,7 +38,7 @@
 					<MessageCircleHeart /> &nbsp; Share a recommendation
 				</Button>
 			</div>
-			{#if data.posts.length === 0}
+			{#if feed_items.length === 0}
 				<div
 					class="flex justify-center p-2 mb-2 font-bold border-gray-800 rounded-sm bg-lime-200 border-1"
 				>
@@ -43,7 +48,7 @@
 					</p>
 				</div>
 			{/if}
-			{#each data.posts as feed_item}
+			{#each feed_items as feed_item}
 				<FeedItem {feed_item} />
 			{/each}
 		</div>

@@ -1,5 +1,5 @@
 import * as api from "./api.svelte";
-import type { ApiResponse, Post } from "./types";
+import type { ApiResponse, Post, PostsResponse } from "./types";
 
 const ENDPOINT = "posts";
 
@@ -8,8 +8,8 @@ const ENDPOINT = "posts";
  * @param token - JWT token for authentication
  * @returns Promise with posts data or error
  */
-export async function getPosts(token: string): Promise<ApiResponse<Post[]>> {
-	return api.get<Post[]>(ENDPOINT, token);
+export async function getPosts(token: string): Promise<ApiResponse<PostsResponse[]>> {
+	return api.get<PostsResponse>(ENDPOINT, token);
 }
 
 /**

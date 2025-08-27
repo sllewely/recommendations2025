@@ -1,23 +1,43 @@
 class PostsController < ApplicationController
   def index
-    friend_ids = current_user.friend_ids
     user_id = params[:user_id]
-    posts = Post.includes(:comments).order(created_at: :desc)
-    posts = posts.where(user_id: user_id) if user_id
-    recommendations = Recommendation.includes(:comments).order(created_at: :desc)
-    recommendations = recommendations.where(user_id: user_id) if user_id
-    events = Event.includes(:comments, :rsvps).order(created_at: :desc)
-    events = events.where(user_id: user_id) if user_id
-    feed = merge_by_time(posts, recommendations)
-    feed = merge_by_time(feed, events)
-    feed_with_attributes = feed.map do |e|
-      row = e.attributes
-      if (e.class.name == 'Event')
-        row.merge!({ current_user_status: e.rsvp_status_for_current_user(current_user) })
-      end
-      row
-    end
-    render json: feed_with_attributes, status: :ok
+
+    feed = FeedItem.order(created_at: :desc)
+    feed = feed.where(user_id: user_id) if user_id
+
+    @pagy, @feed_items = pagy(feed, limit: 30)
+    render json: {
+      feed_items: @feed_items.map do |f|
+        row = f.feedable.attributes
+        if (f.feedable.class.name == 'Event')
+          row.merge!({ current_user_status: f.feedable.rsvp_status_for_current_user(current_user) })
+        end
+        row
+      end,
+      pagy: @pagy,
+    }, status: :ok
+
+    # user_id = params[:user_id]
+    # posts = Post.includes(comments: :user).order(created_at: :desc)
+    # posts = posts.where(user_id: user_id) if user_id
+    # recommendations = Recommendation.includes(comments: :user).order(created_at: :desc)
+    # recommendations = recommendations.where(user_id: user_id) if user_id
+    # events = Event.includes(:rsvps, comments: :user).order(created_at: :desc)
+    # events = events.where(user_id: user_id) if user_id
+    # feed = merge_by_time(posts, recommendations)
+    # feed = merge_by_time(feed, events)
+    #
+    # # TODO: query comments separately
+    # # TODO: feed could be one datatype
+    #
+    # feed_with_attributes = feed.map do |e|
+    #   row = e.attributes
+    #   if (e.class.name == 'Event')
+    #     row.merge!({ current_user_status: e.rsvp_status_for_current_user(current_user) })
+    #   end
+    #   row
+    # end
+    # render json: feed_with_attributes, status: :ok
   end
 
   def show
@@ -33,11 +53,15 @@ class PostsController < ApplicationController
 
   def create
     @post = current_user.posts.new(post_params)
-    if @post.save
-      render json: @post, status: :created
-    else
-      render json: { error: @post.errors_to_s }, status: :unprocessable_content
+    begin
+      ActiveRecord::Base.transaction do
+        @post.save!
+        @post.feed_item = FeedItem.create!(user: current_user, feedable: @post)
+      end
+    rescue ActiveRecord::RecordInvalid => e
+      render json: { error: @post.errors_to_s }, status: :unprocessable_content and return
     end
+    render json: @post, status: :created
   end
 
   def update

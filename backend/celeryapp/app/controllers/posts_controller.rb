@@ -2,7 +2,7 @@ class PostsController < ApplicationController
   def index
     user_id = params[:user_id]
 
-    feed = FeedItem.all.order(created_at: :desc)
+    feed = FeedItem.order(created_at: :desc)
     feed = feed.where(user_id: user_id) if user_id
 
     @pagy, @feed_items = pagy(feed, limit: 30)

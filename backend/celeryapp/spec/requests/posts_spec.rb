@@ -129,6 +129,7 @@ RSpec.describe "Posts", type: :request do
       expect(feed_items_res.first['content']).to_not be_nil
       expect(feed_items_res.first['user_id']).to_not be_nil
       expect(feed_items_res[2]['title']).to_not be_nil
+      expect(feed_items_res[2]['status']).to eq("interested")
     end
 
     it 'gets events' do
@@ -175,13 +176,24 @@ RSpec.describe "Posts", type: :request do
       create(:post, user: @friend)
       create(:post, user: @friend)
       create(:event, user: @friend)
+      15.times do
+        create(:post, user: @friend)
+        create(:event, user: @friend)
+      end
 
       get "/posts", params: {}, headers: @headers
 
       expect(response).to have_http_status(:ok)
       res = JSON.parse(response.body)
       feed_items_res = res['feed_items']
-      debugger
+      expect(feed_items_res.size).to eq(30)
+      expect(res['pagy']['next']).to eq(2)
+
+      get "/posts?page=2", params: {}, headers: @headers
+      expect(response).to have_http_status(:ok)
+      res = JSON.parse(response.body)
+      feed_items_res = res['feed_items']
+      expect(feed_items_res.size).to eq(6)
     end
 
   end

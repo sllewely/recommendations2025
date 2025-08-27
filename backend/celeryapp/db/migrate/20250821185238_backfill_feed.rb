@@ -4,7 +4,8 @@ class BackfillFeed < ActiveRecord::Migration[8.0]
       {
         feedable_id: post.id,
         feedable_type: "Post",
-        user_id: post.user_id
+        user_id: post.user_id,
+        created_at: post.created_at
       }
     end
     FeedItem.insert_all(posts)
@@ -12,7 +13,8 @@ class BackfillFeed < ActiveRecord::Migration[8.0]
       {
         feedable_id: event.id,
         feedable_type: "Event",
-        user_id: event.user_id
+        user_id: event.user_id,
+        created_at: event.created_at
       }
     end
     FeedItem.insert_all(events)
@@ -20,7 +22,8 @@ class BackfillFeed < ActiveRecord::Migration[8.0]
       {
         feedable_id: recommendation.id,
         feedable_type: "Recommendation",
-        user_id: recommendation.user_id
+        user_id: recommendation.user_id,
+        created_at: recommendation.created_at
       }
     end
     FeedItem.insert_all(recommendations)

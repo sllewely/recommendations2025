@@ -16,12 +16,14 @@ class EventsController < ApplicationController
   end
 
   def create
-    @event = current_user.events.new(event_params)
-    if @event.save
-      render json: @event, status: :created
-    else
-      render json: { error: @event.errors_to_s }, status: :unprocessable_content
+    ActiveRecord::Base.transaction do
+      @event = current_user.events.new(event_params)
+      @event.save!
+      @event.feed_item = FeedItem.create!(user: current_user, feedable: @event)
+    rescue ActiveRecord::RecordInvalid
+      render json: { error: @event.errors_to_s }, status: :unprocessable_content and return
     end
+    render json: @event, status: :created
   end
 
   def show

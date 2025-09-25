@@ -23,11 +23,7 @@ class EventsController < ApplicationController
     rescue ActiveRecord::RecordInvalid
       render json: { error: @event.errors_to_s }, status: :unprocessable_content and return
     end
-    if @event.save
-      render json: @event, status: :created
-    else
-      render json: { error: @event.errors_to_s }, status: :unprocessable_content
-    end
+    render json: @event, status: :created
   end
 
   def show

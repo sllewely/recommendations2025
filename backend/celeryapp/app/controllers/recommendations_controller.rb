@@ -9,7 +9,7 @@ class RecommendationsController < ApplicationController
     if params['status']
       recommendations = recommendations.where(status: params['status'])
     end
-    
+
     @pagy, @recommendations = pagy(recommendations, limit: 30)
     render json: {
       recommendations: @recommendations.map(&:attributes),
@@ -38,12 +38,14 @@ class RecommendationsController < ApplicationController
   end
 
   def create
-    @recommendation = current_user.recommendations.new(recommendation_params)
-    if @recommendation.save
-      render json: @recommendation, status: :created
-    else
-      render json: { error: @recommendation.errors_to_s }, status: :unprocessable_content
+    ActiveRecord::Base.transaction do
+      @recommendation = current_user.recommendations.new(recommendation_params)
+      @recommendation.save!
+      @recommendation.feed_item = FeedItem.create!(user: current_user, feedable: @recommendation)
+    rescue ActiveRecord::RecordInvalid
+      render json: { error: @recommendation.errors_to_s }, status: :unprocessable_content and return
     end
+    render json: @recommendation, status: :created
   end
 
   private

@@ -33,4 +33,8 @@ Rails.application.routes.draw do
       post 'profile_picture'
     end
   end
+
+  namespace :unauthed do
+
+  end
 end

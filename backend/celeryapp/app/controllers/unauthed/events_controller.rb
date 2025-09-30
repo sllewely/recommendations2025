@@ -3,6 +3,13 @@ class Unauthed::EventsController < ApplicationController
 
   def show
     @event = Event.find(params[:id])
+    # TODO: PERMISSIONS
+
+    if @event
+      render json: EventBlueprint.render(@event), status: :ok
+    else
+      render json: {}, status: :not_found
+    end
   end
 
 end

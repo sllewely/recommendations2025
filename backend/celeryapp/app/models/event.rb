@@ -41,6 +41,14 @@ class Event < ApplicationRecord
     )
   end
 
+  def start_date_string
+    get_date_string(start_date_time)
+  end
+
+  def start_time_string
+    get_time_string(start_date_time)
+  end
+
   def total_rsvp
     self.rsvps.count
   end

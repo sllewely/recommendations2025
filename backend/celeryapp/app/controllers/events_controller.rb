@@ -30,8 +30,7 @@ class EventsController < ApplicationController
     @event = Event.includes(:comments).find_by(id: params[:id])
     # TODO: PERMISSIONS
     if @event
-      status = @event.rsvp_status_for_current_user(current_user)
-      render json: @event.attributes.merge({ current_user_rsvp: status }), status: :ok
+      render json: EventBlueprint.render(@event, view: :authed, current_user: current_user), status: :ok
     else
       render json: @event.errors, status: :not_found
     end

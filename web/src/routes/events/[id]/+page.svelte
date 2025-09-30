@@ -22,7 +22,7 @@
 		event = data.event;
 	});
 
-	let comments = $derived(event.comments);
+	let comments = $derived(event.comments || []);
 
 	let num_comments = $derived(comments.length);
 

@@ -166,6 +166,21 @@ RSpec.describe "Events", type: :request do
       expect(res['current_user_rsvp']).to eq('interested')
     end
 
+    it 'has comments' do
+      event = create(:event, user: @friend)
+      create(:comment, :for_event, commentable: event, user: @my_user)
+      create(:comment, :for_event, commentable: event, user: @friend)
+
+      get "/events/#{event.id}", headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      res = JSON.parse(response.body)
+
+      debugger
+      expect(res['comments'].size).to eq(2)
+      expect(res['comments'].first['body']).to_not be_nil
+    end
+
   end
 
   describe 'update' do

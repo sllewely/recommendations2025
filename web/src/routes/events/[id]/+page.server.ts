@@ -1,11 +1,19 @@
 import * as api from "$lib/api_calls/api.svelte.ts";
+import { getPost, getPostPublic } from "$lib/api_calls/posts.svelte";
 
 export async function load({ cookies, params }) {
 	const jwt = cookies.get("jwt");
 	const my_user_id = cookies.get("user_id");
 	const event_id = params.id;
 
-	let res = await api.get(`events/` + event_id, jwt);
+	let eventApiCall =
+		typeof jwt === "string"
+			? api.get(`events/` + event_id, jwt)
+			: api.get(`public/events/` + event_id);
+
+	let res = await eventApiCall;
+
+	2 + 5;
 
 	return {
 		event: res["res"],

@@ -46,8 +46,11 @@
 	};
 </script>
 
+{console.log("hello")}
+{console.log(event)}
+
 <div>
-	{#if my_user_id.toString() === event.creator_id.toString()}
+	{#if my_user_id === event.user.id}
 		<div class="float-right relative">
 			<LinkButton url="/events/{event.id}/edit">Edit</LinkButton>
 			<Button onclick={delete_event} variant="destructive">Delete</Button>

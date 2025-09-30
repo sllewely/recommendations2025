@@ -6,7 +6,7 @@
 	let { feed_item } = $props();
 
 	if (feed_item.class_name !== "Event") {
-		console.error("not a post feed item");
+		console.error("not an event feed item");
 	}
 </script>
 

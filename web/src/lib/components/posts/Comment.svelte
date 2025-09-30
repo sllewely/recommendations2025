@@ -2,6 +2,7 @@
 	import { friends_map } from "$lib/state/friends_map.svelte";
 	import { rails_datetime_pretty } from "$lib/utils/dates.svelte";
 	import Link from "$lib/components/text/Link.svelte";
+	import { parseAbsoluteToLocal } from "@internationalized/date";
 
 	const { comment } = $props();
 	// TODO: this is bad because it assumes I'm seeing content by people I'm friends with
@@ -20,7 +21,9 @@
 					<Link url="/users/{comment.user_id}">{author.name}</Link>
 				</p>
 				<p class="text-sm text-gray-600 dark:text-gray-400">
-					{rails_datetime_pretty(comment.created_at)}
+					{console.log("sarah")}
+					{console.log(comment.created_at)}
+					{parseAbsoluteToLocal(comment.created_at)}
 				</p>
 			</div>
 		</div>

@@ -8,7 +8,7 @@ const ENDPOINT = "posts";
  * @param token - JWT token for authentication
  * @returns Promise with posts data or error
  */
-export async function getPosts(token: string): Promise<ApiResponse<PostsResponse[]>> {
+export async function getPosts(token: string): Promise<ApiResponse<PostsResponse>> {
 	return api.get<PostsResponse>(ENDPOINT, token);
 }
 
@@ -20,6 +20,15 @@ export async function getPosts(token: string): Promise<ApiResponse<PostsResponse
  */
 export async function getPost(id: string, token: string): Promise<ApiResponse<Post>> {
 	return api.get<Post>(`${ENDPOINT}/${id}`, token);
+}
+
+/**
+ * Fetches a single post by ID, for not logged in users
+ * @param id - Post ID
+ * @returns Promise with post data or error
+ */
+export async function getPostPublic(id: string): Promise<ApiResponse<Post>> {
+	return api.get<Post>(`public/${ENDPOINT}/${id}`);
 }
 
 /**

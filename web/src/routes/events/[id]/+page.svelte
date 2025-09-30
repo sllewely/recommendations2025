@@ -8,6 +8,8 @@
 	import SubmitComment from "$lib/components/posts/SubmitComment.svelte";
 	import Comment from "$lib/components/posts/Comment.svelte";
 	import { Button } from "$lib/components/ui/button";
+	import { current_user } from "$lib/state/current_user.svelte";
+	import * as Card from "$lib/components/ui/card/index.js";
 
 	let { data } = $props();
 	// let user = data.user;
@@ -44,10 +46,13 @@
 			newToast("Error deleting a event: " + res.message, ToastType.Error);
 		}
 	};
-</script>
 
-{console.log("hello")}
-{console.log(event)}
+	let signed_in = $state(false);
+
+	$effect(() => {
+		signed_in = current_user && current_user.id !== "" && typeof current_user.id !== "undefined";
+	});
+</script>
 
 <div>
 	{#if my_user_id === event.user.id}
@@ -82,11 +87,7 @@
 				<input type="hidden" name="event_id" value={event.id} />
 				<input type="hidden" name="user_id" value={my_user_id} />
 				<label for="rsvp_status">Your rsvp:</label>
-				<select
-					name="rsvp_status"
-					id="rsvp_status"
-					onchange={(event) => event.target.form.requestSubmit()}
-				>
+				<select name="rsvp_status" id="rsvp_status" onchange={(e) => e.target.form.requestSubmit()}>
 					<option value="not_selected" selected={rsvp === null}>not rsvp'd</option>
 					<option value="going" selected={rsvp === "going"}>going</option>
 					<option value="interested" selected={rsvp === "interested"}>interested</option>
@@ -111,12 +112,18 @@
 			{num_comments} Comments
 			<MessageCircleMore />
 		</div>
-		<div>
-			{#each comments as comment}
-				<Comment {comment} />
-			{/each}
-		</div>
+		{#if signed_in}
+			<div>
+				{#each comments as comment}
+					<Comment {comment} />
+				{/each}
+			</div>
 
-		<SubmitComment feed_item={event} />
+			<SubmitComment feed_item={event} />
+		{:else}
+			<Card.Root class="bg-teal-400">
+				<Card.Content>Sign in to read and leave comments!</Card.Content>
+			</Card.Root>
+		{/if}
 	</div>
 </div>

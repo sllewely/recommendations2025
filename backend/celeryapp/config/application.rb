@@ -30,5 +30,8 @@ module Celeryapp
     config.api_only = true
 
     config.time_zone = 'Eastern Time (US & Canada)'
+
+    # detect n+1 queries
+    config.active_record.strict_loading_by_default = true
   end
 end

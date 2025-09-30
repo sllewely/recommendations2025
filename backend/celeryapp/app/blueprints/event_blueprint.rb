@@ -10,6 +10,7 @@ class EventBlueprint < Blueprinter::Base
            :start_time_string, :create_date_string, :create_time_string
     association :rsvps, blueprint: RsvpBlueprint, view: :unauthed
     association :user, blueprint: UserBlueprint, view: :unauthed
+    association :comments, blueprint: CommentBlueprint, view: :unauthed
   end
 
   view :authed do

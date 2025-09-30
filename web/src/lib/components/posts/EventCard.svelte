@@ -2,21 +2,25 @@
 	import Card from "$lib/components/Card.svelte";
 	import H2 from "$lib/components/text/H2.svelte";
 	import Link from "$lib/components/text/Link.svelte";
+	import { isSignedIn } from "$lib/state/current_user.svelte";
 
 	let { feed_item } = $props();
 
 	if (feed_item.class_name !== "Event") {
 		console.error("not an event feed item");
 	}
+
+	let signed_in = isSignedIn();
 </script>
 
 <div>
 	<div class="flex flex-row justify-between">
 		<!--        <svelte:boundary>-->
 		<div>
-			<span class="font-bold"
-				><Link url="/users/{feed_item.creator_id}">{feed_item.creator_name}</Link></span
-			> posted an upcoming event
+			<span class="font-bold">
+				<!-- I just broke this for the feed TODO SARAH -->
+				<Link url="/users/{feed_item.user.id}">{feed_item.user.name}</Link>
+			</span> posted an upcoming event
 		</div>
 		<!--        <div><span class="font-bold"><a class="text-teal-400 hover:text-orange-400" href="/users/{feed_item.creator_id}">{feed_item.creator_name}</a></span> posted an upcoming event</div>-->
 		<!--        </svelte:boundary>-->

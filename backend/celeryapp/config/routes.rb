@@ -34,7 +34,7 @@ Rails.application.routes.draw do
     end
   end
 
-  namespace :unauthed do
-
+  namespace :public do
+    resources :events
   end
 end

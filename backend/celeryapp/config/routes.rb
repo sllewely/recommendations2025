@@ -33,4 +33,8 @@ Rails.application.routes.draw do
       post 'profile_picture'
     end
   end
+
+  namespace :public do
+    resources :events
+  end
 end

@@ -9,7 +9,7 @@
 	let signed_in = $state(false);
 
 	$effect(() => {
-		signed_in = current_user && current_user.id !== "";
+		signed_in = current_user && current_user.id !== "" && typeof current_user.id !== "undefined";
 	});
 
 	let log_out = async () => {

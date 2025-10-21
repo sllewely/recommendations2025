@@ -1,6 +1,7 @@
 class Event < ApplicationRecord
   include DateHelper
   belongs_to :user
+  # create scopes for each rsvp status
   has_many :rsvps
   has_many :comments, as: :commentable
   has_one :feed_item, as: :feedable
@@ -11,6 +12,10 @@ class Event < ApplicationRecord
   validates :start_date_time, presence: true
 
   scope :by_friends, ->(friend_ids) { where(user_id: friend_ids) }
+
+  def blueprint
+    EventBlueprint
+  end
 
   def rsvp_status_for_current_user(current_user)
     self.rsvps.where(user_id: current_user.id).first&.status
@@ -39,6 +44,22 @@ class Event < ApplicationRecord
         ON events.id = r.event_id
 "
     )
+  end
+
+  def start_date_string
+    get_date_string(start_date_time)
+  end
+
+  def start_time_string
+    get_time_string(start_date_time)
+  end
+
+  def create_date_string
+    get_date_string(created_at)
+  end
+
+  def create_time_string
+    get_time_string(created_at)
   end
 
   def total_rsvp

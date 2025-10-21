@@ -14,6 +14,18 @@ class Recommendation < ApplicationRecord
     rating == 0 || rating.nil?
   end
 
+  def blueprint
+    RecommendationBlueprint
+  end
+
+  def create_date_string
+    get_date_string(created_at)
+  end
+
+  def create_time_string
+    get_time_string(created_at)
+  end
+
   def attributes
     super.merge({
                   user: user.public_attributes,

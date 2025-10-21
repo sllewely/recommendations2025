@@ -13,8 +13,6 @@ export async function load({ cookies, params }) {
 
 	let res = await eventApiCall;
 
-	2 + 5;
-
 	return {
 		event: res["res"],
 		// user: user,

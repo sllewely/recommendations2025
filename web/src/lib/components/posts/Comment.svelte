@@ -1,12 +1,15 @@
 <script lang="ts">
-	import { friends_map } from "$lib/state/friends_map.svelte";
-	import { rails_datetime_pretty } from "$lib/utils/dates.svelte";
 	import Link from "$lib/components/text/Link.svelte";
 	import { parseAbsoluteToLocal } from "@internationalized/date";
 
 	const { comment } = $props();
-	// TODO: this is bad because it assumes I'm seeing content by people I'm friends with
-	const author = $derived(friends_map.friends_map[comment.user_id] ?? {});
+
+	const localizedCreateTime = parseAbsoluteToLocal(comment.created_at);
+	const formattedCreateTime = new Intl.DateTimeFormat("en-US", {
+		dateStyle: "medium",
+		timeStyle: "short",
+		timeZone: localizedCreateTime.timeZone,
+	}).format(localizedCreateTime.toDate());
 </script>
 
 {console.log(comment)}
@@ -18,12 +21,10 @@
 				<p
 					class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold"
 				>
-					<Link url="/users/{comment.user_id}">{author.name}</Link>
+					<Link url="/users/{comment.user.id}">{comment.user.name}</Link>
 				</p>
 				<p class="text-sm text-gray-600 dark:text-gray-400">
-					{console.log("sarah")}
-					{console.log(comment.created_at)}
-					{parseAbsoluteToLocal(comment.created_at)}
+					{formattedCreateTime}
 				</p>
 			</div>
 		</div>

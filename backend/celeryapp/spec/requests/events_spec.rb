@@ -176,7 +176,6 @@ RSpec.describe "Events", type: :request do
       expect(response).to have_http_status(:ok)
       res = JSON.parse(response.body)
 
-      debugger
       expect(res['comments'].size).to eq(2)
       expect(res['comments'].first['body']).to_not be_nil
     end

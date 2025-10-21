@@ -2,7 +2,7 @@ class PostsController < ApplicationController
   def index
     user_id = params[:user_id]
 
-    feed = FeedItem.order(created_at: :desc)
+    feed = FeedItem.includes(feedable: [event: [:user, :comments], post: [:user, :comments], recommendation: [:user, :comments]]).order(created_at: :desc)
     feed = feed.where(user_id: user_id) if user_id
 
     @pagy, @feed_items = pagy(feed, limit: 30)

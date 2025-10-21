@@ -20,7 +20,7 @@ class EventBlueprint < Blueprinter::Base
     field :current_user_rsvp do |event, opts|
       event.rsvp_status_for_current_user(opts[:current_user])
     end
-    association :comments, blueprint: CommentBlueprint
+    association :comments, blueprint: CommentBlueprint, view: :authed
     association :user, blueprint: UserBlueprint, view: :authed
   end
 end

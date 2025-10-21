@@ -9,6 +9,18 @@ class Post < ApplicationRecord
 
   scope :by_friends, ->(friend_ids) { where(user_id: friend_ids) }
 
+  def blueprint
+    PostBlueprint
+  end
+
+  def create_date_string
+    get_date_string(created_at)
+  end
+
+  def create_time_string
+    get_time_string(created_at)
+  end
+
   def attributes
     super.merge(
       {

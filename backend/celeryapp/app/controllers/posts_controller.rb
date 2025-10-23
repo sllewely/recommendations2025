@@ -2,18 +2,12 @@ class PostsController < ApplicationController
   def index
     user_id = params[:user_id]
 
-    feed = FeedItem.includes(feedable: [event: [:user, :comments], post: [:user, :comments], recommendation: [:user, :comments]]).order(created_at: :desc)
+    feed = FeedItem.includes(feedable: [event: [:user, comments: [:user]], post: [:user, comments: [:user]], recommendation: [:user, comments: [:user]]]).order(created_at: :desc)
     feed = feed.where(user_id: user_id) if user_id
 
     @pagy, @feed_items = pagy(feed, limit: 30)
     render json: {
-      feed_items: @feed_items.map do |f|
-        row = f.feedable.attributes
-        if (f.feedable.class.name == 'Event')
-          row.merge!({ current_user_status: f.feedable.rsvp_status_for_current_user(current_user) })
-        end
-        row
-      end,
+      feed_items: FeedItemBlueprint.render_as_hash(@feed_items, current_user: current_user),
       pagy: @pagy,
     }, status: :ok
 

@@ -11,8 +11,6 @@ import { formDataToGeneric } from "$lib/api_calls/utils";
 export const load = withAuth(async ({ jwt }: LoadAuthContext) => {
 	const [postsResponse, eventsResponse] = await Promise.all([getPosts(jwt), getEvents(jwt)]);
 
-	2 + 5;
-
 	let events_with_dates_headers: EventWithDateHeader[] = [];
 	if (!eventsResponse.success) {
 		console.error("Failed to fetch events:", eventsResponse.message);

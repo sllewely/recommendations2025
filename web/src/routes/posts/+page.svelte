@@ -16,6 +16,8 @@
 	// SARAH!!
 </script>
 
+{console.log(feed_items)}
+
 <div>
 	<div
 		class="flex justify-center p-2 mb-2 font-bold border-gray-800 rounded-sm bg-lime-200 border-1"
@@ -49,7 +51,7 @@
 				</div>
 			{/if}
 			{#each feed_items as feed_item}
-				<FeedItem {feed_item} />
+				<FeedItem feed_item={feed_item.feedable} />
 			{/each}
 		</div>
 		<div class="flex flex-col pl-2">

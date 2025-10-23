@@ -3,6 +3,7 @@
 	import H2 from "$lib/components/text/H2.svelte";
 	import Link from "$lib/components/text/Link.svelte";
 	import { isSignedIn } from "$lib/state/current_user.svelte";
+	import { parseAbsoluteToLocal } from "@internationalized/date";
 
 	let { feed_item } = $props();
 
@@ -11,7 +12,23 @@
 	}
 
 	let signed_in = isSignedIn();
+
+	const localizedCreateTime = parseAbsoluteToLocal(feed_item.created_at);
+	// const formattedCreateTime = new Intl.DateTimeFormat("en-US", {
+	// 	dateStyle: "medium",
+	// 	timeStyle: "short",
+	// 	timeZone: localizedCreateTime.timeZone,
+	// }).format(localizedCreateTime.toDate());
+	//
+	// const localizedStartTime = parseAbsoluteToLocal(feed_item.start_date_time);
+	// const formattedStartTime = new Intl.DateTimeFormat("en-US", {
+	// 	dateStyle: "medium",
+	// 	timeStyle: "short",
+	// 	timeZone: localizedCreateTime.timeZone,
+	// }).format(localizedCreateTime.toDate());
 </script>
+
+<!--{console.log(feed_item)}-->
 
 <div>
 	<div class="flex flex-row justify-between">
@@ -25,7 +42,7 @@
 		<!--        <div><span class="font-bold"><a class="text-teal-400 hover:text-orange-400" href="/users/{feed_item.creator_id}">{feed_item.creator_name}</a></span> posted an upcoming event</div>-->
 		<!--        </svelte:boundary>-->
 		<div>
-			<span class="text-sm">at {feed_item.create_date_string} {feed_item.create_time_string}</span>
+			<!--			<span class="text-sm">at {formattedCreateTime}</span>-->
 		</div>
 	</div>
 	<div class="p-2">

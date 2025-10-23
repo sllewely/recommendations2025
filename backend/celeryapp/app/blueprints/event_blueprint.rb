@@ -16,7 +16,7 @@ class EventBlueprint < Blueprinter::Base
   view :authed do
     include_view :unauthed
     field :address
-    association :rsvps, blueprint: RsvpBlueprint, view: :unauthed
+    association :rsvps, blueprint: RsvpBlueprint, view: :authed
     field :current_user_rsvp do |event, opts|
       event.rsvp_status_for_current_user(opts[:current_user])
     end

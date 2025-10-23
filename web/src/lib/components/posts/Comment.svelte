@@ -19,11 +19,7 @@
 				<p
 					class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold"
 				>
-					{#if comment.user}
-						<Link url="/users/{comment.user.id}">{comment.user.name}</Link>
-					{:else}
-						<Link url="/users/{comment.user_id}">todo</Link>
-					{/if}
+					<Link url="/users/{comment.user.id}">{comment.user.name}</Link>
 				</p>
 				<p class="text-sm text-gray-600 dark:text-gray-400">
 					{formattedCreateTime}

@@ -88,7 +88,7 @@ RSpec.describe "Posts", type: :request do
       expect(response).to have_http_status(:ok)
       res = JSON.parse(response.body)
       expect(res.size).to eq(2)
-      feed_items_res = JSON.parse(res['feed_items'])
+      feed_items_res = res['feed_items']
       expect(feed_items_res.size).to eq(3)
       expect(feed_items_res.first["feedable"]['post_title']).to_not be_nil
       expect(feed_items_res.first["feedable"]['content']).to_not be_nil
@@ -104,7 +104,7 @@ RSpec.describe "Posts", type: :request do
 
       expect(response).to have_http_status(:ok)
       res = JSON.parse(response.body)
-      feed_items_res = JSON.parse(res['feed_items'])
+      feed_items_res = res['feed_items']
       expect(feed_items_res.size).to eq(3)
       expect(feed_items_res.first["feedable"]['post_title']).to_not be_nil
       expect(feed_items_res.first["feedable"]['content']).to_not be_nil
@@ -123,7 +123,7 @@ RSpec.describe "Posts", type: :request do
 
       expect(response).to have_http_status(:ok)
       res = JSON.parse(response.body)
-      feed_items_res = JSON.parse(res['feed_items'])
+      feed_items_res = res['feed_items']
       expect(feed_items_res.size).to eq(4)
       expect(feed_items_res.first["feedable"]['post_title']).to_not be_nil
       expect(feed_items_res.first["feedable"]['content']).to_not be_nil
@@ -140,7 +140,7 @@ RSpec.describe "Posts", type: :request do
 
       expect(response).to have_http_status(:ok)
       res = JSON.parse(response.body)
-      feed_items_res = JSON.parse(res['feed_items'])
+      feed_items_res = res['feed_items']
       expect(feed_items_res.size).to eq(2)
       first_post = feed_items_res[0]["feedable"]
       expect(first_post['title']).to_not be_nil
@@ -162,7 +162,8 @@ RSpec.describe "Posts", type: :request do
 
       expect(response).to have_http_status(:ok)
       res = JSON.parse(response.body)
-      feed_items_res = JSON.parse(res['feed_items'])
+      feed_items_res = res['feed_items']
+      debugger
       expect(feed_items_res.size).to eq(1)
       expect(feed_items_res[0]["feedable"]['comments'].size).to eq(2)
       expect(feed_items_res[0]["feedable"]['comments'][0]['body']).to_not be_nil
@@ -184,14 +185,14 @@ RSpec.describe "Posts", type: :request do
 
       expect(response).to have_http_status(:ok)
       res = JSON.parse(response.body)
-      feed_items_res = JSON.parse(res['feed_items'])
+      feed_items_res = res['feed_items']
       expect(feed_items_res.size).to eq(30)
       expect(res['pagy']['next']).to eq(2)
 
       get "/posts?page=2", params: {}, headers: @headers
       expect(response).to have_http_status(:ok)
       res = JSON.parse(response.body)
-      feed_items_res = JSON.parse(res['feed_items'])
+      feed_items_res = res['feed_items']
       expect(feed_items_res.size).to eq(6)
     end
 

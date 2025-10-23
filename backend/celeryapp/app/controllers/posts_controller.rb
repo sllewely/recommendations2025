@@ -7,7 +7,7 @@ class PostsController < ApplicationController
 
     @pagy, @feed_items = pagy(feed, limit: 30)
     render json: {
-      feed_items: FeedItemBlueprint.render(@feed_items, current_user: current_user),
+      feed_items: FeedItemBlueprint.render_as_hash(@feed_items, current_user: current_user),
       pagy: @pagy,
     }, status: :ok
 

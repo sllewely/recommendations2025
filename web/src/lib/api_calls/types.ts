@@ -11,8 +11,14 @@ export interface ApiResponse<T = unknown> {
 }
 
 export interface PostsResponse {
-	feed_items: (Post | Event | Recommendation)[];
+	feed_items: Feedable[];
 	pagy: unknown;
+}
+
+export interface Feedable {
+	id: string;
+	created_at: string;
+	feedable: Post | Event | Recommendation;
 }
 
 export interface Post {
@@ -25,12 +31,9 @@ export interface Post {
 	address?: string;
 	url?: null | string;
 	event_type?: string;
-	user_id: number;
 	end_date_time?: string;
 	is_public?: boolean;
 	user: User;
-	creator_name: string;
-	creator_id: number;
 	start_date_string?: string;
 	start_time_string?: string;
 	create_date_string: string;

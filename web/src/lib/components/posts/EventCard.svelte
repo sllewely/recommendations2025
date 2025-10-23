@@ -13,7 +13,8 @@
 
 	let signed_in = isSignedIn();
 
-	const localizedCreateTime = parseAbsoluteToLocal(feed_item.created_at);
+	console.log(feed_item);
+	// const localizedCreateTime = parseAbsoluteToLocal(feed_item.created_at);
 	// const formattedCreateTime = new Intl.DateTimeFormat("en-US", {
 	// 	dateStyle: "medium",
 	// 	timeStyle: "short",
@@ -23,7 +24,7 @@
 	// const localizedStartTime = parseAbsoluteToLocal(feed_item.start_date_time);
 	// const formattedStartTime = new Intl.DateTimeFormat("en-US", {
 	// 	dateStyle: "medium",
-	// 	timeStyle: "short",
+	// 	timeStyle: "short"
 	// 	timeZone: localizedCreateTime.timeZone,
 	// }).format(localizedCreateTime.toDate());
 </script>

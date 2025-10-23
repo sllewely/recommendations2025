@@ -14,19 +14,20 @@
 	let signed_in = isSignedIn();
 
 	console.log(feed_item);
-	// const localizedCreateTime = parseAbsoluteToLocal(feed_item.created_at);
-	// const formattedCreateTime = new Intl.DateTimeFormat("en-US", {
-	// 	dateStyle: "medium",
-	// 	timeStyle: "short",
-	// 	timeZone: localizedCreateTime.timeZone,
-	// }).format(localizedCreateTime.toDate());
-	//
-	// const localizedStartTime = parseAbsoluteToLocal(feed_item.start_date_time);
-	// const formattedStartTime = new Intl.DateTimeFormat("en-US", {
-	// 	dateStyle: "medium",
-	// 	timeStyle: "short"
-	// 	timeZone: localizedCreateTime.timeZone,
-	// }).format(localizedCreateTime.toDate());
+	console.log(feed_item.created_at);
+	const localizedCreateTime = parseAbsoluteToLocal(feed_item.created_at);
+	const formattedCreateTime = new Intl.DateTimeFormat("en-US", {
+		dateStyle: "medium",
+		timeStyle: "short",
+		timeZone: localizedCreateTime.timeZone,
+	}).format(localizedCreateTime.toDate());
+
+	const localizedStartTime = parseAbsoluteToLocal(feed_item.start_date_time);
+	const formattedStartTime = new Intl.DateTimeFormat("en-US", {
+		dateStyle: "medium",
+		timeStyle: "short",
+		timeZone: localizedCreateTime.timeZone,
+	}).format(localizedStartTime.toDate());
 </script>
 
 <!--{console.log(feed_item)}-->
@@ -43,7 +44,7 @@
 		<!--        <div><span class="font-bold"><a class="text-teal-400 hover:text-orange-400" href="/users/{feed_item.creator_id}">{feed_item.creator_name}</a></span> posted an upcoming event</div>-->
 		<!--        </svelte:boundary>-->
 		<div>
-			<!--			<span class="text-sm">at {formattedCreateTime}</span>-->
+			<span class="text-sm">at {formattedCreateTime}</span>
 		</div>
 	</div>
 	<div class="p-2">
@@ -54,7 +55,7 @@
 					<p>{feed_item.description}</p>
 				{/if}
 				{#if feed_item.start_date_string}
-					<p>Happening {feed_item.start_date_string} - {feed_item.start_time_string}</p>
+					<p>Happening {formattedStartTime}</p>
 				{/if}
 				{#if feed_item.address}
 					<p>at {feed_item.address}</p>

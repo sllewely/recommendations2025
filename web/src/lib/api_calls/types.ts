@@ -80,8 +80,8 @@ export interface User {
 
 export interface Event {
 	id: string;
-	created_at: Date;
-	updated_at: Date;
+	created_at: string;
+	updated_at: string;
 	title: string;
 	description: string;
 	start_date_time: string;

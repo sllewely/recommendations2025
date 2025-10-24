@@ -6,6 +6,7 @@
 	import { parseAbsoluteToLocal } from "@internationalized/date";
 	import { current_user } from "$lib/state/current_user.svelte.js";
 	import type { Event } from "$lib/api_calls/types";
+	import RsvpBadge from "$lib/components/ui/badge/RsvpBadge.svelte";
 
 	interface Props {
 		feed_item: Event;
@@ -21,8 +22,7 @@
 
 	// TODO: Going should match on my id instead of current user rsvp
 	// should be updateable state
-	console.log(feed_item.rsvps);
-	let current_user_rsvp = feed_item.rsvps.some((rsvp) => rsvp.user_id === current_user.id);
+	let current_user_rsvp = feed_item.rsvps.find((rsvp) => rsvp.user.id === current_user.id) ?? null;
 
 	const localizedCreateTime = parseAbsoluteToLocal(feed_item.created_at);
 	const formattedCreateTime = new Intl.DateTimeFormat("en-US", {
@@ -68,7 +68,9 @@
 					<p>at {feed_item.address}</p>
 				{/if}
 
-				<p class="text-sm">rsvp: {feed_item.current_user_rsvp ?? "not rsvp'd"}</p>
+				<div>
+					<RsvpBadge rsvp={current_user_rsvp} />
+				</div>
 			</Card>
 		</a>
 	</div>

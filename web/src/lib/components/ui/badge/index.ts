@@ -1,4 +1,5 @@
 import { type VariantProps, tv } from "tailwind-variants";
+
 export { default as Badge } from "./badge.svelte";
 
 export const badgeVariants = tv({
@@ -10,6 +11,11 @@ export const badgeVariants = tv({
 			destructive:
 				"bg-destructive text-destructive-foreground hover:bg-destructive/80 border-transparent",
 			outline: "text-foreground",
+			going: "bg-primary text-primary-foreground hover:bg-primary/80 border-transparent",
+			interested: "bg-primary text-primary-foreground hover:bg-primary/80 border-transparent",
+			not_going: "bg-primary text-primary-foreground hover:bg-primary/80 border-transparent",
+			not_interested: "bg-primary text-primary-foreground hover:bg-primary/80 border-transparent",
+			not_rsvpd: "bg-primary text-primary-foreground hover:bg-primary/80 border-transparent",
 		},
 	},
 	defaultVariants: {

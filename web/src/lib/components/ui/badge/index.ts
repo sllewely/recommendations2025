@@ -11,11 +11,12 @@ export const badgeVariants = tv({
 			destructive:
 				"bg-destructive text-destructive-foreground hover:bg-destructive/80 border-transparent",
 			outline: "text-foreground",
-			going: "bg-primary text-primary-foreground hover:bg-primary/80 border-transparent",
-			interested: "bg-primary text-primary-foreground hover:bg-primary/80 border-transparent",
-			not_going: "bg-primary text-primary-foreground hover:bg-primary/80 border-transparent",
-			not_interested: "bg-primary text-primary-foreground hover:bg-primary/80 border-transparent",
-			not_rsvpd: "bg-primary text-primary-foreground hover:bg-primary/80 border-transparent",
+			going: "bg-lime-200 text-secondary-foreground hover:bg-primary/80 border-transparent",
+			interested: "bg-amber-200 text-secondary-foreground hover:bg-primary/80 border-transparent",
+			not_going: "bg-slate-200 text-secondary-foreground hover:bg-primary/80 border-transparent",
+			not_interested:
+				"bg-slate-200 text-secondary-foreground hover:bg-primary/80 border-transparent",
+			not_rsvpd: "bg-teal-200 text-secondary-foreground hover:bg-primary/80 border-transparent",
 		},
 	},
 	defaultVariants: {

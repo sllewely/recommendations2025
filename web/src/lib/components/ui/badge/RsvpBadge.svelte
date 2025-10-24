@@ -16,7 +16,7 @@
 				return ["Going", "going"];
 			case "interested":
 				return ["Interested", "interested"];
-			case "not_going":
+			case "cant_go":
 				return ["Not going", "not_going"];
 			case "not_interested":
 				return ["Not interested", "not_interested"];

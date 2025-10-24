@@ -4,8 +4,15 @@
 	import Link from "$lib/components/text/Link.svelte";
 	import { isSignedIn } from "$lib/state/current_user.svelte";
 	import { parseAbsoluteToLocal } from "@internationalized/date";
+	import { current_user } from "$lib/state/current_user.svelte.js";
+	import type { Event } from "$lib/api_calls/types";
+	import RsvpBadge from "$lib/components/ui/badge/RsvpBadge.svelte";
 
-	let { feed_item } = $props();
+	interface Props {
+		feed_item: Event;
+	}
+
+	let { feed_item }: Props = $props();
 
 	if (feed_item.class_name !== "Event") {
 		console.error("not an event feed item");
@@ -13,23 +20,24 @@
 
 	let signed_in = isSignedIn();
 
-	console.log(feed_item);
-	// const localizedCreateTime = parseAbsoluteToLocal(feed_item.created_at);
-	// const formattedCreateTime = new Intl.DateTimeFormat("en-US", {
-	// 	dateStyle: "medium",
-	// 	timeStyle: "short",
-	// 	timeZone: localizedCreateTime.timeZone,
-	// }).format(localizedCreateTime.toDate());
-	//
-	// const localizedStartTime = parseAbsoluteToLocal(feed_item.start_date_time);
-	// const formattedStartTime = new Intl.DateTimeFormat("en-US", {
-	// 	dateStyle: "medium",
-	// 	timeStyle: "short"
-	// 	timeZone: localizedCreateTime.timeZone,
-	// }).format(localizedCreateTime.toDate());
-</script>
+	// TODO: Going should match on my id instead of current user rsvp
+	// should be updateable state
+	let current_user_rsvp = feed_item.rsvps.find((rsvp) => rsvp.user.id === current_user.id) ?? null;
 
-<!--{console.log(feed_item)}-->
+	const localizedCreateTime = parseAbsoluteToLocal(feed_item.created_at);
+	const formattedCreateTime = new Intl.DateTimeFormat("en-US", {
+		dateStyle: "medium",
+		timeStyle: "short",
+		timeZone: localizedCreateTime.timeZone,
+	}).format(localizedCreateTime.toDate());
+
+	const localizedStartTime = parseAbsoluteToLocal(feed_item.start_date_time);
+	const formattedStartTime = new Intl.DateTimeFormat("en-US", {
+		dateStyle: "medium",
+		timeStyle: "short",
+		timeZone: localizedCreateTime.timeZone,
+	}).format(localizedStartTime.toDate());
+</script>
 
 <div>
 	<div class="flex flex-row justify-between">
@@ -43,7 +51,7 @@
 		<!--        <div><span class="font-bold"><a class="text-teal-400 hover:text-orange-400" href="/users/{feed_item.creator_id}">{feed_item.creator_name}</a></span> posted an upcoming event</div>-->
 		<!--        </svelte:boundary>-->
 		<div>
-			<!--			<span class="text-sm">at {formattedCreateTime}</span>-->
+			<span class="text-sm">at {formattedCreateTime}</span>
 		</div>
 	</div>
 	<div class="p-2">
@@ -54,13 +62,15 @@
 					<p>{feed_item.description}</p>
 				{/if}
 				{#if feed_item.start_date_string}
-					<p>Happening {feed_item.start_date_string} - {feed_item.start_time_string}</p>
+					<p>Happening {formattedStartTime}</p>
 				{/if}
 				{#if feed_item.address}
 					<p>at {feed_item.address}</p>
 				{/if}
 
-				<p class="text-sm">rsvp: {feed_item.current_user_rsvp ?? "not rsvp'd"}</p>
+				<div>
+					<RsvpBadge rsvp={current_user_rsvp} />
+				</div>
 			</Card>
 		</a>
 	</div>

@@ -16,8 +16,6 @@
 	// SARAH!!
 </script>
 
-{console.log(feed_items)}
-
 <div>
 	<div
 		class="flex justify-center p-2 mb-2 font-bold border-gray-800 rounded-sm bg-lime-200 border-1"

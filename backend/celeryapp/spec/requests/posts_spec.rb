@@ -163,7 +163,6 @@ RSpec.describe "Posts", type: :request do
       expect(response).to have_http_status(:ok)
       res = JSON.parse(response.body)
       feed_items_res = res['feed_items']
-      debugger
       expect(feed_items_res.size).to eq(1)
       expect(feed_items_res[0]["feedable"]['comments'].size).to eq(2)
       expect(feed_items_res[0]["feedable"]['comments'][0]['body']).to_not be_nil

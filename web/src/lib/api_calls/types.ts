@@ -102,7 +102,16 @@ export interface Event {
 	rsvps_count: number;
 	comments: any[];
 	current_user_rsvp: null;
-	rsvps: any[];
+	rsvps: Rsvp[];
+}
+
+export interface Rsvp {
+	id: string;
+	created_at: string;
+	updated_at: string;
+	event_id: string;
+	user_id: string;
+	status: string;
 }
 
 export type EventWithDateHeader =

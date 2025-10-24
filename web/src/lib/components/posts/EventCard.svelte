@@ -4,8 +4,14 @@
 	import Link from "$lib/components/text/Link.svelte";
 	import { isSignedIn } from "$lib/state/current_user.svelte";
 	import { parseAbsoluteToLocal } from "@internationalized/date";
+	import { current_user } from "$lib/state/current_user.svelte.js";
+	import type { Event } from "$lib/api_calls/types";
 
-	let { feed_item } = $props();
+	interface Props {
+		feed_item: Event;
+	}
+
+	let { feed_item }: Props = $props();
 
 	if (feed_item.class_name !== "Event") {
 		console.error("not an event feed item");
@@ -13,8 +19,11 @@
 
 	let signed_in = isSignedIn();
 
-	console.log(feed_item);
-	console.log(feed_item.created_at);
+	// TODO: Going should match on my id instead of current user rsvp
+	// should be updateable state
+	console.log(feed_item.rsvps);
+	let current_user_rsvp = feed_item.rsvps.some((rsvp) => rsvp.user_id === current_user.id);
+
 	const localizedCreateTime = parseAbsoluteToLocal(feed_item.created_at);
 	const formattedCreateTime = new Intl.DateTimeFormat("en-US", {
 		dateStyle: "medium",
@@ -29,8 +38,6 @@
 		timeZone: localizedCreateTime.timeZone,
 	}).format(localizedStartTime.toDate());
 </script>
-
-<!--{console.log(feed_item)}-->
 
 <div>
 	<div class="flex flex-row justify-between">

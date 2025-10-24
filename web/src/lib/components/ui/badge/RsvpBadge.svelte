@@ -24,8 +24,6 @@
 				return ["Not rsvp'd", "not_rsvpd"];
 		}
 	})();
-	// const badgeText = rsvp ? rsvp.status : "Not rsvp'd";
-	// const badgeVariant = "going";
 </script>
 
 <div>

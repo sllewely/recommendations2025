@@ -76,7 +76,6 @@ export interface Event {
 	class_name: string;
 	rsvps_count: number;
 	comments: Comment[];
-	current_user_rsvp: null;
 	rsvps: Rsvp[];
 }
 

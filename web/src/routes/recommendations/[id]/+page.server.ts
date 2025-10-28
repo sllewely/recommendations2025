@@ -9,11 +9,8 @@ export const load = withAuth(async ({ jwt, params, user_id }: LoadAuthContext) =
 	let recommendation_id = params.id;
 	let recommendation = await getRecommendation(recommendation_id, jwt);
 
-	let user = await getUser(recommendation.res.user_id, jwt);
-
 	return {
 		recommendation: recommendation["res"],
-		user: user["res"],
 		my_user_id: user_id,
 	};
 });

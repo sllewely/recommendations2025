@@ -8,9 +8,17 @@
 	import { MessageCircleMore } from "@lucide/svelte";
 	import SubmitComment from "$lib/components/posts/SubmitComment.svelte";
 	import Comment from "$lib/components/posts/Comment.svelte";
+	import type { Recommendation, User } from "$lib/api_calls/types";
+	import { parseAbsoluteToLocal } from "@internationalized/date";
 
-	let { data } = $props();
-	let user = data.user;
+	interface Props {
+		data: {
+			recommendation: Recommendation;
+			my_user_id: string;
+		};
+	}
+
+	let { data }: Props = $props();
 
 	// Svelte pitfall.  Page updates are not triggered by load data prop change!!
 	// This is the workaround
@@ -19,25 +27,36 @@
 		recommendation = data.recommendation;
 	});
 
+	console.log(recommendation);
+
 	let comments = $derived(recommendation.comments);
 
 	let num_comments = $derived(comments.length);
+
+	const localizedCreateTime = parseAbsoluteToLocal(recommendation.created_at);
+	const formattedCreateTime = new Intl.DateTimeFormat("en-US", {
+		dateStyle: "medium",
+		timeStyle: "short",
+		timeZone: localizedCreateTime.timeZone,
+	}).format(localizedCreateTime.toDate());
 </script>
 
 <div>
-	{#if data.my_user_id.toString() === user.id.toString()}
+	{#if data.my_user_id.toString() === recommendation.user.id.toString()}
 		<div class="float-right relative">
 			<LinkButton url="/recommendations/{recommendation.id}/edit">Edit</LinkButton>
 			<LinkButton url="/recommendations/{recommendation.id}/delete">Delete</LinkButton>
 		</div>
 	{/if}
-	<H2>{user.name}'s recommendation</H2>
+	<H2>{recommendation.user.name}'s recommendation</H2>
 	<Card>
 		<H1>{recommendation.title}</H1>
 		<p>{recommendation.media_type}</p>
 		<p>{recommendation.notes}</p>
-		<p>Who recommended? {recommendation.who_recommended}</p>
-		<p>Added: {recommendation.create_date_string}</p>
+		{#if recommendation.who_recommended}
+			<p>Who recommended? {recommendation.who_recommended}</p>
+		{/if}
+		<p>Added: {formattedCreateTime}</p>
 		{#if recommendation.url}
 			<Link url={recommendation.url}>{recommendation.url}</Link>
 		{/if}

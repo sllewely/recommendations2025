@@ -19,12 +19,12 @@ class RecommendationsController < ApplicationController
   end
 
   def show
-    @recommendation = Recommendation.includes(:comments).find_by(id: params[:id])
+    @recommendation = Recommendation.includes(:user, comments: :user).find_by(id: params[:id])
     if @recommendation.nil?
       render json: { error: 'not found' }, status: :not_found and return
     end
     # TODO permissions
-    render json: @recommendation.attributes, status: :ok
+    render json: RecommendationBlueprint.render(@recommendation), status: :ok
   end
 
   def update

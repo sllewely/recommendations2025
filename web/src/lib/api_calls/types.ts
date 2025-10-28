@@ -26,8 +26,6 @@ export interface Post {
 	created_at: string;
 	updated_at: string;
 	user: User;
-	create_date_string: string;
-	create_time_string: string;
 	comments: Comment[];
 	post_title: string;
 	content?: string;
@@ -76,12 +74,8 @@ export interface Event {
 	is_public: boolean;
 	user: User;
 	class_name: string;
-	start_date_string: string;
-	start_time_string: string;
-	create_date_string: string;
-	create_time_string: string;
 	rsvps_count: number;
-	comments: any[];
+	comments: Comment[];
 	current_user_rsvp: null;
 	rsvps: Rsvp[];
 }
@@ -114,6 +108,7 @@ export interface Recommendation {
 	notes: string;
 	created_at: string;
 	updated_at: string;
+	comments: Comment[];
 }
 
 export type CreateRecommendationData = unknown;

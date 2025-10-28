@@ -219,7 +219,8 @@ RSpec.describe "Posts", type: :request do
       res = JSON.parse(response.body)
       expect(res['post_title']).to_not be_nil
       expect(res['content']).to_not be_nil
-      expect(res['creator_id']).to_not be_nil
+      expect(res['user']).to_not be_nil
+      expect(res['user']['id']).to_not be_nil
     end
 
     it 'gets the post with comments' do
@@ -233,7 +234,8 @@ RSpec.describe "Posts", type: :request do
       res = JSON.parse(response.body)
       expect(res['post_title']).to_not be_nil
       expect(res['content']).to_not be_nil
-      expect(res['creator_id']).to_not be_nil
+      expect(res['user']).to_not be_nil
+      expect(res['user']['id']).to_not be_nil
 
       expect(res['comments'].size).to eq(2)
     end

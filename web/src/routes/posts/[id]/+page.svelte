@@ -7,8 +7,15 @@
 	import { goto } from "$app/navigation";
 	import { Button } from "$lib/components/ui/button";
 	import { newToast, ToastType } from "$lib/state/toast.svelte";
+	import type { Post } from "$lib/api_calls/types";
 
-	let { data } = $props();
+	interface Props {
+		data: {
+			post: Post;
+			my_user_id: string;
+		};
+	}
+	let { data }: Props = $props();
 	let my_user_id = data.my_user_id;
 
 	// Svelte pitfall.  Page updates are not triggered by load data prop change!!
@@ -41,7 +48,7 @@
 </script>
 
 <div>
-	{#if my_user_id.toString() === post.user_id.toString()}
+	{#if my_user_id.toString() === post.user.id.toString()}
 		<div class="float-right relative">
 			<LinkButton url="/posts/{post.id}/edit">Edit</LinkButton>
 			<Button onclick={delete_post} variant="destructive">Delete</Button>

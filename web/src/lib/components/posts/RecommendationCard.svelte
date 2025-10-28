@@ -5,8 +5,14 @@
 	import H2 from "$lib/components/text/H2.svelte";
 	import PlusCircle from "$lib/components/posts/PlusCircle.svelte";
 	import { current_user } from "$lib/state/current_user.svelte";
+	import type { Recommendation } from "$lib/api_calls/types";
+	import { parseAbsoluteToLocal } from "@internationalized/date";
 
-	let { feed_item } = $props();
+	interface Props {
+		feed_item: Recommendation;
+	}
+
+	let { feed_item }: Props = $props();
 
 	let by_line = " is interested in";
 
@@ -21,24 +27,31 @@
 		by_line = " recommends";
 	}
 
-	let creating = $state(false);
+	console.log(feed_item.created_at);
+	const localizedCreateTime = parseAbsoluteToLocal(feed_item.created_at);
+
+	const formattedCreateTime = new Intl.DateTimeFormat("en-US", {
+		dateStyle: "medium",
+		timeStyle: "short",
+		timeZone: localizedCreateTime.timeZone,
+	}).format(localizedCreateTime.toDate());
 </script>
 
 <div>
 	<div class="flex flex-row justify-between">
 		<div>
 			<span class="font-bold"
-				><Link url="/users/{feed_item.creator_id}">{feed_item.creator_name}</Link></span
+				><Link url="/users/{feed_item.user.id}">{feed_item.user.name}</Link></span
 			>
 			{by_line}
 		</div>
 		<div>
-			<span class="text-sm">at {feed_item.create_date_string} {feed_item.create_time_string}</span>
+			<span class="text-sm">at {formattedCreateTime}</span>
 		</div>
 	</div>
 
 	<div>
-		{#if current_user.id !== feed_item.creator_id}
+		{#if current_user.id !== feed_item.user.id}
 			<div class="float-right relative">
 				<div class="absolute top-0 right-0">
 					<form
@@ -54,7 +67,7 @@
 					>
 						<input type="hidden" name="title" value={feed_item.title} />
 						<input type="hidden" name="media_type" value={feed_item.media_type} />
-						<input type="hidden" name="who_recommended" value={feed_item.creator_name} />
+						<input type="hidden" name="who_recommended" value={feed_item.user.name} />
 						<button type="submit">
 							<PlusCircle />
 						</button>

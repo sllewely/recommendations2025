@@ -5,27 +5,38 @@
 	import H2 from "$lib/components/text/H2.svelte";
 	import PlusCircle from "$lib/components/posts/PlusCircle.svelte";
 	import { current_user } from "$lib/state/current_user.svelte";
+	import type { Post } from "$lib/api_calls/types";
+	import { parseAbsoluteToLocal } from "@internationalized/date";
 
-	let { feed_item } = $props();
+	interface Props {
+		feed_item: Post;
+	}
+
+	let { feed_item }: Props = $props();
 
 	if (feed_item.class_name !== "Post") {
 		console.error("not a post feed item");
 	}
 
-	// let creating = $state(false);
+	const localizedCreateTime = parseAbsoluteToLocal(feed_item.created_at);
+	const formattedCreateTime = new Intl.DateTimeFormat("en-US", {
+		dateStyle: "medium",
+		timeStyle: "short",
+		timeZone: localizedCreateTime.timeZone,
+	}).format(localizedCreateTime.toDate());
 </script>
 
 <div>
 	<div class="flex flex-row justify-between">
 		<div>
 			<span class="font-bold"
-				><a class="text-teal-400 hover:text-orange-400" href="/users/{feed_item.creator_id}"
-					>{feed_item.creator_name}</a
+				><a class="text-teal-400 hover:text-orange-400" href="/users/{feed_item.user.id}"
+					>{feed_item.user.name}</a
 				></span
 			> posted
 		</div>
 		<div>
-			<span class="text-sm">at {feed_item.create_date_string} {feed_item.create_time_string}</span>
+			<span class="text-sm">at {formattedCreateTime}</span>
 		</div>
 	</div>
 

@@ -98,8 +98,8 @@ RSpec.describe "Events", type: :request do
       expect(response).to have_http_status(:ok)
       res = JSON.parse(response.body)
       expect(res.size).to eq(3)
-      expect(res.first['creator_name']).to eq(other_user.name)
-      expect(res.first['creator_id']).to eq(other_user.id)
+      expect(res.first['user']['name']).to eq(other_user.name)
+      expect(res.first['user']['id']).to eq(other_user.id)
     end
 
     it 'retrieves a list of events, with rsvps' do
@@ -118,9 +118,9 @@ RSpec.describe "Events", type: :request do
       # non deterministic
       expect(res[0]['rsvps'].size).to eq(2)
 
-      expect(res.first['current_user_rsvp']).to_not be_nil
-      expect(res.first['creator_name']).to_not be_nil
-      expect(res.first['creator_id']).to_not be_nil
+      expect(res.first['rsvps'].size).to eq(2)
+      expect(res.first['user']['name']).to_not be_nil
+      expect(res.first['user']['id']).to_not be_nil
     end
 
   end
@@ -163,7 +163,7 @@ RSpec.describe "Events", type: :request do
 
       expect(res['start_date_string']).to match(/\d?\d\/\d?\d\/\d\d\d\d/)
       expect(res['start_time_string']).to match(/\d?\d:\d\d/)
-      expect(res['current_user_rsvp']).to eq('interested')
+      expect(res['rsvps'].first['status']).to eq('interested')
     end
 
     it 'has comments' do

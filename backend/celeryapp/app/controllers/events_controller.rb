@@ -2,10 +2,10 @@ class EventsController < ApplicationController
   skip_before_action :authenticate, only: [:public_events]
 
   def index
-    @events = Event.includes(:rsvps).where('start_date_time > ?', DateTime.now).order(start_date_time: :asc)
+    @events = Event.includes(:user, rsvps: :user, comments: :user).where('start_date_time > ?', DateTime.now).order(start_date_time: :asc)
 
     # TODO: improve query performance
-    render json: @events.map { |e| e.attributes.merge({ current_user_rsvp: e.rsvp_status_for_current_user(current_user), rsvps: e.rsvps }) }, status: :ok
+    render json: EventBlueprint.render(@events, view: :authed), status: :ok
   end
 
   def public_events

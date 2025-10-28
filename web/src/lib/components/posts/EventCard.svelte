@@ -61,9 +61,7 @@
 				{#if feed_item.description}
 					<p>{feed_item.description}</p>
 				{/if}
-				{#if feed_item.start_date_string}
-					<p>Happening {formattedStartTime}</p>
-				{/if}
+				<p>Happening {formattedStartTime}</p>
 				{#if feed_item.address}
 					<p>at {feed_item.address}</p>
 				{/if}

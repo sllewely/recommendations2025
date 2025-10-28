@@ -7,13 +7,36 @@
 	import { Button, buttonVariants } from "$lib/components/ui/button";
 	import { CalendarPlus2, MessageCircleHeart, MessageSquareText } from "@lucide/svelte";
 	import type { PageProps } from "./$types.js";
+	import { parseAbsoluteToLocal } from "@internationalized/date";
+	import type { Event } from "$lib/api_calls/types";
 
 	let { data }: PageProps = $props();
 
 	const feed_items = data.posts_response.feed_items;
 	const pagination = data.posts_response.pagy;
 
-	// SARAH!!
+	let localized_dater = function (event_item: Event): string {
+		const localizedStartTime = parseAbsoluteToLocal(event_item.start_date_time);
+		return new Intl.DateTimeFormat("en-US", {
+			dateStyle: "medium",
+			timeZone: localizedStartTime.timeZone,
+		}).format(localizedStartTime.toDate());
+	};
+
+	// chunk dates into localized dates
+	let events_and_date_headers = [];
+	if (data.events) {
+		let current_date = localized_dater(data.events[0]);
+		events_and_date_headers.push({ date_header: current_date });
+		for (const event of data.events) {
+			let date = localized_dater(event);
+			if (date !== current_date) {
+				current_date = date;
+				events_and_date_headers.push({ date_header: current_date });
+			}
+			events_and_date_headers.push(event);
+		}
+	}
 </script>
 
 <div>
@@ -60,7 +83,7 @@
 					<CalendarPlus2 /> &nbsp; Create event
 				</Button>
 			</div>
-			{#if data.events.length === 0}
+			{#if events_and_date_headers.length === 0}
 				<div
 					class="flex justify-center p-2 mb-2 font-bold border-gray-800 rounded-sm bg-lime-200 border-1"
 				>
@@ -70,7 +93,7 @@
 					</p>
 				</div>
 			{/if}
-			{#each data.events as event_item}
+			{#each events_and_date_headers as event_item}
 				{#if !!event_item["date_header"]}
 					<DateHeader {event_item} />
 				{:else}

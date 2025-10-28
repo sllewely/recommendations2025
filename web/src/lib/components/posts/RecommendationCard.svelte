@@ -27,9 +27,7 @@
 		by_line = " recommends";
 	}
 
-	console.log(feed_item.created_at);
 	const localizedCreateTime = parseAbsoluteToLocal(feed_item.created_at);
-
 	const formattedCreateTime = new Intl.DateTimeFormat("en-US", {
 		dateStyle: "medium",
 		timeStyle: "short",

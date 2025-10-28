@@ -5,7 +5,7 @@ class PostBlueprint < Blueprinter::Base
     "Post"
   end
 
-  fields :post_title, :content, :create_date_string, :create_time_string
+  fields :post_title, :content, :created_at
 
   association :user, blueprint: UserBlueprint, view: :authed
   association :comments, blueprint: CommentBlueprint, view: :authed

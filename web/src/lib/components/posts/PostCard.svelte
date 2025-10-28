@@ -6,6 +6,7 @@
 	import PlusCircle from "$lib/components/posts/PlusCircle.svelte";
 	import { current_user } from "$lib/state/current_user.svelte";
 	import type { Post } from "$lib/api_calls/types";
+	import { parseAbsoluteToLocal } from "@internationalized/date";
 
 	interface Props {
 		feed_item: Post;
@@ -17,7 +18,12 @@
 		console.error("not a post feed item");
 	}
 
-	// let creating = $state(false);
+	const localizedCreateTime = parseAbsoluteToLocal(feed_item.created_at);
+	const formattedCreateTime = new Intl.DateTimeFormat("en-US", {
+		dateStyle: "medium",
+		timeStyle: "short",
+		timeZone: localizedCreateTime.timeZone,
+	}).format(localizedCreateTime.toDate());
 </script>
 
 <div>
@@ -30,7 +36,7 @@
 			> posted
 		</div>
 		<div>
-			<span class="text-sm">at {feed_item.create_date_string} {feed_item.create_time_string}</span>
+			<span class="text-sm">at {formattedCreateTime}</span>
 		</div>
 	</div>
 

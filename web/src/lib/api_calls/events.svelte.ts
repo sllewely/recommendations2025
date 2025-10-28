@@ -1,6 +1,5 @@
-import { readable_backend_date } from "$lib/utils/dates.svelte";
 import * as api from "./api.svelte";
-import type { ApiResponse, Event, EventWithDateHeader } from "./types";
+import type { ApiResponse, Event } from "./types";
 
 const ENDPOINT = "events";
 
@@ -68,39 +67,4 @@ export async function updateEvent(
  */
 export async function deleteEvent(id: number, token: string): Promise<ApiResponse<void>> {
 	return api.del(`${ENDPOINT}/${id}`, token);
-}
-
-/**
- * Processes event dates for display by adding date headers
- * @param response - API response containing events
- * @returns Array of events with date headers inserted, or empty array if error
- */
-export function process_dates(response: ApiResponse<Event[]>): EventWithDateHeader[] {
-	if (!response.success || !response.res) {
-		console.error("Failed to process events:", response.message);
-		return [];
-	}
-
-	const events = response.res;
-	if (!events.length) return [];
-
-	const processed: EventWithDateHeader[] = [];
-	let current_date = "";
-
-	for (const event of events) {
-		const { date_string } = readable_backend_date(event.start_date_time);
-
-		if (date_string !== current_date) {
-			current_date = date_string;
-			processed.push({ date_header: current_date });
-		}
-
-		processed.push({
-			...event,
-			start_date_time: event.start_date_time,
-			time_string: new Date(event.start_date_time).toLocaleTimeString(),
-		});
-	}
-
-	return processed;
 }

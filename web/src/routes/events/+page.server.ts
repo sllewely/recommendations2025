@@ -1,21 +1,13 @@
 import * as api from "$lib/api_calls/api.svelte.js";
-import { createEvent, getCommunityEvents, process_dates } from "$lib/api_calls/events.svelte.js";
+import { createEvent, getCommunityEvents } from "$lib/api_calls/events.svelte.js";
 import type { ActionAuthContext, LoadAuthContext } from "$lib/auth";
 import { withAuth } from "$lib/auth";
-import type { EventWithDateHeader } from "$lib/api_calls/types";
 
 export const load = withAuth(async ({ jwt }: LoadAuthContext) => {
 	let res = await getCommunityEvents(jwt);
 
-	let events_with_dates_headers: EventWithDateHeader[] = [];
-	if (!res["success"]) {
-		// TODO: Create a new toast
-		return { result: res };
-	} else {
-		events_with_dates_headers = process_dates(res);
-	}
 	return {
-		events: events_with_dates_headers,
+		events: res["res"],
 	};
 });
 

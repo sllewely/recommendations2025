@@ -1,26 +1,18 @@
 import * as api from "$lib/api_calls/api.svelte.js";
-import { getEvents, process_dates } from "$lib/api_calls/events.svelte.js";
+import { getEvents } from "$lib/api_calls/events.svelte.js";
 import { getPosts } from "$lib/api_calls/posts.svelte.js";
 import { withAuth, type LoadAuthContext, type ActionAuthContext } from "$lib/auth";
 import { RecommendationStatus } from "$lib/enums.js";
 import { redirect } from "@sveltejs/kit";
-import type { EventWithDateHeader, Post } from "$lib/api_calls/types";
 import { createComment, type CommentPayload } from "$lib/api_calls/comments.svelte.js";
 import { formDataToGeneric } from "$lib/api_calls/utils";
 
 export const load = withAuth(async ({ jwt }: LoadAuthContext) => {
 	const [postsResponse, eventsResponse] = await Promise.all([getPosts(jwt), getEvents(jwt)]);
 
-	let events_with_dates_headers: EventWithDateHeader[] = [];
-	if (!eventsResponse.success) {
-		console.error("Failed to fetch events:", eventsResponse.message);
-	} else {
-		events_with_dates_headers = process_dates(eventsResponse);
-	}
-
 	return {
 		posts_response: postsResponse.success ? (postsResponse.res ?? {}) : {},
-		events: events_with_dates_headers,
+		events: eventsResponse["res"],
 	};
 });
 

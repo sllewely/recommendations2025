@@ -25,30 +25,13 @@ export interface Post {
 	id: string;
 	created_at: string;
 	updated_at: string;
-	title?: string;
-	description?: string;
-	start_date_time?: string;
-	address?: string;
-	url?: null | string;
-	event_type?: string;
-	end_date_time?: string;
-	is_public?: boolean;
 	user: User;
-	start_date_string?: string;
-	start_time_string?: string;
 	create_date_string: string;
 	create_time_string: string;
-	rsvps_count?: number;
 	comments: Comment[];
-	current_user_status?: null;
-	notes?: null | string;
-	media_type?: string;
-	who_recommended?: string;
-	status?: string;
-	rating?: number;
-	post_title?: string;
+	post_title: string;
 	content?: string;
-	recommendations?: any[];
+	class_name: string;
 }
 
 export interface Comment {
@@ -93,8 +76,6 @@ export interface Event {
 	is_public: boolean;
 	user: User;
 	class_name: string;
-	creator_name: string;
-	creator_id: number;
 	start_date_string: string;
 	start_time_string: string;
 	create_date_string: string;
@@ -112,11 +93,27 @@ export interface Rsvp {
 	event_id: string;
 	user_id: string;
 	status: string;
+	user: User;
 }
 
 export type EventWithDateHeader =
 	| { date_header: string }
 	| (Event & { time_string: string; date_header?: string });
 
-export type Recommendation = unknown;
+export interface Recommendation {
+	id: string;
+	class_name: string;
+	user: User;
+	user_id: string;
+	title: string;
+	media_type: string;
+	url: string;
+	status: string;
+	who_recommended: string;
+	rating: number;
+	notes: string;
+	created_at: string;
+	updated_at: string;
+}
+
 export type CreateRecommendationData = unknown;

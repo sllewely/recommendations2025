@@ -5,7 +5,7 @@ class RecommendationBlueprint < Blueprinter::Base
     "Recommendation"
   end
 
-  fields :title, :notes, :status, :rating, :url, :media_type, :who_recommended, :create_date_string, :create_time_string
+  fields :title, :notes, :status, :rating, :url, :media_type, :who_recommended, :created_at
 
   association :comments, blueprint: CommentBlueprint, view: :authed
   association :user, blueprint: UserBlueprint, view: :authed

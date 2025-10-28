@@ -5,8 +5,13 @@
 	import H2 from "$lib/components/text/H2.svelte";
 	import PlusCircle from "$lib/components/posts/PlusCircle.svelte";
 	import { current_user } from "$lib/state/current_user.svelte";
+	import type { Post } from "$lib/api_calls/types";
 
-	let { feed_item } = $props();
+	interface Props {
+		feed_item: Post;
+	}
+
+	let { feed_item }: Props = $props();
 
 	if (feed_item.class_name !== "Post") {
 		console.error("not a post feed item");
@@ -19,8 +24,8 @@
 	<div class="flex flex-row justify-between">
 		<div>
 			<span class="font-bold"
-				><a class="text-teal-400 hover:text-orange-400" href="/users/{feed_item.creator_id}"
-					>{feed_item.creator_name}</a
+				><a class="text-teal-400 hover:text-orange-400" href="/users/{feed_item.user.id}"
+					>{feed_item.user.name}</a
 				></span
 			> posted
 		</div>

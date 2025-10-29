@@ -9,6 +9,9 @@
 	import type { PageProps } from "./$types.js";
 	import { parseAbsoluteToLocal } from "@internationalized/date";
 	import type { Event } from "$lib/api_calls/types";
+	import { browser } from "$app/environment";
+	import { onMount } from "svelte";
+	import { Spinner } from "$lib/components/ui/spinner/index.js";
 
 	let { data }: PageProps = $props();
 
@@ -37,6 +40,25 @@
 			events_and_date_headers.push(event);
 		}
 	}
+
+	let fetching_more_posts = $state(false);
+
+	onMount(() => {
+		window.addEventListener("scroll", function () {
+			if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+				console.log("you're at the bottom of the page");
+				fetching_more_posts = true;
+				// Show loading spinner and make fetch request to api
+				// const response = await fetch("/api/friends_map", {
+				// 	method: "GET",
+				// 	headers: {
+				// 		"Content-Type": "application/json",
+				// 	},
+				// });
+				// const res = await response.json();
+			}
+		});
+	});
 </script>
 
 <div>
@@ -71,9 +93,16 @@
 					</p>
 				</div>
 			{/if}
-			{#each feed_items as feed_item}
-				<FeedItem feed_item={feed_item.feedable} />
-			{/each}
+			<div>
+				{#each feed_items as feed_item}
+					<FeedItem feed_item={feed_item.feedable} />
+				{/each}
+			</div>
+			<div class="flex justify-center pt-20">
+				{#if fetching_more_posts}
+					<Spinner class="size-24" />
+				{/if}
+			</div>
 		</div>
 		<div class="flex flex-col pl-2">
 			<H1>Events</H1>

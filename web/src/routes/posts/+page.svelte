@@ -9,7 +9,6 @@
 	import type { PageProps } from "./$types.js";
 	import { parseAbsoluteToLocal } from "@internationalized/date";
 	import type { Event } from "$lib/api_calls/types";
-	import { browser } from "$app/environment";
 	import { onMount } from "svelte";
 	import { Spinner } from "$lib/components/ui/spinner/index.js";
 
@@ -44,18 +43,26 @@
 	let fetching_more_posts = $state(false);
 
 	onMount(() => {
+		let next_page = pagination.next;
+
+		async function fetch_posts() {
+			// Show loading spinner and make fetch request to api
+			const response = await fetch("/api/fetch_posts?page=" + next_page, {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
+			const res = await response.json();
+		}
 		window.addEventListener("scroll", function () {
 			if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
 				console.log("you're at the bottom of the page");
-				fetching_more_posts = true;
-				// Show loading spinner and make fetch request to api
-				// const response = await fetch("/api/friends_map", {
-				// 	method: "GET",
-				// 	headers: {
-				// 		"Content-Type": "application/json",
-				// 	},
-				// });
-				// const res = await response.json();
+				if (!fetching_more_posts) {
+					fetching_more_posts = true;
+					fetch_posts();
+					fetching_more_posts = false;
+				}
 			}
 		});
 	});

@@ -1,16 +1,14 @@
 import * as api from "$lib/api_calls/api.svelte";
 import { json } from "@sveltejs/kit";
 
-export async function GET({ params, cookies }) {
+export async function GET({ url, cookies }) {
 	const jwt = cookies.get("jwt");
 
-	// Get parameter from the request
-	2 + 5;
-	const page_number = params;
+	// Get page from URL query parameter, default to 1 if not provided
+	const page = url.searchParams.get("page") ?? "1";
+
 	// This gives us a lookup map of { user_id: user }
-	const more_posts_response = await api.get("posts?page=" + params.get("page"), jwt);
+	const more_posts_response = await api.get("posts?page=" + page, jwt);
 
-	2 + 5;
-
-	return json(more_posts_response);
+	return json(more_posts_response["res"]);
 }

@@ -5,7 +5,6 @@
 	import { current_user } from "$lib/state/current_user.svelte.ts";
 
 	import * as Table from "$lib/components/ui/table/index.js";
-	// import Link from "$lib/components/text/Link.svelte";
 	import * as Pagination from "$lib/components/ui/pagination/index.js";
 	import {
 		Book,
@@ -19,6 +18,7 @@
 		MessageCircleHeart,
 	} from "@lucide/svelte";
 	import { newToast, ToastType } from "$lib/state/toast.svelte.ts";
+	import { Button, buttonVariants } from "$lib/components/ui/button/index.js";
 
 	let { data } = $props();
 	let myPage = $state(1);
@@ -40,8 +40,11 @@
 		Save the things you love, track what you want to enjoy next, share interests with your friends
 	</p>
 
-	<div>
-		<!--        <Link url="/recommendations/create">Create a new recommendation</Link>-->
+	<div class="flex justify-center py-4">
+		<Button href="/recommendations/create" class={buttonVariants({ variant: "recommendation" })}>
+			<MessageCircleHeart /> &nbsp; Create a new a recommendation
+		</Button>
+		<!--		<Link url="/recommendations/create">Create a new recommendation</Link>-->
 	</div>
 	<hr />
 

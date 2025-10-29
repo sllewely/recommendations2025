@@ -19,8 +19,6 @@
 	// every 10 seconds, poll notifications
 	onMount(() => {
 		fetch_friends_map();
-
-		fetch_friends_map();
 		fetch_notifs();
 		// const interval = setInterval(
 		// 	() => {

@@ -20,7 +20,7 @@
 	"devDependencies": {
 		"@fontsource/fira-mono": "^5.0.0",
 		"@internationalized/date": "^3.8.2",
-		"@lucide/svelte": "^0.515.0",
+		"@lucide/svelte": "^0.544.0",
 		"@neoconfetti/svelte": "^2.0.0",
 		"@sveltejs/adapter-auto": "^4.0.0",
 		"@sveltejs/adapter-node": "^5.2.12",

@@ -5,7 +5,6 @@
 	import { current_user } from "$lib/state/current_user.svelte.ts";
 
 	import * as Table from "$lib/components/ui/table/index.js";
-	// import Link from "$lib/components/text/Link.svelte";
 	import * as Pagination from "$lib/components/ui/pagination/index.js";
 	import {
 		Book,
@@ -19,6 +18,7 @@
 		MessageCircleHeart,
 	} from "@lucide/svelte";
 	import { newToast, ToastType } from "$lib/state/toast.svelte.ts";
+	import { Button, buttonVariants } from "$lib/components/ui/button/index.js";
 
 	let { data } = $props();
 	let myPage = $state(1);
@@ -30,8 +30,6 @@
 	let updating = $state(false);
 </script>
 
-{console.log(recommendations)}
-
 <div>
 	<H1>{user.name}'s saved recommendations</H1>
 	<p>&nbsp;</p>
@@ -40,8 +38,11 @@
 		Save the things you love, track what you want to enjoy next, share interests with your friends
 	</p>
 
-	<div>
-		<!--        <Link url="/recommendations/create">Create a new recommendation</Link>-->
+	<div class="flex justify-center py-4">
+		<Button href="/recommendations/create" class={buttonVariants({ variant: "recommendation" })}>
+			<MessageCircleHeart /> &nbsp; Create a new a recommendation
+		</Button>
+		<!--		<Link url="/recommendations/create">Create a new recommendation</Link>-->
 	</div>
 	<hr />
 
@@ -66,7 +67,6 @@
 			</Table.Header>
 			<Table.Body>
 				{#each recommendations as rec}
-					{console.log(rec)}
 					<Table.Row>
 						<Table.Cell class="font-medium">
 							{#if rec.status === "interested"}
@@ -74,13 +74,17 @@
 							{/if}
 						</Table.Cell>
 						<Table.Cell>
-							<div class="flex flex-row">
-								<Star fill={rec.rating >= 1 ? "yellow" : "white"} />
-								<Star fill={rec.rating >= 2 ? "yellow" : "white"} />
-								<Star fill={rec.rating >= 3 ? "yellow" : "white"} />
-								<Star fill={rec.rating >= 4 ? "yellow" : "white"} />
-								<Star fill={rec.rating >= 5 ? "yellow" : "white"} />
-							</div>
+							{#if rec.status === "interested"}
+								TBD
+							{:else}
+								<div class="flex flex-row">
+									<Star fill={rec.rating >= 1 ? "yellow" : "white"} />
+									<Star fill={rec.rating >= 2 ? "yellow" : "white"} />
+									<Star fill={rec.rating >= 3 ? "yellow" : "white"} />
+									<Star fill={rec.rating >= 4 ? "yellow" : "white"} />
+									<Star fill={rec.rating >= 5 ? "yellow" : "white"} />
+								</div>
+							{/if}
 						</Table.Cell>
 						<Table.Cell>
 							{#if rec.media_type === "book"}

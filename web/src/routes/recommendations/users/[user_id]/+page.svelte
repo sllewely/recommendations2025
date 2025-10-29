@@ -30,8 +30,6 @@
 	let updating = $state(false);
 </script>
 
-{console.log(recommendations)}
-
 <div>
 	<H1>{user.name}'s saved recommendations</H1>
 	<p>&nbsp;</p>
@@ -69,7 +67,6 @@
 			</Table.Header>
 			<Table.Body>
 				{#each recommendations as rec}
-					{console.log(rec)}
 					<Table.Row>
 						<Table.Cell class="font-medium">
 							{#if rec.status === "interested"}
@@ -77,13 +74,17 @@
 							{/if}
 						</Table.Cell>
 						<Table.Cell>
-							<div class="flex flex-row">
-								<Star fill={rec.rating >= 1 ? "yellow" : "white"} />
-								<Star fill={rec.rating >= 2 ? "yellow" : "white"} />
-								<Star fill={rec.rating >= 3 ? "yellow" : "white"} />
-								<Star fill={rec.rating >= 4 ? "yellow" : "white"} />
-								<Star fill={rec.rating >= 5 ? "yellow" : "white"} />
-							</div>
+							{#if rec.status === "interested"}
+								TBD
+							{:else}
+								<div class="flex flex-row">
+									<Star fill={rec.rating >= 1 ? "yellow" : "white"} />
+									<Star fill={rec.rating >= 2 ? "yellow" : "white"} />
+									<Star fill={rec.rating >= 3 ? "yellow" : "white"} />
+									<Star fill={rec.rating >= 4 ? "yellow" : "white"} />
+									<Star fill={rec.rating >= 5 ? "yellow" : "white"} />
+								</div>
+							{/if}
 						</Table.Cell>
 						<Table.Cell>
 							{#if rec.media_type === "book"}

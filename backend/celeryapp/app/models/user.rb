@@ -14,9 +14,11 @@ class User < ApplicationRecord
   has_many :user_tags
   has_many :tags, through: :user_tags
   has_many :user_statuses, dependent: :destroy
+  has_many :groups, through: :user_groups
 
   scope :by_name, ->(search) { where('LOWER(name) LIKE LOWER(?)', "%#{search}%") }
   scope :by_tag, ->(tag) { joins(:tags).where('tags.tag LIKE (?)', tag) }
+  scope :by_group, ->(group) { where('groups.group LIKE (?)', group) }
 
   generates_token_for :email_verification, expires_in: 2.days do
     email

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_21_185238) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_29_181327) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -104,6 +104,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_21_185238) do
     t.index ["uuid"], name: "index_friendships_on_uuid", unique: true
   end
 
+  create_table "groups", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "name", null: false
+  end
+
   create_table "notifications", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -188,6 +194,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_21_185238) do
     t.index ["uuid"], name: "index_tags_on_uuid", unique: true
   end
 
+  create_table "user_groups", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.uuid "user_id", null: false
+    t.uuid "group_id", null: false
+    t.index ["group_id"], name: "index_user_groups_on_group_id"
+    t.index ["user_id", "group_id"], name: "index_user_groups_on_user_id_and_group_id", unique: true
+    t.index ["user_id"], name: "index_user_groups_on_user_id"
+  end
+
   create_table "user_statuses", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -239,6 +255,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_21_185238) do
   add_foreign_key "rsvps", "events", on_delete: :cascade
   add_foreign_key "rsvps", "users", on_delete: :cascade
   add_foreign_key "sessions", "users", on_delete: :cascade
+  add_foreign_key "user_groups", "groups"
+  add_foreign_key "user_groups", "users"
   add_foreign_key "user_statuses", "users", on_delete: :cascade
   add_foreign_key "user_tags", "tags"
   add_foreign_key "user_tags", "users", on_delete: :cascade

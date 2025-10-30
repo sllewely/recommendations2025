@@ -28,7 +28,7 @@
 
 	// chunk dates into localized dates
 	let events_and_date_headers = [];
-	if (data.events) {
+	if (data.events && data.events.length > 0) {
 		let current_date = localized_dater(data.events[0]);
 		events_and_date_headers.push({ date_header: current_date });
 		for (const event of data.events) {

@@ -1,7 +1,5 @@
 class GroupsController < ApplicationController
 
-  # Create a user is a part of Registrations controller
-
   def index
     query = Group.all
     if params[:name]
@@ -9,7 +7,6 @@ class GroupsController < ApplicationController
     end
 
     render json: query, status: :ok
-
   end
 
   def show

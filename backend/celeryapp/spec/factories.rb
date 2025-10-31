@@ -1,9 +1,6 @@
 # Disable strict loading checks from this guide:
 # https://thoughtbot.com/blog/strict-loading-in-rails-8-a-railsy-way-to-avoid-n-1-queries
 FactoryBot.define do
-  factory :group do
-    
-  end
 
   after :build do |record|
     if record.is_a? ActiveRecord::Base

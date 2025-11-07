@@ -69,3 +69,11 @@ include FactoryBot::Syntax::Methods
 
 ```
 
+
+### Troubleshooting
+
+**install openssl*
+
+```gem install openssl -- --with-openssl-dir=$(brew --prefix openssl@3)```
+
+

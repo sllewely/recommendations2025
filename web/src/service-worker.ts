@@ -99,9 +99,18 @@ self.addEventListener("fetch", (event) => {
 // Listen to `push` notification event. Define the text to be displayed
 // and show the notification.
 self.addEventListener("push", function (event) {
+	console.log("push - sarah");
+	console.log(event);
+
+	const data = event.data?.json() ?? {};
+	const title = data.title || "Something Has Happened";
+	const message = data.body || "Here's something you might want to check out.";
+
+	console.log(data);
+
 	event.waitUntil(
-		self.registration.showNotification("ServiceWorker Cookbook", {
-			body: "Push Notification Subscription Management",
+		self.registration.showNotification(title, {
+			body: message,
 		}),
 	);
 });

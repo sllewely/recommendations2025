@@ -6,7 +6,7 @@
 
 		// move to env variable
 		const vapidPublicKey =
-			"BGtPz389bxcjj5vlNZ4_9sFLJJ1ilZJl0eyVi7UcinYXIPJ-J02EDgemuvDwTHQTJmuZWGQtflLiXT1cFIZSMeI";
+			"BH8dvS4Eim2vVNWFxSyAnUVo8yk89iVhd4HFEz5G_AHFc7B0lfpDisAdUDf7gNlAr-o_5fhUz7SMF6TCZqecNPQ";
 
 		const registration = await navigator.serviceWorker.ready;
 
@@ -23,8 +23,13 @@
 			}
 		}
 
+		console.log("subscription:", subscription.toJSON());
+		// TODO: save this in db for user, they will have multiple per user.
+
 		return subscription;
 	};
 </script>
 
 <Button onclick={subscribe}>let me push you</Button>
+
+<Button onclick={subscribe}>send myself a notification</Button>

@@ -14,6 +14,9 @@
 
 	let { data }: PageProps = $props();
 
+	// Mobile toggle state
+	let activeTab = $state<"posts" | "events">("posts");
+
 	let feed_items = $state(data.posts_response.feed_items);
 	const pagination = data.posts_response.pagy;
 	let next_page = $state(pagination.next);
@@ -76,7 +79,30 @@
 		<Link url="/friends">Add friends!!</Link>
 	</div>
 
-	<div class="grid grid-cols-3">
+	<!-- Mobile toggle buttons -->
+	<div class="md:hidden mb-4">
+		<div class="flex bg-gray-200 rounded-lg p-1">
+			<button
+				class="flex-1 py-2 px-4 rounded-md font-medium transition-colors {activeTab === 'posts'
+					? 'bg-white text-gray-900 shadow-sm'
+					: 'text-gray-600 hover:text-gray-900'}"
+				onclick={() => (activeTab = "posts")}
+			>
+				Posts
+			</button>
+			<button
+				class="flex-1 py-2 px-4 rounded-md font-medium transition-colors {activeTab === 'events'
+					? 'bg-white text-gray-900 shadow-sm'
+					: 'text-gray-600 hover:text-gray-900'}"
+				onclick={() => (activeTab = "events")}
+			>
+				Events
+			</button>
+		</div>
+	</div>
+
+	<!-- Desktop layout (unchanged) -->
+	<div class="hidden md:grid md:grid-cols-3">
 		<div class="flex flex-col col-span-2">
 			<H1>Posts</H1>
 
@@ -142,5 +168,77 @@
 				{/if}
 			{/each}
 		</div>
+	</div>
+
+	<!-- Mobile layout with toggle -->
+	<div class="md:hidden">
+		{#if activeTab === "posts"}
+			<div class="flex flex-col">
+				<H1>Posts</H1>
+
+				<div class="flex justify-center pt-2 pb-2 space-x-2">
+					<Button href="/posts/create" class={buttonVariants({ variant: "post" })}>
+						<MessageSquareText /> &nbsp; New post
+					</Button>
+					<Button
+						href="/recommendations/create"
+						class={buttonVariants({ variant: "recommendation" })}
+					>
+						<MessageCircleHeart /> &nbsp; Share a recommendation
+					</Button>
+				</div>
+				{#if feed_items.length === 0}
+					<div
+						class="flex justify-center p-2 mb-2 font-bold border-gray-800 rounded-sm bg-lime-200 border-1"
+					>
+						<p>
+							Your feed is empty!
+							<Link url="/friends">Add friends!!</Link>
+						</p>
+					</div>
+				{/if}
+				<div>
+					{#each feed_items as feed_item}
+						<FeedItem feed_item={feed_item.feedable} />
+					{/each}
+				</div>
+				{#if fetching_more_posts}
+					<div class="flex justify-center pt-20">
+						<Spinner class="size-24" />
+					</div>
+				{/if}
+
+				{#if !next_page}
+					<div class="flex justify-center pt-20">Reached the end of time :)</div>
+				{/if}
+			</div>
+		{:else}
+			<div class="flex flex-col">
+				<H1>Events</H1>
+
+				<div class="flex justify-center pt-2 pb-2">
+					<Button href="/events/create" class={buttonVariants({ variant: "event" })}>
+						<CalendarPlus2 /> &nbsp; Create event
+					</Button>
+				</div>
+				{#if events_and_date_headers.length === 0}
+					<div
+						class="flex justify-center p-2 mb-2 font-bold border-gray-800 rounded-sm bg-lime-200 border-1"
+					>
+						<p>
+							No upcoming events.
+							<Link url="/events/create">Create a new event</Link>
+						</p>
+					</div>
+				{/if}
+				{#each events_and_date_headers as event_item}
+					{#if !!event_item["date_header"]}
+						<DateHeader {event_item} />
+					{:else}
+						<EventFeedItem {event_item} />
+					{/if}
+				{/each}
+			</div>
+		{/if}
 	</div>
 </div>

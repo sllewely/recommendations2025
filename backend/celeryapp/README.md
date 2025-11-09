@@ -4,9 +4,28 @@
 
 Install rbenv/rvm/other to install ruby version ```3.2.2```
 
+---
+
+rbenv can be installed by homebrew and requires rbenv init & updating the path to work
+
+---
+
 Install postgres
 
+```
+brew install postgresql@14
+```
+
+```
+brew services start postgresql@14
+```
+
+---
+
 Install bundler and run ```bundle install```
+
+If you're getting "rails not installed error at this stage, open a new terminal.
+
 
 ...
 

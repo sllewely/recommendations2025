@@ -83,9 +83,7 @@
 					creating = false;
 					let res = result.data;
 					if (res.success) {
-						current_user.auth_token = res["auth_token"];
-						current_user.id = res["user_id"];
-						newToast("You have successfully created a recommendation");
+						newToast("You have successfully created a recommendation", ToastType.Success);
 					} else {
 						newToast("Error creating recommendation: " + res.message, ToastType.Error);
 					}

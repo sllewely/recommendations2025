@@ -4,8 +4,6 @@
 	import { setPendingToast, ToastType } from "$lib/state/toast.svelte";
 	import { Settings } from "@lucide/svelte";
 
-	let user_id = current_user.id;
-
 	let signed_in = $state(false);
 
 	$effect(() => {
@@ -35,7 +33,9 @@
 			<ul class="list-reset flex justify-center flex-wrap text-xs md:text-sm gap-3">
 				{#if signed_in}
 					<li><a href="/posts" class="text-gray-400 hover:text-white">Posts</a></li>
-					<li><a href="/users/{user_id}" class="text-gray-400 hover:text-white">My profile</a></li>
+					<li>
+						<a href="/users/{current_user.id}" class="text-gray-400 hover:text-white">My profile</a>
+					</li>
 				{/if}
 				<!--				<li><a href="/events/map" class="text-gray-400 hover:text-white">Map!</a></li>-->
 				<li><a href="/events" class="text-gray-400 hover:text-white">Events</a></li>
@@ -80,8 +80,9 @@
 				<ul class="list-reset flex justify-center flex-wrap text-xs md:text-sm gap-3">
 					<li><a href="/friends" class="text-gray-400 hover:text-white">Friends</a></li>
 					<li>
-						<a href="/recommendations/users/{user_id}" class="text-gray-400 hover:text-white"
-							>Saved Recommendations</a
+						<a
+							href="/recommendations/users/{current_user.id}"
+							class="text-gray-400 hover:text-white">Saved Recommendations</a
 						>
 					</li>
 				</ul>

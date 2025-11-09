@@ -38,7 +38,6 @@
 					</li>
 				{/if}
 				<!--				<li><a href="/events/map" class="text-gray-400 hover:text-white">Map!</a></li>-->
-				<li><a href="/events" class="text-gray-400 hover:text-white">Events</a></li>
 				<li><a href="/roadmap" class="text-gray-400 hover:text-white">Roadmap</a></li>
 				<li><a href="/about" class="text-gray-400 hover:text-white">About</a></li>
 

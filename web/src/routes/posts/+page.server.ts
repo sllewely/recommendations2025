@@ -7,12 +7,12 @@ import { redirect } from "@sveltejs/kit";
 import { createComment, type CommentPayload } from "$lib/api_calls/comments.svelte.js";
 import { formDataToGeneric } from "$lib/api_calls/utils";
 
-export const load = withAuth(async ({ jwt }: LoadAuthContext) => {
+export const load = withAuth(async ({ jwt, user_id }: LoadAuthContext) => {
 	const [postsResponse, eventsResponse] = await Promise.all([getPosts(jwt), getEvents(jwt)]);
-
 	return {
 		posts_response: postsResponse.success ? (postsResponse.res ?? {}) : {},
 		events: eventsResponse["res"],
+		current_user_id: user_id,
 	};
 });
 

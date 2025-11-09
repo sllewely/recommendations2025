@@ -39,8 +39,7 @@
 				creating = false;
 				let res = result.data;
 				if (res.success) {
-					current_user.auth_token = res["auth_token"];
-					current_user.id = res["user_id"];
+					current_user.id = res["res"]["my_user_id"];
 					setPendingToast("You have successfully signed in!", ToastType.Success);
 					goto("/posts");
 				} else {

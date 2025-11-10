@@ -18,6 +18,7 @@ module PushNotification
       # icon: ActionController::Base.helpers.asset_url("app-icons/icon-192.png")
     }.to_json
 
+    # TODO: don't forget to later delete if call fails
     response = WebPush.payload_send(
       message: message_json,
       endpoint: push_endpoint,

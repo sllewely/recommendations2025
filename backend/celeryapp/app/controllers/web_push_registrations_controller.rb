@@ -23,7 +23,7 @@ class WebPushRegistrationsController < ApplicationController
   private
 
   def registration_params
-    params.permit(:endpoint, :auth, :p256dh, :expiration)
+    params.permit(:endpoint, :auth, :p256dh, :expires_at)
   end
 
 end

@@ -43,5 +43,27 @@ RSpec.describe "WebPushRegistrations", type: :request do
       res = JSON.parse(response.body)
       expect(res['active_registrations_count']).to eq(3)
     end
+
+    it 'checks if the user has active registrations, when the expiration date is null' do
+      create(:web_push_registration, user: @my_user, expires_at: nil)
+      create(:web_push_registration, user: @my_user, expires_at: nil)
+      create(:web_push_registration, user: @my_user, expires_at: nil)
+
+      get "/web_push_registrations", headers: @headers
+      expect(response).to have_http_status(:ok)
+
+      res = JSON.parse(response.body)
+      expect(res['active_registrations_count']).to eq(3)
+    end
+
+    it 'checks if the user has active registrations, when they have expired' do
+      create(:web_push_registration, user: @my_user, expires_at: Time.now - 1.day)
+
+      get "/web_push_registrations", headers: @headers
+      expect(response).to have_http_status(:ok)
+
+      res = JSON.parse(response.body)
+      expect(res['active_registrations_count']).to eq(0)
+    end
   end
 end

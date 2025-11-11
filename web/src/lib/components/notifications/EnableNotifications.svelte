@@ -2,6 +2,7 @@
 	import { Button } from "$lib/components/ui/button";
 	import { onMount } from "svelte";
 	import { newToast, ToastType } from "$lib/state/toast.svelte.js";
+	import { toast } from "svelte-sonner";
 
 	let is_subscribed = $state(false);
 
@@ -36,15 +37,17 @@
 			},
 		});
 		if (response.ok) {
-			newToast("For friendship!");
+			toast.success("For friendship!");
 		} else {
-			newToast("Error saving the subscription.", ToastType.Error);
+			toast.error("Error saving the subscription in the db.");
 			await subscription.unsubscribe();
 		}
 	};
 
 	// Subscribe to push notifications onclick action
-	const subscribe = async () => {
+	const click_subscribe = async () => {
+		console.log("click subscribe");
+		toast.info("this subscribes only this device/browser for notifications");
 		// move to env variable
 		const vapidPublicKey =
 			"BH8dvS4Eim2vVNWFxSyAnUVo8yk89iVhd4HFEz5G_AHFc7B0lfpDisAdUDf7gNlAr-o_5fhUz7SMF6TCZqecNPQ";
@@ -59,11 +62,13 @@
 				applicationServerKey: vapidPublicKey,
 			});
 			if (!subscription) {
-				console.log("error subscribing");
-				newToast("Error subscribing.  Can you click the button again?", ToastType.Error);
+				console.log("error subscribing to push manager");
+				toast.error("failed to subscribe to push notifications");
 			} else {
 				await create_subscription(subscription);
 			}
+		} else {
+			toast.info("already subscribed");
 		}
 
 		return subscription;
@@ -72,7 +77,7 @@
 
 {#if true}
 	<div class="flex justify-center mb-2 font-bold">
-		<Button onclick={subscribe}>Enable web notifications</Button>
+		<Button onclick={click_subscribe}>Enable web notifications</Button>
 	</div>
 	<div class="flex justify-center p-2 mb-2 font-bold border-gray-800 rounded-sm border-1">
 		I worked hard on web push notifications, so please enable them!!

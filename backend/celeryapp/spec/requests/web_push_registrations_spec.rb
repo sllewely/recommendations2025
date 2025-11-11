@@ -19,6 +19,15 @@ RSpec.describe "WebPushRegistrations", type: :request do
       user = User.find(@my_user.id)
       expect(user.web_push_registrations.count).to eq(1)
     end
+
+    it 'updates an existing web push registration' do
+      registration = create(:web_push_registration, user: @my_user)
+      post "/web_push_registrations", params: { endpoint: registration.endpoint, p256dh: "p256dh", auth: "auth" }, headers: @headers
+      expect(response).to have_http_status(:ok)
+
+      user = User.find(@my_user.id)
+      expect(user.web_push_registrations.count).to eq(1)
+    end
   end
 
   describe "GET /web_push_registrations" do
@@ -64,6 +73,34 @@ RSpec.describe "WebPushRegistrations", type: :request do
 
       res = JSON.parse(response.body)
       expect(res['active_registrations_count']).to eq(0)
+    end
+  end
+
+  describe "DELETE /web_push_registrations" do
+    before(:context) do
+      @my_user = create(:user)
+
+      headers = { 'ACCEPT' => 'application/json' }
+      post "/sign_in", params: { email: @my_user.email, password: @my_user.password }, headers: headers
+
+      auth_token = JSON.parse(response.body)["auth_token"]
+      @headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{auth_token}" }
+    end
+
+    it 'deletes a web push registration' do
+      registration = create(:web_push_registration, user: @my_user, expires_at: Time.now - 1.day)
+
+      delete "/web_push_registrations/0?endpoint=#{registration.endpoint}", headers: @headers
+
+      expect(response).to have_http_status(:ok)
+    end
+
+    it 'it doesnt delete by id' do
+      registration = create(:web_push_registration, user: @my_user, expires_at: Time.now - 1.day)
+
+      delete "/web_push_registrations/#{registration.id}", headers: @headers
+
+      expect(response).to have_http_status(:not_found)
     end
   end
 end

@@ -1,5 +1,4 @@
 import { getUser } from "$lib/api_calls/users.svelte.js";
-import * as api from "$lib/api_calls/api.svelte.js";
 import type { PageServerLoad } from "./$types.js";
 import { superValidate } from "sveltekit-superforms";
 import { imageFormSchema } from "./schema";

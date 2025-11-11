@@ -34,7 +34,7 @@ self.addEventListener("install", (event) => {
 		ASSETS.forEach((file) =>
 			stack.push(cache.add(file).catch((_) => console.error(`can't load ${file} to cache`))),
 		);
-		await cache.addAll(stack);
+		// await cache.addAll(stack);
 	}
 
 	event.waitUntil(addFilesToCache());

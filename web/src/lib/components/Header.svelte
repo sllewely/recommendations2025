@@ -71,7 +71,7 @@
 			>
 			<span>|</span>
 			{#if signed_in}
-				<a class="font-semibold text-gray-400 hover:text-orange-400" href="/users/edit">
+				<a class="font-semibold text-gray-400 hover:text-orange-400" href="/settings">
 					<Settings />
 				</a>
 				<span>|</span>

@@ -16,11 +16,11 @@
 
 <div>
 	<p>#TODO page needs a fun background!!</p>
-	<img
-		src={"https://bb-profile-image-dev.s3.us-east-2.amazonaws.com/profile_pictures/" + user.id}
-	/>
+	<!--	<img-->
+	<!--		src={"https://bb-profile-image-dev.s3.us-east-2.amazonaws.com/profile_pictures/" + user.id}-->
+	<!--	/>-->
 	<H1>{user.name}</H1>
-	<Link url="">photo upload</Link>
+	<!--	<Link url="">photo upload</Link>-->
 
 	<div>
 		<UserForm form_data={data.form} {tags} />

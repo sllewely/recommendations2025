@@ -18,6 +18,8 @@ const self = globalThis.self as unknown as ServiceWorkerGlobalScope;
 // Create a unique cache name for this deployment
 const CACHE = `cache-${version}`;
 
+console.log("files,", files);
+
 const ASSETS = [
 	...build, // the app itself
 	...files, // everything in `static`
@@ -28,7 +30,11 @@ self.addEventListener("install", (event) => {
 	// Create a new cache and add all files to it
 	async function addFilesToCache() {
 		const cache = await caches.open(CACHE);
-		await cache.addAll(ASSETS);
+		const stack = [];
+		ASSETS.forEach((file) =>
+			stack.push(cache.add(file).catch((_) => console.error(`can't load ${file} to cache`))),
+		);
+		await cache.addAll(stack);
 	}
 
 	event.waitUntil(addFilesToCache());

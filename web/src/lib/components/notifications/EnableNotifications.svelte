@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { Button } from "$lib/components/ui/button";
 	import { onMount } from "svelte";
-	import { newToast, ToastType } from "$lib/state/toast.svelte.js";
+	import { toast } from "svelte-sonner";
 
 	let is_subscribed = $state(false);
+	let missing_service_worker = $state(false);
 
 	let subscribed = (subscription: PushSubscription) => {
 		return subscription.expirationTime === null || subscription.expirationTime > Date.now();
@@ -11,6 +12,11 @@
 
 	onMount(async () => {
 		const registration = await navigator.serviceWorker.ready;
+		console.log("registration", registration);
+		if (!registration) {
+			console.log("no registration");
+			missing_service_worker = true;
+		}
 
 		let subscription = await registration.pushManager.getSubscription();
 		// TODO: get the backend subscription for this endpoint & update if expired
@@ -36,15 +42,17 @@
 			},
 		});
 		if (response.ok) {
-			newToast("For friendship!");
+			toast.success("For friendship!");
 		} else {
-			newToast("Error saving the subscription.", ToastType.Error);
+			toast.error("Error saving the subscription in the db.");
 			await subscription.unsubscribe();
 		}
 	};
 
 	// Subscribe to push notifications onclick action
-	const subscribe = async () => {
+	const click_subscribe = async () => {
+		console.log("click subscribe");
+		toast.info("this subscribes only this device/browser for notifications");
 		// move to env variable
 		const vapidPublicKey =
 			"BH8dvS4Eim2vVNWFxSyAnUVo8yk89iVhd4HFEz5G_AHFc7B0lfpDisAdUDf7gNlAr-o_5fhUz7SMF6TCZqecNPQ";
@@ -59,20 +67,22 @@
 				applicationServerKey: vapidPublicKey,
 			});
 			if (!subscription) {
-				console.log("error subscribing");
-				newToast("Error subscribing.  Can you click the button again?", ToastType.Error);
+				console.log("error subscribing to push manager");
+				toast.error("failed to subscribe to push notifications");
 			} else {
 				await create_subscription(subscription);
 			}
+		} else {
+			toast.info("already subscribed");
 		}
 
 		return subscription;
 	};
 </script>
 
-{#if true}
+{#if !missing_service_worker && !is_subscribed}
 	<div class="flex justify-center mb-2 font-bold">
-		<Button onclick={subscribe}>Enable web notifications</Button>
+		<Button onclick={click_subscribe}>Enable web notifications</Button>
 	</div>
 	<div class="flex justify-center p-2 mb-2 font-bold border-gray-800 rounded-sm border-1">
 		I worked hard on web push notifications, so please enable them!!

@@ -2,6 +2,7 @@
 	import H1 from "$lib/components/text/H1.svelte";
 	import UserForm from "./UserForm.svelte";
 	import Link from "$lib/components/text/Link.svelte";
+	import { Button } from "$lib/components/ui/button";
 
 	let { data, form } = $props();
 	let creating = $state(false);
@@ -14,15 +15,20 @@
 	});
 </script>
 
-<div>
-	<p>#TODO page needs a fun background!!</p>
-	<!--	<img-->
-	<!--		src={"https://bb-profile-image-dev.s3.us-east-2.amazonaws.com/profile_pictures/" + user.id}-->
-	<!--	/>-->
-	<H1>{user.name}</H1>
-	<!--	<Link url="">photo upload</Link>-->
-
+<div class="flex flex-col">
 	<div>
-		<UserForm form_data={data.form} {tags} />
+		<Button href="/settings/notifications">Notifications</Button>
+	</div>
+	<div>
+		<p>#TODO page needs a fun background!!</p>
+		<!--	<img-->
+		<!--		src={"https://bb-profile-image-dev.s3.us-east-2.amazonaws.com/profile_pictures/" + user.id}-->
+		<!--	/>-->
+		<H1>{user.name}</H1>
+		<!--	<Link url="">photo upload</Link>-->
+
+		<div>
+			<UserForm form_data={data.form} {tags} />
+		</div>
 	</div>
 </div>

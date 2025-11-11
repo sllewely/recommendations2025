@@ -34,6 +34,7 @@ Rails.application.routes.draw do
       post 'profile_picture'
     end
   end
+  resources :web_push_registrations
 
   namespace :public do
     resources :events

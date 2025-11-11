@@ -18,6 +18,18 @@ class WebPushRegistrationsController < ApplicationController
 
   end
 
+  def destroy
+    registration = current_user.web_push_registrations.find_by(endpoint: params[:endpoint])
+    if registration.nil?
+      render json: {}, status: :not_found and return
+    end
+    if registration.delete
+      render json: {}, status: :ok
+    else
+      render json: {}, status: :unprocessable_entity
+    end
+  end
+
   ## lol one day people can manage their notifications
 
   private

@@ -1,5 +1,10 @@
 class WebPushRegistrationsController < ApplicationController
 
+  def index
+    active_registrations_count = current_user.web_push_registrations.active.count
+    render json: { active_registrations_count: active_registrations_count }, status: :ok
+  end
+
   def create
     # validate that the endpoint is one that I'm willing to work with
     # ie mozilla, chrome, safari
@@ -18,7 +23,7 @@ class WebPushRegistrationsController < ApplicationController
   private
 
   def registration_params
-    params.permit(:endpoint, :auth, :p256dh, :expiration)
+    params.permit(:endpoint, :auth, :p256dh, :expires_at)
   end
 
 end

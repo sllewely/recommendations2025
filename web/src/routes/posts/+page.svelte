@@ -11,6 +11,7 @@
 	import type { Event } from "$lib/api_calls/types";
 	import { onMount } from "svelte";
 	import { Spinner } from "$lib/components/ui/spinner/index.js";
+	import EnableNotifications from "$lib/components/notifications/EnableNotifications.svelte";
 
 	let { data }: PageProps = $props();
 
@@ -73,6 +74,7 @@
 </script>
 
 <div>
+	<EnableNotifications />
 	<div
 		class="flex justify-center p-2 mb-2 font-bold border-gray-800 rounded-sm bg-lime-200 border-1"
 	>

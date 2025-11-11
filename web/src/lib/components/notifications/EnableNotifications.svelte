@@ -1,0 +1,80 @@
+<script lang="ts">
+	import { Button } from "$lib/components/ui/button";
+	import { onMount } from "svelte";
+	import { newToast, ToastType } from "$lib/state/toast.svelte.js";
+
+	let is_subscribed = $state(false);
+
+	let subscribed = (subscription: PushSubscription) => {
+		return subscription.expirationTime === null || subscription.expirationTime > Date.now();
+	};
+
+	onMount(async () => {
+		const registration = await navigator.serviceWorker.ready;
+
+		let subscription = await registration.pushManager.getSubscription();
+		// TODO: get the backend subscription for this endpoint & update if expired
+
+		is_subscribed = subscription !== null && subscribed(subscription);
+	});
+
+	// Save the subscription to the backend
+	let create_subscription = async (subscription: PushSubscription) => {
+		// Must toJSON otherwise keys are lost for some reason
+		const subscription_json = subscription.toJSON();
+		console.log("subscription_json", subscription_json);
+		const response = await fetch("/api/web_push/subscribe", {
+			method: "POST",
+			body: JSON.stringify({
+				endpoint: subscription.endpoint,
+				expires_at: subscription.expirationTime,
+				p256dh: subscription_json.keys.p256dh,
+				auth: subscription_json.keys.auth,
+			}),
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+		if (response.ok) {
+			newToast("For friendship!");
+		} else {
+			newToast("Error saving the subscription.", ToastType.Error);
+			await subscription.unsubscribe();
+		}
+	};
+
+	// Subscribe to push notifications onclick action
+	const subscribe = async () => {
+		// move to env variable
+		const vapidPublicKey =
+			"BH8dvS4Eim2vVNWFxSyAnUVo8yk89iVhd4HFEz5G_AHFc7B0lfpDisAdUDf7gNlAr-o_5fhUz7SMF6TCZqecNPQ";
+
+		const registration = await navigator.serviceWorker.ready;
+
+		let subscription = await registration.pushManager.getSubscription();
+
+		if (!(subscription !== null && subscribed(subscription))) {
+			subscription = await registration.pushManager.subscribe({
+				userVisibleOnly: true,
+				applicationServerKey: vapidPublicKey,
+			});
+			if (!subscription) {
+				console.log("error subscribing");
+				newToast("Error subscribing.  Can you click the button again?", ToastType.Error);
+			} else {
+				await create_subscription(subscription);
+			}
+		}
+
+		return subscription;
+	};
+</script>
+
+{#if true}
+	<div class="flex justify-center mb-2 font-bold">
+		<Button onclick={subscribe}>Enable web notifications</Button>
+	</div>
+	<div class="flex justify-center p-2 mb-2 font-bold border-gray-800 rounded-sm border-1">
+		I worked hard on web push notifications, so please enable them!!
+	</div>
+{/if}

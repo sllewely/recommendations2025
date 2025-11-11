@@ -19,6 +19,15 @@ RSpec.describe "WebPushRegistrations", type: :request do
       user = User.find(@my_user.id)
       expect(user.web_push_registrations.count).to eq(1)
     end
+
+    it 'updates an existing web push registration' do
+      registration = create(:web_push_registration, user: @my_user)
+      post "/web_push_registrations", params: { endpoint: registration.endpoint, p256dh: "p256dh", auth: "auth" }, headers: @headers
+      expect(response).to have_http_status(:ok)
+
+      user = User.find(@my_user.id)
+      expect(user.web_push_registrations.count).to eq(1)
+    end
   end
 
   describe "GET /web_push_registrations" do

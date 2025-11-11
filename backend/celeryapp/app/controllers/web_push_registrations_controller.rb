@@ -9,11 +9,22 @@ class WebPushRegistrationsController < ApplicationController
     # validate that the endpoint is one that I'm willing to work with
     # ie mozilla, chrome, safari
 
+    # update if the registration already exists
+
+    registration = current_user.web_push_registrations.find_by(endpoint: params[:endpoint])
+    if registration.present?
+      if registration.update(registration_params)
+        render json: {}, status: :ok and return
+      else
+        render json: { error: registration.errors_to_s }, status: :unprocessable_entity and return
+      end
+    end
+
     registration = current_user.web_push_registrations.create(registration_params)
     if registration.save
       render json: {}, status: :created
     else
-      render json: {}, status: :unprocessable_entity
+      render json: { error: registration.errors_to_s }, status: :unprocessable_entity
     end
 
   end

@@ -4,8 +4,10 @@
 </script>
 
 <div class="m-10">
-	<H1>Recommendations, Events, Posts with friends</H1>
+	<H1>I'm building an app about becoming closer to the people you know</H1>
 	<p>&nbsp;</p>
+
+	<p>by sharing posts and events</p>
 
 	<p>
 		Hey friends! I’m excited to build this social app. I originally envisioned events and

@@ -1,4 +1,5 @@
 class FriendRequestsController < ApplicationController
+  include PushNotification
 
   def show
     # do I have a friend request to this user?
@@ -27,6 +28,8 @@ class FriendRequestsController < ApplicationController
       user.notifications << Notification.pending_friend_request(user, current_user)
     end
     FriendshipMailer.with(user: user, friend: current_user).pending_friend_request.deliver_now!
+    PushNotification.send_push_notification(user, "Friend request", "You have a pending friend request from #{current_user.name}")
+    PushNotification.send_push_notification(current_user, "Friend request", "You send a pending friend request to #{current_user.name}")
     render json: user.public_attributes, status: :created
   end
 end

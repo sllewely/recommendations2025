@@ -3,12 +3,26 @@
 	import H2 from "$lib/components/text/H2.svelte";
 </script>
 
-<div class="m-10">
+<div class="flex flex-col m-10 gap-y-4">
 	<H1>I'm building an app about becoming closer to the people you know</H1>
-	<p>&nbsp;</p>
 
-	<p>by sharing posts and events</p>
+	<p>not driven by ads or suggested content</p>
 
+	<p>Create <b>posts</b> to share with your friends and family.</p>
+	<p>
+		Share <b>events</b> you're interested in, and scroll through a list of what your friends are up to.
+	</p>
+
+	<p>
+		Hey friends! I'm excited to build this overly ambitious social app. I'm a child of the 90s and
+		miss the days of social media when it was actually useful to <b>connect</b>
+		with the people you knew, instead of being bombarded with suggested content to drive ad revenue.
+		I want to make something fun.
+	</p>
+
+	<p>Share <b>recommendations</b> and see what your friends are watching/reading/eating/playing.</p>
+
+	<!--
 	<p>
 		Hey friends! I’m excited to build this social app. I originally envisioned events and
 		recommendations as two separate projects – inspired by wanting to go to concerts with friends
@@ -51,4 +65,5 @@
 	<p>&nbsp;</p>
 	<p>&nbsp;</p>
 	<p>name idea "bumblebeans" by Julia!</p>
+	-->
 </div>

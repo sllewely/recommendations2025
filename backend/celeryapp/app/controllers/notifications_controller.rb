@@ -1,4 +1,5 @@
 class NotificationsController < ApplicationController
+  include PushNotification
 
   def index
     render json: current_user.notifications.active, status: :ok
@@ -12,6 +13,12 @@ class NotificationsController < ApplicationController
     else
       render json: { error: @notif.errors }, status: :unprocessable_content
     end
+  end
+
+  # This is a test endpoint to send myself a notification
+  def create
+    PushNotification.send_push_notification(current_user, "Test Notification", "This is a test notification")
+    render json: {}, status: :ok
   end
 
   private

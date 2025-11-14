@@ -28,14 +28,14 @@ module PushNotification
 
       rescue WebPush::ExpiredSubscription => e
         reg.destroy
-        logger.error e.message
+        Rails.logger.error e.message
       rescue WebPush::InvalidSubscription => e
         reg.destroy
-        logger.error e.message
+        Rails.logger.error e.message
       rescue Exception => e
-        logger.error e.message
+        Rails.logger.error e.message
       end
-      logger.info response
+      Rails.logger.info response
 
     end
   end

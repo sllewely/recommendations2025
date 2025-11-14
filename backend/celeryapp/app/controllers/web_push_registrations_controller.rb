@@ -10,7 +10,6 @@ class WebPushRegistrationsController < ApplicationController
     # ie mozilla, chrome, safari
 
     # update if the registration already exists
-
     registration = current_user.web_push_registrations.find_by(endpoint: params[:endpoint])
     if registration.present?
       if registration.update(registration_params)

@@ -122,6 +122,7 @@ self.addEventListener("push", function (event) {
 });
 
 self.addEventListener("pushsubscriptionchange", (event) => {
+	console.log("pushsubscriptionchange - sarah");
 	const conv = (val) => self.btoa(String.fromCharCode.apply(null, new Uint8Array(val)));
 	const getPayload = (subscription) => ({
 		endpoint: subscription.endpoint,
@@ -143,5 +144,6 @@ self.addEventListener("pushsubscriptionchange", (event) => {
 				}),
 			}),
 		);
+
 	event.waitUntil(subscription);
 });

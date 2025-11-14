@@ -80,11 +80,9 @@
 	};
 </script>
 
-{#if !missing_service_worker && !is_subscribed}
-	<div class="flex justify-center mb-2 font-bold">
-		<Button onclick={click_subscribe}>Enable web notifications</Button>
-	</div>
-	<div class="flex justify-center p-2 mb-2 font-bold border-gray-800 rounded-sm border-1">
-		I worked hard on web push notifications, so please enable them!!
-	</div>
-{/if}
+<div class="flex justify-center mb-2 font-bold">
+	<Button onclick={click_subscribe}>Enable web notifications</Button>
+</div>
+<div class="flex justify-center p-2 mb-2 font-bold border-gray-800 rounded-sm border-1">
+	I worked hard on web push notifications, so please enable them!!
+</div>

@@ -7,6 +7,9 @@
 	import * as Card from "$lib/components/ui/card/index.js";
 	import { Separator } from "$lib/components/ui/separator/index.js";
 	import { CircleCheckBig, CircleX } from "lucide-svelte";
+	import { web_push_notifs_enabled } from "$lib/utils/web_push_notifs";
+
+	let notifs_enabled = $state(false);
 
 	let service_worker_found = $state(false);
 
@@ -43,6 +46,11 @@
 		has_matching_endpoint = saved_registrations.find(
 			(reg) => reg.endpoint === subscription?.endpoint,
 		);
+		try {
+			notifs_enabled = await web_push_notifs_enabled();
+		} catch (error) {
+			console.error(error);
+		}
 	});
 
 	let click_unsubscribe = async () => {
@@ -88,6 +96,13 @@
 			</Card.Description>
 		</Card.Header>
 		<Card.Content>
+			<div class="flex flex-row gap-4">
+				{#if notifs_enabled}
+					<CircleCheckBig color="#88aa99" /> Everything looks good
+				{:else}
+					<CircleX color="#ff2277" /> See problems below
+				{/if}
+			</div>
 			<Separator class="my-4" />
 			<div class="flex flex-row gap-4">
 				{#if service_worker_found}

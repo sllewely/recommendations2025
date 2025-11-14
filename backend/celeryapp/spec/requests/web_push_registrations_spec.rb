@@ -50,7 +50,9 @@ RSpec.describe "WebPushRegistrations", type: :request do
       expect(response).to have_http_status(:ok)
 
       res = JSON.parse(response.body)
-      expect(res['active_registrations_count']).to eq(3)
+      expect(res.size).to eq(3)
+      expect(res.first['expires_at']).to_not be_nil
+      expect(res.first['endpoint']).to_not be_nil
     end
 
     it 'checks if the user has active registrations, when the expiration date is null' do
@@ -62,7 +64,7 @@ RSpec.describe "WebPushRegistrations", type: :request do
       expect(response).to have_http_status(:ok)
 
       res = JSON.parse(response.body)
-      expect(res['active_registrations_count']).to eq(3)
+      expect(res.size).to eq(3)
     end
 
     it 'checks if the user has active registrations, when they have expired' do
@@ -72,7 +74,7 @@ RSpec.describe "WebPushRegistrations", type: :request do
       expect(response).to have_http_status(:ok)
 
       res = JSON.parse(response.body)
-      expect(res['active_registrations_count']).to eq(0)
+      expect(res.size).to eq(0)
     end
   end
 

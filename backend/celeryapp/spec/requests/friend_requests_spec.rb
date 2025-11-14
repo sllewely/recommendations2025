@@ -117,7 +117,7 @@ RSpec.describe "FriendRequests", type: :request do
       expect(res['id']).to eq(new_friend.id)
 
       email = ActionMailer::Base.deliveries.last
-      assert_includes email.body.to_s, "You have a new friend request!"
+      assert_includes email.body.to_s, "You have a new friend request from #{@my_user.name}!"
     end
   end
 end

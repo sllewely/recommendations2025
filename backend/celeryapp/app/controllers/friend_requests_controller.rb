@@ -26,7 +26,7 @@ class FriendRequestsController < ApplicationController
       user.friend_requests.create!(incoming_friend_id: current_user.id)
       user.notifications << Notification.pending_friend_request(user, current_user)
     end
-    FriendshipMailer.with(user: user).pending_friend_request.deliver_now!
+    FriendshipMailer.with(user: user, friend: current_user).pending_friend_request.deliver_now!
     render json: user.public_attributes, status: :created
   end
 end

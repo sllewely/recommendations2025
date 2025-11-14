@@ -14,6 +14,8 @@
 
 	let saved_registrations = $state([]);
 
+	let has_matching_endpoint = $state(false);
+
 	let get_my_saved_registrations = async () => {
 		// show my saved registrations?
 		const response = await fetch("/api/web_push/get_registrations");
@@ -37,6 +39,10 @@
 		service_worker_found = registration.active !== null;
 
 		await get_my_saved_registrations();
+
+		has_matching_endpoint = saved_registrations.find(
+			(reg) => reg.endpoint === subscription?.endpoint,
+		);
 	});
 
 	let click_unsubscribe = async () => {
@@ -85,9 +91,26 @@
 			<Separator class="my-4" />
 			<div class="flex flex-row gap-4">
 				{#if service_worker_found}
-					Service worker found <CircleCheckBig color="#88aa99" />
+					<CircleCheckBig color="#88aa99" /> Service worker found
 				{:else}
-					Service worker not found <CircleX color="#ff2277" />
+					<CircleX color="#ff2277" /> Service worker not found
+				{/if}
+			</div>
+			<Separator class="my-4" />
+			<div class="flex flex-row gap-4">
+				{#if current_subscription.endpoint !== undefined}
+					<CircleCheckBig color="#88aa99" /> Current subscription found for browser.
+				{:else}
+					<CircleX color="#ff2277" /> No current subscription. Please click the subscribe button to get
+					notifications.
+				{/if}
+			</div>
+			<Separator class="my-4" />
+			<div class="flex flex-row gap-4">
+				{#if has_matching_endpoint}
+					<CircleCheckBig color="#88aa99" /> Subscription registration saved.
+				{:else}
+					<CircleX color="#ff2277" /> Please click the subscribe button to save the subscription registration.
 				{/if}
 			</div>
 			<Separator class="my-4" />
@@ -100,7 +123,11 @@
 				{/if}
 				{#each saved_registrations as registration}
 					<div class="text-sm truncate">
-						- {registration.endpoint}
+						{#if registration.endpoint === current_subscription.endpoint}
+							- <span class="font-bold">{registration.endpoint}</span>
+						{:else}
+							- {registration.endpoint}
+						{/if}
 					</div>
 				{/each}
 			</div>

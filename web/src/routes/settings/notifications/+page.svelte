@@ -4,17 +4,21 @@
 	import EnableNotifications from "$lib/components/notifications/EnableNotifications.svelte";
 	import { onMount } from "svelte";
 	import { toast } from "svelte-sonner";
-	import { invalidateAll } from "$app/navigation";
 
 	let service_worker_found = $state(false);
 
 	onMount(async () => {
 		const registration = await navigator.serviceWorker.ready;
+		const subscription = await registration.pushManager.getSubscription();
+		if (subscription) {
+			console.log("subscription", subscription);
+		} else {
+			console.log("no subscription");
+		}
 		service_worker_found = registration.active !== null;
 	});
 
 	let click_unsubscribe = async () => {
-		console.log("click!");
 		const registration = await navigator.serviceWorker.ready;
 
 		let subscription = await registration.pushManager.getSubscription();
@@ -26,9 +30,24 @@
 		}
 		toast.info("refresh the page to subscribe");
 	};
+
+	let click_send_notif = async () => {
+		const response = await fetch("/api/web_push/send_test_notification", {
+			method: "POST",
+			body: JSON.stringify({}),
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+		if (response.ok) {
+			toast.success("check ur notifs");
+		} else {
+			toast.error("hmm problem.");
+		}
+	};
 </script>
 
-<div class="flex flex-col">
+<div class="flex flex-col gap-y-4">
 	<H1>Notifications</H1>
 	<div>
 		Web push notifications must be enabled on each device you want to receive notifications.
@@ -46,4 +65,5 @@
 	<div>
 		<Button onclick={click_unsubscribe}>Unsubscribe</Button>
 	</div>
+	<div><Button variant="destructive" onclick={click_send_notif}>Send yourself a notif</Button></div>
 </div>

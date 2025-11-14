@@ -18,8 +18,6 @@ const self = globalThis.self as unknown as ServiceWorkerGlobalScope;
 // Create a unique cache name for this deployment
 const CACHE = `cache-${version}`;
 
-console.log("files,", files);
-
 const ASSETS = [
 	...build, // the app itself
 	...files, // everything in `static`
@@ -119,4 +117,37 @@ self.addEventListener("push", function (event) {
 			body: message,
 		}),
 	);
+});
+
+self.addEventListener("pushsubscriptionchange", (event) => {
+	console.log("pushsubscriptionchange - sarah");
+	const conv = (val) => self.btoa(String.fromCharCode.apply(null, new Uint8Array(val)));
+	const getPayload = (subscription) => ({
+		endpoint: subscription.endpoint,
+		publicKey: conv(subscription.getKey("p256dh")),
+		authToken: conv(subscription.getKey("auth")),
+	});
+
+	const subscription = self.registration.pushManager
+		.subscribe(event.oldSubscription.options)
+		.then(async (subscription) => {
+			const subscription_json = subscription.toJSON();
+			const response = await fetch("/api/web_push/subscribe", {
+				method: "post",
+				headers: {
+					"Content-type": "application/json",
+				},
+				body: JSON.stringify({
+					old: getPayload(event.oldSubscription),
+					new: getPayload(subscription),
+					endpoint: subscription.endpoint,
+					expires_at: subscription.expirationTime,
+					p256dh: subscription_json.keys.p256dh,
+					auth: subscription_json.keys.auth,
+				}),
+			});
+			console.log("response", response);
+		});
+
+	event.waitUntil(subscription);
 });

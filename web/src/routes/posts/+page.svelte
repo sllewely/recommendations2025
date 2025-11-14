@@ -12,6 +12,7 @@
 	import { onMount } from "svelte";
 	import { Spinner } from "$lib/components/ui/spinner/index.js";
 	import EnableNotifications from "$lib/components/notifications/EnableNotifications.svelte";
+	import ShouldShowNotificationSubscribeButtonCard from "$lib/components/notifications/ShouldShowNotificationSubscribeButtonCard.svelte";
 
 	let { data }: PageProps = $props();
 
@@ -74,7 +75,7 @@
 </script>
 
 <div>
-	<EnableNotifications />
+	<ShouldShowNotificationSubscribeButtonCard />
 	<div
 		class="flex justify-center p-2 mb-2 font-bold border-gray-800 rounded-sm bg-lime-200 border-1"
 	>

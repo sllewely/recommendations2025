@@ -1,28 +1,6 @@
 <script lang="ts">
 	import { Button } from "$lib/components/ui/button";
-	import { onMount } from "svelte";
 	import { toast } from "svelte-sonner";
-
-	let is_subscribed = $state(false);
-	let missing_service_worker = $state(false);
-
-	let subscribed = (subscription: PushSubscription) => {
-		return subscription.expirationTime === null || subscription.expirationTime > Date.now();
-	};
-
-	onMount(async () => {
-		const registration = await navigator.serviceWorker.ready;
-		console.log("registration", registration);
-		if (!registration) {
-			console.log("no registration");
-			missing_service_worker = true;
-		}
-
-		let subscription = await registration.pushManager.getSubscription();
-		// TODO: get the backend subscription for this endpoint & update if expired
-
-		is_subscribed = subscription !== null && subscribed(subscription);
-	});
 
 	// Save the subscription to the backend
 	let create_subscription = async (subscription: PushSubscription) => {
@@ -61,30 +39,24 @@
 
 		let subscription = await registration.pushManager.getSubscription();
 
-		if (!(subscription !== null && subscribed(subscription))) {
-			subscription = await registration.pushManager.subscribe({
-				userVisibleOnly: true,
-				applicationServerKey: vapidPublicKey,
-			});
-			if (!subscription) {
-				console.log("error subscribing to push manager");
-				toast.error("failed to subscribe to push notifications");
-			} else {
-				await create_subscription(subscription);
-			}
+		subscription = await registration.pushManager.subscribe({
+			userVisibleOnly: true,
+			applicationServerKey: vapidPublicKey,
+		});
+		if (!subscription) {
+			console.log("error subscribing to push manager");
+			toast.error("failed to subscribe to push notifications");
 		} else {
-			toast.info("already subscribed");
+			await create_subscription(subscription);
 		}
 
 		return subscription;
 	};
 </script>
 
-{#if !missing_service_worker && !is_subscribed}
-	<div class="flex justify-center mb-2 font-bold">
-		<Button onclick={click_subscribe}>Enable web notifications</Button>
-	</div>
-	<div class="flex justify-center p-2 mb-2 font-bold border-gray-800 rounded-sm border-1">
-		I worked hard on web push notifications, so please enable them!!
-	</div>
-{/if}
+<div class="flex justify-center mb-2 font-bold">
+	<Button onclick={click_subscribe}>Web notifications not enabled. Subscribe!!</Button>
+</div>
+<div class="flex justify-center p-2 mb-2 font-bold border-gray-800 rounded-sm border-1">
+	I worked hard on web push notifications, so please enable them!!
+</div>

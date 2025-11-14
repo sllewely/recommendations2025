@@ -1,8 +1,8 @@
 class WebPushRegistrationsController < ApplicationController
 
   def index
-    active_registrations_count = current_user.web_push_registrations.active.count
-    render json: { active_registrations_count: active_registrations_count }, status: :ok
+    active_registrations = current_user.web_push_registrations.active
+    render json: WebPushRegistrationBlueprint.render(active_registrations), status: :ok
   end
 
   def create

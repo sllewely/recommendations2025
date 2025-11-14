@@ -143,7 +143,7 @@
 					</li>
 					<li>
 						<a
-							href="/users/edit"
+							href="/settings"
 							class="block text-gray-400 hover:text-white py-2"
 							onclick={closeMobileMenu}>Settings</a
 						>

@@ -18,8 +18,6 @@ const self = globalThis.self as unknown as ServiceWorkerGlobalScope;
 // Create a unique cache name for this deployment
 const CACHE = `cache-${version}`;
 
-console.log("files,", files);
-
 const ASSETS = [
 	...build, // the app itself
 	...files, // everything in `static`
@@ -132,8 +130,9 @@ self.addEventListener("pushsubscriptionchange", (event) => {
 
 	const subscription = self.registration.pushManager
 		.subscribe(event.oldSubscription.options)
-		.then((subscription) =>
-			fetch("register", {
+		.then(async (subscription) => {
+			const subscription_json = subscription.toJSON();
+			const response = await fetch("/api/web_push/subscribe", {
 				method: "post",
 				headers: {
 					"Content-type": "application/json",
@@ -141,9 +140,14 @@ self.addEventListener("pushsubscriptionchange", (event) => {
 				body: JSON.stringify({
 					old: getPayload(event.oldSubscription),
 					new: getPayload(subscription),
+					endpoint: subscription.endpoint,
+					expires_at: subscription.expirationTime,
+					p256dh: subscription_json.keys.p256dh,
+					auth: subscription_json.keys.auth,
 				}),
-			}),
-		);
+			});
+			console.log("response", response);
+		});
 
 	event.waitUntil(subscription);
 });

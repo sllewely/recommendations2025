@@ -7,6 +7,11 @@
 
 	let service_worker_found = $state(false);
 
+	let get_my_saved_registrations = async () => {
+		const response = await fetch("/api/web_push/get_registrations");
+		const res = await response.json();
+	};
+
 	onMount(async () => {
 		const registration = await navigator.serviceWorker.ready;
 		const subscription = await registration.pushManager.getSubscription();

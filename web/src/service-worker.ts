@@ -138,8 +138,6 @@ self.addEventListener("pushsubscriptionchange", (event) => {
 					"Content-type": "application/json",
 				},
 				body: JSON.stringify({
-					old: getPayload(event.oldSubscription),
-					new: getPayload(subscription),
 					endpoint: subscription.endpoint,
 					expires_at: subscription.expirationTime,
 					p256dh: subscription_json.keys.p256dh,

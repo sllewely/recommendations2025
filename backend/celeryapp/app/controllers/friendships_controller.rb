@@ -21,6 +21,7 @@ class FriendshipsController < ApplicationController
       current_user.notifications.active.pending_friend_requests.update_all(active: false)
       friend_request.delete
     end
+    PushNotification.send_push_notification(user, "New friend", "#{current_user.name} is your friend!")
     render json: user.public_attributes, status: :created
     # TODO Error handling maybe?
   end

@@ -23,6 +23,9 @@ class EventsController < ApplicationController
     rescue ActiveRecord::RecordInvalid
       render json: { error: @event.errors_to_s }, status: :unprocessable_content and return
     end
+    current_user.friends.each do |friend|
+      PushNotification.send_push_notification(friend, "New Event", "#{current_user.name} posted a new event")
+    end
     render json: @event, status: :created
   end
 

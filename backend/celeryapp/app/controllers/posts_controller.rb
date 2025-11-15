@@ -33,6 +33,10 @@ class PostsController < ApplicationController
     rescue ActiveRecord::RecordInvalid => e
       render json: { error: @post.errors_to_s }, status: :unprocessable_content and return
     end
+    current_user.friends.each do |friend|
+      PushNotification.send_push_notification(friend, "New Post", "#{current_user.name} posted a new post")
+    end
+
     render json: @post, status: :created
   end
 

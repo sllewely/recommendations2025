@@ -29,6 +29,10 @@ class RsvpsController < ApplicationController
     @rsvp = current_user.rsvps.find_or_initialize_by(event_id: params[:event_id])
     @rsvp.status = params[:status] || 'interested'
     if @rsvp.save
+      event_user = @rsvp.event.user
+      if event_user != current_user
+        PushNotification.send_push_notification(event_user, "New rsvp", "#{current_user.name} rsvp'd to your event #{@rsvp.event.title}")
+      end
       render json: @rsvp.attributes, status: :created
     else
       render json: @rsvp.errors, status: :unprocessable_content

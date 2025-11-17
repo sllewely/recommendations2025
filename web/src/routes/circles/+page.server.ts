@@ -26,33 +26,14 @@ export const actions = {
 			});
 		}
 
-		const friends = form.data.friends || [];
-		// TODO: get member IDs from friends selection
-
 		const response = await api.post(
 			"circles",
 			{
 				name: form.data.name,
-				member_ids: [],
+				member_ids: form.data.member_ids || [],
 			},
 			jwt,
 		);
-
-		return response;
-	},
-
-	search_friends: async ({ cookies, request }) => {
-		const data = await request.formData();
-		const jwt = cookies.get("jwt");
-		const query = data.get("search");
-
-		let paramsObj = {};
-		if (query) {
-			paramsObj["search"] = query;
-		}
-		const searchParams = new URLSearchParams(paramsObj);
-
-		const response = await api.get("friendships?" + searchParams.toString(), jwt);
 
 		return response;
 	},

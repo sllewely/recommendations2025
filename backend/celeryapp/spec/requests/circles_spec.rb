@@ -50,7 +50,8 @@ RSpec.describe "Circles", type: :request do
 
       expect(response).to have_http_status(:created)
       res = JSON.parse(response.body)
-      expect(res['users'].size).to eq(3)
+      debugger
+      expect(res['members'].size).to eq(3)
     end
   end
 

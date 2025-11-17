@@ -6,7 +6,10 @@ export async function load({ cookies, params }) {
 	const my_user_id = cookies.get("user_id");
 
 	const friends = await api.get("friendships", jwt);
-	const friends_hash = new Map(friends["res"].map((f) => [f.id.toString(), f]));
+	if (!friends["success"]) {
+		console.log("GET /friends", friends);
+	}
+	const friends_hash = new Map(friends["res"].map((f) => [f.id, f]));
 
 	const friend_requests_response = await api.get("friend_requests", jwt);
 
@@ -15,9 +18,7 @@ export async function load({ cookies, params }) {
 
 	const outgoing_friend_requests =
 		friend_requests_response["res"]["outgoing_friend_requests"] ?? [];
-	let outgoing_friend_request_map = new Map(
-		outgoing_friend_requests.map((f) => [f.id.toString(), f]),
-	);
+	let outgoing_friend_request_map = new Map(outgoing_friend_requests.map((f) => [f.id, f]));
 
 	return {
 		my_user: user_res,

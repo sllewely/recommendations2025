@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_17_173137) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_17_200954) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -202,6 +202,15 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_17_173137) do
     t.index ["uuid"], name: "index_tags_on_uuid", unique: true
   end
 
+  create_table "user_circles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "circle_id", null: false
+    t.datetime "created_at", null: false
+    t.uuid "member_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["circle_id"], name: "index_user_circles_on_circle_id"
+    t.index ["member_id"], name: "index_user_circles_on_member_id"
+  end
+
   create_table "user_groups", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.uuid "group_id", null: false
@@ -251,15 +260,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_17_173137) do
     t.index ["id"], name: "index_users_on_id", unique: true
   end
 
-  create_table "users_circles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "circle_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.uuid "user_id", null: false
-    t.index ["circle_id"], name: "index_users_circles_on_circle_id"
-    t.index ["user_id"], name: "index_users_circles_on_user_id"
-  end
-
   create_table "web_push_registrations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "auth", null: false
     t.datetime "created_at", null: false
@@ -284,12 +284,12 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_17_173137) do
   add_foreign_key "rsvps", "events", on_delete: :cascade
   add_foreign_key "rsvps", "users", on_delete: :cascade
   add_foreign_key "sessions", "users", on_delete: :cascade
+  add_foreign_key "user_circles", "circles"
+  add_foreign_key "user_circles", "users", column: "member_id"
   add_foreign_key "user_groups", "groups"
   add_foreign_key "user_groups", "users"
   add_foreign_key "user_statuses", "users", on_delete: :cascade
   add_foreign_key "user_tags", "tags"
   add_foreign_key "user_tags", "users", on_delete: :cascade
-  add_foreign_key "users_circles", "circles"
-  add_foreign_key "users_circles", "users"
   add_foreign_key "web_push_registrations", "users"
 end

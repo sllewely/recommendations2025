@@ -1,13 +1,15 @@
 class CirclesController < ApplicationController
 
   def index
-    render json: current_user.circles, status: :ok
+    circles = current_user.circles
+    render json: CircleBlueprint.render(circles), status: :ok
   end
 
   def create
     circle = current_user.circles.new(circle_params)
+
     if circle.save
-      render json: circle, status: :created
+      render json: CircleBlueprint.render(circle), status: :created
     else
       render json: { error: circle.errors_to_s }, status: :unprocessable_content
     end

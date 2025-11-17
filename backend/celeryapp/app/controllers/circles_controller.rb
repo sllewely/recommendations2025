@@ -7,7 +7,6 @@ class CirclesController < ApplicationController
 
   def create
     circle = current_user.circles.new(circle_params)
-
     if circle.save
       render json: CircleBlueprint.render(circle), status: :created
     else

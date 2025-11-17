@@ -23,5 +23,20 @@ RSpec.describe "Circles", type: :request do
       res = JSON.parse(response.body)
       expect(res['name']).to eq("my circle")
     end
+
+    it 'creates a circle with users' do
+      u1 = create(:user)
+      u2 = create(:user)
+      u3 = create(:user)
+      post "/circles", params: { name: "my circle", user_ids: [u1.id, u2.id, u3.id] }, headers: @headers
+
+      expect(response).to have_http_status(:created)
+      res = JSON.parse(response.body)
+      expect(res['users'].size).to eq(3)
+    end
+  end
+
+  describe "POST /circles/:id/add" do
+
   end
 end

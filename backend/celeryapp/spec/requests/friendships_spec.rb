@@ -26,6 +26,22 @@ RSpec.describe "Friendships", type: :request do
       expect(res.size).to eq(2)
       expect(res.first.keys).to include("name")
     end
+
+    it 'filters my friends' do
+      friend = create(:user, name: 'james')
+      friend2 = create(:user, name: 'jimothy')
+      friend3 = create(:user, name: '123')
+      create(:friendship, user: @my_user, friend: friend)
+      create(:friendship, user: @my_user, friend: friend2)
+      create(:friendship, user: @my_user, friend: friend3)
+
+      get '/friendships?search=j', headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      res = JSON.parse(response.body)
+      expect(res.size).to eq(2)
+      expect(res.first.keys).to include("name")
+    end
   end
 
   describe "POST /friendships" do

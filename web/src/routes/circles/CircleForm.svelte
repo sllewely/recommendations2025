@@ -44,9 +44,8 @@
 						if (res.success) {
 							console.log("success create circle");
 							newToast("You have successfully created a circle!!");
-							goto("/posts");
 						} else {
-							newToast("Error creating an event: " + res.message, ToastType.Error);
+							newToast("Error creating circle: " + res.message, ToastType.Error);
 						}
 					};
 				}}
@@ -56,7 +55,26 @@
 						<Form.Label>Name</Form.Label>
 						<Input {...attrs} bind:value={$formData.name} />
 					</Form.Control>
-					<Form.Description>Name</Form.Description>
+					<Form.Control let:attrs>
+						<Form.Label>Friends</Form.Label>
+						<ul id="friends">list of friends will go here</ul>
+						<div class="flex gap-2">
+							<Input {...attrs} id="search" name="search" />
+							<Button
+								type="button"
+								class="rounded hover:bg-orange-500 text-teal-700 font-semibold hover:text-white py-2 px-4 border border-teal-500 hover:border-transparent"
+								variant="outline"
+								on:click={() => {
+									// call search_friends to populate potential friends
+
+									pending_friends = [];
+									document.getElementById("search").focus();
+								}}
+								>Search
+							</Button>
+						</div>
+						<div>potential friends that you searched for</div>
+					</Form.Control>
 					<Form.FieldErrors />
 				</Form.Field>
 				<Form.Button>Submit</Form.Button>

@@ -5,6 +5,11 @@
 	import CircleForm from "./CircleForm.svelte";
 
 	let { data }: { data: PageData } = $props();
+
+	let circles = $state(data.circles_response["res"] ?? []);
+	$effect(() => {
+		circles = data.circles_response["res"] ?? [];
+	});
 </script>
 
 <div>
@@ -16,6 +21,13 @@
 
 	<div class="pt-4">
 		<H2>Your Circles</H2>
-		<div>// TODO: Show circles here</div>
+		{#if circles.length === 0}
+			<p>You have no circles yet! Create a new one above :)</p>
+		{/if}
+		<div>
+			{#each circles as circle}
+				<p>{circle.name}</p>
+			{/each}
+		</div>
 	</div>
 </div>

@@ -16,6 +16,7 @@ class User < ApplicationRecord
   has_many :user_statuses, dependent: :destroy
   has_many :groups, through: :user_groups
   has_many :web_push_registrations
+  has_many :circles
 
   scope :by_name, ->(search) { where('LOWER(name) LIKE LOWER(?)', "%#{search}%") }
   scope :by_tag, ->(tag) { joins(:tags).where('tags.tag LIKE (?)', tag) }

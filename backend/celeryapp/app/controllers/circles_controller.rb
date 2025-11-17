@@ -1,5 +1,9 @@
 class CirclesController < ApplicationController
 
+  def index
+    render json: current_user.circles, status: :ok
+  end
+
   def create
     circle = current_user.circles.new(circle_params)
     if circle.save

@@ -8,6 +8,8 @@ Install rbenv/rvm/other to install ruby version ```3.2.2```
 
 rbenv can be installed by homebrew and requires rbenv init & updating the path to work
 
+frequent problem [stackoverflow: rbenv not updating local ruby version](https://stackoverflow.com/questions/10940736/rbenv-not-changing-ruby-version)
+
 ---
 
 Install postgres

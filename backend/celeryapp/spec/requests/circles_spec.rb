@@ -46,11 +46,10 @@ RSpec.describe "Circles", type: :request do
       u1 = create(:user)
       u2 = create(:user)
       u3 = create(:user)
-      post "/circles", params: { name: "my circle", user_ids: [u1.id, u2.id, u3.id] }, headers: @headers
+      post "/circles", params: { name: "my circle", member_ids: [u1.id, u2.id, u3.id] }, headers: @headers
 
       expect(response).to have_http_status(:created)
       res = JSON.parse(response.body)
-      debugger
       expect(res['members'].size).to eq(3)
     end
   end

@@ -1,6 +1,6 @@
 {
-	"name": "Celery",
-	"short_name": "Celery",
+	"name": "Bumblebeans.social",
+	"short_name": "Bumblebeans",
 	"start_url": "/",
 	"icons": [
 		{
@@ -32,5 +32,5 @@
 	"background_color": "#FFFFFF",
 	"display": "standalone",
 	"orientation": "portrait",
-	"description": "my events and recommendations app"
+	"description": "peas in a pod"
 }

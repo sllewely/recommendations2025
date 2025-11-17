@@ -14,8 +14,11 @@ class CommentsController < ApplicationController
     # TODO: Can only post on comment within friends
     @comment = current_user.comments.new(comment_params)
     if @comment.save
-      PushNotification.send_push_notification(@comment.commentable.user, "New Comment", "#{current_user.name} commented on your post")
-      # TODO: send notification to everyone who also commented.
+      commentable = @comment.commentable
+      PushNotification.send_push_notification(commentable.user, "New Comment", "#{current_user.name} commented on your post")
+      User.find(commentable.comments.pluck(:user_id).uniq).each do |user|
+        PushNotification.send_push_notification(user, "New Comment", "#{current_user.name} commented on a post you're following")
+      end
       render json: @comment, status: :created
     else
       render json: { error: @comment.errors_to_s }, status: :unprocessable_content

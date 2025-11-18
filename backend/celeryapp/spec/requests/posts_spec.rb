@@ -23,14 +23,6 @@ RSpec.describe "Posts", type: :request do
       expect(res['post_title']).to eq("new fav book")
     end
 
-    # it 'posts must have a title' do
-    #   post "/posts", params: { content: "I love it a lot, you should read it" }, headers: @headers
-    #
-    #   expect(response).to have_http_status(:unprocessable_content)
-    #   res = JSON.parse(response.body)
-    #   expect(res['exception']).to eq("#<ActiveRecord::RecordInvalid: Validation failed: Post title can't be blank>")
-    # end
-
     it 'posts must have a title' do
       post "/posts", params: { content: "I love it a lot, you should read it" }, headers: @headers
 
@@ -38,31 +30,6 @@ RSpec.describe "Posts", type: :request do
       res = JSON.parse(response.body)
       expect(res['error']).to eq("post_title: can't be blank")
     end
-
-    # it 'creates a new post with a recommendation' do
-    #   post "/posts", params: { post_title: "new fav book", content: "I love it a lot, you should read it", recommendations_attributes: [title: "Annihilation", notes: "A book I like"] }, headers: @headers
-    #
-    #   expect(response).to have_http_status(:created)
-    #   res = JSON.parse(response.body)
-    #   expect(res['id']).to_not be_nil
-    #   expect(res['post_title']).to eq("new fav book")
-    #   expect(res['recommendations'].first['title']).to eq('Annihilation')
-    # end
-
-    # it 'creates a new post with a recommendation with rating' do
-    #   post "/posts", params: { post_title: "new fav book", content: "I love it a lot, you should read it", recommendations_attributes: [title: "Annihilation", notes: "A book I like", rating: 5, status: 'recommend', media_type: 'book'] }, headers: @headers
-    #
-    #   expect(response).to have_http_status(:created)
-    #   res = JSON.parse(response.body)
-    #   expect(res['id']).to_not be_nil
-    #   expect(res['post_title']).to eq("new fav book")
-    #   rec_res = res['recommendations'].first
-    #   expect(rec_res['title']).to eq('Annihilation')
-    #   expect(rec_res['rating']).to eq(5)
-    #   expect(rec_res['status']).to eq('recommend')
-    #   expect(rec_res['media_type']).to eq('book')
-    #   expect(rec_res['notes']).to eq('A book I like')
-    # end
   end
 
   describe "GET /posts" do
@@ -298,6 +265,20 @@ RSpec.describe "Posts", type: :request do
 
       expect(response).to have_http_status(:ok)
       deleted_post = Post.find_by(id: p.id)
+      expect(deleted_post).to be_nil
+    end
+
+    it 'deleting my post deletes the feed item' do
+      post "/posts", params: { post_title: "new fav book", content: "I love it a lot, you should read it" }, headers: @headers
+      res = JSON.parse(response.body)
+      post_id = res['id']
+
+      delete "/posts/#{post_id}", params: {}, headers: @headers
+
+      expect(FeedItem.where(feedable_id: post_id, feedable_type: "Post")).to be_empty
+
+      expect(response).to have_http_status(:ok)
+      deleted_post = Post.find_by(id: post_id)
       expect(deleted_post).to be_nil
     end
 

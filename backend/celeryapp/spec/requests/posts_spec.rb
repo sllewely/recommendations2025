@@ -239,7 +239,7 @@ RSpec.describe "Posts", type: :request do
       res = JSON.parse(response.body)
       expect(res['post_title']).to eq("beep boop")
       expect(res['content']).to eq(post.content)
-      expect(res['creator_id']).to_not be_nil
+      expect(res['user']['name']).to_not be_nil
     end
 
   end

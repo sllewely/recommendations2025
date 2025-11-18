@@ -3,7 +3,14 @@ class FriendshipsController < ApplicationController
   end
 
   def index
-    render json: current_user.friends.map { |f| f.public_attributes }, status: :ok
+    # TODO: this will need to be paginated
+    search = params[:search]
+    query = current_user.friends
+    if search
+      query = query.by_name(search)
+    end
+
+    render json: UserBlueprint.render(query, view: :authed), status: :ok
   end
 
   def create

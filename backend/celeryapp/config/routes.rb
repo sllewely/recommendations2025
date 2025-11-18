@@ -27,6 +27,10 @@ Rails.application.routes.draw do
   end
   resources :friend_requests
   resources :notifications
+  resources :circles do
+    post "add"
+    post "remove"
+  end
   resources :comments
   resources :user_statuses, only: [:create, :index]
   resources :images do

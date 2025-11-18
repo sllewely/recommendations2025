@@ -27,7 +27,7 @@ export interface Post {
 	updated_at: string;
 	user: User;
 	comments: Comment[];
-	post_title: string;
+	title: string;
 	content?: string;
 	class_name: string;
 }

@@ -54,7 +54,7 @@
 			<div class="flex flex-col">
 				<input type="hidden" name="post_id" value={post.id} />
 				<!--            <InputCheckbox name="recommendation_only" label="Don't post publicly, just save for me (TODO: not implemented):" />-->
-				<Input name="post_title" label="Post Title:" value={form?.post_title ?? post.post_title} />
+				<Input name="title" label="Title:" value={form?.title ?? post.title} />
 				<Input name="content" label="Content" value={form?.content ?? post.content} />
 			</div>
 			<FormButton>Update post</FormButton>

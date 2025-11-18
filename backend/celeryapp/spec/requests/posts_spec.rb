@@ -15,12 +15,12 @@ RSpec.describe "Posts", type: :request do
     end
 
     it 'creates a new post' do
-      post "/posts", params: { post_title: "new fav book", content: "I love it a lot, you should read it" }, headers: @headers
+      post "/posts", params: { title: "new fav book", content: "I love it a lot, you should read it" }, headers: @headers
 
       expect(response).to have_http_status(:created)
       res = JSON.parse(response.body)
       expect(res['id']).to_not be_nil
-      expect(res['post_title']).to eq("new fav book")
+      expect(res['title']).to eq("new fav book")
     end
 
     it 'posts must have a title' do
@@ -28,7 +28,7 @@ RSpec.describe "Posts", type: :request do
 
       expect(response).to have_http_status(:unprocessable_content)
       res = JSON.parse(response.body)
-      expect(res['error']).to eq("post_title: can't be blank")
+      expect(res['error']).to eq("title: can't be blank")
     end
   end
 
@@ -57,7 +57,7 @@ RSpec.describe "Posts", type: :request do
       expect(res.size).to eq(2)
       feed_items_res = res['feed_items']
       expect(feed_items_res.size).to eq(3)
-      expect(feed_items_res.first["feedable"]['post_title']).to_not be_nil
+      expect(feed_items_res.first["feedable"]['title']).to_not be_nil
       expect(feed_items_res.first["feedable"]['content']).to_not be_nil
       expect(feed_items_res.first["feedable"]['user']['id']).to_not be_nil
     end
@@ -73,7 +73,7 @@ RSpec.describe "Posts", type: :request do
       res = JSON.parse(response.body)
       feed_items_res = res['feed_items']
       expect(feed_items_res.size).to eq(3)
-      expect(feed_items_res.first["feedable"]['post_title']).to_not be_nil
+      expect(feed_items_res.first["feedable"]['title']).to_not be_nil
       expect(feed_items_res.first["feedable"]['content']).to_not be_nil
       expect(feed_items_res.first["feedable"]['user']['id']).to_not be_nil
       expect(feed_items_res[1]["feedable"]['title']).to_not be_nil
@@ -92,7 +92,7 @@ RSpec.describe "Posts", type: :request do
       res = JSON.parse(response.body)
       feed_items_res = res['feed_items']
       expect(feed_items_res.size).to eq(4)
-      expect(feed_items_res.first["feedable"]['post_title']).to_not be_nil
+      expect(feed_items_res.first["feedable"]['title']).to_not be_nil
       expect(feed_items_res.first["feedable"]['content']).to_not be_nil
       expect(feed_items_res.first["feedable"]['user']['id']).to_not be_nil
       expect(feed_items_res[2]["feedable"]['title']).to_not be_nil
@@ -184,7 +184,7 @@ RSpec.describe "Posts", type: :request do
 
       expect(response).to have_http_status(:ok)
       res = JSON.parse(response.body)
-      expect(res['post_title']).to_not be_nil
+      expect(res['title']).to_not be_nil
       expect(res['content']).to_not be_nil
       expect(res['user']).to_not be_nil
       expect(res['user']['id']).to_not be_nil
@@ -199,7 +199,7 @@ RSpec.describe "Posts", type: :request do
 
       expect(response).to have_http_status(:ok)
       res = JSON.parse(response.body)
-      expect(res['post_title']).to_not be_nil
+      expect(res['title']).to_not be_nil
       expect(res['content']).to_not be_nil
       expect(res['user']).to_not be_nil
       expect(res['user']['id']).to_not be_nil
@@ -233,13 +233,13 @@ RSpec.describe "Posts", type: :request do
 
     it 'updates the post' do
       post = create(:post, user: @my_user)
-      patch "/posts/#{post.id}", params: { post_title: "beep boop" }, headers: @headers
+      patch "/posts/#{post.id}", params: { title: "beep boop" }, headers: @headers
 
       expect(response).to have_http_status(:ok)
       res = JSON.parse(response.body)
-      expect(res['post_title']).to eq("beep boop")
+      expect(res['title']).to eq("beep boop")
       expect(res['content']).to eq(post.content)
-      expect(res['creator_id']).to_not be_nil
+      expect(res['user']['name']).to_not be_nil
     end
 
   end
@@ -269,7 +269,7 @@ RSpec.describe "Posts", type: :request do
     end
 
     it 'deleting my post deletes the feed item' do
-      post "/posts", params: { post_title: "new fav book", content: "I love it a lot, you should read it" }, headers: @headers
+      post "/posts", params: { title: "new fav book", content: "I love it a lot, you should read it" }, headers: @headers
       res = JSON.parse(response.body)
       post_id = res['id']
 

@@ -1,8 +1,5 @@
-import { redirect } from "@sveltejs/kit";
 import { VITE_API_URL } from "$env/static/private";
-import * as api from "$lib/api_calls/api.svelte.ts";
-
-let root_url = VITE_API_URL;
+import * as api from "$lib/api_calls/api.svelte";
 
 // named action for sign in form
 export const actions = {
@@ -13,7 +10,7 @@ export const actions = {
 		const response = await api.post(
 			"posts",
 			{
-				post_title: data.get("post_title"),
+				title: data.get("title"),
 				content: data.get("content"),
 			},
 			jwt,

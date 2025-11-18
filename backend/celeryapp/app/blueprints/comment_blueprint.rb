@@ -1,5 +1,6 @@
 class CommentBlueprint < Blueprinter::Base
   identifier :id
+  field :commentable_id
 
   view :unauthed do
     fields :id

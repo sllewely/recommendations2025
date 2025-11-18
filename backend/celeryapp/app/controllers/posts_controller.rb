@@ -48,7 +48,7 @@ class PostsController < ApplicationController
       render json: { error: "post not found" }, status: :unprocessable_content and return
     end
     if post.update(post_params)
-      render json: post.attributes, status: :ok
+      render json: PostBlueprint.render(post), status: :ok
     else
       render json: "error updating post", status: :unprocessable_content
     end
@@ -72,8 +72,7 @@ class PostsController < ApplicationController
   private
 
   def post_params
-    # TODO: should have named this field title instead of post_title
-    params.permit(:post_title, :content)
+    params.permit(:title, :content)
   end
 
   def recommendation_params(rec_params)

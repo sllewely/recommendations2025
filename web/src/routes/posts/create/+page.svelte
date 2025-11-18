@@ -52,7 +52,7 @@
 		>
 			<div class="flex flex-col">
 				<!--            <InputCheckbox name="recommendation_only" label="Don't post publicly, just save for me (TODO: not implemented):" />-->
-				<Input name="post_title" label="Post Title:" value={form?.post_title} />
+				<Input name="title" label="Title:" value={form?.title} />
 				<Input name="content" label="Content" value={form?.content} />
 			</div>
 			<FormButton>Create post</FormButton>

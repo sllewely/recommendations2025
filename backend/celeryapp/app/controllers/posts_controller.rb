@@ -72,8 +72,7 @@ class PostsController < ApplicationController
   private
 
   def post_params
-    # TODO: should have named this field title instead of post_title
-    params.permit(:post_title, :content)
+    params.permit(:title, :content)
   end
 
   def recommendation_params(rec_params)

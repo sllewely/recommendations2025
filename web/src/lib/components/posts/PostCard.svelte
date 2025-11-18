@@ -44,7 +44,7 @@
 		<div class="p-2">
 			<a href="/posts/{feed_item.id}">
 				<Card border_color="border-orange-500" hover_color="hover:bg-orange-100">
-					<H2>{feed_item.post_title}</H2>
+					<H2>{feed_item.title}</H2>
 					{#if feed_item.content}
 						<p>{feed_item.content}</p>
 					{/if}

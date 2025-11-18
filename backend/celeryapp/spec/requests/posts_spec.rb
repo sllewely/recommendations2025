@@ -2,30 +2,6 @@ require 'rails_helper'
 require 'json'
 
 RSpec.describe "Posts", type: :request do
-  describe "DELETE /posts" do
-
-    before(:context) do
-      @my_user = create(:user)
-      headers = { 'ACCEPT' => 'application/json' }
-      post "/sign_in", params: { email: @my_user.email, password: @my_user.password }, headers: headers
-      auth_token = JSON.parse(response.body)["auth_token"]
-      @headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{auth_token}" }
-    end
-
-    it 'delete post' do
-      my_post = create(:post, user: @my_user)
-      delete "/posts/#{my_post.id}", headers: @headers
-      expect(response).to have_http_status(:no_content)
-    end
-
-    it "error if deleting other person's post" do
-      new_user = create(:user)
-      my_post = create(:post, user: new_user)
-      delete "/posts/#{my_post.id}", params: {}, headers: @headers
-      expect(response).to have_http_status(:not_found)
-    end
-  end
-
   describe "POST /posts" do
 
     before(:context) do
@@ -287,7 +263,7 @@ RSpec.describe "Posts", type: :request do
 
       delete "/posts/#{p.id}", params: {}, headers: @headers
 
-      expect(response).to have_http_status(:ok)
+      expect(response).to have_http_status(:no_content)
       deleted_post = Post.find_by(id: p.id)
       expect(deleted_post).to be_nil
     end
@@ -301,7 +277,7 @@ RSpec.describe "Posts", type: :request do
 
       expect(FeedItem.where(feedable_id: post_id, feedable_type: "Post")).to be_empty
 
-      expect(response).to have_http_status(:ok)
+      expect(response).to have_http_status(:no_content)
       deleted_post = Post.find_by(id: post_id)
       expect(deleted_post).to be_nil
     end
@@ -311,11 +287,22 @@ RSpec.describe "Posts", type: :request do
 
       delete "/posts/#{p.id}", params: {}, headers: @headers
 
-      expect(response).to have_http_status(:unprocessable_content)
+      expect(response).to have_http_status(:not_found)
       deleted_post = Post.find_by(id: p.id)
       expect(deleted_post).to_not be_nil
     end
 
-  end
+    it 'delete post' do
+      my_post = create(:post, user: @my_user)
+      delete "/posts/#{my_post.id}", headers: @headers
+      expect(response).to have_http_status(:no_content)
+    end
 
+    it "error if deleting other person's post" do
+      new_user = create(:user)
+      my_post = create(:post, user: new_user)
+      delete "/posts/#{my_post.id}", params: {}, headers: @headers
+      expect(response).to have_http_status(:not_found)
+    end
+  end
 end

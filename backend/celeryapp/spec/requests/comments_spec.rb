@@ -69,7 +69,6 @@ RSpec.describe "Comments", type: :request do
       expect(response).to have_http_status(:ok)
       res = JSON.parse(response.body)
       expect(res['body']).to eq('hoo boy I sure love stew')
-      expect(res['commentable_id']).to eq(event.id)
     end
 
   end

@@ -4,9 +4,6 @@
 	import PostCard from "$lib/components/posts/PostCard.svelte";
 	import EventCard from "$lib/components/posts/EventCard.svelte";
 
-	import * as Collapsible from "$lib/components/ui/collapsible";
-	import { Textarea } from "$lib/components/ui/textarea";
-	import { Button } from "$lib/components/ui/button";
 	import { MessageCircleMore } from "@lucide/svelte";
 
 	import Comment from "$lib/components/posts/Comment.svelte";
@@ -23,6 +20,8 @@
 	} else {
 		border_color = "border-orange-500";
 	}
+
+	// let comments = $state(feed_item["comments"] ?? []);
 
 	const num_comments = feed_item["comments"]?.length;
 

@@ -6,7 +6,7 @@ class CommentsController < ApplicationController
       render json: { error: "comment not found" }, status: :not_found and return
     end
     @comment.update(body: params[:body])
-    render json: @comment, status: :ok
+    render json: CommentBlueprint.render(@comment, view: :authed), status: :ok
 
   end
 
@@ -19,7 +19,7 @@ class CommentsController < ApplicationController
       User.find(commentable.comments.pluck(:user_id).uniq).each do |user|
         PushNotification.send_push_notification(user, "New Comment", "#{current_user.name} commented on a post you're following")
       end
-      render json: @comment, status: :created
+      render json: CommentBlueprint.render(@comment, view: :authed), status: :created
     else
       render json: { error: @comment.errors_to_s }, status: :unprocessable_content
     end

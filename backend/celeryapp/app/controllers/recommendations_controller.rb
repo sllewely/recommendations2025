@@ -12,7 +12,7 @@ class RecommendationsController < ApplicationController
 
     @pagy, @recommendations = pagy(recommendations, limit: 30)
     render json: {
-      recommendations: @recommendations.map(&:attributes),
+      recommendations: RecommendationBlueprint.render_as_hash(@recommendations),
       pagy: @pagy,
     }, status: :ok
 
@@ -33,7 +33,7 @@ class RecommendationsController < ApplicationController
       render json: { error: "recommendation not found" }, status: :not_found and return
     end
     @recommendation.update(recommendation_params)
-    render json: @recommendation.attributes, status: :ok
+    render json: RecommendationBlueprint.render(@recommendation), status: :ok
 
   end
 
@@ -45,7 +45,7 @@ class RecommendationsController < ApplicationController
     rescue ActiveRecord::RecordInvalid
       render json: { error: @recommendation.errors_to_s }, status: :unprocessable_content and return
     end
-    render json: @recommendation, status: :created
+    render json: RecommendationBlueprint.render(@recommendation), status: :created
   end
 
   private

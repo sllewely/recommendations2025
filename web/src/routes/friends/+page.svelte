@@ -57,8 +57,8 @@
 		<div>
 			<H2>Pending friend requests</H2>
 
-			{#each pending_friends as pending_friend}
-				<PendingFriendRequest {pending_friend} />
+			{#each pending_friends as pending_friend_request}
+				<PendingFriendRequest {pending_friend_request} />
 			{/each}
 		</div>
 	{/if}

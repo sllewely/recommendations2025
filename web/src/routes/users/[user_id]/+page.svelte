@@ -1,6 +1,7 @@
 <script lang="ts">
 	import H1 from "$lib/components/text/H1.svelte";
 	import H2 from "$lib/components/text/H2.svelte";
+	import { current_user } from "$lib/state/current_user.svelte.js";
 	import { Badge } from "$lib/components/ui/badge";
 	import { friends_map } from "$lib/state/friends_map.svelte.js";
 	import { newToast, ToastType } from "$lib/state/toast.svelte.js";
@@ -11,10 +12,10 @@
 	let user = data.user;
 	const tags = user.tags;
 	const is_friends = user.id in friends_map.friends_map;
-	let friend_request = $state(data.pending_friend_request["friend_request"]);
+	let friend_request = $state(data.pending_friend_request);
 
 	$effect(() => {
-		friend_request = data.pending_friend_request["friend_request"];
+		friend_request = data.pending_friend_request;
 	});
 	let updating = $state(false);
 </script>
@@ -31,7 +32,7 @@
 		{/if}
 	</div>
 	<div>
-		{#if is_friends}
+		{#if user.id === current_user.id}{:else if is_friends}
 			<div>
 				<Badge variant="secondary">friends</Badge>
 			</div>
@@ -55,7 +56,7 @@
 					}}
 				>
 					<input type="hidden" name="user_id" value={user.id} />
-					{#if friend_request !== null}
+					{#if friend_request}
 						<Button type="button" disabled>Friend request pending</Button>
 					{:else}
 						<Button type="submit">Add friend</Button>

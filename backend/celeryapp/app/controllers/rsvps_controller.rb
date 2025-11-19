@@ -10,7 +10,7 @@ class RsvpsController < ApplicationController
       @rsvps = @rsvps.where(status: params['status'])
     end
     # TODO permission and pagination
-    render json: @rsvps.limit(100).map(&:attributes), status: :ok
+    render json: RsvpBlueprint.render(@rsvps.limit(100), view: :authed), status: :ok
 
   end
 
@@ -20,7 +20,7 @@ class RsvpsController < ApplicationController
       render json: {}, status: :not_found and return
     end
     # TODO permissions
-    render json: @rsvp.attributes, status: :ok
+    render json: RsvpBlueprint.render(@rsvp, view: :authed), status: :ok
   end
 
   # Create or update
@@ -33,7 +33,7 @@ class RsvpsController < ApplicationController
       if event_user != current_user
         PushNotification.send_push_notification(event_user, "New rsvp", "#{current_user.name} rsvp'd to your event #{@rsvp.event.title}")
       end
-      render json: @rsvp.attributes, status: :created
+      render json: RsvpBlueprint.render(@rsvp, view: :authed), status: :created
     else
       render json: @rsvp.errors, status: :unprocessable_content
     end

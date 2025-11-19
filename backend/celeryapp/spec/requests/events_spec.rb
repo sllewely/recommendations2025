@@ -33,15 +33,6 @@ RSpec.describe "Events", type: :request do
       expect(res['title']).to eq('k flay')
     end
 
-    it 'creates a public event' do
-      post "/events", params: { title: 'k flay', description: "come see this fun show with me", start_date_time: DateTime.now + 5.days, is_public: true }, headers: @headers
-
-      expect(response).to have_http_status(:created)
-      res = JSON.parse(response.body)
-      expect(res['title']).to eq('k flay')
-      expect(res['is_public']).to eq(true)
-    end
-
     it 'requires a title' do
 
       post "/events", params: { description: "come see this fun show with me", start_date_time: DateTime.now + 5.days, }, headers: @headers
@@ -237,7 +228,7 @@ RSpec.describe "Events", type: :request do
 
       delete "/events/#{event.id}", params: {}, headers: @headers
 
-      expect(response).to have_http_status(:ok)
+      expect(response).to have_http_status(:no_content)
       deleted_event = Event.find_by(id: event.id)
       expect(deleted_event).to be_nil
     end

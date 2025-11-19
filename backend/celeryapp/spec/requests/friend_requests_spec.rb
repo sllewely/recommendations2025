@@ -21,17 +21,17 @@ RSpec.describe "FriendRequests", type: :request do
 
       expect(response).to have_http_status(:ok)
       res = JSON.parse(response.body)
-      expect(res['friend_request']['user_id']).to eq new_friend.id
-      expect(res['friend_request']['incoming_friend_id']).to eq @my_user.id
+      expect(res['user']['id']).to eq new_friend.id
+      expect(res['incoming_friend']['id']).to eq @my_user.id
     end
 
     it 'does not find a friend request, if it doesnt exist' do
       new_friend = create(:user)
       get "/friend_requests/#{new_friend.id}", params: {}, headers: @headers
 
-      expect(response).to have_http_status(:ok)
+      expect(response).to have_http_status(:not_found)
       res = JSON.parse(response.body)
-      expect(res['friend_request']).to be_nil
+      expect(res).to eq({})
     end
 
   end
@@ -58,7 +58,7 @@ RSpec.describe "FriendRequests", type: :request do
       res = JSON.parse(response.body)
       expect(res.size).to eq(2)
       expect(res['incoming_friend_requests'].size).to eq(2)
-      expect(res['incoming_friend_requests'].first.keys).to include("name")
+      expect(res['incoming_friend_requests'].first['user']['name']).to_not be_nil
       expect(res['outgoing_friend_requests'].size).to eq(0)
     end
 
@@ -73,7 +73,7 @@ RSpec.describe "FriendRequests", type: :request do
       res = JSON.parse(response.body)
       expect(res.size).to eq(2)
       expect(res['outgoing_friend_requests'].size).to eq(2)
-      expect(res['outgoing_friend_requests'].first.keys).to include("name")
+      expect(res['outgoing_friend_requests'].first['user']['name']).to_not be_nil
     end
 
   end
@@ -95,7 +95,7 @@ RSpec.describe "FriendRequests", type: :request do
 
       expect(response).to have_http_status(:created)
       res = JSON.parse(response.body)
-      expect(res['id']).to eq(new_friend.id)
+      expect(res['user']['id']).to eq(new_friend.id)
     end
 
     it 'fails if a friend request already exists to them' do
@@ -135,7 +135,7 @@ RSpec.describe "FriendRequests", type: :request do
 
       expect(response).to have_http_status(:created)
       res = JSON.parse(response.body)
-      expect(res['id']).to eq(new_friend.id)
+      expect(res['user']['id']).to eq(new_friend.id)
 
       email = ActionMailer::Base.deliveries.last
       assert_includes email.body.to_s, "You have a new friend request from #{@my_user.name}!"

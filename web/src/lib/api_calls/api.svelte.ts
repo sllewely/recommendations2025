@@ -47,7 +47,7 @@ async function send<T = unknown, D = unknown>({
 			const error = json as ApiError;
 			return {
 				success: false,
-				message: error.exception ?? error.error ?? "An unknown error occurred",
+				message: error.exception ?? error.error ?? null,
 			};
 		}
 	} catch (e) {

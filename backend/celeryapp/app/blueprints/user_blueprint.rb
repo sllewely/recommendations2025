@@ -1,12 +1,11 @@
 class UserBlueprint < Blueprinter::Base
   identifier :id
+  fields :id, :name
 
   view :unauthed do
-    fields :id, :name
   end
 
   view :authed do
-    include_view :unauthed
     fields :blurb
   end
 

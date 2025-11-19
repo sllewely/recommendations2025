@@ -38,7 +38,7 @@ class PostsController < ApplicationController
       PushNotification.send_push_notification(friend, "New Post", "#{current_user.name} posted a new post")
     end
 
-    render json: @post, status: :created
+    render json: PostBlueprint.render(@post), status: :created
   end
 
   def update

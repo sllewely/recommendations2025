@@ -98,14 +98,35 @@ RSpec.describe "FriendRequests", type: :request do
       expect(res['id']).to eq(new_friend.id)
     end
 
-    it 'fails if a friend request already exists' do
+    it 'fails if a friend request already exists to them' do
       new_friend = create(:user)
       post "/friend_requests", params: { user_id: new_friend.id }, headers: @headers
       post "/friend_requests", params: { user_id: new_friend.id }, headers: @headers
 
       expect(response).to have_http_status(:unprocessable_content)
       res = JSON.parse(response.body)
-      expect(res['error']).to include('duplicate key value violates unique constraint')
+      expect(res['error']).to include('Validation failed: You already have a pending friend request to')
+    end
+
+    it 'fails if an incoming friend request already exists from them' do
+      new_friend = create(:user)
+      fr = create(:friend_request, user: @my_user, incoming_friend: new_friend)
+      post "/friend_requests", params: { user_id: new_friend.id }, headers: @headers
+
+      expect(response).to have_http_status(:unprocessable_content)
+      res = JSON.parse(response.body)
+      expect(res['error']).to include('Validation failed: You already have a pending friend request from')
+    end
+
+    it 'fails if were already friends' do
+      new_friend = create(:user)
+      create(:friendship, user: @my_user, friend: new_friend)
+      create(:friendship, user: new_friend, friend: @my_user)
+      post "/friend_requests", params: { user_id: new_friend.id }, headers: @headers
+
+      expect(response).to have_http_status(:unprocessable_content)
+      res = JSON.parse(response.body)
+      expect(res['error']).to include("Cannot send friend request: already friends")
     end
 
     it 'sends a pending friend request email' do

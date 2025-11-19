@@ -22,10 +22,13 @@ class FriendRequestsController < ApplicationController
     user = User.find_by(id: friend_id)
     render json: { error: "Cannot send friend request: user not found" }, status: :unprocessable_content and return if user.nil?
     render json: { error: "Cannot send friend request: already friends" }, status: :unprocessable_content and return if current_user.friends.find_by(id: friend_id).present?
-    # TODO: check if friend already or pending already
-    ActiveRecord::Base.transaction do
-      user.friend_requests.create!(incoming_friend_id: current_user.id)
-      user.notifications << Notification.pending_friend_request(user, current_user)
+    try do
+      ActiveRecord::Base.transaction do
+        user.friend_requests.create!(incoming_friend_id: current_user.id)
+        user.notifications << Notification.pending_friend_request(user, current_user)
+      end
+    rescue ActiveRecord::RecordInvalid => e
+      render json: { error: e.message }, status: :unprocessable_content and return
     end
     FriendshipMailer.with(user: user, friend: current_user).pending_friend_request.deliver_now!
     PushNotification.send_push_notification(user, "Friend request", "You have a pending friend request from #{current_user.name}")

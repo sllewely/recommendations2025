@@ -10,7 +10,7 @@ class UsersController < ApplicationController
       query = query.by_tag(params[:tag])
     end
 
-    render json: query.by_name(search).map(&:public_attributes), status: :ok
+    render json: UserBlueprint.render(query.by_name(search), view: :authed), status: :ok
 
   end
 
@@ -24,7 +24,7 @@ class UsersController < ApplicationController
     render json: {}, status: :not_found and return if @user.nil?
 
     # TODO: show something different if friend vs not
-    render json: @user.public_attributes, status: :ok
+    render json: UserBlueprint.render(@user, view: :authed), status: :ok
   end
 
   def update

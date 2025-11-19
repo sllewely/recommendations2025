@@ -6,8 +6,12 @@ class UserBlueprint < Blueprinter::Base
   end
 
   view :authed do
-    fields :blurb
+    fields :blurb, :username
+    association :tags, blueprint: TagBlueprint
   end
 
-  # TODO: self view
+  view :self do
+    include_view :authed
+    field :email
+  end
 end

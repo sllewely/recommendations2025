@@ -29,7 +29,7 @@ class FriendshipsController < ApplicationController
       friend_request.delete
     end
     PushNotification.send_push_notification(user, "New friend", "#{current_user.name} is your friend!")
-    render json: user.public_attributes, status: :created
+    render json: UserBlueprint.render(user, view: :authed), status: :created
     # TODO Error handling maybe?
   end
 

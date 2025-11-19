@@ -3,6 +3,9 @@
 	import RecommendationCard from "$lib/components/posts/RecommendationCard.svelte";
 	import PostCard from "$lib/components/posts/PostCard.svelte";
 	import EventCard from "$lib/components/posts/EventCard.svelte";
+	import * as Collapsible from "$lib/components/ui/collapsible";
+	import { Textarea } from "$lib/components/ui/textarea";
+	import { Button } from "$lib/components/ui/button";
 
 	import { MessageCircleMore } from "@lucide/svelte";
 

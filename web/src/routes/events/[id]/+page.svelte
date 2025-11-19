@@ -28,7 +28,11 @@
 
 	let num_comments = $derived(comments.length);
 
-	let rsvp = $derived(event.current_user_rsvp);
+	let current_user_rsvp = $derived(
+		event.rsvps.find((rsvp) => rsvp.user.id === current_user.id) ?? null,
+	);
+
+	let rsvp_status = $derived(current_user_rsvp ? current_user_rsvp.status : null);
 
 	let delete_event = async () => {
 		const response = await fetch("/api/delete_event", {
@@ -88,11 +92,11 @@
 				<input type="hidden" name="user_id" value={my_user_id} />
 				<label for="rsvp_status">Your rsvp:</label>
 				<select name="rsvp_status" id="rsvp_status" onchange={(e) => e.target.form.requestSubmit()}>
-					<option value="not_selected" selected={rsvp === null}>not rsvp'd</option>
-					<option value="going" selected={rsvp === "going"}>going</option>
-					<option value="interested" selected={rsvp === "interested"}>interested</option>
-					<option value="cant_go" selected={rsvp === "cant_go"}>can't go</option>
-					<option value="not_interested" selected={rsvp === "not_interested"}
+					<option value="not_selected" selected={rsvp_status === null}>not rsvp'd</option>
+					<option value="going" selected={rsvp_status === "going"}>going</option>
+					<option value="interested" selected={rsvp_status === "interested"}>interested</option>
+					<option value="cant_go" selected={rsvp_status === "cant_go"}>can't go</option>
+					<option value="not_interested" selected={rsvp_status === "not_interested"}
 						>not interested
 					</option>
 				</select>

@@ -50,7 +50,7 @@ class PostsController < ApplicationController
     if post.update(post_params)
       render json: PostBlueprint.render(post), status: :ok
     else
-      render json: "error updating post", status: :unprocessable_content
+      render json: { error: post.errors_to_s }, status: :unprocessable_content
     end
   end
 

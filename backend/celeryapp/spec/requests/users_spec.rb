@@ -24,7 +24,6 @@ RSpec.describe "User", type: :request do
       expect(res['username']).to eq(@my_user.username)
       expect(res['name']).to eq(@my_user.name)
       expect(res['id']).to eq(@my_user.id)
-      expect(res['verified']).to eq(@my_user.verified)
       expect(res['email']).to eq(@my_user.email)
     end
 

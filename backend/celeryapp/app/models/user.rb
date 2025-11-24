@@ -57,22 +57,13 @@ class User < ApplicationRecord
   end
 
   def update_tags(tag_names)
-    tags = (tag_names).map { |t| Tag.find_or_create_by(tag: t) }
+    # there's a bug here.  dups are being created anyway
+    tags = (tag_names).map { |t| t.downcase }.map { |t| Tag.find_or_create_by(tag: t) }
     self.tags = tags
   end
 
   def active_notifications
     self.notifications.where('active = true').order(created_at: :desc)
-  end
-
-  def public_attributes
-    {
-      id: id,
-      username: username,
-      name: name,
-      tags: tags.map(&:tag),
-      blurb: blurb,
-    }
   end
 
   def friend_code
@@ -85,11 +76,5 @@ class User < ApplicationRecord
     return token if !token.nil?
     FriendCode.persist_with_random_token!(self)
     self.friend_code
-  end
-
-  def attributes
-    a = super.except!('password_digest')
-    a[:tags] = tags.map(&:tag)
-    a
   end
 end

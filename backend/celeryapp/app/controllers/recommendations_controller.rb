@@ -32,9 +32,11 @@ class RecommendationsController < ApplicationController
     if @recommendation.nil?
       render json: { error: "recommendation not found" }, status: :not_found and return
     end
-    @recommendation.update(recommendation_params)
-    render json: RecommendationBlueprint.render(@recommendation), status: :ok
-
+    if @recommendation.update(recommendation_params)
+      render json: RecommendationBlueprint.render(@recommendation), status: :ok
+    else
+      render json: { error: @recommendation.errors_to_s }, status: :unprocessable_content
+    end
   end
 
   def create

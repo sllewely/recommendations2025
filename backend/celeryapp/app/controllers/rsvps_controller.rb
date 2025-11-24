@@ -35,7 +35,7 @@ class RsvpsController < ApplicationController
       end
       render json: RsvpBlueprint.render(@rsvp, view: :authed), status: :created
     else
-      render json: @rsvp.errors, status: :unprocessable_content
+      render json: { error: @rsvp.errors_to_s }, status: :unprocessable_content
     end
 
   end

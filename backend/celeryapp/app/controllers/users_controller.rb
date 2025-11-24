@@ -38,9 +38,9 @@ class UsersController < ApplicationController
     current_user.password = params[:password] if params[:password].present?
 
     if current_user.save
-      render json: current_user.attributes, status: :ok
+      render json: UserBlueprint.render(current_user, view: :self), status: :ok
     else
-      render json: current_user.errors, status: :unprocessable_content
+      render json: { error: current_user.errors_to_s }, status: :unprocessable_content
     end
   end
 

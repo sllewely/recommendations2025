@@ -40,7 +40,7 @@ class EventsController < ApplicationController
     if @event.update(event_params)
       render json: EventBlueprint.render(@event, view: :authed), status: :ok
     else
-      render json: @event.errors, status: :unprocessable_content
+      render json: { error: @event.errors_to_s }, status: :unprocessable_content
     end
 
   end

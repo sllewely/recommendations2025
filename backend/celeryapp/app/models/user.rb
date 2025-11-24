@@ -57,7 +57,8 @@ class User < ApplicationRecord
   end
 
   def update_tags(tag_names)
-    tags = (tag_names).map { |t| Tag.find_or_create_by(tag: t) }
+    # there's a bug here.  dups are being created anyway
+    tags = (tag_names).map { |t| t.downcase }.map { |t| Tag.find_or_create_by(tag: t) }
     self.tags = tags
   end
 

@@ -96,7 +96,7 @@
 					</Form.Field>
 					<div class="space-x-2 mb-4">
 						{#each tags as tag}
-							<Badge>{tag}</Badge>
+							<Badge>{tag.tag}</Badge>
 						{/each}
 					</div>
 

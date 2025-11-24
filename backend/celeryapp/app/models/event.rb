@@ -66,23 +66,6 @@ class Event < ApplicationRecord
     self.rsvps.count
   end
 
-  # TODO: limit # of comments
-  def attributes
-    super.merge({
-                  user: user.public_attributes,
-                  class_name: 'Event',
-                  creator_name: user.name,
-                  creator_id: user.id,
-                  start_date_string: get_date_string(start_date_time),
-                  start_time_string: get_time_string(start_date_time),
-                  create_date_string: get_date_string(created_at),
-                  create_time_string: get_time_string(created_at),
-                  rsvps_count: total_rsvp,
-                  comments: comments,
-                }
-    )
-  end
-
   private
 
   # gives it an end time if it doesn't have one

@@ -66,16 +66,6 @@ class User < ApplicationRecord
     self.notifications.where('active = true').order(created_at: :desc)
   end
 
-  def public_attributes
-    {
-      id: id,
-      username: username,
-      name: name,
-      tags: tags.map(&:tag),
-      blurb: blurb,
-    }
-  end
-
   def friend_code
     # Called safe navigation operator &.
     self.friend_codes.where('active = true').first&.token
@@ -86,11 +76,5 @@ class User < ApplicationRecord
     return token if !token.nil?
     FriendCode.persist_with_random_token!(self)
     self.friend_code
-  end
-
-  def attributes
-    a = super.except!('password_digest')
-    a[:tags] = tags.map(&:tag)
-    a
   end
 end

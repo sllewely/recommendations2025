@@ -18,7 +18,7 @@ class UsersController < ApplicationController
     user_id = params[:id]
     # the current user
     if current_user.id == user_id
-      render json: current_user.attributes, status: :ok and return
+      render json: UserBlueprint.render(current_user, view: :self), status: :ok and return
     end
     @user = User.find_by(id: user_id)
     render json: {}, status: :not_found and return if @user.nil?

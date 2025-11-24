@@ -26,7 +26,7 @@
 		{#if tags}
 			<div class="space-x-2 mb-4">
 				{#each tags as tag}
-					<Badge>{tag.tag}</Badge>
+					<Badge>{tag}</Badge>
 				{/each}
 			</div>
 		{/if}

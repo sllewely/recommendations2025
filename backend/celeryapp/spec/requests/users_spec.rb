@@ -75,7 +75,7 @@ RSpec.describe "User", type: :request do
       expect(response).to have_http_status(:ok)
       res = JSON.parse(response.body)
 
-      expect(res['tags'].map { |t| t["tag"] }).to eq(['recurse', 'gangout'])
+      expect(res['tags']).to eq(['recurse', 'gangout'])
     end
 
     it 'cannot update someone else' do

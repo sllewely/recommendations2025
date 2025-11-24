@@ -11,3 +11,8 @@ export let web_push_notifs_enabled = async () => {
 	// find if any saved endpoints match this one
 	return endpoints.find((reg) => reg.endpoint === subscription?.endpoint);
 };
+
+export let service_worker_missing = async (): boolean => {
+	const registration = await navigator.serviceWorker.ready;
+	return !registration;
+};

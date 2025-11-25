@@ -9,6 +9,7 @@
 
 	import { newToast, ToastType } from "$lib/state/toast.svelte.js";
 	import { goto } from "$app/navigation";
+	import MarkedDownPost from "$lib/components/posts/MarkedDownPost.svelte";
 
 	let { data, form } = $props();
 
@@ -20,7 +21,6 @@
 
 	let timer: number;
 	const debounce = (v: string) => {
-		console.log(v);
 		clearTimeout(timer);
 		timer = setTimeout(() => {
 			captured_text = v;
@@ -73,6 +73,9 @@
 				{rendered}
 			</Card>
 			<Card>{@html marked_text}</Card>
+			<Card>
+				<MarkedDownPost {captured_text} />
+			</Card>
 		</div>
 	</div>
 </div>

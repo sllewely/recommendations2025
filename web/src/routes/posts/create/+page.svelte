@@ -26,6 +26,45 @@
 			captured_text = v;
 		}, 750);
 	};
+
+	let searching_user = $state(false);
+
+	const usersearch = (e: KeyboardEvent) => {
+		if (e.key === "@") {
+			searching_user = true;
+		}
+		if (e.key === "Escape") {
+			// TODO: no escape key on mobile lol
+			searching_user = false;
+		}
+		if (!searching_user) {
+			return;
+		}
+		const target = e.target as HTMLTextAreaElement;
+
+		// wait for the keypress to modify the text
+		setTimeout(() => {
+			const whole_text = target.value;
+			// call backend
+			const pos = target.selectionStart;
+			// walk backwards until the @ or space
+			const last_at = whole_text.lastIndexOf("@", pos);
+
+			const searchstring = whole_text.substring(last_at + 1, pos);
+			console.log(searchstring);
+		}, 0);
+
+		// call the backend, and return some users
+
+		const users = [{ name: "sarah", id: "2a3e5720-27a5-493b-adfd-dd4b99afd4d9" }];
+
+		// hover box with options I can tab throough and select with enter
+		// but also escape out
+		// or just keep typing
+		// or just click on the user
+
+		//target.value = searchstring.replace(`@${username}`, `[${username}](/users/${username})`);
+	};
 </script>
 
 <div>
@@ -61,6 +100,7 @@
 						<Textarea
 							name="content"
 							bind:value={rendered}
+							on:keydown={usersearch}
 							on:keyup={({ target: { value } }) => debounce(value)}
 						/>
 					</div>

@@ -5,6 +5,7 @@
 	import H1 from "$lib/components/text/H1.svelte";
 	import Card from "$lib/components/Card.svelte";
 	import { Textarea } from "$lib/components/ui/textarea/index.js";
+	import { marked } from "marked";
 
 	import { newToast, ToastType } from "$lib/state/toast.svelte.js";
 	import { goto } from "$app/navigation";
@@ -14,14 +15,15 @@
 	let creating = $state(false);
 
 	let rendered = $state(form?.content);
-	let test = $state("");
+	let captured_text = $state("");
+	let marked_text = $derived(marked(captured_text));
 
 	let timer: number;
 	const debounce = (v: string) => {
 		console.log(v);
 		clearTimeout(timer);
 		timer = setTimeout(() => {
-			test = v;
+			captured_text = v;
 		}, 750);
 	};
 </script>
@@ -70,7 +72,7 @@
 			<Card>
 				{rendered}
 			</Card>
-			<Card>{test}</Card>
+			<Card>{@html marked_text}</Card>
 		</div>
 	</div>
 </div>

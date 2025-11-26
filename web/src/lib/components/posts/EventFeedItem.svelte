@@ -6,6 +6,7 @@
 	import { current_user } from "$lib/state/current_user.svelte";
 	import RsvpBadge from "$lib/components/ui/badge/RsvpBadge.svelte";
 	import type { Event } from "$lib/api_calls/types";
+	import MarkedDownPost from "$lib/components/posts/MarkedDownPost.svelte";
 
 	interface Props {
 		event_item: Event;
@@ -31,11 +32,17 @@
 				<Card border_color="border-lime-500" hover_color="hover:bg-lime-100">
 					<H2>{event_item.title}</H2>
 					{#if event_item.description}
-						<p>{event_item.description}</p>
+						<MarkedDownPost captured_text={event_item.description} />
 					{/if}
 					<p>At {formattedStartTime}</p>
 					{#if event_item.address}
 						<p>at {event_item.address}</p>
+					{/if}
+					{#if event_item.url}
+						<Link url={event_item.url}>{event_item.url}</Link>
+					{/if}
+					{#if event_item.event_type}
+						<p>{event_item.event_type}</p>
 					{/if}
 
 					<div>

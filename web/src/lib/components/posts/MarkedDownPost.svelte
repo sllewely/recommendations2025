@@ -46,7 +46,7 @@
 </div>
 
 <style>
-	@reference '../../../app.css';
+	@reference '$src/app.css';
 
 	div.markddown :global(p) {
 		@apply text-base;

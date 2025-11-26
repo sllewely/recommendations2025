@@ -5,7 +5,7 @@ class Post < ApplicationRecord
   has_many :comments, as: :commentable, dependent: :destroy
   has_one :feed_item, as: :feedable, dependent: :destroy
 
-  validates :title, presence: true
+  validates :content, presence: true
 
   scope :by_friends, ->(friend_ids) { where(user_id: friend_ids) }
 

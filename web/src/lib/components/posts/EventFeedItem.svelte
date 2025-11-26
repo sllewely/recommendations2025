@@ -7,6 +7,7 @@
 	import RsvpBadge from "$lib/components/ui/badge/RsvpBadge.svelte";
 	import type { Event } from "$lib/api_calls/types";
 	import MarkedDownPost from "$lib/components/posts/MarkedDownPost.svelte";
+	import * as Tooltip from "$lib/components/ui/tooltip/index.js";
 
 	interface Props {
 		event_item: Event;
@@ -39,7 +40,16 @@
 						<p>at {event_item.address}</p>
 					{/if}
 					{#if event_item.url}
-						<Link url={event_item.url}>{event_item.url}</Link>
+						<Tooltip.Provider>
+							<Tooltip.Root>
+								<Tooltip.Trigger>
+									<Link url={event_item.url}>link</Link>
+								</Tooltip.Trigger>
+								<Tooltip.Content>
+									<p>{event_item.url}</p>
+								</Tooltip.Content>
+							</Tooltip.Root>
+						</Tooltip.Provider>
 					{/if}
 					{#if event_item.event_type}
 						<p>{event_item.event_type}</p>

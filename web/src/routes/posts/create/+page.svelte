@@ -68,7 +68,17 @@
 </script>
 
 <div>
-	<div class="lg:grid lg:grid-cols-2 lg:gap-4">
+	<div class="md:grid md:grid-cols-2 md:gap-4">
+		<div class="md:order-last">
+			<H1>Preview</H1>
+
+			{#if rendering}
+				<p>pause typing to render...</p>
+			{/if}
+			<Card>
+				<MarkedDownPost {captured_text} />
+			</Card>
+		</div>
 		<div class="">
 			<H1>Create a post</H1>
 
@@ -107,16 +117,6 @@
 					</div>
 					<FormButton>Create post</FormButton>
 				</form>
-			</Card>
-		</div>
-		<div>
-			<H1>Preview</H1>
-
-			{#if rendering}
-				<p>pause typing to render...</p>
-			{/if}
-			<Card>
-				<MarkedDownPost {captured_text} />
 			</Card>
 		</div>
 	</div>

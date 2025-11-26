@@ -15,7 +15,9 @@ class CommentsController < ApplicationController
     @comment = current_user.comments.new(comment_params)
     if @comment.save
       commentable = @comment.commentable
-      PushNotification.send_push_notification(commentable.user, "New Comment", "#{current_user.name} commented on your post")
+      if (commentable.user.id != current_user.id)
+        PushNotification.send_push_notification(commentable.user, "New Comment", "#{current_user.name} commented on your post")
+      end
       User.find(commentable.comments.pluck(:user_id).uniq).each do |user|
         next if user.id == current_user.id
         PushNotification.send_push_notification(user, "New Comment", "#{current_user.name} commented on a post you're following")

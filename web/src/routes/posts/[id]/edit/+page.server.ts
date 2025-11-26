@@ -13,8 +13,6 @@ export async function load({ cookies, params }) {
 	let post_response = await getPost(post_id, jwt);
 	let post = post_response["res"];
 
-	2 + 5;
-
 	return {
 		post_response: post_response,
 		form: await superValidate(post, zod(postFormSchema)),
@@ -22,22 +20,6 @@ export async function load({ cookies, params }) {
 }
 
 export const actions = {
-	update_post: async ({ cookies, request }) => {
-		const data = await request.formData();
-		const jwt = cookies.get("jwt");
-
-		const response = await api.patch(
-			`posts/${data.get("post_id")}`,
-			{
-				title: data.get("title"),
-				content: data.get("content"),
-			},
-			jwt,
-		);
-
-		return response;
-	},
-
 	create_post: async ({ cookies, request }) => {
 		const jwt = cookies.get("jwt");
 
@@ -47,8 +29,6 @@ export const actions = {
 				form,
 			});
 		}
-
-		2 + 5;
 
 		const response = await api.patch(
 			`posts/${form.data.id}`,

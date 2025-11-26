@@ -73,7 +73,7 @@
 	{#if creating}
 		<p>creating post...</p>
 	{/if}
-	<div class="grid grid-cols-2 gap-4">
+	<div class="lg:grid lg:grid-cols-2 lg:gap-4">
 		<div class="">
 			<Card>
 				<form
@@ -102,6 +102,7 @@
 							bind:value={rendered}
 							on:keydown={usersearch}
 							on:keyup={({ target: { value } }) => debounce(value)}
+							class="h-80"
 						/>
 					</div>
 					<FormButton>Create post</FormButton>
@@ -112,7 +113,6 @@
 			<Card>
 				{rendered}
 			</Card>
-			<Card>{@html marked_text}</Card>
 			<Card>
 				<MarkedDownPost {captured_text} />
 			</Card>

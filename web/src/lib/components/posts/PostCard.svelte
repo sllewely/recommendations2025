@@ -30,11 +30,11 @@
 <div>
 	<div class="flex flex-row justify-between">
 		<div>
-			<span class="font-bold"
-				><a class="text-teal-400 hover:text-orange-400" href="/users/{feed_item.user.id}"
-					>{feed_item.user.name}</a
-				></span
-			> posted
+			<span class="font-bold">
+				<a class="text-teal-400 hover:text-orange-400" href="/users/{feed_item.user.id}">
+					{feed_item.user.name}
+				</a>
+			</span> posted
 		</div>
 		<div>
 			<span class="text-sm">at {formattedCreateTime}</span>
@@ -45,7 +45,7 @@
 		<div class="p-2">
 			<a href="/posts/{feed_item.id}">
 				<Card border_color="border-orange-500" hover_color="hover:bg-orange-100">
-					<H2>{feed_item.title}</H2>
+					{#if feed_item.title}<H2>{feed_item.title}</H2>{/if}
 					{#if feed_item.content}
 						<MarkedDownPost captured_text={feed_item.content} />
 					{/if}

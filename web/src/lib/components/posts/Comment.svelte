@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Link from "$lib/components/text/Link.svelte";
 	import { parseAbsoluteToLocal } from "@internationalized/date";
+	import MarkedDownPost from "$lib/components/posts/MarkedDownPost.svelte";
 
 	const { comment } = $props();
 
@@ -28,7 +29,7 @@
 		</div>
 		<div class="text-left">
 			<p class="text-gray-500 dark:text-gray-400">
-				{comment.body}
+				<MarkedDownPost captured_text={comment.body} />
 			</p>
 		</div>
 	</article>

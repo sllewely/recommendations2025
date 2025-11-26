@@ -17,6 +17,7 @@ class CommentsController < ApplicationController
       commentable = @comment.commentable
       PushNotification.send_push_notification(commentable.user, "New Comment", "#{current_user.name} commented on your post")
       User.find(commentable.comments.pluck(:user_id).uniq).each do |user|
+        next if user.id == current_user.id
         PushNotification.send_push_notification(user, "New Comment", "#{current_user.name} commented on a post you're following")
       end
       render json: CommentBlueprint.render(@comment, view: :authed), status: :created

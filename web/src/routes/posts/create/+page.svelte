@@ -81,6 +81,7 @@
 		</div>
 		<div class="">
 			<H1>Create a post</H1>
+			<p>writing to your friends builds community</p>
 
 			{#if creating}
 				<p>creating post...</p>

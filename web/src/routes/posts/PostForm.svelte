@@ -94,7 +94,13 @@
 		<div>
 			<Card.Root>
 				<Card.Header>
-					<Card.Title>Create a post</Card.Title>
+					<Card.Title>
+						{#if $formData.id}
+							Edit post
+						{:else}
+							Create a post
+						{/if}
+					</Card.Title>
 					<Card.Description>writing to your friends builds community</Card.Description>
 				</Card.Header>
 				<Card.Content>

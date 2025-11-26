@@ -83,6 +83,8 @@
 					<Card.Description>
 						{#if rendering}
 							<p>pause typing to render...</p>
+						{:else}
+							<p>markdown supported</p>
 						{/if}
 					</Card.Description>
 				</Card.Header>

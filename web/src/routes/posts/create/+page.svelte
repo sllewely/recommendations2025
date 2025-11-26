@@ -5,7 +5,6 @@
 	import H1 from "$lib/components/text/H1.svelte";
 	import Card from "$lib/components/Card.svelte";
 	import { Textarea } from "$lib/components/ui/textarea/index.js";
-	import { marked } from "marked";
 
 	import { newToast, ToastType } from "$lib/state/toast.svelte.js";
 	import { goto } from "$app/navigation";
@@ -14,17 +13,18 @@
 	let { data, form } = $props();
 
 	let creating = $state(false);
+	let rendering = $state(false);
 
-	let rendered = $state(form?.content);
 	let captured_text = $state("");
-	let marked_text = $derived(marked(captured_text));
 
 	let timer: number;
 	const debounce = (v: string) => {
+		rendering = true;
 		clearTimeout(timer);
 		timer = setTimeout(() => {
 			captured_text = v;
-		}, 750);
+			rendering = false;
+		}, 500);
 	};
 
 	let searching_user = $state(false);
@@ -68,13 +68,13 @@
 </script>
 
 <div>
-	<H1>Create a post</H1>
-
-	{#if creating}
-		<p>creating post...</p>
-	{/if}
 	<div class="lg:grid lg:grid-cols-2 lg:gap-4">
 		<div class="">
+			<H1>Create a post</H1>
+
+			{#if creating}
+				<p>creating post...</p>
+			{/if}
 			<Card>
 				<form
 					method="POST"
@@ -99,7 +99,7 @@
 
 						<Textarea
 							name="content"
-							bind:value={rendered}
+							value={form?.content}
 							on:keydown={usersearch}
 							on:keyup={({ target: { value } }) => debounce(value)}
 							class="h-80"
@@ -110,9 +110,11 @@
 			</Card>
 		</div>
 		<div>
-			<Card>
-				{rendered}
-			</Card>
+			<H1>Preview</H1>
+
+			{#if rendering}
+				<p>pause typing to render...</p>
+			{/if}
 			<Card>
 				<MarkedDownPost {captured_text} />
 			</Card>

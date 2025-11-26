@@ -46,6 +46,16 @@ RSpec.describe "Comments", type: :request do
       expect(res['body']).to eq('hoo boy I sure love stew')
       expect(res['commentable_id']).to eq(recommendation.id)
     end
+
+    it 'cant have an empty body' do
+      post1 = create(:post)
+
+      post "/comments", params: { body: '', commentable_id: post1.id, commentable_type: "Post" }, headers: @headers
+
+      expect(response).to have_http_status(:unprocessable_content)
+      res = JSON.parse(response.body)
+      expect(res['error']).to eq("body: can't be blank")
+    end
   end
 
   describe 'update' do

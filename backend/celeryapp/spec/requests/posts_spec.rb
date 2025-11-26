@@ -23,12 +23,12 @@ RSpec.describe "Posts", type: :request do
       expect(res['title']).to eq("new fav book")
     end
 
-    it 'posts must have a title' do
-      post "/posts", params: { content: "I love it a lot, you should read it" }, headers: @headers
+    it 'posts must have a body' do
+      post "/posts", params: {}, headers: @headers
 
       expect(response).to have_http_status(:unprocessable_content)
       res = JSON.parse(response.body)
-      expect(res['error']).to eq("title: can't be blank")
+      expect(res['error']).to eq("content: can't be blank")
     end
   end
 

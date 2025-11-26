@@ -7,7 +7,7 @@
 	import { Textarea } from "$lib/components/ui/textarea/index.js";
 
 	import { newToast, ToastType } from "$lib/state/toast.svelte.js";
-	import { goto } from "$app/navigation";
+
 	import MarkedDownPost from "$lib/components/posts/MarkedDownPost.svelte";
 
 	let { data, form } = $props();

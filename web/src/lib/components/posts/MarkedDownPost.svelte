@@ -39,7 +39,6 @@
 		<h1>h1</h1>
 		<h2>h2</h2>
 		<h3>h3</h3>
-		<a>link</a>
 	</div>
 	<section>
 		{@html marked_text}
@@ -50,7 +49,7 @@
 	@reference '../../../app.css';
 
 	div.markddown :global(p) {
-		@apply text-sm;
+		@apply text-base;
 	}
 	div.markddown :global(h1) {
 		@apply text-4xl;
@@ -64,10 +63,12 @@
 	div.markddown :global(a) {
 		@apply underline text-cyan-500;
 	}
-	/*section :global(p) {*/
-	/*	color: #0000ff;*/
-	/*}*/
-	/*div :global(p) {*/
-	/*	color: #ffff00;*/
-	/*}*/
+	div.markddown :global(li) {
+		@apply text-sm;
+		list-style-type: disc;
+		list-style-position: inside;
+	}
+	div.markddown :global(code) {
+		@apply bg-gray-200 p-1 rounded;
+	}
 </style>

@@ -7,6 +7,7 @@
 	import { current_user } from "$lib/state/current_user.svelte";
 	import type { Post } from "$lib/api_calls/types";
 	import { parseAbsoluteToLocal } from "@internationalized/date";
+	import MarkedDownPost from "$lib/components/posts/MarkedDownPost.svelte";
 
 	interface Props {
 		feed_item: Post;
@@ -46,7 +47,7 @@
 				<Card border_color="border-orange-500" hover_color="hover:bg-orange-100">
 					<H2>{feed_item.title}</H2>
 					{#if feed_item.content}
-						<p>{feed_item.content}</p>
+						<MarkedDownPost captured_text={feed_item.content} />
 					{/if}
 				</Card>
 			</a>

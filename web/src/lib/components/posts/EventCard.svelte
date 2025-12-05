@@ -26,19 +26,32 @@
 	// should be updateable state
 	let current_user_rsvp = feed_item.rsvps.find((rsvp) => rsvp.user.id === current_user.id) ?? null;
 
-	const localizedCreateTime = parseAbsoluteToLocal(feed_item.created_at);
-	const formattedCreateTime = new Intl.DateTimeFormat("en-US", {
-		dateStyle: "medium",
-		timeStyle: "short",
-		timeZone: localizedCreateTime.timeZone,
-	}).format(localizedCreateTime.toDate());
+	let localizedCreateTime = $state(parseAbsoluteToLocal(feed_item.created_at));
+	let formattedCreateTime = $state();
+	let localizedStartTime = $state(parseAbsoluteToLocal(feed_item.start_date_time));
+	let formattedStartTime = $state();
 
-	const localizedStartTime = parseAbsoluteToLocal(feed_item.start_date_time);
-	const formattedStartTime = new Intl.DateTimeFormat("en-US", {
-		dateStyle: "medium",
-		timeStyle: "short",
-		timeZone: localizedCreateTime.timeZone,
-	}).format(localizedStartTime.toDate());
+	onMount(() => {
+		localizedCreateTime = parseAbsoluteToLocal(feed_item.created_at);
+		// console.log("localizedCreateTime", $state.snapshot(localizedCreateTime));
+
+		formattedCreateTime = new Intl.DateTimeFormat("en-US", {
+			dateStyle: "medium",
+			timeStyle: "short",
+			timeZone: localizedCreateTime.timeZone,
+		}).format(localizedCreateTime.toDate());
+		// console.log("formattedCreateTime", $state.snapshot(formattedCreateTime));
+
+		localizedStartTime = parseAbsoluteToLocal(feed_item.start_date_time);
+		console.log("localizedStartTime", $state.snapshot(localizedStartTime));
+		formattedStartTime = new Intl.DateTimeFormat("en-US", {
+			dateStyle: "medium",
+			timeStyle: "short",
+			timeZone: localizedCreateTime.timeZone,
+		}).format(localizedStartTime.toDate());
+		console.log("formattedStartTime", $state.snapshot(formattedStartTime));
+		console.log("timezone", localizedCreateTime.timeZone);
+	});
 </script>
 
 <div>

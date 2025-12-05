@@ -3,7 +3,7 @@
 	import H2 from "$lib/components/text/H2.svelte";
 	import Link from "$lib/components/text/Link.svelte";
 	import { isSignedIn } from "$lib/state/current_user.svelte";
-	import { parseAbsoluteToLocal } from "@internationalized/date";
+	import { parseAbsolute, parseAbsoluteToLocal } from "@internationalized/date";
 	import { current_user } from "$lib/state/current_user.svelte.js";
 	import type { Event } from "$lib/api_calls/types";
 	import RsvpBadge from "$lib/components/ui/badge/RsvpBadge.svelte";
@@ -43,6 +43,7 @@
 		}).format(localizedCreateTime.toDate());
 		// console.log("formattedCreateTime", $state.snapshot(formattedCreateTime));
 
+		console.log("original start date time", parseAbsolute(feed_item.start_date_time));
 		localizedStartTime = parseAbsoluteToLocal(feed_item.start_date_time);
 		console.log("localizedStartTime", $state.snapshot(localizedStartTime));
 		formattedStartTime = new Intl.DateTimeFormat("en-US", {

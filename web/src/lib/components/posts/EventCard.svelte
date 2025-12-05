@@ -9,6 +9,7 @@
 	import RsvpBadge from "$lib/components/ui/badge/RsvpBadge.svelte";
 	import MarkedDownPost from "$lib/components/posts/MarkedDownPost.svelte";
 	import * as Tooltip from "$lib/components/ui/tooltip/index.js";
+	import { onMount } from "svelte";
 
 	interface Props {
 		feed_item: Event;

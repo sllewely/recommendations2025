@@ -4,8 +4,13 @@
 	import { Textarea } from "$lib/components/ui/textarea";
 	import { newToast, ToastType } from "$lib/state/toast.svelte";
 	import { MessageCirclePlus } from "@lucide/svelte";
+	import type { Comment, Feedable } from "$lib/api_calls/types";
 
-	let { feed_item } = $props();
+	interface Props {
+		feed_item: Feedable;
+		update_comments: (comments: Comment[]) => void;
+	}
+	let { feed_item, update_comments }: Props = $props();
 
 	let posting = $state(false);
 </script>
@@ -24,6 +29,8 @@
 				posting = false;
 				let res = result.data;
 				if (res.success) {
+					console.log(res);
+					update_comments(res.res);
 					newToast("You have successfully created a comment ~~!", ToastType.Success);
 				} else {
 					newToast("Error creating a comment: " + res.message, ToastType.Error);

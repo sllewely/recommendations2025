@@ -22,7 +22,8 @@ class CommentsController < ApplicationController
         next if user.id == current_user.id
         PushNotification.send_push_notification(user, "New Comment", "#{current_user.name} commented on a post you're following")
       end
-      render json: CommentBlueprint.render(@comment, view: :authed), status: :created
+
+      render json: CommentBlueprint.render(commentable.comments.order(:created_at), view: :authed), status: :created
     else
       render json: { error: @comment.errors_to_s }, status: :unprocessable_content
     end

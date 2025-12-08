@@ -21,8 +21,9 @@ RSpec.describe "Comments", type: :request do
 
       expect(response).to have_http_status(:created)
       res = JSON.parse(response.body)
-      expect(res['body']).to eq('hoo boy I sure love stew')
-      expect(res['commentable_id']).to eq(event.id)
+      expect(res.size).to eq(1)
+      expect(res[0]['body']).to eq('hoo boy I sure love stew')
+      expect(res[0]['commentable_id']).to eq(event.id)
     end
 
     it 'creates a comment on a post' do
@@ -32,8 +33,9 @@ RSpec.describe "Comments", type: :request do
 
       expect(response).to have_http_status(:created)
       res = JSON.parse(response.body)
-      expect(res['body']).to eq('hoo boy I sure love stew')
-      expect(res['commentable_id']).to eq(post1.id)
+      expect(res.size).to eq(1)
+      expect(res[0]['body']).to eq('hoo boy I sure love stew')
+      expect(res[0]['commentable_id']).to eq(post1.id)
     end
 
     it 'creates a comment on a recommendation' do
@@ -43,8 +45,9 @@ RSpec.describe "Comments", type: :request do
 
       expect(response).to have_http_status(:created)
       res = JSON.parse(response.body)
-      expect(res['body']).to eq('hoo boy I sure love stew')
-      expect(res['commentable_id']).to eq(recommendation.id)
+      expect(res.size).to eq(1)
+      expect(res[0]['body']).to eq('hoo boy I sure love stew')
+      expect(res[0]['commentable_id']).to eq(recommendation.id)
     end
 
     it 'cant have an empty body' do
@@ -55,6 +58,21 @@ RSpec.describe "Comments", type: :request do
       expect(response).to have_http_status(:unprocessable_content)
       res = JSON.parse(response.body)
       expect(res['error']).to eq("body: can't be blank")
+    end
+
+    it 'creates a comment and returns multiple' do
+      event = create(:event)
+      create(:comment, :for_event, commentable: event)
+      create(:comment, :for_event, commentable: event)
+      create(:comment, :for_event, commentable: event)
+
+      post "/comments", params: { body: 'hoo boy I sure love stew', commentable_id: event.id, commentable_type: "Event" }, headers: @headers
+
+      expect(response).to have_http_status(:created)
+      res = JSON.parse(response.body)
+      expect(res.size).to eq(4)
+      expect(res[3]['body']).to eq('hoo boy I sure love stew')
+      expect(res[3]['commentable_id']).to eq(event.id)
     end
   end
 

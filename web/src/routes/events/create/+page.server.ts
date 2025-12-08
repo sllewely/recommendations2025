@@ -29,7 +29,20 @@ export const actions = {
 		let start_time = form.data.start_time;
 		let time_zone = form.data.time_zone;
 		let datetime = new Date(`${start_date} ${start_time}`);
+
+		// let zoned_date_time = new ZonedDateTime(
+		// 	datetime.getFullYear(),
+		// 	datetime.getMonth(),
+		// 	datetime.getDate(),
+		// 	time_zone,
+		// 	0,
+		// 	datetime.getHours(),
+		// 	datetime.getMinutes(),
+		// );
+
 		let zoned_date_time = fromDate(datetime, time_zone);
+
+		2 + 5;
 
 		const response = await api.post(
 			"events",

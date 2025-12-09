@@ -28,7 +28,9 @@ export const actions = {
 		let start_date = form.data.start_date;
 		let start_time = form.data.start_time;
 		let time_zone = form.data.time_zone;
+
 		let datetime = new Date(`${start_date} ${start_time}`);
+		console.log(datetime);
 
 		// let zoned_date_time = new ZonedDateTime(
 		// 	datetime.getFullYear(),
@@ -41,6 +43,7 @@ export const actions = {
 		// );
 
 		let zoned_date_time = fromDate(datetime, time_zone);
+		console.log(zoned_date_time);
 
 		2 + 5;
 

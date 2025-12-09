@@ -3,6 +3,8 @@
 	import { current_user } from "$lib/state/current_user.svelte.js";
 	import { setPendingToast, ToastType } from "$lib/state/toast.svelte";
 	import { Settings, Menu, X } from "@lucide/svelte";
+	import bblogo from "$lib/assets/android-launchericon-72-72.png";
+
 	let mobileMenuOpen = $state(false);
 
 	let signed_in = $state(false);
@@ -40,7 +42,14 @@
 
 		<!-- Logo -->
 		<div class="w-full text-center md:w-auto">
-			<a href="/"><p class="text-yellow-400 text-xl">BumbleBeans</p></a>
+			<div class="flex flex-row items-center">
+				<div class="w-16 h-10">
+					<img src={bblogo} />
+				</div>
+				<div>
+					<a href="/"> <p class="text-yellow-400 text-xl">BumbleBeans</p></a>
+				</div>
+			</div>
 		</div>
 
 		<!-- Desktop navigation -->

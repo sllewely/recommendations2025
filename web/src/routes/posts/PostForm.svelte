@@ -46,6 +46,22 @@
 			// TODO: no escape key on mobile lol
 			searching_user = false;
 		}
+		if (e.key === "Tab") {
+			e.preventDefault();
+			//insert the uuid
+			let uuid = user_search_results[0].id;
+
+			const target = e.target as HTMLTextAreaElement;
+			const whole_text = target.value;
+			// call backend
+			const pos = target.selectionStart;
+			// walk backwards until the @ or space
+			const last_at = whole_text.lastIndexOf("@", pos);
+			target.value =
+				whole_text.substring(0, last_at + 1) +
+				`[${user_search_results[0].name}](/users/${uuid})` +
+				whole_text.substring(pos);
+		}
 		if (!searching_user) {
 			return;
 		}

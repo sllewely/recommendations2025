@@ -7,27 +7,29 @@
 		name: "user_tag",
 		level: "inline", // Is this a block-level or inline-level tokenizer?
 		start(src) {
-			return src.match(/@/)?.index;
+			return src.match(/@\[/)?.index;
 		}, // Hint to Marked.js to stop and check for a match
 		tokenizer(src, tokens) {
-			const rule = /^:([^:\n]+):([^:\n]*)(?:\n|$)/; // Regex for the complete token, anchor to string start
+			const rule = /^@(\[.+?\]\(\/users\/.+?\))/; // Regex for the complete token, anchor to string start
 			const match = rule.exec(src);
 			if (match) {
 				return {
 					// Token to generate
-					type: "description", // Should match "name" above
+					type: "user_tag", // Should match "name" above
 					raw: match[0], // Text to consume from the source
-					dt: this.lexer.inlineTokens(match[1].trim()), // Additional custom properties, including
-					dd: this.lexer.inlineTokens(match[2].trim()), //   any further-nested inline tokens
+					entire: this.lexer.inlineTokens(match[1].trim()), // Additional custom properties, including
+					// user_id: this.lexer.inlineTokens(match[2].trim()), // Additional custom properties, including
 				};
 			}
 		},
 		renderer(token) {
-			return `\n<dt>${this.parser.parseInline(token.dt)}</dt><dd>${this.parser.parseInline(token.dd)}</dd>`;
+			// let link = `[${token.name}](/users/${token.user_id})`;
+			// return `<blah>@${this.parser.parseInline(link)}"></blah>`;
+			return `@aaaaaaaaa${this.parser.parseInline(token.entire)}`;
 		},
-		childTokens: ["dt", "dd"], // Any child tokens to be visited by walkTokens
 	};
 
+	marked.use({ extensions: [user_tag] });
 	let marked_text = $derived(marked(captured_text));
 </script>
 

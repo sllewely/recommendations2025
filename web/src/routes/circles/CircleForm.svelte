@@ -74,7 +74,7 @@
 									// call search_friends to populate potential friends
 									const name = document.getElementById("search").value;
 									console.log("searching for", name);
-									const response = await fetch(`api/friends/search?search=${name}`, {
+									const response = await fetch(`/api/friends/search?search=${name}`, {
 										method: "GET",
 										headers: { "Content-Type": "application/json" },
 									});

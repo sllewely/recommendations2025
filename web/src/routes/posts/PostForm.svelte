@@ -24,6 +24,8 @@
 
 	let captured_text = $state("");
 
+	let user_search_results = $state([]);
+
 	let timer: number;
 	const debounce = (v: string) => {
 		rendering = true;
@@ -50,7 +52,7 @@
 		const target = e.target as HTMLTextAreaElement;
 
 		// wait for the keypress to modify the text
-		setTimeout(() => {
+		setTimeout(async () => {
 			const whole_text = target.value;
 			// call backend
 			const pos = target.selectionStart;
@@ -59,6 +61,12 @@
 
 			const searchstring = whole_text.substring(last_at + 1, pos);
 			console.log(searchstring);
+			const response = await fetch(`/api/friends/search?search=${searchstring}`, {
+				method: "GET",
+				headers: { "Content-Type": "application/json" },
+			});
+
+			user_search_results = await response.json();
 		}, 0);
 
 		// call the backend, and return some users
@@ -130,6 +138,23 @@
 						<Form.Field {form} name="content">
 							<Form.Control let:attrs>
 								<Form.Label>Content</Form.Label>
+								<div style="position:relative">
+									{#if user_search_results.length > 0}
+										<div style="position:absolute; left: 10px; bottom: -10px">
+											<Card.Root>
+												<Card.Content>
+													<div class="flex flex-col">
+														{#each user_search_results as user}
+															<div>
+																{user.name}
+															</div>
+														{/each}
+													</div>
+												</Card.Content>
+											</Card.Root>
+										</div>
+									{/if}
+								</div>
 								<Textarea
 									{...attrs}
 									bind:value={$formData.content}

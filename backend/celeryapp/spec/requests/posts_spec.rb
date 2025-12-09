@@ -62,6 +62,20 @@ RSpec.describe "Posts", type: :request do
       expect(feed_items_res.first["feedable"]['user']['id']).to_not be_nil
     end
 
+    it 'wont show posts from my not-friend' do
+      user = create(:user)
+      3.times do
+        create(:post, user: user)
+      end
+      get "/posts", params: {}, headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      res = JSON.parse(response.body)
+      expect(res.size).to eq(2)
+      feed_items_res = res['feed_items']
+      expect(feed_items_res.size).to eq(0)
+    end
+
     it 'gets all posts and recommendations' do
       create(:post, user: @friend)
       create(:recommendation, user: @friend)

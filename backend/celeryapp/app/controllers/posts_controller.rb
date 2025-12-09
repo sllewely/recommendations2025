@@ -3,8 +3,9 @@ class PostsController < ApplicationController
   def index
     user_id = params[:user_id]
 
-    feed = FeedItem.includes(feedable: [event: [:user, comments: [:user]], post: [:user, comments: [:user]], recommendation: [:user, comments: [:user]]]).order(created_at: :desc)
+    feed = FeedItem.can_see(current_user.friend_ids).includes(feedable: [event: [:user, comments: [:user]], post: [:user, comments: [:user]], recommendation: [:user, comments: [:user]]]).order(created_at: :desc)
     feed = feed.where(user_id: user_id) if user_id
+    feed = feed
 
     @pagy, @feed_items = pagy(feed, limit: 30)
     render json: {

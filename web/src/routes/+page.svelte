@@ -20,12 +20,16 @@
 
 			<p>&nbsp;</p>
 			<p>demo instructions</p>
+
 			<ul>
+				<li>- on your phone</li>
 				<li>- create an account</li>
 				<li>- sign in!</li>
+				<li>- enable notifications</li>
 				<li>- add friends :)</li>
 				<li>- make a post!!!</li>
 				<li>- create an event or save a book, movie, etc you want to remember or share</li>
+				<li>- download the app as a pwa</li>
 			</ul>
 		</div>
 	</div>

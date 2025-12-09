@@ -63,12 +63,15 @@ RSpec.describe "Events", type: :request do
 
       auth_token = JSON.parse(response.body)["auth_token"]
       @headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{auth_token}" }
+
+      @friend = create(:user)
+      Friendship.create_bidirectional_friendship!(@my_user, @friend)
     end
 
     it 'retrieves a list of events' do
       create(:event, user: @my_user)
-      create(:event, user: other_user)
-      create(:event, user: other_user)
+      create(:event, user: @friend)
+      create(:event, user: @friend)
 
       get '/events', headers: @headers
 
@@ -79,8 +82,8 @@ RSpec.describe "Events", type: :request do
 
     end
 
-    it 'retrieves a list of events, with creator_name and id' do
-      create(:event, user: other_user)
+    it 'wont show me events by non-friend users' do
+      create(:event, user: @my_user)
       create(:event, user: other_user)
       create(:event, user: other_user)
 
@@ -88,18 +91,32 @@ RSpec.describe "Events", type: :request do
 
       expect(response).to have_http_status(:ok)
       res = JSON.parse(response.body)
+      expect(res.size).to eq(1)
+      expect(res.first['title']).to_not be_nil
+
+    end
+
+    it 'retrieves a list of events, with creator_name and id' do
+      create(:event, user: @friend)
+      create(:event, user: @friend)
+      create(:event, user: @friend)
+
+      get '/events', headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      res = JSON.parse(response.body)
       expect(res.size).to eq(3)
-      expect(res.first['user']['name']).to eq(other_user.name)
-      expect(res.first['user']['id']).to eq(other_user.id)
+      expect(res.first['user']['name']).to eq(@friend.name)
+      expect(res.first['user']['id']).to eq(@friend.id)
     end
 
     it 'retrieves a list of events, with rsvps' do
-      event1 = create(:event, user: other_user)
-      event2 = create(:event, user: other_user)
+      event1 = create(:event, user: @friend)
+      event2 = create(:event, user: @friend)
       create(:rsvp, event: event1, user: @my_user, status: 'going')
-      create(:rsvp, event: event1, user: other_user)
+      create(:rsvp, event: event1, user: @friend)
       create(:rsvp, event: event2, user: @my_user)
-      create(:rsvp, event: event2, user: other_user, status: 'not_interested')
+      create(:rsvp, event: event2, user: @friend, status: 'not_interested')
 
       get '/events', headers: @headers
 

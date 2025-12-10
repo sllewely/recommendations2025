@@ -42,14 +42,16 @@
 
 		<!-- Logo -->
 		<div class="w-full text-center md:w-auto">
-			<div class="flex flex-row items-center">
-				<div class="w-16 h-10">
-					<img src={bblogo} />
+			<a href="/">
+				<div class="flex flex-row items-center">
+					<div class="w-16 h-10">
+						<img src={bblogo} />
+					</div>
+					<div>
+						<p class="text-yellow-400 text-xl">BumbleBeans</p>
+					</div>
 				</div>
-				<div>
-					<a href="/"> <p class="text-yellow-400 text-xl">BumbleBeans</p></a>
-				</div>
-			</div>
+			</a>
 		</div>
 
 		<!-- Desktop navigation -->

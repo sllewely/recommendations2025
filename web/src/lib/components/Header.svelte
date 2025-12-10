@@ -33,6 +33,8 @@
 		setPendingToast("You have been signed out!", ToastType.Info);
 		await goto("/");
 	};
+
+	let icon_link = $derived(signed_in ? "/posts" : "/");
 </script>
 
 <header class="text-white p-0 relative">
@@ -42,7 +44,7 @@
 
 		<!-- Logo -->
 		<div class="w-full text-center md:w-auto">
-			<a href="/">
+			<a href={icon_link}>
 				<div class="flex flex-row items-center">
 					<div class="w-16 h-10">
 						<img src={bblogo} />

@@ -23,11 +23,23 @@
 			}
 		},
 		renderer(token) {
-			// let link = `[${token.name}](/users/${token.user_id})`;
-			// return `<blah>@${this.parser.parseInline(link)}"></blah>`;
-			return `@aaaaaaaaa${this.parser.parseInline(token.entire)}`;
+			const uuid_regex = /\w{8}-\w{4}-\w{4}-\w{4}-\w{12}/;
+			const uuid = uuid_regex.exec(token.entire[0].raw)?.[0];
+			return `<div class="user_tag" id=${uuid}>@${this.parser.parseInline(token.entire)}</div>`;
 		},
 	};
+
+	// exec only in browser
+	// onMount(() => {
+	// 	window.addEventListener("DOMContentLoaded", () => {
+	// 		const container = document.querySelector("div.user_tag");
+	// 		if (container === null) return;
+	// 		container.addEventListener("mouseenter", (e) => {
+	// 			console.log("detect user tag");
+	// 			console.log(e.target.id);
+	// 		});
+	// 	});
+	// });
 
 	marked.use({ extensions: [user_tag] });
 	let marked_text = $derived(marked(captured_text));

@@ -17,8 +17,7 @@
 					// Token to generate
 					type: "user_tag", // Should match "name" above
 					raw: match[0], // Text to consume from the source
-					entire: this.lexer.inlineTokens(match[1].trim()), // Additional custom properties, including
-					// user_id: this.lexer.inlineTokens(match[2].trim()), // Additional custom properties, including
+					entire: this.lexer.inlineTokens(match[1].trim()), // Additional custom properties
 				};
 			}
 		},
@@ -29,6 +28,7 @@
 		},
 	};
 
+	// @TODO: I want a user card to load on hover
 	// exec only in browser
 	// onMount(() => {
 	// 	window.addEventListener("DOMContentLoaded", () => {

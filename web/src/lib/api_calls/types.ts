@@ -111,3 +111,10 @@ export interface Recommendation {
 }
 
 export type CreateRecommendationData = unknown;
+
+export type FriendStatus =
+	| "pending_friend_request"
+	| "friends"
+	| "sent_friend_request"
+	| "none"
+	| "self";

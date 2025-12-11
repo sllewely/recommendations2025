@@ -12,7 +12,6 @@
 	import UserSearchResult from "$lib/components/users/UserSearchResult.svelte";
 	import PendingFriendRequest from "$lib/components/users/PendingFriendRequest.svelte";
 	import Friend from "$lib/components/users/Friend.svelte";
-	import { friends_map, fetch_friends_map } from "$lib/state/friends_map.svelte.js";
 
 	let { data, form } = $props();
 

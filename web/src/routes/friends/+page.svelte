@@ -12,9 +12,22 @@
 	import UserSearchResult from "$lib/components/users/UserSearchResult.svelte";
 	import PendingFriendRequest from "$lib/components/users/PendingFriendRequest.svelte";
 	import Friend from "$lib/components/users/Friend.svelte";
-	import { friends_map, fetch_friends_map } from "$lib/state/friends_map.svelte.js";
+	import type { User, FriendStatus, FriendsMap } from "$lib/api_calls/types";
+	import Link from "$lib/components/text/Link.svelte";
+	import FriendStatusButton from "$lib/components/users/FriendStatusButton.svelte";
 
-	let { data, form } = $props();
+	interface Props {
+		data: {
+			my_user: User;
+			friends_map: FriendsMap;
+			friend_requests_response: any;
+			friends_response: any;
+			outgoing_friend_request_map: Map<string, any>;
+		};
+		form: any;
+	}
+
+	let { data, form }: Props = $props();
 
 	let my_user = data.my_user;
 
@@ -49,6 +62,8 @@
 		document.getElementById("search_form").requestSubmit();
 	}
 </script>
+
+{console.log("fm", data.friends_map)}
 
 <div>
 	<H1>Friends!</H1>
@@ -139,12 +154,19 @@
 
 				<div>
 					{#each users as user}
-						<div class="">
-							<UserSearchResult
-								{user}
-								is_friend={user.id in friends_map.friends_map}
-								is_pending={data.outgoing_friend_request_map.has(user.id.toString())}
-							/>
+						<div
+							class="p-2 my-2 border-1 border-gray-200 rounded-sm flex flex-row justify-between items-center"
+						>
+							<span>
+								<Link url="/users/{user.id}"><p>{user.name}</p></Link>
+							</span>
+
+							<div>
+								<FriendStatusButton
+									{user}
+									friend_status_prop={data.friends_map[user.id] ?? "none"}
+								/>
+							</div>
 						</div>
 					{/each}
 				</div>

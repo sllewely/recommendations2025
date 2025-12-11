@@ -111,3 +111,13 @@ export interface Recommendation {
 }
 
 export type CreateRecommendationData = unknown;
+
+export type FriendStatus =
+	| "pending_friend_request"
+	| "friends"
+	| "sent_friend_request"
+	| "none"
+	| "self";
+
+// key is a user uuid.  If missing, status is "none".
+export type FriendsMap = Map<string, FriendStatus>;

@@ -2,13 +2,27 @@ class FriendRequestsController < ApplicationController
   include PushNotification
 
   def show
-    # do I have a friend request to this user?
+    # What is my friend status?
     user = User.find(params[:id])
-    friend_request = user.friend_requests.where(incoming_friend_id: current_user.id)&.first
-    if friend_request.nil?
-      render json: {}, status: :not_found and return
+
+    if user.id == current_user.id
+      render json: { status: :self }, status: :ok and return
     end
-    render json: FriendRequestBlueprint.render(friend_request), status: :ok
+
+    # from the current user
+    outgoing_friend_request = user.friend_requests.where(incoming_friend_id: current_user.id)&.first
+    if outgoing_friend_request
+      render json: { status: :sent_friend_request }, status: :ok and return
+    end
+    # to the current user
+    incoming_friend_request = user.outgoing_friend_requests.where(user_id: current_user.id)&.first
+    if incoming_friend_request
+      render json: { status: :pending_friend_request }, status: :ok and return
+    end
+    if current_user.friends.find_by(id: user.id)
+      render json: { status: :friends }, status: :ok and return
+    end
+    render json: { status: :none }, status: :ok
   end
 
   # Returns the user associated with the friend request.
@@ -24,6 +38,7 @@ class FriendRequestsController < ApplicationController
     friend_id = params['user_id']
     user = User.find_by(id: friend_id)
     render json: { error: "Cannot send friend request: user not found" }, status: :unprocessable_content and return if user.nil?
+    render json: { error: "Cannot send friend request: it you" }, status: :unprocessable_content and return if friend_id == current_user.id
     render json: { error: "Cannot send friend request: already friends" }, status: :unprocessable_content and return if current_user.friends.find_by(id: friend_id).present?
     try do
       ActiveRecord::Base.transaction do

@@ -14,24 +14,52 @@ RSpec.describe "FriendRequests", type: :request do
       @headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{auth_token}" }
     end
 
-    it 'gets my friend request to the user, if it exists' do
+    it 'I see that I have a pending friend request with this user' do
       new_friend = create(:user)
       create(:friend_request, user: new_friend, incoming_friend: @my_user)
       get "/friend_requests/#{new_friend.id}", params: {}, headers: @headers
 
       expect(response).to have_http_status(:ok)
       res = JSON.parse(response.body)
-      expect(res['user']['id']).to eq new_friend.id
-      expect(res['incoming_friend']['id']).to eq @my_user.id
+      expect(res['status']).to eq "sent_friend_request"
+    end
+
+    it 'I see that I have a pending friend request from this user' do
+      new_friend = create(:user)
+      create(:friend_request, user: @my_user, incoming_friend: new_friend)
+      get "/friend_requests/#{new_friend.id}", params: {}, headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      res = JSON.parse(response.body)
+      expect(res['status']).to eq "pending_friend_request"
+    end
+
+    it 'I see that we are friends' do
+
+      new_friend = create(:user)
+      Friendship.create_bidirectional_friendship!(@my_user, new_friend)
+      get "/friend_requests/#{new_friend.id}", params: {}, headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      res = JSON.parse(response.body)
+      expect(res['status']).to eq "friends"
+    end
+
+    it 'when I look up my friendship status with myself, I see self' do
+      get "/friend_requests/#{@my_user.id}", params: {}, headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      res = JSON.parse(response.body)
+      expect(res['status']).to eq "self"
     end
 
     it 'does not find a friend request, if it doesnt exist' do
       new_friend = create(:user)
       get "/friend_requests/#{new_friend.id}", params: {}, headers: @headers
 
-      expect(response).to have_http_status(:not_found)
+      expect(response).to have_http_status(:ok)
       res = JSON.parse(response.body)
-      expect(res).to eq({})
+      expect(res['status']).to eq("none")
     end
 
   end

@@ -5,7 +5,6 @@
 	import { current_user } from "$lib/state/current_user.svelte.js";
 	import { notifs } from "$lib/state/notifications.svelte.js";
 	import { fetch_notifs } from "$lib/utils/notifs";
-	import { friends_map, fetch_friends_map } from "$lib/state/friends_map.svelte.js";
 	import { onMount } from "svelte";
 	import BannerNotifications from "$lib/components/notifications/BannerNotifications.svelte";
 	import { afterNavigate } from "$app/navigation";
@@ -20,20 +19,8 @@
 		}
 	});
 
-	// every 10 seconds, poll notifications
 	onMount(() => {
-		fetch_friends_map();
 		fetch_notifs();
-		// const interval = setInterval(
-		// 	() => {
-		// 		fetch_notifs();
-		// 	},
-		// 	1000 * 60 * 5,
-		// ); // 5 minutes
-		//
-		// return () => {
-		// 	clearInterval(interval);
-		// };
 	});
 
 	afterNavigate(() => {

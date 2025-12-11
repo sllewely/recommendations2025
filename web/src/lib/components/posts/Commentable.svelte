@@ -19,11 +19,17 @@
 	let update_comments = (new_comments: Comment[]) => {
 		all_comments = new_comments;
 	};
+
+	let show_extra_comment = $state(true);
+
+	let toggle_comment = () => {
+		show_extra_comment = !show_extra_comment;
+	};
 </script>
 
 <div>
 	<Collapsible.Root>
-		<Collapsible.Trigger>
+		<Collapsible.Trigger onclick={toggle_comment}>
 			<Link>
 				<div class="flex">
 					{num_comments} Comments
@@ -32,14 +38,14 @@
 			</Link>
 		</Collapsible.Trigger>
 		<div>
-			{#if num_comments > 0}
-				<CommentComponent comment={all_comments[0]} />
+			{#if num_comments > 0 && show_extra_comment}
+				<CommentComponent comment={all_comments.at(-1)} />
 			{/if}
 		</div>
 		<Collapsible.Content>
 			<div>
 				<div>
-					{#each all_comments.slice(1) as comment}
+					{#each all_comments as comment}
 						<CommentComponent {comment} />
 					{/each}
 				</div>

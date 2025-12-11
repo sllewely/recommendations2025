@@ -62,6 +62,8 @@
 			feed_items = feed_items.concat(res["feed_items"]);
 			next_page = res["pagy"]["next"];
 		}
+
+		// Fetch more posts when you reach the bottom
 		window.addEventListener("scroll", function () {
 			if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
 				console.log("you're at the bottom of the page");
@@ -73,6 +75,7 @@
 			}
 		});
 
+		// Reload the page when you scroll to the top
 		window.addEventListener("scroll", function () {
 			if (window.scrollY == 0) {
 				console.log("you're at the top of the page");

@@ -47,6 +47,7 @@
 	}
 
 	let fetching_more_posts = $state(false);
+	let reloading_page = $state(false);
 
 	onMount(() => {
 		async function fetch_posts() {
@@ -61,6 +62,8 @@
 			feed_items = feed_items.concat(res["feed_items"]);
 			next_page = res["pagy"]["next"];
 		}
+
+		// Fetch more posts when you reach the bottom
 		window.addEventListener("scroll", function () {
 			if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
 				console.log("you're at the bottom of the page");
@@ -71,10 +74,18 @@
 				}
 			}
 		});
+
+		// Reload the page when you scroll to the top
+		window.addEventListener("scroll", function () {
+			if (window.scrollY == 0) {
+				console.log("you're at the top of the page");
+				window.location.reload();
+			}
+		});
 	});
 </script>
 
-<div>
+<div id="top_detector">
 	<ShouldShowNotificationSubscribeButtonCard />
 	<div
 		class="flex justify-center p-2 mb-2 font-bold border-gray-800 rounded-sm bg-lime-200 border-1"

@@ -24,7 +24,7 @@
 		renderer(token) {
 			const uuid_regex = /\w{8}-\w{4}-\w{4}-\w{4}-\w{12}/;
 			const uuid = uuid_regex.exec(token.entire[0].raw)?.[0];
-			return `<div class="user_tag" id=${uuid}>@${this.parser.parseInline(token.entire)}</div>`;
+			return `<span class="user_tag" id=${uuid}>@${this.parser.parseInline(token.entire)}</span>`;
 		},
 	};
 

@@ -1,11 +1,6 @@
 <script lang="ts">
 	import H1 from "$lib/components/text/H1.svelte";
-	import H2 from "$lib/components/text/H2.svelte";
-	import { current_user } from "$lib/state/current_user.svelte.js";
 	import { Badge } from "$lib/components/ui/badge";
-	import { newToast, ToastType } from "$lib/state/toast.svelte.js";
-	import { Button } from "$lib/components/ui/button";
-	import { enhance } from "$app/forms";
 	import type { User, FriendStatus } from "$lib/api_calls/types";
 	import FriendStatusButton from "$lib/components/users/FriendStatusButton.svelte";
 

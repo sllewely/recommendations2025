@@ -9,10 +9,6 @@ export async function load({ cookies, params }) {
 	let user = await getUser(user_id, jwt);
 	let friend_status = await api.get(`friend_requests/${user_id}`, jwt);
 
-	2 + 5;
-
-	console.log(friend_status);
-
 	return {
 		user: user["res"],
 		friend_status: friend_status["res"],

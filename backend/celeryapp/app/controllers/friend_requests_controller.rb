@@ -15,7 +15,7 @@ class FriendRequestsController < ApplicationController
       render json: { status: :sent_friend_request }, status: :ok and return
     end
     # to the current user
-    incoming_friend_request = user.friend_requests.where(user_id: user.id)&.first
+    incoming_friend_request = user.outgoing_friend_requests.where(user_id: current_user.id)&.first
     if incoming_friend_request
       render json: { status: :pending_friend_request }, status: :ok and return
     end

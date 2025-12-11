@@ -28,9 +28,24 @@
 			friend_status = "sent_friend_request";
 		}
 	};
-</script>
 
-{console.log("friend_status", friend_status_prop)}
+	const accept_friend_request = async () => {
+		const response = await fetch("/api/friends/accept_friend_request", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				user_id: user.id,
+			}),
+		});
+		const json = await response.json();
+		if (json["errors"]) {
+		} else {
+			friend_status = "friends";
+		}
+	};
+</script>
 
 <div>
 	{#if friend_status === "self"}
@@ -40,7 +55,7 @@
 			<Badge variant="secondary">friends</Badge>
 		</div>
 	{:else if friend_status === "pending_friend_request"}
-		<Button>Accept friend request</Button>
+		<Button onclick={accept_friend_request}>Accept friend request</Button>
 	{:else if friend_status === "sent_friend_request"}
 		<Badge variant="secondary">Friend request pending</Badge>
 	{:else}

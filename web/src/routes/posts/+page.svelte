@@ -47,6 +47,7 @@
 	}
 
 	let fetching_more_posts = $state(false);
+	let reloading_page = $state(false);
 
 	onMount(() => {
 		async function fetch_posts() {
@@ -71,10 +72,17 @@
 				}
 			}
 		});
+
+		window.addEventListener("scroll", function () {
+			if (window.scrollY == 0) {
+				console.log("you're at the top of the page");
+				window.location.reload();
+			}
+		});
 	});
 </script>
 
-<div>
+<div id="top_detector">
 	<ShouldShowNotificationSubscribeButtonCard />
 	<div
 		class="flex justify-center p-2 mb-2 font-bold border-gray-800 rounded-sm bg-lime-200 border-1"

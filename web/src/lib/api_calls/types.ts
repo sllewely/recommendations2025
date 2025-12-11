@@ -118,3 +118,6 @@ export type FriendStatus =
 	| "sent_friend_request"
 	| "none"
 	| "self";
+
+// key is a user uuid.  If missing, status is "none".
+export type FriendsMap = Map<string, FriendStatus>;

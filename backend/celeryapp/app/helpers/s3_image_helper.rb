@@ -56,4 +56,13 @@ module S3ImageHelper
                          key: object_key,
     )
   end
+
+  def self.presigned_url_get_object(object_key)
+    signer = Aws::S3::Presigner.new(client: cloudflare_client)
+
+    signer.presigned_url(:get_object,
+                         bucket: CLOUDFLARE_BUCKET,
+                         key: object_key,
+    )
+  end
 end

@@ -33,12 +33,17 @@ export const actions = {
 		const formData = new FormData();
 		formData.append("file", form.data.image);
 
-		const response = await fetch(VITE_API_URL + "images/profile_picture", {
-			method: "POST",
-			headers: {
-				Authorization: "Token " + jwt,
-			},
-			body: formData,
+		// const response = await fetch(VITE_API_URL + "images/profile_picture", {
+		// 	method: "POST",
+		// 	headers: {
+		// 		Authorization: "Token " + jwt,
+		// 	},
+		// 	body: formData,
+		// });
+
+		const response = await fetch(form.data.image_url, {
+			method: "PUT",
+			data: formData,
 		});
 
 		return response;

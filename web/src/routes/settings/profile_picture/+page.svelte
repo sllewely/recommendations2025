@@ -8,15 +8,7 @@
 	import { zodClient } from "sveltekit-superforms/adapters";
 	import { onMount } from "svelte";
 
-	interface Props {
-		data: { form_data: SuperValidated<Infer<ImageSchema>> };
-	}
-
 	let { data }: Props = $props();
-	const form = superForm(data.form_data, {
-		validators: zodClient(imageFormSchema),
-	});
-	const { form: formData } = form;
 
 	let creating = $state(false);
 
@@ -27,50 +19,66 @@
 			method: "GET",
 			headers: { "Content-Type": "application/json" },
 		});
-		upload_url = await response.json();
+		const res = await response.json();
+		upload_url = res.url;
 		console.log("uploadurl", JSON.stringify(upload_url));
 	});
+
+	let files = $state();
+
+	$effect(() => {
+		if (files) {
+			console.log(files);
+
+			for (const file of files) {
+				console.log(`${file.name}: ${file.size} bytes`);
+			}
+		}
+	});
+
+	const upload_it = async (file: File) => {
+		const reader = new FileReader();
+	};
 </script>
 
 <div>
-	{upload_url}
+	<form id="user_form" enctype="multipart/form-data">
+		<!--		<Form.Field {form} name="image_url">-->
+		<!--			<Form.Control let:attrs>-->
+		<!--				<Input type="hidden" {...attrs} value={upload_url} />-->
+		<!--			</Form.Control>-->
+		<!--		</Form.Field>-->
+		<!--		<Form.Field {form} name="image">-->
+		<!--			<Form.Control let:attrs>-->
+		<!--				<Form.Label>photo</Form.Label>-->
+		<!--				<Input type="file" {...attrs} bind:value={$formData.image} onclick={console.log()} />-->
+		<!--			</Form.Control>-->
+		<!--			<Form.Description>Upload a profile photo.</Form.Description>-->
+		<!--			<Form.FieldErrors />-->
+		<!--		</Form.Field>-->
 
-	<!--	<form-->
-	<!--		id="user_form"-->
-	<!--		enctype="multipart/form-data"-->
-	<!--		method="POST"-->
-	<!--		action="?/update_user"-->
-	<!--		use:enhance={() => {-->
-	<!--			creating = true;-->
-	<!--			return async ({ update, result }) => {-->
-	<!--				await update();-->
-	<!--				creating = false;-->
-	<!--				// let res = result.data;-->
-	<!--				// if (res.success) {-->
-	<!--				// 	newToast("You have successfully updated your user");-->
-	<!--				// } else {-->
-	<!--				// 	newToast("Error updating " + res.message, ToastType.Error);-->
-	<!--				// }-->
-	<!--			};-->
-	<!--		}}-->
-	<!--	>-->
-	<!--		<Form.Field {form} name="image">-->
-	<!--			<Form.Control let:attrs>-->
-	<!--				<Form.Label>photo</Form.Label>-->
-	<!--				<Input type="file" {...attrs} bind:value={$formData.image} />-->
-	<!--			</Form.Control>-->
-	<!--			<Form.Description>Upload a profile photo.</Form.Description>-->
-	<!--			<Form.FieldErrors />-->
-	<!--		</Form.Field>-->
+		<input accept="image/png, image/jpeg" bind:files id="avatar" name="avatar" type="file" />
 
-	<!--		<div class="flex flex-col space-y-2">-->
-	<!--			<Form.Button-->
-	<!--				on:click={() => {-->
-	<!--					console.log("click!!");-->
-	<!--				}}-->
-	<!--			>-->
-	<!--				Update-->
-	<!--			</Form.Button>-->
-	<!--		</div>-->
-	<!--	</form>-->
+		{#if files}
+			<h2>Selected files:</h2>
+			{#each Array.from(files) as file}
+				<p>{file.name} ({file.size} bytes)</p>
+			{/each}
+		{/if}
+
+		<div class="flex flex-col space-y-2">
+			<Form.Button
+				onclick={async () => {
+					console.log("click!!");
+					console.log(files[0]);
+					await fetch(upload_url, {
+						method: "PUT",
+						body: files[0],
+					});
+				}}
+			>
+				Update
+			</Form.Button>
+		</div>
+	</form>
 </div>

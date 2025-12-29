@@ -4,7 +4,7 @@ import { superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
 import { eventsFormSchema } from "../../schema";
 import { fail } from "@sveltejs/kit";
-import { fromDate } from "@internationalized/date";
+import { DateTime } from "luxon";
 
 export async function load({ locals, cookies, params }) {
 	const jwt = cookies.get("jwt");
@@ -35,7 +35,9 @@ export const actions = {
 		let start_time = form.data.start_time;
 		let time_zone = form.data.time_zone;
 		let datetime = new Date(`${start_date} ${start_time}`);
-		let zoned_date_time = fromDate(datetime, time_zone);
+		const zoned_date_time = DateTime.fromJSDate(datetime).setZone(time_zone, {
+			keepLocalTime: true,
+		});
 
 		const response = await api.patch(
 			`events/${form.data.id}`,
@@ -45,7 +47,7 @@ export const actions = {
 				address: form.data.address,
 				url: form.data.url,
 				event_type: form.data.event_type,
-				start_date_time: zoned_date_time.toString(),
+				start_date_time: zoned_date_time.toISO(),
 			},
 			jwt,
 		);

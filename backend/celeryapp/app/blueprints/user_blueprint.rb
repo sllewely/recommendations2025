@@ -7,9 +7,9 @@ class UserBlueprint < Blueprinter::Base
 
   view :authed do
     fields :blurb, :username
-    field :tags do |user|
-      user.tags.pluck(:tag)
-    end
+    # field :tags do |user|
+    #   user.tags.pluck(:tag)
+    # end
   end
 
   view :self do

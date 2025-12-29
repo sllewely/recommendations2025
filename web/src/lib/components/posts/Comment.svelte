@@ -28,9 +28,9 @@
 			</div>
 		</div>
 		<div class="text-left">
-			<p class="text-gray-500 dark:text-gray-400">
+			<div class="text-gray-500 dark:text-gray-400">
 				<MarkedDownPost captured_text={comment.body} />
-			</p>
+			</div>
 		</div>
 	</article>
 </div>

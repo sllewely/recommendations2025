@@ -6,6 +6,8 @@ class Event < ApplicationRecord
   has_many :comments, as: :commentable, dependent: :destroy
   has_one :feed_item, as: :feedable, dependent: :destroy
 
+  scope :for_user, ->(user_id) { where(user_id: user_id) }
+
   before_save :ensure_end_time
 
   validates :title, presence: true

@@ -28,7 +28,7 @@
 	});
 </script>
 
-<div class="app">
+<div class="app dark:bg-gray-900 dark:text-gray-200">
 	<Header />
 	<BannerNotifications />
 	<Toaster closeButton={true} richColors={true} />

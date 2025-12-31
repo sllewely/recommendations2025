@@ -166,7 +166,7 @@
 			</div>
 			{#if events_and_date_headers.length === 0}
 				<div
-					class="flex justify-center p-2 mb-2 font-bold border-gray-800 rounded-sm bg-lime-200 border-1"
+					class="flex justify-center p-2 mb-2 font-bold border-gray-800 rounded-sm bg-lime-200 border-1 dark:text-gray-900"
 				>
 					<p>
 						No upcoming events.
@@ -237,7 +237,7 @@
 				</div>
 				{#if events_and_date_headers.length === 0}
 					<div
-						class="flex justify-center p-2 mb-2 font-bold border-gray-800 rounded-sm bg-lime-200 border-1"
+						class="flex justify-center p-2 mb-2 font-bold border-gray-800 rounded-sm bg-lime-200 border-1 dark:text-gray-900"
 					>
 						<p>
 							No upcoming events.

@@ -241,6 +241,7 @@
 								{/each}
 							{:else}
 								<p>Sign in to see who's coming</p>
+								<p>Rsvps: {data.event.rsvps.length}</p>
 							{/if}
 						</div>
 					</Card.Content>

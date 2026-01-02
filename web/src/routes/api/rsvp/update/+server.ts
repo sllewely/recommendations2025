@@ -1,16 +1,16 @@
 import { json } from "@sveltejs/kit";
 import * as api from "$lib/api_calls/api.svelte.js";
 
-// Accept friend request
+// Update rsvp
 export async function POST({ request, cookies }) {
 	const jwt = cookies.get("jwt");
-	const friend_request_request: { user_id: String } = await request.json();
+	const rsvp_request: {
+		status: String;
+		event_id: String;
+		user_id: String;
+	} = await request.json();
 
-	const response = await api.post(
-		"friendships",
-		{ friend_id: friend_request_request.user_id },
-		jwt,
-	);
+	const response = await api.post("rsvps", rsvp_request, jwt);
 
 	return json(response["res"]);
 }

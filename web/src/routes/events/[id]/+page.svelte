@@ -2,7 +2,7 @@
 	import { enhance } from "$app/forms";
 	import LinkButton from "$lib/components/text/LinkButton.svelte";
 	import { newToast, ToastType } from "$lib/state/toast.svelte.js";
-	import { goto } from "$app/navigation";
+	import { goto, invalidate } from "$app/navigation";
 	import { MessageCircleMore } from "@lucide/svelte";
 	import SubmitComment from "$lib/components/posts/SubmitComment.svelte";
 	import Comment from "$lib/components/posts/Comment.svelte";
@@ -17,6 +17,7 @@
 	import { onMount } from "svelte";
 	import type { Event } from "$lib/api_calls/types";
 	import { Separator } from "$lib/components/ui/separator";
+	import * as Select from "$lib/components/ui/select/index.js";
 
 	interface Props {
 		data: {
@@ -42,9 +43,11 @@
 
 	let num_comments = comments.length;
 
+	/* RSVP status */
 	let current_user_rsvp = data.event.rsvps.find((rsvp) => rsvp.user.id === my_user_id) ?? null;
+	let rsvp_status = $state(current_user_rsvp ? current_user_rsvp.status : null);
 
-	let rsvp_status = $derived(current_user_rsvp ? current_user_rsvp.status : null);
+	const rsvp_statuses = ["going", "interested", "cant_go", "not_interested", "not_rsvpd"];
 
 	let delete_event = async () => {
 		const response = await fetch("/api/delete_event", {
@@ -92,6 +95,28 @@
 
 		signed_in = current_user && current_user.id !== "" && typeof current_user.id !== "undefined";
 	});
+
+	const update_rsvp = async (status: String) => {
+		console.log("update_rsvp", status);
+		const response = await fetch("/api/rsvp/update", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				user_id: my_user_id,
+				event_id: data.event.id,
+				status: status,
+			}),
+		});
+		const json = await response.json();
+		if (json["errors"]) {
+		} else {
+			console.log("json", json);
+			// await invalidate(`/events/${data.event.id}`);
+			window.location.reload();
+		}
+	};
 </script>
 
 {console.log("rsvps", data.event.rsvps)}
@@ -139,7 +164,43 @@
 						</div>
 						<div class="flex flex-row justify-between">
 							<div>
-								<RsvpBadge rsvp={current_user_rsvp} />
+								<form
+									method="POST"
+									action="?/update_rsvp"
+									use:enhance={() => {
+										creating = true;
+										return async ({ update, result }) => {
+											await update();
+											creating = false;
+											let res = result.data;
+											if (res.success) {
+												newToast("Success updating your rsvp");
+											} else {
+												newToast("Error updating rsvp: " + res.message, ToastType.Error);
+											}
+										};
+									}}
+								>
+									<Select.Root type="single" name="rsvpStatus" bind:value={rsvp_status}>
+										<Select.Trigger>
+											<RsvpBadge rsvp={current_user_rsvp} />
+										</Select.Trigger>
+										<Select.Content>
+											<Select.Group>
+												{#each rsvp_statuses as status}
+													<Select.Item
+														value={status}
+														onclick={() => {
+															update_rsvp(status);
+														}}
+													>
+														<RsvpBadge rsvp={{ status: status }} />
+													</Select.Item>
+												{/each}
+											</Select.Group>
+										</Select.Content>
+									</Select.Root>
+								</form>
 							</div>
 							{#if data.event.url}
 								<Tooltip.Provider>
@@ -163,7 +224,7 @@
 										{rsvp.user.name}
 									</div>
 									<div>
-										{rsvp.status}
+										<RsvpBadge {rsvp} />
 									</div>
 								</div>
 							{/each}

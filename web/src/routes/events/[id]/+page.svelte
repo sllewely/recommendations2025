@@ -44,7 +44,12 @@
 	let num_comments = comments.length;
 
 	/* RSVP status */
-	let current_user_rsvp = data.event.rsvps.find((rsvp) => rsvp.user.id === my_user_id) ?? null;
+	let current_user_rsvp = (() => {
+		if (my_user_id === null || my_user_id === "" || typeof my_user_id === "undefined") {
+			return null;
+		}
+		return data.event.rsvps.find((rsvp) => rsvp.user.id === my_user_id) ?? null;
+	})();
 	let rsvp_status = $state(current_user_rsvp ? current_user_rsvp.status : null);
 
 	const rsvp_statuses = ["going", "interested", "cant_go", "not_interested", "not_rsvpd"];
@@ -163,45 +168,50 @@
 							{/if}
 						</div>
 						<div class="flex flex-row justify-between">
-							<div>
-								<form
-									method="POST"
-									action="?/update_rsvp"
-									use:enhance={() => {
-										creating = true;
-										return async ({ update, result }) => {
-											await update();
-											creating = false;
-											let res = result.data;
-											if (res.success) {
-												newToast("Success updating your rsvp");
-											} else {
-												newToast("Error updating rsvp: " + res.message, ToastType.Error);
-											}
-										};
-									}}
-								>
-									<Select.Root type="single" name="rsvpStatus" bind:value={rsvp_status}>
-										<Select.Trigger>
-											<RsvpBadge rsvp={current_user_rsvp} />
-										</Select.Trigger>
-										<Select.Content>
-											<Select.Group>
-												{#each rsvp_statuses as status}
-													<Select.Item
-														value={status}
-														onclick={() => {
-															update_rsvp(status);
-														}}
-													>
-														<RsvpBadge rsvp={{ status: status }} />
-													</Select.Item>
-												{/each}
-											</Select.Group>
-										</Select.Content>
-									</Select.Root>
-								</form>
-							</div>
+							{#if signed_in}
+								<div>
+									<form
+										method="POST"
+										action="?/update_rsvp"
+										use:enhance={() => {
+											creating = true;
+											return async ({ update, result }) => {
+												await update();
+												creating = false;
+												let res = result.data;
+												if (res.success) {
+													newToast("Success updating your rsvp");
+												} else {
+													newToast("Error updating rsvp: " + res.message, ToastType.Error);
+												}
+											};
+										}}
+									>
+										<Select.Root type="single" name="rsvpStatus" bind:value={rsvp_status}>
+											<Select.Trigger>
+												<RsvpBadge rsvp={current_user_rsvp} />
+											</Select.Trigger>
+											<Select.Content>
+												<Select.Group>
+													{#each rsvp_statuses as status}
+														<Select.Item
+															value={status}
+															onclick={() => {
+																update_rsvp(status);
+															}}
+														>
+															<RsvpBadge rsvp={{ status: status }} />
+														</Select.Item>
+													{/each}
+												</Select.Group>
+											</Select.Content>
+										</Select.Root>
+									</form>
+								</div>
+							{:else}
+								<RsvpBadge rsvp={{ status: "not_rsvpd" }} />
+								<p>Sign in to rsvp</p>
+							{/if}
 							{#if data.event.url}
 								<Tooltip.Provider>
 									<Tooltip.Root>
@@ -218,16 +228,21 @@
 						<Separator class="my-6" />
 						<div class="">
 							<span class="text-xl">Rsvps</span>
-							{#each data.event.rsvps as rsvp}
-								<div class="flex flex-row justify-between">
-									<div>
-										{rsvp.user.name}
+							{#if signed_in}
+								{#each data.event.rsvps as rsvp}
+									<div class="flex flex-row justify-between">
+										<div>
+											{rsvp.user.name}
+										</div>
+										<div>
+											<RsvpBadge {rsvp} />
+										</div>
 									</div>
-									<div>
-										<RsvpBadge {rsvp} />
-									</div>
-								</div>
-							{/each}
+								{/each}
+							{:else}
+								<p>Sign in to see who's coming</p>
+								<p>Rsvps: {data.event.rsvps.length}</p>
+							{/if}
 						</div>
 					</Card.Content>
 				</Card.Root>

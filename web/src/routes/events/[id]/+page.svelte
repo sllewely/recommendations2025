@@ -30,27 +30,25 @@
 
 	let creating = $state(false);
 
-	// Svelte pitfall.  Page updates are not triggered by load data prop change!!
-	// This is the workaround
-	let event = $state(data.event);
-	$effect(() => {
-		event = data.event;
-	});
+	// // Svelte pitfall.  Page updates are not triggered by load data prop change!!
+	// // This is the workaround
+	// let event = $state(data.event);
+	// $effect(() => {
+	// 	event = data.event;
+	// });
 
-	let comments = $derived(event.comments || []);
+	let comments = data.event.comments || [];
 
-	let num_comments = $derived(comments.length);
+	let num_comments = comments.length;
 
-	let current_user_rsvp = $derived(
-		event.rsvps.find((rsvp) => rsvp.user.id === current_user.id) ?? null,
-	);
+	let current_user_rsvp = data.event.rsvps.find((rsvp) => rsvp.user.id === my_user_id) ?? null;
 
 	let rsvp_status = $derived(current_user_rsvp ? current_user_rsvp.status : null);
 
 	let delete_event = async () => {
 		const response = await fetch("/api/delete_event", {
 			method: "POST",
-			body: JSON.stringify({ id: event.id }),
+			body: JSON.stringify({ id: data.event.id }),
 			headers: {
 				"Content-Type": "application/json",
 			},
@@ -70,13 +68,13 @@
 		signed_in = current_user && current_user.id !== "" && typeof current_user.id !== "undefined";
 	});
 
-	let localizedCreateTime = $derived(parseAbsoluteToLocal(event.created_at));
+	let localizedCreateTime = $derived(parseAbsoluteToLocal(data.event.created_at));
 	let formattedCreateTime = $state();
-	let localizedStartTime = $derived(parseAbsoluteToLocal(event.start_date_time));
+	let localizedStartTime = $derived(parseAbsoluteToLocal(data.event.start_date_time));
 	let formattedStartTime = $state();
 
 	onMount(() => {
-		localizedCreateTime = parseAbsoluteToLocal(event.created_at);
+		localizedCreateTime = parseAbsoluteToLocal(data.event.created_at);
 
 		formattedCreateTime = new Intl.DateTimeFormat("en-US", {
 			dateStyle: "medium",
@@ -84,7 +82,7 @@
 			timeZone: localizedCreateTime.timeZone,
 		}).format(localizedCreateTime.toDate());
 
-		localizedStartTime = parseAbsoluteToLocal(event.start_date_time);
+		localizedStartTime = parseAbsoluteToLocal(data.event.start_date_time);
 		formattedStartTime = new Intl.DateTimeFormat("en-US", {
 			dateStyle: "medium",
 			timeStyle: "short",
@@ -95,13 +93,13 @@
 	});
 </script>
 
-{console.log("rsvps", event.rsvps)}
+{console.log("rsvps", data.event.rsvps)}
 {console.log("current_user_rsvp", current_user_rsvp)}
 
 <div>
-	{#if my_user_id === event.user.id}
+	{#if my_user_id === data.event.user.id}
 		<div class="float-right relative">
-			<LinkButton url="/events/{event.id}/edit">Edit</LinkButton>
+			<LinkButton url="/events/{data.event.id}/edit">Edit</LinkButton>
 			<Button onclick={delete_event} variant="destructive">Delete</Button>
 		</div>
 	{/if}
@@ -111,45 +109,45 @@
 			<div>
 				<span class="font-bold">
 					<!-- I just broke this for the feed TODO SARAH -->
-					<Link url="/users/{event.user.id}">{event.user.name}</Link>
+					<Link url="/users/{data.event.user.id}">{data.event.user.name}</Link>
 				</span> posted an upcoming event
 			</div>
-			<!--        <div><span class="font-bold"><a class="text-teal-400 hover:text-orange-400" href="/users/{event.creator_id}">{event.creator_name}</a></span> posted an upcoming event</div>-->
+			<!--        <div><span class="font-bold"><a class="text-teal-400 hover:text-orange-400" href="/users/{data.event.creator_id}">{data.event.creator_name}</a></span> posted an upcoming event</div>-->
 			<!--        </svelte:boundary>-->
 			<div>
 				<span class="text-sm">at {formattedCreateTime}</span>
 			</div>
 		</div>
 		<div class="p-2">
-			<a href="/events/{event.id}">
+			<a href="/events/{data.event.id}">
 				<Card.Root class=" border-lime-500 ">
 					<Card.Header>
-						{#if event.title}
-							<Card.Title>{event.title}</Card.Title>
+						{#if data.event.title}
+							<Card.Title>{data.event.title}</Card.Title>
 						{/if}
 						<Card.Description>Happening {formattedStartTime}</Card.Description>
 					</Card.Header>
 					<Card.Content>
-						{#if event.description}
-							<MarkedDownPost captured_text={event.description} />
+						{#if data.event.description}
+							<MarkedDownPost captured_text={data.event.description} />
 						{/if}
 						<div class="text-sm text-gray-500">
-							{#if event.address}
-								<p>at {event.address}</p>
+							{#if data.event.address}
+								<p>at {data.event.address}</p>
 							{/if}
 						</div>
 						<div class="flex flex-row justify-between">
 							<div>
 								<RsvpBadge rsvp={current_user_rsvp} />
 							</div>
-							{#if event.url}
+							{#if data.event.url}
 								<Tooltip.Provider>
 									<Tooltip.Root>
 										<Tooltip.Trigger>
-											<Link url={event.url}>link</Link>
+											<Link url={data.event.url}>link</Link>
 										</Tooltip.Trigger>
 										<Tooltip.Content>
-											<p>{event.url}</p>
+											<p>{data.event.url}</p>
 										</Tooltip.Content>
 									</Tooltip.Root>
 								</Tooltip.Provider>
@@ -182,7 +180,7 @@
 					};
 				}}
 			>
-				<input type="hidden" name="event_id" value={event.id} />
+				<input type="hidden" name="event_id" value={data.event.id} />
 				<input type="hidden" name="user_id" value={my_user_id} />
 				<label for="rsvp_status">Your rsvp:</label>
 				<select name="rsvp_status" id="rsvp_status" onchange={(e) => e.target.form.requestSubmit()}>
@@ -199,7 +197,7 @@
 		<div>
 			rsvps
 			<div>
-				{#each event.rsvps as rsvp}
+				{#each data.event.rsvps as rsvp}
 					{rsvp.status}
 				{/each}
 			</div>
@@ -217,7 +215,7 @@
 				{/each}
 			</div>
 
-			<SubmitComment feed_item={event} />
+			<SubmitComment feed_item={data.event} />
 		{:else}
 			<Card.Root class="bg-teal-400">
 				<Card.Content>Sign in to read and leave comments!</Card.Content>

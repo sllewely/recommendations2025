@@ -235,43 +235,6 @@
 		</div>
 	</div>
 	<div>
-		<div>
-			{#if creating}
-				<p>updating...</p>
-			{/if}
-			<form
-				method="POST"
-				action="?/update_rsvp"
-				use:enhance={() => {
-					creating = true;
-					return async ({ update, result }) => {
-						await update();
-						creating = false;
-						let res = result.data;
-						if (res.success) {
-							newToast("Success updating your rsvp");
-						} else {
-							newToast("Error updating rsvp: " + res.message, ToastType.Error);
-						}
-					};
-				}}
-			>
-				<input type="hidden" name="event_id" value={data.event.id} />
-				<input type="hidden" name="user_id" value={my_user_id} />
-				<label for="rsvp_status">Your rsvp:</label>
-				<select name="rsvp_status" id="rsvp_status" onchange={(e) => e.target.form.requestSubmit()}>
-					<option value="not_selected" selected={rsvp_status === null}>not rsvp'd</option>
-					<option value="going" selected={rsvp_status === "going"}>going</option>
-					<option value="interested" selected={rsvp_status === "interested"}>interested</option>
-					<option value="cant_go" selected={rsvp_status === "cant_go"}>can't go</option>
-					<option value="not_interested" selected={rsvp_status === "not_interested"}
-						>not interested
-					</option>
-				</select>
-			</form>
-		</div>
-	</div>
-	<div>
 		<div class="flex">
 			{num_comments} Comments
 			<MessageCircleMore />

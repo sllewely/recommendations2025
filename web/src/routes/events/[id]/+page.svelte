@@ -16,6 +16,7 @@
 	import { parseAbsoluteToLocal } from "@internationalized/date";
 	import { onMount } from "svelte";
 	import type { Event } from "$lib/api_calls/types";
+	import { Separator } from "$lib/components/ui/separator";
 
 	interface Props {
 		data: {
@@ -153,6 +154,20 @@
 								</Tooltip.Provider>
 							{/if}
 						</div>
+						<Separator class="my-6" />
+						<div class="">
+							<span class="text-xl">Rsvps</span>
+							{#each data.event.rsvps as rsvp}
+								<div class="flex flex-row justify-between">
+									<div>
+										{rsvp.user.name}
+									</div>
+									<div>
+										{rsvp.status}
+									</div>
+								</div>
+							{/each}
+						</div>
 					</Card.Content>
 				</Card.Root>
 			</a>
@@ -193,14 +208,6 @@
 					</option>
 				</select>
 			</form>
-		</div>
-		<div>
-			rsvps
-			<div>
-				{#each data.event.rsvps as rsvp}
-					{rsvp.status}
-				{/each}
-			</div>
 		</div>
 	</div>
 	<div>

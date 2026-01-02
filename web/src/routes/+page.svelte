@@ -18,8 +18,6 @@
 
 			<h2 class="text-md">welcome to my app!!!</h2>
 
-			<div class="dark:bg-gray-800 light:bg-red-200">test</div>
-
 			<p>&nbsp;</p>
 			<p>demo instructions</p>
 

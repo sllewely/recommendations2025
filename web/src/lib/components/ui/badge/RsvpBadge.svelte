@@ -27,5 +27,6 @@
 </script>
 
 <div>
+	<div class="hidden">{rsvp?.status}</div>
 	<Badge variant={badgeVariant}>{badgeText}</Badge>
 </div>

@@ -122,9 +122,7 @@
 		</div>
 		<div class="p-2">
 			<a href="/events/{event.id}">
-				<Card.Root
-					class="dark:bg-gray-900 dark:text-gray-200 border-lime-500 hover:bg-lime-100 border-2 dark:hover:bg-emerald-950"
-				>
+				<Card.Root class=" border-lime-500 ">
 					<Card.Header>
 						{#if event.title}
 							<Card.Title>{event.title}</Card.Title>

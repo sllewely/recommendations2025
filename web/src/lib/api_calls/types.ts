@@ -19,6 +19,7 @@ export interface Feedable {
 	id: string;
 	created_at: string;
 	feedable: Post | Event | Recommendation;
+	class_name: string;
 }
 
 export interface Post {

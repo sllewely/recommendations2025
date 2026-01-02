@@ -20,6 +20,8 @@ const config = {
 				ring: "hsl(var(--ring) / <alpha-value>)",
 				background: "hsl(var(--background) / <alpha-value>)",
 				foreground: "hsl(var(--foreground) / <alpha-value>)",
+				darkbackground: "hsl(var(--darkbackground) / <alpha-value>)",
+				darkforeground: "hsl(var(--darkforeground) / <alpha-value>)",
 				primary: {
 					DEFAULT: "hsl(var(--primary) / <alpha-value>)",
 					foreground: "hsl(var(--primary-foreground) / <alpha-value>)",
@@ -47,6 +49,10 @@ const config = {
 				card: {
 					DEFAULT: "hsl(var(--card) / <alpha-value>)",
 					foreground: "hsl(var(--card-foreground) / <alpha-value>)",
+				},
+				darkcard: {
+					DEFAULT: "hsl(var(--darkcard) / <alpha-value>)",
+					foreground: "hsl(var(--darkcard-foreground) / <alpha-value>)",
 				},
 				event: {
 					DEFAULT: "hsl(var(--event) / <alpha-value>)",

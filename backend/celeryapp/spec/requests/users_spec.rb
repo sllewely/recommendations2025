@@ -70,6 +70,7 @@ RSpec.describe "User", type: :request do
     end
 
     it 'adds tags' do
+      skip "remove tags feature for now for n+1 queries"
       patch "/users/#{@my_update_user.id}", params: { tags: ['recurse', 'gangout'] }, headers: @update_headers
 
       expect(response).to have_http_status(:ok)

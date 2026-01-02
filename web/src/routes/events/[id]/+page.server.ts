@@ -1,4 +1,4 @@
-import * as api from "$lib/api_calls/api.svelte.ts";
+import * as api from "$lib/api_calls/api.svelte";
 import { getPost, getPostPublic } from "$lib/api_calls/posts.svelte";
 
 export async function load({ cookies, params }) {

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import H2 from "$lib/components/text/H2.svelte";
 	import Link from "$lib/components/text/Link.svelte";
 	import { isSignedIn } from "$lib/state/current_user.svelte";
 	import { parseAbsolute, parseAbsoluteToLocal } from "@internationalized/date";

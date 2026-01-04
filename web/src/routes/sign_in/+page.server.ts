@@ -5,6 +5,18 @@ import { zod } from "sveltekit-superforms/adapters";
 import * as api from "$lib/api_calls/api.svelte.js";
 import { fail } from "@sveltejs/kit";
 
+function getJwtMaxAge(token: string): number {
+	try {
+		const payload = JSON.parse(atob(token.split(".")[1]));
+		if (payload.exp) {
+			return payload.exp - Math.floor(Date.now() / 1000);
+		}
+	} catch {
+		// Fall through to default
+	}
+	return 60 * 60 * 24 * 30; // Default: 30 days
+}
+
 export const load: PageServerLoad = async () => {
 	return {
 		form: await superValidate(zod(signinFormSchema)),
@@ -31,8 +43,9 @@ export const actions = {
 		if (!response.success) {
 			return response;
 		} else {
-			cookies.set("jwt", response.res["auth_token"], { path: "/" });
-			cookies.set("user_id", response.res["user_id"], { path: "/" });
+			const maxAge = getJwtMaxAge(response.res["auth_token"]);
+			cookies.set("jwt", response.res["auth_token"], { path: "/", maxAge });
+			cookies.set("user_id", response.res["user_id"], { path: "/", maxAge });
 			return {
 				success: true,
 				res: {

@@ -13,11 +13,9 @@
 
 	let { children, data } = $props();
 
-	$effect(() => {
-		if (data.current_user_id) {
-			current_user.id = data.current_user_id;
-		}
-	});
+	if (data.current_user_id) {
+		current_user.id = data.current_user_id;
+	}
 
 	onMount(() => {
 		fetch_notifs();

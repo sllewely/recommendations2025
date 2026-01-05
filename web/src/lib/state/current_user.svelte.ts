@@ -3,4 +3,6 @@ export let current_user = $state({
 	id: "",
 });
 
-export let isSignedIn = $derived(current_user.id !== "" && typeof current_user.id !== "undefined");
+export function isSignedIn() {
+	return current_user.auth_token !== "" && typeof current_user.auth_token !== "undefined";
+}

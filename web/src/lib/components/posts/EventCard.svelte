@@ -1,7 +1,8 @@
 <script lang="ts">
 	import Link from "$lib/components/text/Link.svelte";
+	import { isSignedIn } from "$lib/state/current_user.svelte";
 	import { parseAbsolute, parseAbsoluteToLocal } from "@internationalized/date";
-	import { current_user } from "$lib/state/current_user.svelte";
+	import { current_user } from "$lib/state/current_user.svelte.js";
 	import type { Event } from "$lib/api_calls/types";
 	import RsvpBadge from "$lib/components/ui/badge/RsvpBadge.svelte";
 	import MarkedDownPost from "$lib/components/posts/MarkedDownPost.svelte";
@@ -19,11 +20,11 @@
 		console.error("not an event feed item");
 	}
 
+	let signed_in = isSignedIn();
+
 	// TODO: Going should match on my id instead of current user rsvp
 	// should be updateable state
-	let current_user_rsvp = $derived(
-		feed_item.rsvps.find((rsvp) => rsvp.user.id === current_user.id) ?? null,
-	);
+	let current_user_rsvp = feed_item.rsvps.find((rsvp) => rsvp.user.id === current_user.id) ?? null;
 
 	let localizedCreateTime = $state(parseAbsoluteToLocal(feed_item.created_at));
 	let formattedCreateTime = $state();

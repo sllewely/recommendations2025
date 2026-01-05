@@ -7,7 +7,7 @@
 	import SubmitComment from "$lib/components/posts/SubmitComment.svelte";
 	import Comment from "$lib/components/posts/Comment.svelte";
 	import { Button } from "$lib/components/ui/button";
-	import { current_user, isSignedIn } from "$lib/state/current_user.svelte";
+	import { current_user } from "$lib/state/current_user.svelte";
 	import * as Card from "$lib/components/ui/card/index.js";
 	import * as Tooltip from "$lib/components/ui/tooltip/index.js";
 	import Link from "$lib/components/text/Link.svelte";
@@ -71,6 +71,12 @@
 		}
 	};
 
+	let signed_in = $state(false);
+
+	$effect(() => {
+		signed_in = current_user && current_user.id !== "" && typeof current_user.id !== "undefined";
+	});
+
 	let localizedCreateTime = $derived(parseAbsoluteToLocal(data.event.created_at));
 	let formattedCreateTime = $state();
 	let localizedStartTime = $derived(parseAbsoluteToLocal(data.event.start_date_time));
@@ -91,6 +97,8 @@
 			timeStyle: "short",
 			timeZone: localizedCreateTime.timeZone,
 		}).format(localizedStartTime.toDate());
+
+		signed_in = current_user && current_user.id !== "" && typeof current_user.id !== "undefined";
 	});
 
 	const update_rsvp = async (status: String) => {
@@ -160,7 +168,7 @@
 							{/if}
 						</div>
 						<div class="flex flex-row justify-between">
-							{#if isSignedIn}
+							{#if signed_in}
 								<div>
 									<form
 										method="POST"
@@ -220,7 +228,7 @@
 						<Separator class="my-6" />
 						<div class="">
 							<span class="text-xl">Rsvps</span>
-							{#if isSignedIn}
+							{#if signed_in}
 								{#each data.event.rsvps as rsvp}
 									<div class="flex flex-row justify-between">
 										<div>
@@ -246,7 +254,7 @@
 			{num_comments} Comments
 			<MessageCircleMore />
 		</div>
-		{#if isSignedIn}
+		{#if signed_in}
 			<div>
 				{#each comments as comment}
 					<Comment {comment} />

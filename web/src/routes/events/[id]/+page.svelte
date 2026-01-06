@@ -160,7 +160,7 @@
 							{/if}
 						</div>
 						<div class="flex flex-row justify-between">
-							{#if isSignedIn}
+							{#if isSignedIn()}
 								<div>
 									<form
 										method="POST"
@@ -220,7 +220,7 @@
 						<Separator class="my-6" />
 						<div class="">
 							<span class="text-xl">Rsvps</span>
-							{#if isSignedIn}
+							{#if isSignedIn()}
 								{#each data.event.rsvps as rsvp}
 									<div class="flex flex-row justify-between">
 										<div>
@@ -246,7 +246,7 @@
 			{num_comments} Comments
 			<MessageCircleMore />
 		</div>
-		{#if isSignedIn}
+		{#if isSignedIn()}
 			<div>
 				{#each comments as comment}
 					<Comment {comment} />

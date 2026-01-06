@@ -14,18 +14,17 @@
 
 	let { feed_item }: Props = $props();
 
-	let by_line = " is interested in";
+	let by_line = $derived.by(() => {
+		if (feed_item.status === "watching") return " is watching";
+		if (feed_item.status === "recommend") return " recommends";
+		return " is interested in";
+	});
 
 	if (feed_item.class_name !== "Recommendation") {
 		console.error("not a recommendation feed item");
 	}
 
 	let border_color = "border-yellow-500";
-	if (feed_item.status === "watching") {
-		by_line = " is watching";
-	} else if (feed_item.status === "recommend") {
-		by_line = " recommends";
-	}
 
 	const localizedCreateTime = parseAbsoluteToLocal(feed_item.created_at);
 	const formattedCreateTime = new Intl.DateTimeFormat("en-US", {

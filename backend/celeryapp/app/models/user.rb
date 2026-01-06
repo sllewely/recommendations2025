@@ -2,6 +2,7 @@ class User < ApplicationRecord
   has_secure_password
 
   has_many :recommendations, dependent: :destroy
+  has_many :feed_items, dependent: :destroy
   has_many :posts
   has_many :events
   has_many :rsvps, dependent: :destroy

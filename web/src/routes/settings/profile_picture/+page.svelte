@@ -13,15 +13,31 @@
 	let creating = $state(false);
 
 	let upload_url = $state("");
+	// let get_url = $state("");
+	let img_blob = $state("");
 
 	onMount(async () => {
-		const response = await fetch(`/api/images/presigned_upload_url`, {
+		const upload_url_response = await fetch(`/api/images/presigned_upload_url`, {
 			method: "GET",
 			headers: { "Content-Type": "application/json" },
 		});
-		const res = await response.json();
+		const res = await upload_url_response.json();
 		upload_url = res.url;
 		console.log("uploadurl", JSON.stringify(upload_url));
+
+		const retrieve_file_response = await fetch(`/api/images/presigned_get_url`, {
+			method: "GET",
+			headers: { "Content-Type": "application/json" },
+		});
+		const res2 = await retrieve_file_response.json();
+		const get_url = res2.url;
+		console.log("geturl", JSON.stringify(res2));
+
+		const cloudflare_get_url = await fetch(get_url, {
+			method: "GET",
+		});
+		img_blob = await cloudflare_get_url.blob();
+		// get_url = res2.url;
 	});
 
 	let files = $state();
@@ -81,4 +97,9 @@
 			</Form.Button>
 		</div>
 	</form>
+	<div>
+		{#if img_blob}
+			<img src={URL.createObjectURL(img_blob)} />
+		{/if}
+	</div>
 </div>

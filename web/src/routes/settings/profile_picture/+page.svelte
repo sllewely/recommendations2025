@@ -1,9 +1,13 @@
 <script lang="ts">
 	import * as Form from "$lib/components/ui/form";
+	import { Spinner } from "$lib/components/ui/spinner/index.js";
 	import { onMount } from "svelte";
 
 	let upload_url = $state("");
 	let img_blob = $state("");
+
+	let uploading = $state(false);
+	let upload_response = $state("");
 
 	onMount(async () => {
 		const upload_url_response = await fetch(`/api/images/presigned_upload_url`, {
@@ -42,8 +46,21 @@
 </script>
 
 <div>
+	<div>
+		{#if img_blob}
+			(old image:)
+			<img src={URL.createObjectURL(img_blob)} />
+		{/if}
+	</div>
 	<form id="user_form" enctype="multipart/form-data">
-		<input accept="image/png, image/jpeg" bind:files id="avatar" name="avatar" type="file" />
+		<input
+			accept="image/png, image/jpeg"
+			bind:files
+			id="avatar"
+			name="avatar"
+			type="file"
+			class="bg-lime-500 rounded-sm m-2 p-2"
+		/>
 
 		{#if files}
 			<h2>Selected files:</h2>
@@ -55,20 +72,28 @@
 		<div class="flex flex-col space-y-2">
 			<Form.Button
 				onclick={async () => {
+					uploading = true;
 					console.log(files[0]);
-					await fetch(upload_url, {
+					let res = await fetch(upload_url, {
 						method: "PUT",
 						body: files[0],
 					});
+					upload_response = await res.text();
+					console.log("upload response", res);
+					uploading = false;
 				}}
+				disabled={uploading ? "true" : undefined}
 			>
-				Update
+				{#if uploading}
+					<Spinner /> Uploading...
+				{:else}
+					Update
+				{/if}
 			</Form.Button>
 		</div>
 	</form>
 	<div>
-		{#if img_blob}
-			<img src={URL.createObjectURL(img_blob)} />
-		{/if}
+		<div>debug info:</div>
+		<div>{upload_response}</div>
 	</div>
 </div>

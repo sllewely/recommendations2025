@@ -2,6 +2,15 @@ class UserBlueprint < Blueprinter::Base
   identifier :id
   fields :id, :name
 
+  field :profile_picture do |user|
+    if Rails.env.test?
+      # skip this in test environment
+      nil
+    else
+      S3ImageHelper.presigned_url_get_object("profile_picture/#{user.id}")
+    end
+  end
+
   view :unauthed do
   end
 

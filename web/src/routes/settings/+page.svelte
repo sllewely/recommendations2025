@@ -18,6 +18,7 @@
 <div class="flex flex-col">
 	<div>
 		<Button href="/settings/notifications">Notifications</Button>
+		<Button href="/settings/profile_picture">Profile picture</Button>
 	</div>
 	<div>
 		<p>#TODO page needs a fun background!!</p>

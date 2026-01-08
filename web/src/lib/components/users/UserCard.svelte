@@ -10,6 +10,9 @@
 </script>
 
 <div class="flex flex-row">
-	<img src={user.profile_picture_presigned_get_url} alt="profile picture" />
-	<a class="text-teal-400 hover:text-orange-400" href={`/users/${user.id}`}>{user.name}</a>
+	<div class="rounded-full w-12 h-12 overflow-hidden mr-2">
+		<img src={user.profile_picture_presigned_get_url} />
+	</div>
+	<a class="text-teal-400 hover:text-orange-400 font-bold" href={`/users/${user.id}`}>{user.name}</a
+	>
 </div>

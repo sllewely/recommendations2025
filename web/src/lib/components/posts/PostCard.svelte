@@ -8,7 +8,6 @@
 	import type { Post } from "$lib/api_calls/types";
 	import { parseAbsoluteToLocal } from "@internationalized/date";
 	import MarkedDownPost from "$lib/components/posts/MarkedDownPost.svelte";
-	import UserCard from "$lib/components/users/UserCard.svelte";
 
 	interface Props {
 		feed_item: Post;
@@ -19,27 +18,9 @@
 	if (feed_item.class_name !== "Post") {
 		console.error("not a post feed item");
 	}
-
-	const localizedCreateTime = parseAbsoluteToLocal(feed_item.created_at);
-	const formattedCreateTime = new Intl.DateTimeFormat("en-US", {
-		dateStyle: "medium",
-		timeStyle: "short",
-		timeZone: localizedCreateTime.timeZone,
-	}).format(localizedCreateTime.toDate());
 </script>
 
 <div>
-	<div class="flex flex-row justify-between">
-		<div>
-			<span class="font-bold">
-				<UserCard user={feed_item.user} />
-			</span> posted
-		</div>
-		<div>
-			<span class="text-sm">at {formattedCreateTime}</span>
-		</div>
-	</div>
-
 	<div>
 		<div class="p-2">
 			<a href="/posts/{feed_item.id}">

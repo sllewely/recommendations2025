@@ -27,7 +27,7 @@
 	const pagination = data.feed.pagy;
 	let next_page = $state(pagination.next);
 
-	onMount(() => {
+	onMount(async () => {
 		async function fetch_posts() {
 			// Show loading spinner and make fetch request to api
 			const response = await fetch("/api/fetch_posts?page=" + next_page, {
@@ -67,7 +67,12 @@
 
 <div>
 	<div class="flex space-x-2 mb-4 items-baseline">
-		<H1>{user.name}</H1>
+		<div class="flex flex-row">
+			{#if user.profile_picture_presigned_get_url}
+				<img src={user.profile_picture_presigned_get_url} alt="profile picture" />
+			{/if}
+			<H1>{user.name}</H1>
+		</div>
 		{#if tags}
 			<div class="space-x-2 mb-4">
 				{#each tags as tag}

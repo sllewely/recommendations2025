@@ -49,20 +49,6 @@
 </script>
 
 <div>
-	<div class="flex flex-row justify-between">
-		<!--        <svelte:boundary>-->
-		<div>
-			<span class="font-bold">
-				<!-- I just broke this for the feed TODO SARAH -->
-				<Link url="/users/{feed_item.user.id}">{feed_item.user.name}</Link>
-			</span> posted an upcoming event
-		</div>
-		<!--        <div><span class="font-bold"><a class="text-teal-400 hover:text-orange-400" href="/users/{feed_item.creator_id}">{feed_item.creator_name}</a></span> posted an upcoming event</div>-->
-		<!--        </svelte:boundary>-->
-		<div>
-			<span class="text-sm">at {formattedCreateTime}</span>
-		</div>
-	</div>
 	<div class="p-2">
 		<a href="/events/{feed_item.id}">
 			<Card.Root

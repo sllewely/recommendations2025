@@ -32,21 +32,11 @@
 		timeStyle: "short",
 		timeZone: localizedCreateTime.timeZone,
 	}).format(localizedCreateTime.toDate());
+
+	let creating = $state(false);
 </script>
 
 <div>
-	<div class="flex flex-row justify-between">
-		<div>
-			<span class="font-bold"
-				><Link url="/users/{feed_item.user.id}">{feed_item.user.name}</Link></span
-			>
-			{by_line}
-		</div>
-		<div>
-			<span class="text-sm">at {formattedCreateTime}</span>
-		</div>
-	</div>
-
 	<div>
 		{#if current_user.id !== feed_item.user.id}
 			<div class="float-right relative">

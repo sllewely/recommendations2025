@@ -18,29 +18,9 @@
 	if (feed_item.class_name !== "Post") {
 		console.error("not a post feed item");
 	}
-
-	const localizedCreateTime = parseAbsoluteToLocal(feed_item.created_at);
-	const formattedCreateTime = new Intl.DateTimeFormat("en-US", {
-		dateStyle: "medium",
-		timeStyle: "short",
-		timeZone: localizedCreateTime.timeZone,
-	}).format(localizedCreateTime.toDate());
 </script>
 
 <div>
-	<div class="flex flex-row justify-between">
-		<div>
-			<span class="font-bold">
-				<a class="text-teal-400 hover:text-orange-400" href="/users/{feed_item.user.id}">
-					{feed_item.user.name}
-				</a>
-			</span> posted
-		</div>
-		<div>
-			<span class="text-sm">at {formattedCreateTime}</span>
-		</div>
-	</div>
-
 	<div>
 		<div class="p-2">
 			<a href="/posts/{feed_item.id}">

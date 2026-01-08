@@ -13,16 +13,12 @@ class ImagesController < ApplicationController
     # may need to delete the old one
     res = S3ImageHelper.presigned_url_put_object("profile_picture/#{current_user.id}")
 
-    logger.warn "signed upload url: #{res}"
-
     render json: { url: res }, status: :ok
   end
 
   def signed_get_url
     # may need to delete the old one
     res = S3ImageHelper.presigned_url_get_object("profile_picture/#{current_user.id}")
-
-    logger.warn "signed get url: #{res}"
 
     render json: { url: res }, status: :ok
   end

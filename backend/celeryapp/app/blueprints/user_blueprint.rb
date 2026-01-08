@@ -1,8 +1,10 @@
 class UserBlueprint < Blueprinter::Base
+  include S3ImageHelper
+  
   identifier :id
   fields :id, :name
 
-  field :profile_picture do |user|
+  field :profile_picture_presigned_get_url do |user|
     if Rails.env.test?
       # skip this in test environment
       nil

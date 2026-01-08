@@ -8,6 +8,7 @@
 	import type { Post } from "$lib/api_calls/types";
 	import { parseAbsoluteToLocal } from "@internationalized/date";
 	import MarkedDownPost from "$lib/components/posts/MarkedDownPost.svelte";
+	import UserCard from "$lib/components/users/UserCard.svelte";
 
 	interface Props {
 		feed_item: Post;
@@ -31,9 +32,7 @@
 	<div class="flex flex-row justify-between">
 		<div>
 			<span class="font-bold">
-				<a class="text-teal-400 hover:text-orange-400" href="/users/{feed_item.user.id}">
-					{feed_item.user.name}
-				</a>
+				<UserCard user={feed_item.user} />
 			</span> posted
 		</div>
 		<div>

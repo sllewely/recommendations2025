@@ -1,6 +1,6 @@
 class UserBlueprint < Blueprinter::Base
   include S3ImageHelper
-  
+
   identifier :id
   fields :id, :name
 
@@ -9,7 +9,7 @@ class UserBlueprint < Blueprinter::Base
       # skip this in test environment
       nil
     else
-      S3ImageHelper.presigned_url_get_object("profile_picture/#{user.id}")
+      # S3ImageHelper.presigned_url_get_object("profile_picture/#{user.id}")
     end
   end
 

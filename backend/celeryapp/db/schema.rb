@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_18_223415) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_11_135256) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -86,8 +86,10 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_18_223415) do
   create_table "friend_requests", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.uuid "incoming_friend_id"
+    t.string "message"
     t.integer "numeric_incoming_friend_id"
     t.integer "numeric_user_id"
+    t.integer "status", default: 0
     t.datetime "updated_at", null: false
     t.uuid "user_id"
     t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false

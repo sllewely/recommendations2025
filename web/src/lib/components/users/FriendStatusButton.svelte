@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Button } from "$lib/components/ui/button";
 	import { Badge } from "$lib/components/ui/badge";
+	import * as Dialog from "$lib/components/ui/dialog/index.js";
 	import type { User, FriendStatus } from "$lib/api_calls/types";
 
 	interface Props {
@@ -59,6 +60,18 @@
 	{:else if friend_status === "sent_friend_request"}
 		<Badge variant="secondary">Friend request pending</Badge>
 	{:else}
-		<Button type="submit" onclick={send_friend_request}>Add friend</Button>
+		<Dialog.Root>
+			<Dialog.Trigger>Add Friend</Dialog.Trigger>
+			<Dialog.Content class="sm:max-w-md">
+				<Dialog.Header>
+					<Dialog.Title>Send a friend request</Dialog.Title>
+					<Dialog.Description>Let them know how you know each other</Dialog.Description>
+				</Dialog.Header>
+				<div></div>
+				<Dialog.Footer>
+					<Button type="submit" onclick={send_friend_request}>Add friend</Button>
+				</Dialog.Footer>
+			</Dialog.Content>
+		</Dialog.Root>
 	{/if}
 </div>

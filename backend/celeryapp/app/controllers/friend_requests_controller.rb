@@ -42,7 +42,7 @@ class FriendRequestsController < ApplicationController
     render json: { error: "Cannot send friend request: already friends" }, status: :unprocessable_content and return if current_user.friends.find_by(id: friend_id).present?
     try do
       ActiveRecord::Base.transaction do
-        user.friend_requests.create!(incoming_friend_id: current_user.id)
+        user.friend_requests.create!(incoming_friend_id: current_user.id, message: params['message'])
         user.notifications << Notification.pending_friend_request(user, current_user)
       end
     rescue ActiveRecord::RecordInvalid => e

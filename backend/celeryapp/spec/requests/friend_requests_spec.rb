@@ -126,6 +126,17 @@ RSpec.describe "FriendRequests", type: :request do
       expect(res['user']['id']).to eq(new_friend.id)
     end
 
+    it 'a friend request can have a message' do
+      new_friend = create(:user)
+      post "/friend_requests", params: { user_id: new_friend.id, message: "hey I know you from recurse" }, headers: @headers
+
+      expect(response).to have_http_status(:created)
+      res = JSON.parse(response.body)
+      expect(res['user']['id']).to eq(new_friend.id)
+      expect(res['message']).to eq("hey I know you from recurse")
+      expect(res['status']).to eq("pending")
+    end
+
     it 'fails if a friend request already exists to them' do
       new_friend = create(:user)
       post "/friend_requests", params: { user_id: new_friend.id }, headers: @headers

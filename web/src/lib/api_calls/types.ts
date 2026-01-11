@@ -112,6 +112,13 @@ export interface Recommendation {
 	comments: Comment[];
 }
 
+export type PendingFriendRequest = {
+	id: string;
+	user: User;
+	incoming_friend: User;
+	message: string;
+};
+
 export type CreateRecommendationData = unknown;
 
 export type FriendStatus =

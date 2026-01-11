@@ -8,8 +8,13 @@
 	import { goto } from "$app/navigation";
 	import { friends_map, fetch_friends_map } from "$lib/state/friends_map.svelte";
 	import { parseAbsoluteToLocal } from "@internationalized/date";
+	import type { PendingFriendRequest } from "$lib/api_calls/types";
 
-	let { pending_friend_request } = $props();
+	interface Props {
+		pending_friend_request: PendingFriendRequest;
+	}
+
+	let { pending_friend_request }: Props = $props();
 
 	let updating = $state(false);
 
@@ -23,9 +28,10 @@
 <div class="p-4 border-1 border-gray-200 rounded-sm flex flex-row gap-4">
 	<div class="flex flex-row justify-between w-100% grow">
 		<div>
-			<Link url="/users/{pending_friend_request['incoming_friend']['id']}"
-				><p>{pending_friend_request.incoming_friend.name}</p></Link
-			>
+			<Link url="/users/{pending_friend_request['incoming_friend']['id']}">
+				<p>{pending_friend_request.incoming_friend.name}</p>
+			</Link>
+			<p>{pending_friend_request.message}</p>
 		</div>
 		<div class="text-sm">{formattedCreateTime}</div>
 	</div>

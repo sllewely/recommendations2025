@@ -41,7 +41,7 @@
 	let creating = $state(false);
 	let searching = $state(false);
 
-	let users = $state([]);
+	let searchResultUsers = $state([]);
 
 	let friends = $state(data.friends_response["res"] ?? []);
 	$effect(() => {
@@ -59,7 +59,7 @@
 	}
 
 	function submitForm() {
-		document.getElementById("search_form").requestSubmit();
+		<HTMLFormElement>document.getElementById("search_form").requestSubmit();
 	}
 </script>
 
@@ -99,7 +99,7 @@
 							creating = false;
 							let res = result.data;
 							if (res.success) {
-								users = res["res"].filter((user) => {
+								searchResultUsers = res["res"].filter((user) => {
 									return user.id !== my_user.res.id;
 								});
 							} else {
@@ -143,7 +143,7 @@
 								variant="outline"
 								on:click={() => {
 									document.getElementById("search_form").reset();
-									users = [];
+									searchResultUsers = [];
 									document.getElementById("search").focus();
 								}}
 								>Clear
@@ -153,7 +153,7 @@
 				</form>
 
 				<div>
-					{#each users as user}
+					{#each searchResultUsers as user}
 						<div
 							class="p-2 my-2 border-1 border-gray-200 rounded-sm flex flex-row justify-between items-center"
 						>

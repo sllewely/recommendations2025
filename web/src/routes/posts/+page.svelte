@@ -26,7 +26,9 @@
 	let localized_dater = function (event_item: Event): string {
 		const localizedStartTime = parseAbsoluteToLocal(event_item.start_date_time);
 		return new Intl.DateTimeFormat("en-US", {
-			dateStyle: "medium",
+			weekday: "short",
+			month: "short",
+			day: "numeric",
 			timeZone: localizedStartTime.timeZone,
 		}).format(localizedStartTime.toDate());
 	};

@@ -1,7 +1,7 @@
 class EventsController < ApplicationController
 
   def index
-    @events = Event.by_friends(current_user.friend_ids).includes(:user, rsvps: :user, comments: :user).where('start_date_time > ?', DateTime.now).order(start_date_time: :asc)
+    @events = Event.by_friends(current_user.friend_ids).includes(:user, rsvps: :user, comments: :user).where('start_date_time > ?', DateTime.now - 1.day).order(start_date_time: :asc)
 
     # TODO: improve query performance
     render json: EventBlueprint.render(@events, view: :authed), status: :ok

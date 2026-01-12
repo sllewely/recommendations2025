@@ -5,9 +5,6 @@
 	import InputCheckbox from "$lib/components/form/InputCheckbox.svelte";
 	import FormButton from "$lib/components/form/FormButton.svelte";
 	import H1 from "$lib/components/text/H1.svelte";
-	import EventFeedItem from "$lib/components/posts/EventFeedItem.svelte";
-
-	import Card from "$lib/components/Card.svelte";
 
 	import { newToast, ToastType } from "$lib/state/toast.svelte.js";
 	import { goto } from "$app/navigation";

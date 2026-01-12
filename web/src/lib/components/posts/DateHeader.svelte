@@ -1,15 +1,20 @@
 <script lang="ts">
-	import Card from "$lib/components/Card.svelte";
-	import Link from "$lib/components/text/Link.svelte";
 	import H2 from "$lib/components/text/H2.svelte";
+	import * as Card from "$lib/components/ui/card/index.js";
 
-	let { event_item } = $props();
+	interface Props {
+		event_item: {
+			date_header: string;
+		};
+	}
+
+	let { event_item }: Props = $props();
 </script>
 
 <div class="p-2">
-	<div
-		class="p-4 flex justify-center bg-white border border-gray-200 rounded-lg shadow-sm bg-orange-300 dark:border-gray-700"
-	>
-		<H2>{event_item["date_header"]}</H2>
-	</div>
+	<Card.Root>
+		<Card.Content class="text-xl font-bold flex justify-center">
+			{event_item.date_header}
+		</Card.Content>
+	</Card.Root>
 </div>

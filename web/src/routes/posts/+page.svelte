@@ -1,6 +1,5 @@
 <script lang="ts">
 	import DateHeader from "$lib/components/posts/DateHeader.svelte";
-	import EventFeedItem from "$lib/components/posts/EventFeedItem.svelte";
 	import FeedItem from "$lib/components/posts/FeedItem.svelte";
 	import H1 from "$lib/components/text/H1.svelte";
 	import Link from "$lib/components/text/Link.svelte";
@@ -13,6 +12,7 @@
 	import { Spinner } from "$lib/components/ui/spinner/index.js";
 	import EnableNotifications from "$lib/components/notifications/EnableNotifications.svelte";
 	import ShouldShowNotificationSubscribeButtonCard from "$lib/components/notifications/ShouldShowNotificationSubscribeButtonCard.svelte";
+	import EventCard from "$lib/components/posts/EventCard.svelte";
 
 	let { data }: PageProps = $props();
 
@@ -26,7 +26,9 @@
 	let localized_dater = function (event_item: Event): string {
 		const localizedStartTime = parseAbsoluteToLocal(event_item.start_date_time);
 		return new Intl.DateTimeFormat("en-US", {
-			dateStyle: "medium",
+			weekday: "short",
+			month: "short",
+			day: "numeric",
 			timeZone: localizedStartTime.timeZone,
 		}).format(localizedStartTime.toDate());
 	};
@@ -178,7 +180,7 @@
 				{#if !!event_item["date_header"]}
 					<DateHeader {event_item} />
 				{:else}
-					<EventFeedItem {event_item} />
+					<EventCard feed_item={event_item} />
 				{/if}
 			{/each}
 		</div>
@@ -249,7 +251,7 @@
 					{#if !!event_item["date_header"]}
 						<DateHeader {event_item} />
 					{:else}
-						<EventFeedItem {event_item} />
+						<EventCard feed_item={event_item} />
 					{/if}
 				{/each}
 			</div>

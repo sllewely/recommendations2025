@@ -15,10 +15,6 @@
 
 	let { feed_item }: Props = $props();
 
-	if (feed_item.class_name !== "Event") {
-		console.error("not an event feed item");
-	}
-
 	// TODO: Going should match on my id instead of current user rsvp
 	// should be updateable state
 	let current_user_rsvp = $derived(
@@ -28,6 +24,7 @@
 	let localizedCreateTime = $state(parseAbsoluteToLocal(feed_item.created_at));
 	let formattedCreateTime = $state();
 	let localizedStartTime = $state(parseAbsoluteToLocal(feed_item.start_date_time));
+	let formattedStartDate = $state();
 	let formattedStartTime = $state();
 
 	onMount(() => {
@@ -40,9 +37,17 @@
 		}).format(localizedCreateTime.toDate());
 
 		localizedStartTime = parseAbsoluteToLocal(feed_item.start_date_time);
+		formattedStartDate = new Intl.DateTimeFormat("en-US", {
+			weekday: "short",
+			month: "short",
+			year: "numeric",
+			day: "numeric",
+			timeZone: localizedCreateTime.timeZone,
+		}).format(localizedStartTime.toDate());
 		formattedStartTime = new Intl.DateTimeFormat("en-US", {
-			dateStyle: "medium",
-			timeStyle: "short",
+			hour: "numeric",
+			minute: "numeric",
+			hour12: true,
 			timeZone: localizedCreateTime.timeZone,
 		}).format(localizedStartTime.toDate());
 	});
@@ -58,7 +63,16 @@
 					{#if feed_item.title}
 						<Card.Title>{feed_item.title}</Card.Title>
 					{/if}
-					<Card.Description>Happening {formattedStartTime}</Card.Description>
+					<Card.Description>
+						<div class="flex flex-col">
+							<div>
+								{formattedStartDate}
+							</div>
+							<div>
+								At {formattedStartTime}
+							</div>
+						</div>
+					</Card.Description>
 				</Card.Header>
 				<Card.Content>
 					{#if feed_item.description}

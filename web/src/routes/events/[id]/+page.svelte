@@ -74,6 +74,7 @@
 	let localizedCreateTime = $derived(parseAbsoluteToLocal(data.event.created_at));
 	let formattedCreateTime = $state();
 	let localizedStartTime = $derived(parseAbsoluteToLocal(data.event.start_date_time));
+	let formattedStartDate = $state();
 	let formattedStartTime = $state();
 
 	onMount(() => {
@@ -86,9 +87,17 @@
 		}).format(localizedCreateTime.toDate());
 
 		localizedStartTime = parseAbsoluteToLocal(data.event.start_date_time);
+		formattedStartDate = new Intl.DateTimeFormat("en-US", {
+			weekday: "short",
+			month: "short",
+			year: "numeric",
+			day: "numeric",
+			timeZone: localizedCreateTime.timeZone,
+		}).format(localizedStartTime.toDate());
 		formattedStartTime = new Intl.DateTimeFormat("en-US", {
-			dateStyle: "medium",
-			timeStyle: "short",
+			hour: "numeric",
+			minute: "numeric",
+			hour12: true,
 			timeZone: localizedCreateTime.timeZone,
 		}).format(localizedStartTime.toDate());
 	});
@@ -116,9 +125,6 @@
 	};
 </script>
 
-{console.log("rsvps", data.event.rsvps)}
-{console.log("current_user_rsvp", current_user_rsvp)}
-
 <div>
 	{#if my_user_id === data.event.user.id}
 		<div class="float-right relative">
@@ -133,12 +139,12 @@
 				<span class="font-bold">
 					<!-- I just broke this for the feed TODO SARAH -->
 					<Link url="/users/{data.event.user.id}">{data.event.user.name}</Link>
-				</span> posted an upcoming event
+				</span>'s event
 			</div>
 			<!--        <div><span class="font-bold"><a class="text-teal-400 hover:text-orange-400" href="/users/{data.event.creator_id}">{data.event.creator_name}</a></span> posted an upcoming event</div>-->
 			<!--        </svelte:boundary>-->
 			<div>
-				<span class="text-sm">at {formattedCreateTime}</span>
+				<span class="text-sm">posted at {formattedCreateTime}</span>
 			</div>
 		</div>
 		<div class="p-2">
@@ -148,7 +154,16 @@
 						{#if data.event.title}
 							<Card.Title>{data.event.title}</Card.Title>
 						{/if}
-						<Card.Description>Happening {formattedStartTime}</Card.Description>
+						<Card.Description>
+							<div class="flex flex-col">
+								<div>
+									{formattedStartDate}
+								</div>
+								<div>
+									At {formattedStartTime}
+								</div>
+							</div>
+						</Card.Description>
 					</Card.Header>
 					<Card.Content>
 						{#if data.event.description}

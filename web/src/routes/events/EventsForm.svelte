@@ -83,8 +83,11 @@
 					creating = false;
 					let res = result.data;
 					if (res.success) {
-						console.log("success create event");
-						newToast("You have successfully created an event!!");
+						if (data.event) {
+							newToast("You have successfully updated an event!!");
+						} else {
+							newToast("You have successfully created an event!!");
+						}
 						goto("/posts");
 					} else {
 						newToast("Error creating an event: " + res.message, ToastType.Error);

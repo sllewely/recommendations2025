@@ -32,7 +32,6 @@
 					console.log(res);
 					update_comments(res.res);
 					newToast("You have successfully created a comment ~~!", ToastType.Success);
-					window.location.reload();
 				} else {
 					newToast("Error creating a comment: " + res.message, ToastType.Error);
 				}

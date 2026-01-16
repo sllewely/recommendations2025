@@ -2,9 +2,18 @@
 	import * as Form from "$lib/components/ui/form";
 	import { Spinner } from "$lib/components/ui/spinner/index.js";
 	import { onMount } from "svelte";
+	import type { User } from "$lib/api_calls/types";
+
+	interface Props {
+		data: {
+			user: User;
+		};
+	}
+
+	let { data }: Props = $props();
 
 	let upload_url = $state("");
-	let img_blob = $state("");
+	let img_blob: Blob | null = $state(null);
 
 	let uploading = $state(false);
 	let upload_response = $state("");
@@ -18,18 +27,12 @@
 		upload_url = res.url;
 		console.log("uploadurl", JSON.stringify(upload_url));
 
-		const retrieve_file_response = await fetch(`/api/images/presigned_get_url`, {
-			method: "GET",
-			headers: { "Content-Type": "application/json" },
-		});
-		const res2 = await retrieve_file_response.json();
-		const get_url = res2.url;
-		console.log("geturl", JSON.stringify(res2));
-
-		const cloudflare_get_url = await fetch(get_url, {
-			method: "GET",
-		});
-		img_blob = await cloudflare_get_url.blob();
+		if (data.user.presigned_url) {
+			const cloudflare_get_url = await fetch(data.user.presigned_url, {
+				method: "GET",
+			});
+			img_blob = await cloudflare_get_url.blob();
+		}
 	});
 
 	let files = $state();
@@ -43,6 +46,30 @@
 			}
 		}
 	});
+
+	const submitUpload = async () => {
+		uploading = true;
+		console.log(files[0]);
+		let res = await fetch(upload_url, {
+			method: "PUT",
+			body: files[0],
+		});
+		upload_response = await res.text();
+		console.log("upload response", res);
+		// gen new presigned url
+		const response = await fetch("/api/images/update_profile_url", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+		const json = await response.json();
+		if (json["errors"]) {
+		} else {
+			console.log("update profile pic", json);
+		}
+		uploading = false;
+	};
 </script>
 
 <div>
@@ -70,20 +97,7 @@
 		{/if}
 
 		<div class="flex flex-col space-y-2">
-			<Form.Button
-				onclick={async () => {
-					uploading = true;
-					console.log(files[0]);
-					let res = await fetch(upload_url, {
-						method: "PUT",
-						body: files[0],
-					});
-					upload_response = await res.text();
-					console.log("upload response", res);
-					uploading = false;
-				}}
-				disabled={uploading ? "true" : undefined}
-			>
+			<Form.Button onclick={submitUpload} disabled={uploading ? "true" : undefined}>
 				{#if uploading}
 					<Spinner /> Uploading...
 				{:else}

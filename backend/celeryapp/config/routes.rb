@@ -38,6 +38,7 @@ Rails.application.routes.draw do
       post 'profile_picture'
       get "signed_upload_url"
       get "signed_get_url"
+      post "update_profile_url"
     end
   end
   resources :web_push_registrations

@@ -16,6 +16,14 @@ class ImagesController < ApplicationController
     render json: { url: res }, status: :ok
   end
 
+  # This triggers the regen of a user's presigned url
+  def update_profile_url
+    res = S3ImageHelper.presigned_url_get_object("profile_picture/#{current_user.id}")
+    current_user.update(presigned_url: res, presigned_url_expires: Time.now + (S3ImageHelper::EXPIRES_DURATION - 10).seconds)
+    current_user.save
+    render json: UserBlueprint.render(current_user.reload), status: :ok
+  end
+
   def signed_get_url
     # may need to delete the old one
     res = S3ImageHelper.presigned_url_get_object("profile_picture/#{current_user.id}")

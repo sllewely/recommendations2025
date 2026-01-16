@@ -9,6 +9,8 @@ module S3ImageHelper
                       end
   CONTENT_TYPE = "image/jpeg"
 
+  EXPIRES_DURATION = 60 * 60 * 24 * 7 # one week
+
   def self.s3_client
     credentials = Aws::Credentials.new(ENV["AWS_ACCESS_KEY_ID"], ENV["AWS_SECRET_ACCESS_KEY"])
     Aws::S3::Client.new(
@@ -63,6 +65,7 @@ module S3ImageHelper
     signer.presigned_url(:get_object,
                          bucket: CLOUDFLARE_BUCKET,
                          key: object_key,
+                         expires_in: EXPIRES_DURATION,
     )
   end
 end

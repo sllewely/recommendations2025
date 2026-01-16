@@ -62,8 +62,8 @@
 	<div class="flex space-x-2 mb-4 items-baseline">
 		<div class="flex flex-row">
 			<div class="rounded-full w-12 h-12 overflow-hidden mr-2">
-				{#if user.profile_picture_presigned_get_url}
-					<img src={user.profile_picture_presigned_get_url} alt="profile picture" />
+				{#if user.presigned_url}
+					<img src={user.presigned_url} alt="profile picture" />
 				{:else}
 					<img src={bblogo} />
 				{/if}

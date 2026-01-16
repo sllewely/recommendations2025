@@ -27,14 +27,6 @@
 		upload_url = res.url;
 		console.log("uploadurl", JSON.stringify(upload_url));
 
-		// const retrieve_file_response = await fetch(`/api/images/presigned_get_url`, {
-		// 	method: "GET",
-		// 	headers: { "Content-Type": "application/json" },
-		// });
-		// const res2 = await retrieve_file_response.json();
-		// const get_url = res2.url;
-		// console.log("geturl", JSON.stringify(res2));
-
 		if (data.user.presigned_url) {
 			const cloudflare_get_url = await fetch(data.user.presigned_url, {
 				method: "GET",

@@ -49,7 +49,6 @@
 	}
 
 	let fetching_more_posts = $state(false);
-	let reloading_page = $state(false);
 
 	onMount(() => {
 		async function fetch_posts() {
@@ -74,14 +73,6 @@
 					fetch_posts();
 					fetching_more_posts = false;
 				}
-			}
-		});
-
-		// Reload the page when you scroll to the top
-		window.addEventListener("scroll", function () {
-			if (window.scrollY == 0) {
-				console.log("you're at the top of the page");
-				window.location.reload();
 			}
 		});
 	});

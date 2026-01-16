@@ -101,13 +101,7 @@
 					</div>
 
 					<div class="flex flex-col space-y-2">
-						<Form.Button
-							on:click={() => {
-								console.log("click!!");
-							}}
-						>
-							Update
-						</Form.Button>
+						<Form.Button>Update</Form.Button>
 					</div>
 				</Card.Content>
 			</Card.Root>
@@ -126,7 +120,12 @@
 						<Form.Description>Your account email.</Form.Description>
 						<Form.FieldErrors />
 					</Form.Field>
-					<Button type="button" on:click={(edit_password = !edit_password)}>Edit password</Button>
+					<Button
+						type="button"
+						onclick={() => {
+							edit_password = !edit_password;
+						}}>Edit password</Button
+					>
 					{#if edit_password}
 						<Form.Field {form} name="password">
 							<Form.Control let:attrs>

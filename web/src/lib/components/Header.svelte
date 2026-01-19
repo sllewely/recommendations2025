@@ -2,7 +2,7 @@
 	import { goto } from "$app/navigation";
 	import { current_user, isSignedIn } from "$lib/state/current_user.svelte";
 	import { setPendingToast, ToastType } from "$lib/state/toast.svelte";
-	import { Settings, Menu, X } from "@lucide/svelte";
+	import { Settings, Menu, X, BellRing } from "@lucide/svelte";
 	import bblogo from "$lib/assets/android-launchericon-72-72.png";
 
 	let mobileMenuOpen = $state(false);
@@ -59,7 +59,6 @@
 						<a href="/users/{current_user.id}" class="text-gray-400 hover:text-white">My profile</a>
 					</li>
 				{/if}
-				<!--				<li><a href="/events/map" class="text-gray-400 hover:text-white">Map!</a></li>-->
 				<li><a href="/roadmap" class="text-gray-400 hover:text-white">Roadmap</a></li>
 				<li><a href="/about" class="text-gray-400 hover:text-white">About</a></li>
 
@@ -82,6 +81,10 @@
 					<Settings />
 				</a>
 				<span>|</span>
+				<a class="font-semibold text-red-600 hover:text-orange-400" href="/settings">
+					<BellRing />
+				</a>
+				<span>|</span>
 				<button
 					type="button"
 					class="cursor-pointer font-semibold text-gray-400 hover:text-orange-400"
@@ -98,6 +101,9 @@
 
 		<!-- Mobile right side: hamburger menu -->
 		<div class="md:hidden flex items-center pr-4">
+			<a class="font-semibold text-red-600 hover:text-orange-400" href="/settings">
+				<BellRing />
+			</a>
 			<!-- Mobile hamburger menu button -->
 			<button
 				type="button"

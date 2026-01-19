@@ -173,7 +173,7 @@
 					<Textarea
 						{...attrs}
 						bind:value={$formData.description}
-						on:keyup={({ target: { value } }) => debounce(value)}
+						onkeyup={({ target: { value } }) => debounce(value)}
 					/>
 				</Form.Control>
 				<Form.Description>Hype it up!!</Form.Description>

@@ -174,8 +174,8 @@
 								<Textarea
 									{...attrs}
 									bind:value={$formData.content}
-									on:keydown={usersearch}
-									on:keyup={({ target: { value } }) => debounce(value)}
+									onkeydown={usersearch}
+									onkeyup={({ target: { value } }) => debounce(value)}
 									class="h-80"
 								/>
 							</Form.Control>

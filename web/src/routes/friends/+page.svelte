@@ -117,7 +117,7 @@
 								placeholder="sarah"
 								autofocus
 								autocomplete="off"
-								on:keyup={() => {
+								onkeyup={() => {
 									document.getElementById("search_form").requestSubmit();
 								}}
 							/>

@@ -2,10 +2,12 @@
 	import { goto } from "$app/navigation";
 	import { current_user, isSignedIn } from "$lib/state/current_user.svelte";
 	import { setPendingToast, ToastType } from "$lib/state/toast.svelte";
-	import { Settings, Menu, X, BellRing } from "@lucide/svelte";
+	import { Settings, Menu, X, BellRing, Bell } from "@lucide/svelte";
 	import bblogo from "$lib/assets/android-launchericon-72-72.png";
+	import { onMount } from "svelte";
 
 	let mobileMenuOpen = $state(false);
+	let hasNotifications = $state(false);
 
 	const toggleMobileMenu = () => {
 		mobileMenuOpen = !mobileMenuOpen;
@@ -29,6 +31,15 @@
 	};
 
 	let icon_link = $derived(isSignedIn() ? "/posts" : "/");
+
+	onMount(async () => {
+		const has_notifications_response = await fetch(`/api/notifications/has_active`, {
+			method: "GET",
+			headers: { "Content-Type": "application/json" },
+		});
+		const res = await has_notifications_response.json();
+		hasNotifications = res["res"]["has_active"];
+	});
 </script>
 
 <header class="text-white p-0 relative">
@@ -81,9 +92,15 @@
 					<Settings />
 				</a>
 				<span>|</span>
-				<a class="font-semibold text-red-600 hover:text-orange-400" href="/notifications">
-					<BellRing />
-				</a>
+				{#if hasNotifications}
+					<a class="font-semibold text-red-600 hover:text-orange-400" href="/notifications">
+						<BellRing />
+					</a>
+				{:else}
+					<a class="font-semibold text-gray-400 hover:text-orange-400" href="/notifications">
+						<Bell />
+					</a>
+				{/if}
 				<span>|</span>
 				<button
 					type="button"
@@ -101,9 +118,15 @@
 
 		<!-- Mobile right side: hamburger menu -->
 		<div class="md:hidden flex items-center pr-4">
-			<a class="font-semibold text-red-600 hover:text-orange-400" href="/notifications">
-				<BellRing />
-			</a>
+			{#if hasNotifications}
+				<a class="font-semibold text-red-600 hover:text-orange-400" href="/notifications">
+					<BellRing />
+				</a>
+			{:else}
+				<a class="font-semibold text-gray-400 hover:text-orange-400" href="/notifications">
+					<Bell />
+				</a>
+			{/if}
 			<!-- Mobile hamburger menu button -->
 			<button
 				type="button"

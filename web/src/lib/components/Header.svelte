@@ -81,7 +81,7 @@
 					<Settings />
 				</a>
 				<span>|</span>
-				<a class="font-semibold text-red-600 hover:text-orange-400" href="/settings">
+				<a class="font-semibold text-red-600 hover:text-orange-400" href="/notifications">
 					<BellRing />
 				</a>
 				<span>|</span>
@@ -101,7 +101,7 @@
 
 		<!-- Mobile right side: hamburger menu -->
 		<div class="md:hidden flex items-center pr-4">
-			<a class="font-semibold text-red-600 hover:text-orange-400" href="/settings">
+			<a class="font-semibold text-red-600 hover:text-orange-400" href="/notifications">
 				<BellRing />
 			</a>
 			<!-- Mobile hamburger menu button -->

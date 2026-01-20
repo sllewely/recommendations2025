@@ -1,24 +1,30 @@
 <script lang="ts">
-	import H1 from "$lib/components/text/H1.svelte";
-	import { Badge } from "$lib/components/ui/badge";
 	import type { Notification } from "$lib/api_calls/types";
-	import FriendStatusButton from "$lib/components/users/FriendStatusButton.svelte";
-	import FeedItem from "$lib/components/posts/FeedItem.svelte";
-	import { Spinner } from "$lib/components/ui/spinner/index.js";
-	import { onMount } from "svelte";
-	import bblogo from "$lib/assets/android-launchericon-72-72.png";
+	import * as Item from "$lib/components/ui/item/index.js";
+	import { Button } from "$lib/components/ui/button";
+	import { ContactRound } from "@lucide/svelte";
 
 	interface Props {
 		data: {
-			notification: Notification;
+			notifications: Notification[];
 		};
 	}
 
 	let { data }: Props = $props();
-	let user = data.user;
-	const tags = user.tags;
 </script>
 
 <div>
-	{#each notifications as notification}{/each}
+	<Item.Group class="flex flex-col gap-6">
+		{#each data.notifications as notification}
+			<Item.Root variant="outline">
+				<Item.Media>
+					<ContactRound />
+				</Item.Media>
+				<Item.Content>{notification.message}</Item.Content>
+				<Item.Actions>
+					<Button variant="ghost" size="sm">take some action</Button>
+				</Item.Actions>
+			</Item.Root>
+		{/each}
+	</Item.Group>
 </div>

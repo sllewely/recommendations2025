@@ -57,7 +57,7 @@ RSpec.describe "Comments", type: :request do
 
       expect(response).to have_http_status(:unprocessable_content)
       res = JSON.parse(response.body)
-      expect(res['error']).to eq("body: can't be blank")
+      expect(res['error']).to eq("Validation failed: Body can't be blank")
     end
 
     it 'creates a comment and returns multiple' do
@@ -73,6 +73,50 @@ RSpec.describe "Comments", type: :request do
       expect(res.size).to eq(4)
       expect(res[3]['body']).to eq('hoo boy I sure love stew')
       expect(res[3]['commentable_id']).to eq(event.id)
+    end
+
+    it 'in app notifications are sent to people when I comment' do
+      user = create(:user)
+      event = create(:event, user: user)
+      user2 = create(:user)
+      create(:comment, :for_event, commentable: event, user: user2)
+      create(:comment, :for_event, commentable: event, user: user2)
+      create(:comment, :for_event, commentable: event, user: user)
+
+      post "/comments", params: { body: 'hoo boy I sure love stew', commentable_id: event.id, commentable_type: "Event" }, headers: @headers
+
+      expect(response).to have_http_status(:created)
+      res = JSON.parse(response.body)
+      expect(res.size).to eq(4)
+      expect(res[3]['body']).to eq('hoo boy I sure love stew')
+      expect(res[3]['commentable_id']).to eq(event.id)
+
+      expect(user.notifications.size).to eq(1)
+      expect(user.notifications.first.message).to eq("#{@my_user.name} commented on your event")
+      expect(user2.notifications.size).to eq(1)
+      expect(user2.notifications.first.message).to eq("#{@my_user.name} commented on a event you're following")
+    end
+
+    it 'in app notifications are sent to people when I comment' do
+      user = create(:user)
+      post = create(:post, user: user)
+      user2 = create(:user)
+      create(:comment, :for_post, commentable: post, user: user2)
+      create(:comment, :for_post, commentable: post, user: user2)
+      create(:comment, :for_post, commentable: post, user: user)
+
+      post "/comments", params: { body: 'hoo boy I sure love stew', commentable_id: post.id, commentable_type: "Post" }, headers: @headers
+
+      expect(response).to have_http_status(:created)
+      res = JSON.parse(response.body)
+      expect(res.size).to eq(4)
+      expect(res[3]['body']).to eq('hoo boy I sure love stew')
+      expect(res[3]['commentable_id']).to eq(post.id)
+
+      expect(user.notifications.size).to eq(1)
+      expect(user.notifications.first.message).to eq("#{@my_user.name} commented on your post")
+      expect(user2.notifications.size).to eq(1)
+      expect(user2.notifications.first.message).to eq("#{@my_user.name} commented on a post you're following")
     end
   end
 

@@ -13,21 +13,25 @@ class CommentsController < ApplicationController
   def create
     # TODO: Can only post on comment within friends
     @comment = current_user.comments.new(comment_params)
-    if @comment.save
-      commentable = @comment.commentable
-      if (commentable.user.id != current_user.id)
-        PushNotification.send_push_notification(commentable.user, "New Comment", "#{current_user.name} commented on your post")
-      else
-        User.find(commentable.comments.pluck(:user_id).uniq).each do |user|
-          next if user.id == current_user.id
-          PushNotification.send_push_notification(user, "New Comment", "#{current_user.name} commented on a post you're following")
-        end
-      end
+    commentable = @comment.commentable
 
-      render json: CommentBlueprint.render(commentable.comments.order(:created_at), view: :authed), status: :created
-    else
-      render json: { error: @comment.errors_to_s }, status: :unprocessable_content
+    ActiveRecord::Base.transaction do
+      @comment.save!
+      if commentable.user_id != current_user.id
+        # Notify the original author of the post
+        PushNotification.send_push_notification(commentable.user, "New Comment", "#{current_user.name} commented on your post")
+        commentable.user.notifications << Notification.commented_on_your_commentable(current_user, commentable)
+      end
+      User.find(commentable.comments.pluck(:user_id).uniq).each do |user|
+        next if user.id == current_user.id
+        next if user.id == commentable.user_id
+        PushNotification.send_push_notification(user, "New Comment", "#{current_user.name} commented on a post you're following")
+        user.notifications << Notification.commented_on_a_commentable_you_are_following(current_user, commentable)
+      end
+    rescue ActiveRecord::RecordInvalid => e
+      render json: { error: e.message }, status: :unprocessable_content and return
     end
+    render json: CommentBlueprint.render(commentable.comments.order(:created_at), view: :authed), status: :created
   end
 
   private

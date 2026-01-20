@@ -26,7 +26,11 @@ Rails.application.routes.draw do
     end
   end
   resources :friend_requests
-  resources :notifications
+  resources :notifications do
+    collection do
+      get 'has_active'
+    end
+  end
   resources :circles do
     post "add"
     post "remove"

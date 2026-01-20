@@ -14,6 +14,7 @@
 </script>
 
 <div>
+	<span>this page is a work in progress!! lmk what notif features you want</span>
 	<Item.Group class="flex flex-col gap-6">
 		{#each data.notifications as notification}
 			<Item.Root variant="outline">

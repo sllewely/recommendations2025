@@ -5,6 +5,10 @@ class NotificationsController < ApplicationController
     render json: current_user.notifications.active, status: :ok
   end
 
+  def has_active
+    render json: { has_active: current_user.notifications.active.any? }, status: :ok
+  end
+
   def update
     @notif = current_user.notifications.find_by(id: params[:id])
     render json: { error: "notif not found" }, status: :not_found and return if @notif.nil?

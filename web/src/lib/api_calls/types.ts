@@ -112,6 +112,14 @@ export interface Recommendation {
 	comments: Comment[];
 }
 
+export interface Notification {
+	id: string;
+	user_id: string;
+	notif_type: string;
+	message: string;
+	extras: object;
+}
+
 export type PendingFriendRequest = {
 	id: string;
 	user: User;

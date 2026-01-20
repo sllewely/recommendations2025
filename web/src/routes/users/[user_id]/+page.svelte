@@ -56,8 +56,6 @@
 	});
 </script>
 
-{console.log("data", data)}
-
 <div>
 	<div class="flex space-x-2 mb-4 items-baseline">
 		<div class="flex flex-row">

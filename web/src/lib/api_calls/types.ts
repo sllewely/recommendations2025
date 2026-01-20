@@ -112,10 +112,14 @@ export interface Recommendation {
 	comments: Comment[];
 }
 
+export type NotifTypes = "pending_friend_request" | "accepted_friend_request";
+
 export interface Notification {
-	id: string;
+	id: number;
+	uuid: string;
+	active: boolean;
 	user_id: string;
-	notif_type: string;
+	notif_type: NotifTypes;
 	message: string;
 	extras: object;
 }

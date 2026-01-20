@@ -2,7 +2,7 @@ class NotificationsController < ApplicationController
   include PushNotification
 
   def index
-    render json: current_user.notifications.active, status: :ok
+    render json: current_user.notifications, status: :ok
   end
 
   def has_active

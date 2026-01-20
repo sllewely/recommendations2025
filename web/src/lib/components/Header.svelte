@@ -33,6 +33,7 @@
 	let icon_link = $derived(isSignedIn() ? "/posts" : "/");
 
 	onMount(async () => {
+		if (!isSignedIn()) return;
 		const has_notifications_response = await fetch(`/api/notifications/has_active`, {
 			method: "GET",
 			headers: { "Content-Type": "application/json" },

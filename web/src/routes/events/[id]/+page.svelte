@@ -29,8 +29,6 @@
 	// let user = data.user;
 	let my_user_id = data.my_user_id;
 
-	let creating = $state(false);
-
 	// // Svelte pitfall.  Page updates are not triggered by load data prop change!!
 	// // This is the workaround
 	// let event = $state(data.event);
@@ -76,7 +74,9 @@
 	let formattedStartDate = $state();
 	let formattedStartTime = $state();
 
+	let signed_in = $state(false);
 	onMount(() => {
+		signed_in = isSignedIn();
 		localizedCreateTime = parseAbsoluteToLocal(data.event.created_at);
 
 		formattedCreateTime = new Intl.DateTimeFormat("en-US", {
@@ -170,11 +170,11 @@
 						{/if}
 						<div class="text-sm text-gray-500">
 							{#if data.event.address}
-								<p>at {data.event.address}</p>
+								<span>at {data.event.address}</span>
 							{/if}
 						</div>
 						<div class="flex flex-row justify-between">
-							{#if isSignedIn()}
+							{#if signed_in}
 								<div>
 									<form
 										method="POST"
@@ -216,7 +216,7 @@
 								</div>
 							{:else}
 								<RsvpBadge rsvp={{ status: "not_rsvpd" }} />
-								<p>Sign in to rsvp</p>
+								<span>Sign in to rsvp</span>
 							{/if}
 							{#if data.event.url}
 								<Tooltip.Provider>
@@ -225,7 +225,7 @@
 											<Link url={data.event.url}>link</Link>
 										</Tooltip.Trigger>
 										<Tooltip.Content>
-											<p>{data.event.url}</p>
+											<span>{data.event.url}</span>
 										</Tooltip.Content>
 									</Tooltip.Root>
 								</Tooltip.Provider>
@@ -234,7 +234,7 @@
 						<Separator class="my-6" />
 						<div class="">
 							<span class="text-xl">Rsvps</span>
-							{#if isSignedIn()}
+							{#if signed_in}
 								{#each data.event.rsvps as rsvp}
 									<div class="flex flex-row justify-between">
 										<div>
@@ -246,8 +246,8 @@
 									</div>
 								{/each}
 							{:else}
-								<p>Sign in to see who's coming</p>
-								<p>Rsvps: {data.event.rsvps.length}</p>
+								<span>Sign in to see who's coming</span>
+								<span>Rsvps: {data.event.rsvps.length}</span>
 							{/if}
 						</div>
 					</Card.Content>
@@ -256,7 +256,7 @@
 		</div>
 	</div>
 	<div>
-		{#if isSignedIn()}
+		{#if signed_in}
 			<Commentable feed_item={data.event} {comments} />
 		{:else}
 			<div class="flex">

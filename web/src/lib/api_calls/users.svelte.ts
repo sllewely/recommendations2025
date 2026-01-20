@@ -4,15 +4,6 @@ import type { ApiResponse, User, UserUpdatePayload } from "./types";
 const ENDPOINT = "users";
 
 /**
- * Fetches the current user's profile
- * @param token - JWT token for authentication
- * @returns Promise with user data or error
- */
-export async function getCurrentUser(token: string): Promise<ApiResponse<User>> {
-	return api.get<User>(`${ENDPOINT}/me`, token);
-}
-
-/**
  * Fetches a user by ID
  * @param id - User ID
  * @param token - JWT token for authentication

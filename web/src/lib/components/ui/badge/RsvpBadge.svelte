@@ -3,7 +3,7 @@
 	import type { Rsvp } from "$lib/api_calls/types";
 
 	interface Props {
-		rsvp: Rsvp | null;
+		rsvp: Rsvp | null | { status: string };
 	}
 
 	let { rsvp }: Props = $props();

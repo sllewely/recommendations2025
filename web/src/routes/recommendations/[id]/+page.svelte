@@ -2,14 +2,11 @@
 	import H1 from "$lib/components/text/H1.svelte";
 	import H2 from "$lib/components/text/H2.svelte";
 	import Card from "$lib/components/Card.svelte";
-	import PlusCircle from "$lib/components/posts/PlusCircle.svelte";
 	import LinkButton from "$lib/components/text/LinkButton.svelte";
 	import Link from "$lib/components/text/Link.svelte";
-	import { MessageCircleMore } from "@lucide/svelte";
-	import SubmitComment from "$lib/components/posts/SubmitComment.svelte";
-	import Comment from "$lib/components/posts/Comment.svelte";
 	import type { Recommendation, User } from "$lib/api_calls/types";
 	import { parseAbsoluteToLocal } from "@internationalized/date";
+	import Commentable from "$lib/components/posts/Commentable.svelte";
 
 	interface Props {
 		data: {
@@ -63,16 +60,6 @@
 	</Card>
 
 	<div>
-		<div class="flex">
-			{num_comments} Comments
-			<MessageCircleMore />
-		</div>
-		<div>
-			{#each comments as comment}
-				<Comment {comment} />
-			{/each}
-		</div>
-
-		<SubmitComment feed_item={recommendation} />
+		<Commentable feed_item={recommendation} {comments} />
 	</div>
 </div>

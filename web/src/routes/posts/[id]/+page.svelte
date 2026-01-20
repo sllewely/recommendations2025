@@ -8,6 +8,7 @@
 	import { Button } from "$lib/components/ui/button";
 	import { newToast, ToastType } from "$lib/state/toast.svelte";
 	import type { Post } from "$lib/api_calls/types";
+	import Commentable from "$lib/components/posts/Commentable.svelte";
 
 	interface Props {
 		data: {
@@ -57,16 +58,6 @@
 	<PostCard feed_item={post} />
 
 	<div>
-		<div class="flex">
-			{num_comments} Comments
-			<MessageCircleMore />
-		</div>
-		<div>
-			{#each comments as comment}
-				<Comment {comment} />
-			{/each}
-		</div>
-
-		<SubmitComment feed_item={post} />
+		<Commentable feed_item={post} {comments} />
 	</div>
 </div>

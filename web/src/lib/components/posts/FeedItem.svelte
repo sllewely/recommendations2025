@@ -7,7 +7,7 @@
 	import { Button } from "$lib/components/ui/button";
 	import UserCard from "$lib/components/users/UserCard.svelte";
 	import { MessageCircleMore } from "@lucide/svelte";
-	import Commentable from "$lib/components/posts/Commentable.svelte";
+	import ExpandableCommentable from "$lib/components/posts/ExpandableCommentable.svelte";
 	import type { Post, Event, Recommendation } from "$lib/api_calls/types";
 	import { parseAbsoluteToLocal } from "@internationalized/date";
 
@@ -56,5 +56,5 @@
 			<EventCard {feed_item} />
 		</div>
 	{/if}
-	<Commentable comments={feed_item["comments"]} {feed_item} />
+	<ExpandableCommentable comments={feed_item["comments"]} {feed_item} />
 </div>

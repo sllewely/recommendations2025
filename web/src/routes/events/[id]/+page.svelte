@@ -4,8 +4,6 @@
 	import { newToast, ToastType } from "$lib/state/toast.svelte.js";
 	import { goto, invalidate } from "$app/navigation";
 	import { MessageCircleMore } from "@lucide/svelte";
-	import SubmitComment from "$lib/components/posts/SubmitComment.svelte";
-	import Comment from "$lib/components/posts/Comment.svelte";
 	import { Button } from "$lib/components/ui/button";
 	import { current_user, isSignedIn } from "$lib/state/current_user.svelte";
 	import * as Card from "$lib/components/ui/card/index.js";
@@ -18,6 +16,7 @@
 	import type { Event } from "$lib/api_calls/types";
 	import { Separator } from "$lib/components/ui/separator";
 	import * as Select from "$lib/components/ui/select/index.js";
+	import Commentable from "$lib/components/posts/Commentable.svelte";
 
 	interface Props {
 		data: {
@@ -257,22 +256,13 @@
 		</div>
 	</div>
 	<div>
-		<div class="flex">
-			{num_comments} Comments
-			<MessageCircleMore />
-		</div>
 		{#if isSignedIn()}
-			<div>
-				{#each comments as comment}
-					<Comment {comment} />
-				{/each}
-			</div>
-
-			<SubmitComment feed_item={data.event} />
+			<Commentable feed_item={data.event} {comments} />
 		{:else}
-			<Card.Root class="bg-teal-400">
-				<Card.Content>Sign in to read and leave comments!</Card.Content>
-			</Card.Root>
+			<div class="flex">
+				{num_comments} Comments
+				<MessageCircleMore />
+			</div>
 		{/if}
 	</div>
 </div>

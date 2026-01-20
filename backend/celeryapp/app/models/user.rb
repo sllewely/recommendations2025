@@ -99,6 +99,12 @@ class User < ApplicationRecord
     self.friend_code
   end
 
+  def regen_presigned_url!
+    self.presigned_url_expires = Time.now + (S3ImageHelper::EXPIRES_DURATION - 10).seconds
+    self.presigned_url = S3ImageHelper.presigned_url_get_object("profile_picture/#{self.id}")
+    self.save!
+  end
+
   def self.regen_expiring_presigned_urls
     # find users whose presigned urls are about to expire
     User.where('presigned_url_expires < ?', (Time.now + 2.days)).in_batches do |users|

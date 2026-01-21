@@ -1,8 +1,7 @@
 <script lang="ts">
 	import type { Notification } from "$lib/api_calls/types";
 	import * as Item from "$lib/components/ui/item/index.js";
-	import { Button } from "$lib/components/ui/button";
-	import { ContactRound } from "@lucide/svelte";
+
 	import NotificationItem from "$lib/components/notifications/NotificationItem.svelte";
 
 	interface Props {

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Notification } from "$lib/api_calls/types";
 	import * as Item from "$lib/components/ui/item/index.js";
-	import { ContactRound } from "@lucide/svelte";
+	import { Bell, ContactRound, Handshake } from "@lucide/svelte";
 	import { Button } from "$lib/components/ui/button";
 	import { parseAbsoluteToLocal } from "@internationalized/date";
 
@@ -20,6 +20,17 @@
 			timeZone: localizedCreateTime.timeZone,
 		}).format(localizedCreateTime.toDate());
 	};
+
+	const Icon = (() => {
+		switch (notification.notif_type) {
+			case "pending_friend_request":
+				return ContactRound;
+			case "accepted_friend_request":
+				return Handshake;
+			default:
+				return Bell;
+		}
+	})();
 </script>
 
 <Item.Root
@@ -28,7 +39,7 @@
 	class="border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
 >
 	<Item.Media>
-		<ContactRound />
+		<Icon />
 	</Item.Media>
 	<Item.Content>
 		<Item.Title>{notification.message}</Item.Title>

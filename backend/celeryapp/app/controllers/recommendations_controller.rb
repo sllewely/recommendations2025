@@ -44,6 +44,9 @@ class RecommendationsController < ApplicationController
       @recommendation = current_user.recommendations.new(recommendation_params)
       @recommendation.save!
       @recommendation.feed_item = FeedItem.create!(user: current_user, feedable: @recommendation)
+      current_user.friends.each do |friend|
+        friend.notifications << Notification.created_a_feedable(current_user, @recommendation)
+      end
     rescue ActiveRecord::RecordInvalid
       render json: { error: @recommendation.errors_to_s }, status: :unprocessable_content and return
     end

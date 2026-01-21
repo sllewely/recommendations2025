@@ -3,10 +3,7 @@
 	import Footer from "$lib/components/Footer.svelte";
 	import "../app.css";
 	import { current_user } from "$lib/state/current_user.svelte.js";
-	import { notifs } from "$lib/state/notifications.svelte.js";
-	import { fetch_notifs } from "$lib/utils/notifs";
 	import { onMount } from "svelte";
-	import BannerNotifications from "$lib/components/notifications/BannerNotifications.svelte";
 	import { afterNavigate } from "$app/navigation";
 	import { checkAndShowPendingToasts } from "$lib/state/toast.svelte.js";
 	import { Toaster } from "$lib/components/ui/sonner";
@@ -17,9 +14,7 @@
 		current_user.id = data.current_user_id;
 	}
 
-	onMount(() => {
-		fetch_notifs();
-	});
+	onMount(() => {});
 
 	afterNavigate(() => {
 		checkAndShowPendingToasts();
@@ -28,7 +23,6 @@
 
 <div class="app dark:bg-gray-900 dark:text-gray-200">
 	<Header />
-	<BannerNotifications />
 	<Toaster closeButton={true} richColors={true} />
 	<main>
 		{@render children()}

@@ -58,6 +58,21 @@ RSpec.describe "Recommendations", type: :request do
 
       expect(response).to have_http_status(:unprocessable_content)
     end
+
+    it 'creating a recommendation sends an in app notification to my friend' do
+      friend = create(:user)
+      Friendship.create_bidirectional_friendship!(@my_user, friend)
+
+      post "/recommendations", params: { title: "Annihilation", notes: "A book I like" }, headers: @headers
+
+      expect(response).to have_http_status(:created)
+      res = JSON.parse(response.body)
+      expect(res['id']).to_not be_nil
+      expect(res['title']).to eq("Annihilation")
+
+      expect(friend.notifications.size).to eq(1)
+      expect(friend.notifications.first.message).to eq("#{@my_user.name} created a new recommendation")
+    end
   end
 
   describe "GET /recommendations" do

@@ -50,6 +50,22 @@ RSpec.describe "Events", type: :request do
       res = JSON.parse(response.body)
       expect(res['error']).to eq("start_date_time: can't be blank")
     end
+
+    it 'creates an event and sends your friends a notification' do
+      friend = create(:user)
+      Friendship.create_bidirectional_friendship!(@my_user, friend)
+
+      post "/events", params: { title: 'k flay', description: "come see this fun show with me", start_date_time: DateTime.now + 5.days, }, headers: @headers
+
+      expect(response).to have_http_status(:created)
+      res = JSON.parse(response.body)
+      expect(res['title']).to eq('k flay')
+      expect(res['start_date_time']).to_not be_nil
+      expect(res['end_date_time']).to_not be_nil
+
+      expect(friend.notifications.size).to eq(1)
+      expect(friend.notifications.first.message).to eq("#{@my_user.name} created a new event")
+    end
   end
 
   describe 'index' do

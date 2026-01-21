@@ -20,7 +20,7 @@ RSpec.describe "Posts", type: :request do
       expect(response).to have_http_status(:created)
       res = JSON.parse(response.body)
       expect(res['id']).to_not be_nil
-      expect(res['title']).to eq("new fav book")
+      expect(res['content']).to eq("I love it a lot, you should read it")
     end
 
     it 'posts must have a body' do
@@ -30,6 +30,22 @@ RSpec.describe "Posts", type: :request do
       res = JSON.parse(response.body)
       expect(res['error']).to eq("content: can't be blank")
     end
+
+    it 'sends a notification to my friends' do
+      friend = create(:user)
+      Friendship.create_bidirectional_friendship!(@my_user, friend)
+
+      post "/posts", params: { content: "I love it a lot, you should read it" }, headers: @headers
+
+      expect(response).to have_http_status(:created)
+      res = JSON.parse(response.body)
+      expect(res['id']).to_not be_nil
+      expect(res['content']).to eq("I love it a lot, you should read it")
+
+      expect(friend.notifications.size).to eq(1)
+      expect(friend.notifications.first.message).to eq("#{@my_user.name} created a new post")
+    end
+
   end
 
   describe "GET /posts" do

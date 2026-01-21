@@ -31,6 +31,9 @@ class PostsController < ApplicationController
       ActiveRecord::Base.transaction do
         @post.save!
         @post.feed_item = FeedItem.create!(user: current_user, feedable: @post)
+        current_user.friends.each do |friend|
+          friend.notifications << Notification.created_a_feedable(current_user, @post)
+        end
       end
     rescue ActiveRecord::RecordInvalid => e
       render json: { error: @post.errors_to_s }, status: :unprocessable_content and return

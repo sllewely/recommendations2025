@@ -1,7 +1,7 @@
 <script lang="ts">
 	import H1 from "$lib/components/text/H1.svelte";
 	import { Button } from "$lib/components/ui/button";
-	import EnableNotifications from "$lib/components/notifications/EnableNotifications.svelte";
+	import EnableNotifications from "$lib/components/notifications/push/EnableNotifications.svelte";
 	import { onMount } from "svelte";
 	import { toast } from "svelte-sonner";
 	import * as Card from "$lib/components/ui/card/index.js";
@@ -98,34 +98,41 @@
 		<Card.Content>
 			<div class="flex flex-row gap-4">
 				{#if notifs_enabled}
-					<CircleCheckBig color="#88aa99" /> Everything looks good
+					<CircleCheckBig color="#88aa99" />
+					Everything looks good
 				{:else}
-					<CircleX color="#ff2277" /> See problems below
+					<CircleX color="#ff2277" />
+					See problems below
 				{/if}
 			</div>
 			<Separator class="my-4" />
 			<div class="flex flex-row gap-4">
 				{#if service_worker_found}
-					<CircleCheckBig color="#88aa99" /> Service worker found
+					<CircleCheckBig color="#88aa99" />
+					Service worker found
 				{:else}
-					<CircleX color="#ff2277" /> Service worker not found
+					<CircleX color="#ff2277" />
+					Service worker not found
 				{/if}
 			</div>
 			<Separator class="my-4" />
 			<div class="flex flex-row gap-4">
 				{#if current_subscription.endpoint !== undefined}
-					<CircleCheckBig color="#88aa99" /> Current subscription found for browser.
+					<CircleCheckBig color="#88aa99" />
+					Current subscription found for browser.
 				{:else}
-					<CircleX color="#ff2277" /> No current subscription. Please click the subscribe button to get
-					notifications.
+					<CircleX color="#ff2277" />
+					No current subscription. Please click the subscribe button to get notifications.
 				{/if}
 			</div>
 			<Separator class="my-4" />
 			<div class="flex flex-row gap-4">
 				{#if has_matching_endpoint}
-					<CircleCheckBig color="#88aa99" /> Subscription registration saved.
+					<CircleCheckBig color="#88aa99" />
+					Subscription registration saved.
 				{:else}
-					<CircleX color="#ff2277" /> Please click the subscribe button to save the subscription registration.
+					<CircleX color="#ff2277" />
+					Please click the subscribe button to save the subscription registration.
 				{/if}
 			</div>
 			<Separator class="my-4" />
@@ -155,5 +162,7 @@
 	<div>
 		<Button onclick={click_unsubscribe}>Unsubscribe</Button>
 	</div>
-	<div><Button variant="destructive" onclick={click_send_notif}>Send yourself a notif</Button></div>
+	<div>
+		<Button variant="destructive" onclick={click_send_notif}>Send yourself a notif</Button>
+	</div>
 </div>

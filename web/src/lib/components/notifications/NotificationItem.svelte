@@ -5,6 +5,8 @@
 	import { Button } from "$lib/components/ui/button";
 	import { parseAbsoluteToLocal } from "@internationalized/date";
 	import type { Component } from "svelte";
+	import { fetch_notifs } from "$lib/utils/notifs";
+	import { goto } from "$app/navigation";
 
 	interface Props {
 		notification: Notification;
@@ -41,19 +43,25 @@
 		}
 	})();
 
-	const link = () => {
-		switch (notification.notif_type) {
-		}
+	let clear_notif = async () => {
+		await fetch("/api/clear_notification", {
+			method: "POST",
+			body: JSON.stringify({ id: notification.id }),
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
 	};
 </script>
-
-{console.log("notification", notification)}
 
 <a href={notifFields.link}>
 	<Item.Root
 		variant={notification.active ? "default" : "muted"}
 		size="sm"
 		class="border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
+		onclick={() => {
+			if (notification.active) clear_notif();
+		}}
 	>
 		<Item.Media>
 			<notifFields.icon />

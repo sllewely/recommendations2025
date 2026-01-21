@@ -3,6 +3,7 @@
 	import * as Item from "$lib/components/ui/item/index.js";
 	import { Button } from "$lib/components/ui/button";
 	import { ContactRound } from "@lucide/svelte";
+	import { parseAbsoluteToLocal } from "@internationalized/date";
 
 	interface Props {
 		data: {
@@ -11,6 +12,16 @@
 	}
 
 	let { data }: Props = $props();
+
+	const formatDate = (datetime: string) => {
+		const localizedCreateTime = parseAbsoluteToLocal(datetime);
+
+		return new Intl.DateTimeFormat("en-US", {
+			dateStyle: "medium",
+			timeStyle: "short",
+			timeZone: localizedCreateTime.timeZone,
+		}).format(localizedCreateTime.toDate());
+	};
 </script>
 
 <div>
@@ -25,7 +36,10 @@
 				<Item.Media>
 					<ContactRound />
 				</Item.Media>
-				<Item.Content>{notification.message}</Item.Content>
+				<Item.Content>
+					<Item.Title>{notification.message}</Item.Title>
+					<Item.Description>{formatDate(notification.created_at)}</Item.Description>
+				</Item.Content>
 				<Item.Actions>
 					<Button variant="ghost" size="sm">take some action</Button>
 				</Item.Actions>

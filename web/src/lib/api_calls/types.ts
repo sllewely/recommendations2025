@@ -122,6 +122,7 @@ export interface Notification {
 	notif_type: NotifTypes;
 	message: string;
 	extras: object;
+	created_at: string;
 }
 
 export type PendingFriendRequest = {

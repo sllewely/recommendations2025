@@ -12,6 +12,9 @@ class EventsController < ApplicationController
       @event = current_user.events.new(event_params)
       @event.save!
       @event.feed_item = FeedItem.create!(user: current_user, feedable: @event)
+      current_user.friends.each do |friend|
+        friend.notifications << Notification.created_a_feedable(current_user, @event)
+      end
     rescue ActiveRecord::RecordInvalid
       render json: { error: @event.errors_to_s }, status: :unprocessable_content and return
     end

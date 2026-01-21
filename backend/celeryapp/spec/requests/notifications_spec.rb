@@ -26,7 +26,7 @@ RSpec.describe "Notifications", type: :request do
       res = JSON.parse(response.body)
       expect(res.size).to eq(2)
       expect(res[0]['message']).to include("You have a pending friend request from")
-      expect(res[0]['extras']['requesting_user_id']).to_not be_nil
+      expect(res[0]['extras']['user_id']).to_not be_nil
     end
 
   end

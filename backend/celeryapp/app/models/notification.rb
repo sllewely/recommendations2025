@@ -66,4 +66,18 @@ class Notification < ApplicationRecord
       extras: { user_id: requesting_user.id }
     )
   end
+
+  def self.migrate_notifications
+    Notification.all.each do |notification|
+      if notification.extras['requesting_user_id']
+        notification.update(extras: { user_id: notification.extras['requesting_user_id'] })
+      end
+      if notification.extras['friend_id']
+        notification.update(extras: { user_id: notification.extras['friend_id'] })
+      end
+      if notification.extras['user_id'].is_a? Integer
+        notification.destroy
+      end
+    end
+  end
 end

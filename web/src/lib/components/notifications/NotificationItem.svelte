@@ -4,6 +4,7 @@
 	import { Bell, ContactRound, Handshake } from "@lucide/svelte";
 	import { Button } from "$lib/components/ui/button";
 	import { parseAbsoluteToLocal } from "@internationalized/date";
+	import type { Component } from "svelte";
 
 	interface Props {
 		notification: Notification;
@@ -21,31 +22,45 @@
 		}).format(localizedCreateTime.toDate());
 	};
 
-	const Icon = (() => {
+	const notifFields: { icon: Component; link?: string } = (() => {
 		switch (notification.notif_type) {
 			case "pending_friend_request":
-				return ContactRound;
+				return {
+					icon: ContactRound,
+					link: "/friends",
+				};
 			case "accepted_friend_request":
-				return Handshake;
+				return {
+					icon: Handshake,
+					link: "/users/" + notification.extras.user_id,
+				};
 			default:
-				return Bell;
+				return {
+					icon: Bell,
+				};
 		}
 	})();
+
+	const link = () => {
+		switch (notification.notif_type) {
+		}
+	};
 </script>
 
-<Item.Root
-	variant={notification.active ? "default" : "muted"}
-	size="sm"
-	class="border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
->
-	<Item.Media>
-		<Icon />
-	</Item.Media>
-	<Item.Content>
-		<Item.Title>{notification.message}</Item.Title>
-		<Item.Description>{formatDate(notification.created_at)}</Item.Description>
-	</Item.Content>
-	<Item.Actions>
-		<Button variant="ghost" size="sm">take some action</Button>
-	</Item.Actions>
-</Item.Root>
+{console.log("notification", notification)}
+
+<a href={notifFields.link}>
+	<Item.Root
+		variant={notification.active ? "default" : "muted"}
+		size="sm"
+		class="border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
+	>
+		<Item.Media>
+			<notifFields.icon />
+		</Item.Media>
+		<Item.Content>
+			<Item.Title>{notification.message}</Item.Title>
+			<Item.Description>{formatDate(notification.created_at)}</Item.Description>
+		</Item.Content>
+	</Item.Root>
+</a>

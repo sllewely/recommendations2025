@@ -1,5 +1,5 @@
 <script lang="ts">
-	import EnableNotifications from "$lib/components/notifications/EnableNotifications.svelte";
+	import EnableNotifications from "$lib/components/notifications/push/EnableNotifications.svelte";
 	import { web_push_notifs_enabled } from "$lib/utils/web_push_notifs";
 	import { onMount } from "svelte";
 

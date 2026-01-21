@@ -10,8 +10,7 @@
 	import type { Event } from "$lib/api_calls/types";
 	import { onMount } from "svelte";
 	import { Spinner } from "$lib/components/ui/spinner/index.js";
-	import EnableNotifications from "$lib/components/notifications/EnableNotifications.svelte";
-	import ShouldShowNotificationSubscribeButtonCard from "$lib/components/notifications/ShouldShowNotificationSubscribeButtonCard.svelte";
+	import ShouldShowNotificationSubscribeButtonCard from "$lib/components/notifications/push/ShouldShowNotificationSubscribeButtonCard.svelte";
 	import EventCard from "$lib/components/posts/EventCard.svelte";
 
 	let { data }: PageProps = $props();

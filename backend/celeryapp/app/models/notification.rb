@@ -5,11 +5,15 @@ class Notification < ApplicationRecord
     :pending_friend_request,
     :accepted_friend_request,
     :commented_on_your_commentable,
-    :commented_on_a_commentable_you_are_following
+    :commented_on_a_commentable_you_are_following,
+    :created_a_feedable
   ]
 
   scope :active, -> { where(active: true) }
   scope :pending_friend_requests, -> { where(notif_type: 'pending_friend_request') }
+
+  ###########################
+  # Comments
 
   def self.commented_on_your_commentable(user, commentable)
     key = commentable.class.name.downcase
@@ -28,6 +32,21 @@ class Notification < ApplicationRecord
       extras: { user: user.id, key => commentable.id }
     )
   end
+
+  ###########################
+  # Posts
+
+  def self.created_a_feedable(user, feedable)
+    key = feedable.class.name.downcase
+    Notification.new(
+      message: "#{user.name} created a new #{key}",
+      notif_type: Notification.notif_types[:created_a_feedable],
+      extras: { user: user.id, key => feedable.id }
+    )
+  end
+
+  ###########################
+  # Friendships
 
   # @param friend is a user model
   def self.accepted_friendship_notification(friend)

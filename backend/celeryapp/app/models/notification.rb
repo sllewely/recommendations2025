@@ -69,7 +69,7 @@ class Notification < ApplicationRecord
 
   def self.migrate_notifications
     Notification.all.each do |notification|
-      if notification.extras['requesting_user_id']
+      if notification.extras['user']
         notification.update(extras: { user_id: notification.extras['requesting_user_id'] })
       end
       if notification.extras['friend_id']
@@ -80,4 +80,5 @@ class Notification < ApplicationRecord
       end
     end
   end
+
 end

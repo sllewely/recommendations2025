@@ -8,6 +8,7 @@ export async function load({ cookies }) {
 
 	return {
 		notifications: notifications["res"]["notifications"],
+		pagy: notifications["res"]["pagy"],
 	};
 }
 

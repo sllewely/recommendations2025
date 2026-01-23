@@ -24,7 +24,6 @@ RSpec.describe "Notifications", type: :request do
 
       expect(response).to have_http_status(:ok)
       res = JSON.parse(response.body)
-      debugger
       expect(res['notifications'].size).to eq(2)
       expect(res['notifications'][0]['message']).to include("You have a pending friend request from")
       expect(res['notifications'][0]['extras']['user_id']).to_not be_nil

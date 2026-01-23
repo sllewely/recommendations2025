@@ -24,8 +24,6 @@
 		recommendation = data.recommendation;
 	});
 
-	console.log(recommendation);
-
 	let comments = $derived(recommendation.comments);
 
 	let num_comments = $derived(comments.length);

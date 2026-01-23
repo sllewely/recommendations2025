@@ -112,7 +112,12 @@ export interface Recommendation {
 	comments: Comment[];
 }
 
-export type NotifTypes = "pending_friend_request" | "accepted_friend_request";
+export type NotifTypes =
+	| "pending_friend_request"
+	| "accepted_friend_request"
+	| "created_a_feedable"
+	| "commented_on_your_commentable"
+	| "commented_on_a_commentable_you_are_following";
 
 export interface Notification {
 	id: number;
@@ -127,6 +132,9 @@ export interface Notification {
 
 export interface NotificationExtras {
 	user_id?: string;
+	post_id?: string;
+	event_id?: string;
+	recommendation_id?: string;
 }
 
 export type PendingFriendRequest = {

@@ -118,4 +118,18 @@ class User < ApplicationRecord
       User.update(ids, updates)
     end
   end
+
+  def self.regen_all_presigned_urls
+    # find users whose presigned urls are about to expire
+    User.where('presigned_url_expires IS NOT NULL').in_batches do |users|
+      ids = users.pluck(:id)
+      updates = users.map do |user|
+        {
+          presigned_url_expires: Time.now + (S3ImageHelper::EXPIRES_DURATION - 10).seconds,
+          presigned_url: S3ImageHelper.presigned_url_get_object("profile_picture/#{user.id}")
+        }
+      end
+      User.update(ids, updates)
+    end
+  end
 end

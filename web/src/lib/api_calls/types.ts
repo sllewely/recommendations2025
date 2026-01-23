@@ -119,6 +119,19 @@ export type NotifTypes =
 	| "commented_on_your_commentable"
 	| "commented_on_a_commentable_you_are_following";
 
+export interface Pagy {
+	overflow: boolean;
+	count: number;
+	page: number;
+	prev: number | null;
+	next: number | null;
+}
+
+export interface NotificationResponse {
+	notifications: Notification[];
+	pagy: Pagy;
+}
+
 export interface Notification {
 	id: number;
 	uuid: string;

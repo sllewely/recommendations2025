@@ -6,8 +6,6 @@ export async function GET({ url, cookies }) {
 
 	// Get page from URL query parameter, default to 1 if not provided
 	const page = url.searchParams.get("page") ?? "1";
-
-	// This gives us a lookup map of { user_id: user }
 	const more_posts_response = await api.get("posts?page=" + page, jwt);
 
 	return json(more_posts_response["res"]);

@@ -1,13 +1,14 @@
 import * as api from "$lib/api_calls/api.svelte.js";
-import type { ApiError, ApiResponse, Notification } from "$lib/api_calls/types";
+import type { ApiError, ApiResponse, NotificationResponse } from "$lib/api_calls/types";
 
 export async function load({ cookies }) {
 	const jwt = cookies.get("jwt");
 
-	const notifications: ApiResponse<Notification> = await api.get("notifications", jwt);
+	const notifications: ApiResponse<NotificationResponse> = await api.get("notifications", jwt);
 
 	return {
-		notifications: notifications["res"],
+		notifications: notifications["res"]["notifications"],
+		pagy: notifications["res"]["pagy"],
 	};
 }
 

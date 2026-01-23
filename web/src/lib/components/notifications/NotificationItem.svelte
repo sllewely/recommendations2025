@@ -1,7 +1,14 @@
 <script lang="ts">
 	import type { Notification } from "$lib/api_calls/types";
 	import * as Item from "$lib/components/ui/item/index.js";
-	import { Bell, ContactRound, Handshake } from "@lucide/svelte";
+	import {
+		Bell,
+		ContactRound,
+		Handshake,
+		NotebookPen,
+		CalendarPlus,
+		BookMarked,
+	} from "@lucide/svelte";
 	import { Button } from "$lib/components/ui/button";
 	import { parseAbsoluteToLocal } from "@internationalized/date";
 	import type { Component } from "svelte";
@@ -36,6 +43,25 @@
 					icon: Handshake,
 					link: "/users/" + notification.extras.user_id,
 				};
+			case "created_a_feedable":
+				if (notification.extras.post_id) {
+					return {
+						icon: NotebookPen,
+						link: "/posts/" + notification.extras.post_id,
+					};
+				}
+				if (notification.extras.event_id) {
+					return {
+						icon: CalendarPlus,
+						link: "/events/" + notification.extras.event_id,
+					};
+				}
+				if (notification.extras.recommendation_id) {
+					return {
+						icon: BookMarked,
+						link: "/recommendations/" + notification.extras.recommendation_id,
+					};
+				}
 			default:
 				return {
 					icon: Bell,

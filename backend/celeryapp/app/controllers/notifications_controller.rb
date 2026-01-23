@@ -2,7 +2,12 @@ class NotificationsController < ApplicationController
   include PushNotification
 
   def index
-    render json: current_user.notifications.order(created_at: :desc), status: :ok
+    notifs = current_user.notifications.order(created_at: :desc)
+    @pagy, @notifications = pagy(notifs, limit: 30)
+    render json: {
+      notifications: @notifications,
+      pagy: @pagy
+    }, status: :ok
   end
 
   def has_active

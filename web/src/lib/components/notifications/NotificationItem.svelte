@@ -8,12 +8,10 @@
 		NotebookPen,
 		CalendarPlus,
 		BookMarked,
+		MessageCirclePlus,
 	} from "@lucide/svelte";
-	import { Button } from "$lib/components/ui/button";
 	import { parseAbsoluteToLocal } from "@internationalized/date";
 	import type { Component } from "svelte";
-	import { fetch_notifs } from "$lib/utils/notifs";
-	import { goto } from "$app/navigation";
 
 	interface Props {
 		notification: Notification;
@@ -43,13 +41,26 @@
 					icon: Handshake,
 					link: "/users/" + notification.extras.user_id,
 				};
-			case "created_a_feedable":
-				if (notification.extras.post_id) {
+			case "commented_on_your_commentable":
+			case "commented_on_a_commentable_you_are_following":
+				if (notification.extras.event_id) {
 					return {
-						icon: NotebookPen,
+						icon: MessageCirclePlus,
+						link: "/events/" + notification.extras.event_id,
+					};
+				}
+				if (notification.extras.recommendation_id) {
+					return {
+						icon: MessageCirclePlus,
+						link: "/recommendations/" + notification.extras.recommendation_id,
+					};
+				} else {
+					return {
+						icon: MessageCirclePlus,
 						link: "/posts/" + notification.extras.post_id,
 					};
 				}
+			case "created_a_feedable":
 				if (notification.extras.event_id) {
 					return {
 						icon: CalendarPlus,
@@ -60,6 +71,11 @@
 					return {
 						icon: BookMarked,
 						link: "/recommendations/" + notification.extras.recommendation_id,
+					};
+				} else {
+					return {
+						icon: NotebookPen,
+						link: "/posts/" + notification.extras.post_id,
 					};
 				}
 			default:

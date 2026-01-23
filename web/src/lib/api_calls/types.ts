@@ -115,7 +115,9 @@ export interface Recommendation {
 export type NotifTypes =
 	| "pending_friend_request"
 	| "accepted_friend_request"
-	| "created_a_feedable";
+	| "created_a_feedable"
+	| "commented_on_your_commentable"
+	| "commented_on_a_commentable_you_are_following";
 
 export interface Notification {
 	id: number;

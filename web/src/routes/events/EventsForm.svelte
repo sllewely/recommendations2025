@@ -5,7 +5,7 @@
 	import { Button } from "$lib/components/ui/button";
 	import { Calendar } from "$lib/components/ui/calendar";
 	import * as Popover from "$lib/components/ui/popover";
-	import { Input } from "$lib/components/ui/input";
+	import { Input } from "$lib/components/ui/input/index.js";
 	import { type EventsFormSchema, eventsFormSchema } from "./schema";
 	import { type SuperValidated, type Infer, superForm } from "sveltekit-superforms";
 	import { zodClient } from "sveltekit-superforms/adapters";

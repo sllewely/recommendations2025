@@ -1,4 +1,5 @@
 import * as api from "$lib/api_calls/api.svelte.js";
+import { message } from "sveltekit-superforms";
 
 import type { PageServerLoad } from "./$types.js";
 import { superValidate } from "sveltekit-superforms";
@@ -17,9 +18,6 @@ export const load: PageServerLoad = async () => {
 export const actions = {
 	default: async ({ cookies, request }) => {
 		const jwt = cookies.get("jwt");
-
-		console.log("here");
-		2 + 5;
 
 		const form = await superValidate(request, zod(eventsFormSchema));
 
@@ -53,6 +51,13 @@ export const actions = {
 			jwt,
 		);
 
-		return response;
+		if (!response.success) {
+			return fail(400, {
+				form,
+				...response,
+			});
+		}
+
+		return message(form, response);
 	},
 };

@@ -90,7 +90,7 @@
 			use:enhance={() => {
 				creating = true;
 				return async ({ update, result }) => {
-					await update();
+					await update({ reset: false });
 					creating = false;
 					let res = result.data;
 					if (res.success) {
@@ -234,8 +234,8 @@
 				<FieldErrors />
 			</Field>
 			<div class="pt-6">
-				<Button onclick={onSubmit} disabled={submitDisabled}>
-					{#if submitDisabled}
+				<Button onclick={onSubmit} disabled={creating}>
+					{#if creating}
 						<Spinner />
 					{/if}
 					Submit

@@ -233,6 +233,13 @@
 				</Description>
 				<FieldErrors />
 			</Field>
+			<Field {form} name="is_public">
+				<Control>
+					{#snippet children({ props })}
+						<input hidden value={$formData.is_public ?? true} {...props} />
+					{/snippet}
+				</Control>
+			</Field>
 			<div class="pt-6">
 				<Button onclick={onSubmit} disabled={creating}>
 					{#if creating}

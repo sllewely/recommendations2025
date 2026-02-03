@@ -48,6 +48,7 @@ export const actions = {
 				url: form.data.url,
 				event_type: form.data.event_type,
 				start_date_time: zoned_date_time.toISO(),
+				is_public: form.data.is_public,
 			},
 			jwt,
 		);

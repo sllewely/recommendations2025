@@ -24,6 +24,8 @@
 		parseAbsoluteToLocal,
 	} from "@internationalized/date";
 	import MarkedDownPost from "$lib/components/posts/MarkedDownPost.svelte";
+	import { Field, Control, Label, Description, FieldErrors } from "formsnap";
+	import { Spinner } from "$lib/components/ui/spinner";
 
 	let { data }: { data: { form: SuperValidated<Infer<EventsFormSchema>>; event: any } } = $props();
 
@@ -67,6 +69,14 @@
 			rendering = false;
 		}, 500);
 	};
+
+	let submitDisabled = $state(false);
+
+	const onSubmit = () => {
+		console.log("submitting");
+		document.getElementById("events_form").submit();
+		submitDisabled = true;
+	};
 </script>
 
 <div>
@@ -75,6 +85,7 @@
 			<p>creating...</p>
 		{/if}
 		<form
+			id="events_form"
 			method="POST"
 			use:enhance={() => {
 				creating = true;
@@ -90,29 +101,29 @@
 						}
 						goto("/posts");
 					} else {
+						console.log(res.message);
 						newToast("Error creating an event: " + res.message, ToastType.Error);
 					}
 				};
 			}}
 		>
-			<Form.Field {form} name="title">
-				<Form.Control let:attrs>
+			<Field {form} name="title">
+				<Control>
 					<Form.Label>Title</Form.Label>
-					<Input {...attrs} bind:value={$formData.title} />
-				</Form.Control>
-				<Form.Description>Name of the event.</Form.Description>
-				<Form.FieldErrors />
-			</Form.Field>
-			<Form.Field {form} name="id">
+					<Input id="title" bind:value={$formData.title} name="title" />
+				</Control>
+				<FieldErrors />
+			</Field>
+			<Field {form} name="id">
 				<input hidden value={$formData.id} name="id" />
-			</Form.Field>
+			</Field>
 			<div class="flex flex-row justify-between">
-				<Form.Field {form} name="start_date">
-					<Form.Control let:attrs>
-						<Form.Label>Date</Form.Label>
+				<Field {form} name="start_date">
+					<Control>
+						<Label>Date</Label>
 						<Popover.Root>
 							<Popover.Trigger>
-								<Button variant="outline" {...attrs}>
+								<Button variant="outline">
 									<CalendarIcon class="mr-2 size-4" />
 									{start_date_value
 										? df.format(start_date_value.toDate(getLocalTimeZone()))
@@ -135,75 +146,83 @@
 							</Popover.Content>
 						</Popover.Root>
 						<input hidden value={$formData.start_date} name="start_date" />
-					</Form.Control>
-					<Form.FieldErrors />
-				</Form.Field>
-				<Form.Field {form} name="start_time">
-					<Form.Control let:attrs>
+					</Control>
+					<FieldErrors />
+				</Field>
+				<Field {form} name="start_time">
+					<Control>
 						<Form.Label>Start Time</Form.Label>
-						<input type="time" {...attrs} bind:value={$formData.start_time} />
-					</Form.Control>
-					<Form.FieldErrors />
-				</Form.Field>
+						<input type="time" bind:value={$formData.start_time} />
+					</Control>
+					<FieldErrors />
+				</Field>
 			</div>
-			<Form.Field {form} name="time_zone">
-				<Form.Control>
+			<Field {form} name="time_zone">
+				<Control>
 					<input hidden value={getLocalTimeZone()} name="time_zone" />
-				</Form.Control>
-				<Form.FieldErrors />
-			</Form.Field>
-			<Form.Field {form} name="description">
-				<Form.Control let:attrs>
-					<Card.Root>
-						<Card.Header>
-							<Card.Title>Preview of the description</Card.Title>
-							<Card.Description>
-								{#if rendering}
-									<p>pause typing to render...</p>
-								{:else}
-									<p>markdown supported</p>
-								{/if}
-							</Card.Description>
-						</Card.Header>
-						<Card.Content>
-							<MarkedDownPost {captured_text} />
-						</Card.Content>
-					</Card.Root>
-					<Form.Label>Description</Form.Label>
-					<Textarea
-						{...attrs}
-						bind:value={$formData.description}
-						onkeyup={({ target: { value } }) => debounce(value)}
-					/>
-				</Form.Control>
-				<Form.Description>Hype it up!!</Form.Description>
-				<Form.FieldErrors />
-			</Form.Field>
-			<Form.Field {form} name="address">
-				<Form.Control let:attrs>
-					<Form.Label>Address</Form.Label>
-					<Input {...attrs} bind:value={$formData.address} />
-				</Form.Control>
-				<Form.Description>Location.</Form.Description>
-				<Form.FieldErrors />
-			</Form.Field>
-			<Form.Field {form} name="url">
-				<Form.Control let:attrs>
-					<Form.Label>Url</Form.Label>
-					<Input {...attrs} bind:value={$formData.url} />
-				</Form.Control>
-				<Form.Description>Ticket or event link.</Form.Description>
-				<Form.FieldErrors />
-			</Form.Field>
-			<Form.Field {form} name="event_type">
-				<Form.Control let:attrs>
-					<Form.Label>Event Type</Form.Label>
-					<Input {...attrs} bind:value={$formData.event_type} />
-				</Form.Control>
-				<Form.Description>Help people find what they're interested in.</Form.Description>
-				<Form.FieldErrors />
-			</Form.Field>
-			<Form.Button>Submit</Form.Button>
+				</Control>
+				<FieldErrors />
+			</Field>
+			<Field {form} name="description">
+				<Control>
+					{#snippet children({ props })}
+						<Card.Root>
+							<Card.Header>
+								<Card.Title>Preview of the description</Card.Title>
+								<Card.Description>
+									{#if rendering}
+										pause typing to render...
+									{:else}
+										markdown supported
+									{/if}
+								</Card.Description>
+							</Card.Header>
+							<Card.Content>
+								<MarkedDownPost {captured_text} />
+							</Card.Content>
+						</Card.Root>
+						<Label>Description</Label>
+						<Textarea
+							{...props}
+							id="description"
+							bind:value={$formData.description}
+							onkeyup={({ target: { value } }) => debounce(value)}
+						/>
+					{/snippet}
+				</Control>
+				<Description>Hype it up!!</Description>
+				<FieldErrors />
+			</Field>
+			<Field {form} name="address">
+				<Control>
+					<Label>Address</Label>
+					<Input id="address" bind:value={$formData.address} />
+				</Control>
+				<Description>Location.</Description>
+				<FieldErrors />
+			</Field>
+			<Field {form} name="url">
+				<Control>
+					<Label>Url</Label>
+					<Input id="url" bind:value={$formData.url} />
+				</Control>
+				<Description>Ticket or event link.</Description>
+				<FieldErrors />
+			</Field>
+			<Field {form} name="event_type">
+				<Control>
+					<Label>Event Type</Label>
+					<Input id="event_type" bind:value={$formData.event_type} />
+				</Control>
+				<Description>Help people find what they're interested in.</Description>
+				<FieldErrors />
+			</Field>
+			<Button onclick={onSubmit} disabled={submitDisabled}>
+				{#if submitDisabled}
+					<Spinner />
+				{/if}
+				Submit
+			</Button>
 		</form>
 	</div>
 </div>

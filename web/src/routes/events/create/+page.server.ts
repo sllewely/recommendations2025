@@ -3,7 +3,7 @@ import * as api from "$lib/api_calls/api.svelte.js";
 import type { PageServerLoad } from "./$types.js";
 import { superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
-import { eventsFormSchema } from "../schema";
+import { type EventsFormSchema, eventsFormSchema } from "../schema";
 import { fail } from "@sveltejs/kit";
 import { DateTime } from "luxon";
 
@@ -18,7 +18,12 @@ export const actions = {
 	default: async ({ cookies, request }) => {
 		const jwt = cookies.get("jwt");
 
+		console.log("here");
+		2 + 5;
+
 		const form = await superValidate(request, zod(eventsFormSchema));
+
+		2 + 5;
 		if (!form.valid) {
 			return fail(400, {
 				form,

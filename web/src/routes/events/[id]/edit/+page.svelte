@@ -7,7 +7,12 @@
 </script>
 
 <div>
-	<H1>Edit Event {data.event.title}</H1>
-
-	<EventsForm {data} />
+	<Card.Root>
+		<Card.Header>
+			<Card.Title>Edit Event</Card.Title>
+		</Card.Header>
+		<Card.Content>
+			<EventsForm {data} />
+		</Card.Content>
+	</Card.Root>
 </div>

@@ -110,8 +110,10 @@
 			<Field {form} name="title">
 				<Control>
 					{#snippet children({ props })}
-						<Label>Title</Label>
-						<Input {...props} bind:value={$formData.title} />
+						<div class="flex flex-row gap-6 pb-6">
+							<Label class="font-semibold">Title</Label>
+							<Input {...props} bind:value={$formData.title} />
+						</div>
 					{/snippet}
 				</Control>
 				<FieldErrors />
@@ -119,9 +121,9 @@
 			<Field {form} name="id">
 				<input hidden value={$formData.id} name="id" />
 			</Field>
-			<div class="flex flex-row justify-between">
+			<div class="flex flex-row pb-6 items-end gap-6">
 				<Field {form} name="start_date">
-					<label>Date</label>
+					<label class="font-semibold">Date</label>
 					<Popover.Root>
 						<Popover.Trigger>
 							<Button variant="outline">
@@ -152,7 +154,7 @@
 				<Field {form} name="start_time">
 					<Control>
 						{#snippet children({ props })}
-							<Label>Start Time</Label>
+							<Label class="font-semibold">Start Time</Label>
 							<input type="time" {...props} bind:value={$formData.start_time} />
 						{/snippet}
 					</Control>
@@ -180,54 +182,65 @@
 								<MarkedDownPost {captured_text} />
 							</Card.Content>
 						</Card.Root>
-						<Label>Description</Label>
-						<Textarea
-							{...props}
-							id="description"
-							bind:value={$formData.description}
-							onkeyup={({ target: { value } }) => debounce(value)}
-						/>
+						<div class="pt-6">
+							<Label class="font-semibold">Description</Label>
+							<Textarea
+								{...props}
+								id="description"
+								bind:value={$formData.description}
+								onkeyup={({ target: { value } }) => debounce(value)}
+							/>
+						</div>
 					{/snippet}
 				</Control>
-				<Description>Hype it up!!</Description>
+				<Description class="text-xs font-light">Hype it up!!</Description>
 				<FieldErrors />
 			</Field>
 			<Field {form} name="address">
 				<Control>
 					{#snippet children({ props })}
-						<Label>Address</Label>
-						<Input {...props} bind:value={$formData.address} />
+						<div class="flex flex-row gap-6 pt-6 items-end">
+							<Label class="font-semibold">Address</Label>
+							<Input {...props} bind:value={$formData.address} />
+						</div>
 					{/snippet}
 				</Control>
-				<Description>Location.</Description>
 				<FieldErrors />
 			</Field>
 			<Field {form} name="url">
 				<Control>
 					{#snippet children({ props })}
-						<Label>Url</Label>
-						<Input {...props} bind:value={$formData.url} />
+						<div class="flex flex-row gap-6 pt-6 items-end">
+							<Label class="font-semibold">Url</Label>
+							<Input {...props} bind:value={$formData.url} />
+						</div>
 					{/snippet}
 				</Control>
-				<Description>Ticket or event link.</Description>
+				<Description class="font-light text-xs">Ticket or event link.</Description>
 				<FieldErrors />
 			</Field>
 			<Field {form} name="event_type">
 				<Control>
 					{#snippet children({ props })}
-						<Label>Event Type</Label>
-						<Input {...props} bind:value={$formData.event_type} />
+						<div class="flex flex-row gap-6 pt-6 items-end">
+							<Label class="text-nowrap font-semibold">Event Type</Label>
+							<Input {...props} bind:value={$formData.event_type} />
+						</div>
 					{/snippet}
 				</Control>
-				<Description>Help people find what they're interested in.</Description>
+				<Description class="text-xs font-light"
+					>Help people find what they're interested in.
+				</Description>
 				<FieldErrors />
 			</Field>
-			<Button onclick={onSubmit} disabled={submitDisabled}>
-				{#if submitDisabled}
-					<Spinner />
-				{/if}
-				Submit
-			</Button>
+			<div class="pt-6">
+				<Button onclick={onSubmit} disabled={submitDisabled}>
+					{#if submitDisabled}
+						<Spinner />
+					{/if}
+					Submit
+				</Button>
+			</div>
 		</form>
 	</div>
 </div>

@@ -7,6 +7,7 @@
 	import { zodClient } from "sveltekit-superforms/adapters";
 	import { Field, Control, Label, Description, FieldErrors } from "formsnap";
 	import { newToast, ToastType } from "$lib/state/toast.svelte.js";
+	import { Button } from "$lib/components/ui/button";
 
 	let creating = $state(false);
 
@@ -74,6 +75,6 @@
 				<FieldErrors />
 			</Field>
 		</div>
-		<!--		<Button>Create account</Button>-->
+		<Button type="submit">Create account</Button>
 	</form>
 </div>

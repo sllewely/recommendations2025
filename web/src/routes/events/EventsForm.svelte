@@ -25,6 +25,7 @@
 	import MarkedDownPost from "$lib/components/posts/MarkedDownPost.svelte";
 	import { Field, Control, Label, Description, FieldErrors } from "formsnap";
 	import { Spinner } from "$lib/components/ui/spinner";
+	import HorizontalLabelInput from "$lib/components/form/HorizontalLabelInput.svelte";
 
 	let { data }: { data: { form: SuperValidated<Infer<EventsFormSchema>>; event: any } } = $props();
 
@@ -109,10 +110,11 @@
 			<Field {form} name="title">
 				<Control>
 					{#snippet children({ props })}
-						<div class="flex flex-row gap-6 pb-6">
-							<Label class="font-semibold">Title</Label>
-							<Input {...props} bind:value={$formData.title} />
-						</div>
+						<HorizontalLabelInput label_title="Title" {...props} bind:value={$formData.title} />
+						<!--						<div class="flex flex-row gap-6 pb-6">-->
+						<!--							<Label class="font-semibold">Title</Label>-->
+						<!--							<Input {...props} bind:value={$formData.title} />-->
+						<!--						</div>-->
 					{/snippet}
 				</Control>
 				<FieldErrors />

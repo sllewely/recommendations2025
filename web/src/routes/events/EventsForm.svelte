@@ -109,8 +109,10 @@
 		>
 			<Field {form} name="title">
 				<Control>
-					<Form.Label>Title</Form.Label>
-					<Input id="title" bind:value={$formData.title} name="title" />
+					{#snippet children({ props })}
+						<Label>Title</Label>
+						<Input {...props} bind:value={$formData.title} />
+					{/snippet}
 				</Control>
 				<FieldErrors />
 			</Field>
@@ -119,49 +121,46 @@
 			</Field>
 			<div class="flex flex-row justify-between">
 				<Field {form} name="start_date">
-					<Control>
-						<Label>Date</Label>
-						<Popover.Root>
-							<Popover.Trigger>
-								<Button variant="outline">
-									<CalendarIcon class="mr-2 size-4" />
-									{start_date_value
-										? df.format(start_date_value.toDate(getLocalTimeZone()))
-										: "Select a date"}
-								</Button>
-							</Popover.Trigger>
-							<Popover.Content class="w-auto p-0">
-								<Calendar
-									bind:value={start_date_value}
-									type="single"
-									initialFocus
-									onValueChange={(v) => {
-										if (v) {
-											$formData.start_date = v.toString();
-										} else {
-											$formData.start_date = "";
-										}
-									}}
-								/>
-							</Popover.Content>
-						</Popover.Root>
-						<input hidden value={$formData.start_date} name="start_date" />
-					</Control>
+					<label>Date</label>
+					<Popover.Root>
+						<Popover.Trigger>
+							<Button variant="outline">
+								<CalendarIcon class="mr-2 size-4" />
+								{start_date_value
+									? df.format(start_date_value.toDate(getLocalTimeZone()))
+									: "Select a date"}
+							</Button>
+						</Popover.Trigger>
+						<Popover.Content class="w-auto p-0">
+							<Calendar
+								bind:value={start_date_value}
+								type="single"
+								initialFocus
+								onValueChange={(v) => {
+									if (v) {
+										$formData.start_date = v.toString();
+									} else {
+										$formData.start_date = "";
+									}
+								}}
+							/>
+						</Popover.Content>
+					</Popover.Root>
+					<input hidden value={$formData.start_date} name="start_date" />
 					<FieldErrors />
 				</Field>
 				<Field {form} name="start_time">
 					<Control>
-						<Form.Label>Start Time</Form.Label>
-						<input type="time" bind:value={$formData.start_time} />
+						{#snippet children({ props })}
+							<Label>Start Time</Label>
+							<input type="time" {...props} bind:value={$formData.start_time} />
+						{/snippet}
 					</Control>
 					<FieldErrors />
 				</Field>
 			</div>
 			<Field {form} name="time_zone">
-				<Control>
-					<input hidden value={getLocalTimeZone()} name="time_zone" />
-				</Control>
-				<FieldErrors />
+				<input hidden value={getLocalTimeZone()} name="time_zone" />
 			</Field>
 			<Field {form} name="description">
 				<Control>
@@ -195,24 +194,30 @@
 			</Field>
 			<Field {form} name="address">
 				<Control>
-					<Label>Address</Label>
-					<Input id="address" bind:value={$formData.address} />
+					{#snippet children({ props })}
+						<Label>Address</Label>
+						<Input {...props} bind:value={$formData.address} />
+					{/snippet}
 				</Control>
 				<Description>Location.</Description>
 				<FieldErrors />
 			</Field>
 			<Field {form} name="url">
 				<Control>
-					<Label>Url</Label>
-					<Input id="url" bind:value={$formData.url} />
+					{#snippet children({ props })}
+						<Label>Url</Label>
+						<Input {...props} bind:value={$formData.url} />
+					{/snippet}
 				</Control>
 				<Description>Ticket or event link.</Description>
 				<FieldErrors />
 			</Field>
 			<Field {form} name="event_type">
 				<Control>
-					<Label>Event Type</Label>
-					<Input id="event_type" bind:value={$formData.event_type} />
+					{#snippet children({ props })}
+						<Label>Event Type</Label>
+						<Input {...props} bind:value={$formData.event_type} />
+					{/snippet}
 				</Control>
 				<Description>Help people find what they're interested in.</Description>
 				<FieldErrors />

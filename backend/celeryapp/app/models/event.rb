@@ -13,6 +13,7 @@ class Event < ApplicationRecord
 
   scope :by_friends, ->(friend_ids) { where(user_id: friend_ids) }
   scope :invited, ->(user_id) { where(is_public: false).joins(:rsvps).where(rsvps: { user_id: user_id }) }
+  # `block in <class:Event>': Relation passed to #or must be structurally compatible. Incompatible values: [:joins] (ArgumentError)
   scope :can_see, ->(user_id) { where(is_public: true).or(invited(user_id)) }
   scope :upcoming, -> { where('start_date_time > ?', DateTime.now - 1.day) }
 

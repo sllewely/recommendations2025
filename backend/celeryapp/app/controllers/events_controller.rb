@@ -4,7 +4,7 @@ class EventsController < ApplicationController
     @events = Event
                 .by_friends(current_user.friend_ids)
                 .includes(:user, rsvps: :user, comments: :user)
-                .can_see
+                # .can_see(current_user.id)
                 .upcoming.order(start_date_time: :asc)
 
     # TODO: improve query performance

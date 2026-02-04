@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { enhance } from "$app/forms";
 	import { goto } from "$app/navigation";
-	import * as Form from "$lib/components/ui/form";
 	import { type SuperValidated, type Infer, superForm } from "sveltekit-superforms";
 	import { zodClient } from "sveltekit-superforms/adapters";
 	import { Input } from "$lib/components/ui/input";
@@ -12,6 +11,8 @@
 	import { Textarea } from "$lib/components/ui/textarea/index.js";
 	import MarkedDownPost from "$lib/components/posts/MarkedDownPost.svelte";
 	import H1 from "$lib/components/text/H1.svelte";
+	import { Field, Control, Description, FieldErrors } from "formsnap";
+	import FormLabel from "$lib/components/form/FormLabel.svelte";
 
 	let { data }: { data: { form: SuperValidated<Infer<PostFormSchema>>; event: any } } = $props();
 	const form = superForm(data.form, {
@@ -151,41 +152,43 @@
 							};
 						}}
 					>
-						<Form.Field {form} name="content">
-							<Form.Control let:attrs>
-								<Form.Label>Content</Form.Label>
-								<div style="position:relative">
-									{#if user_search_results.length > 0}
-										<div style="position:absolute; left: 10px; bottom: -10px">
-											<Card.Root>
-												<Card.Content>
-													<div class="flex flex-col">
-														{#each user_search_results as user}
-															<div>
-																{user.name}
-															</div>
-														{/each}
-													</div>
-												</Card.Content>
-											</Card.Root>
-										</div>
-									{/if}
-								</div>
-								<Textarea
-									{...attrs}
-									bind:value={$formData.content}
-									onkeydown={usersearch}
-									onkeyup={({ target: { value } }) => debounce(value)}
-									class="h-80"
-								/>
-							</Form.Control>
-						</Form.Field>
+						<Field {form} name="content">
+							<Control>
+								{#snippet children({ props })}
+									<FormLabel>Content</FormLabel>
+									<div style="position:relative">
+										{#if user_search_results.length > 0}
+											<div style="position:absolute; left: 10px; bottom: -10px">
+												<Card.Root>
+													<Card.Content>
+														<div class="flex flex-col">
+															{#each user_search_results as user}
+																<div>
+																	{user.name}
+																</div>
+															{/each}
+														</div>
+													</Card.Content>
+												</Card.Root>
+											</div>
+										{/if}
+									</div>
+									<Textarea
+										{...props}
+										bind:value={$formData.content}
+										onkeydown={usersearch}
+										onkeyup={({ target: { value } }) => debounce(value)}
+										class="h-80"
+									/>
+								{/snippet}
+							</Control>
+						</Field>
 
-						<Form.Field {form} name="id">
+						<Field {form} name="id">
 							<input hidden value={$formData.id} name="id" />
-						</Form.Field>
+						</Field>
 						<div class="pt-4">
-							<Form.Button>Submit</Form.Button>
+							<Button type="submit">Submit</Button>
 						</div>
 					</form>
 				</Card.Content>

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { enhance } from "$app/forms";
-	import * as Form from "$lib/components/ui/form";
 	import { Input } from "$lib/components/ui/input";
 	import { profileFormSchema, type FormSchema } from "./schema";
 	import { type SuperValidated, type Infer, superForm } from "sveltekit-superforms";
@@ -14,6 +13,8 @@
 	import * as Tabs from "$lib/components/ui/tabs";
 	import * as Card from "$lib/components/ui/card";
 	import { Button } from "$lib/components/ui/button";
+	import { Field, Control, Description, FieldErrors } from "formsnap";
+	import FormLabel from "$lib/components/form/FormLabel.svelte";
 
 	interface Props {
 		form_data: SuperValidated<Infer<FormSchema>>;
@@ -65,35 +66,41 @@
 					<H1>Edit your profile</H1>
 				</Card.Header>
 				<Card.Content>
-					<Form.Field {form} name="name">
-						<Form.Control let:attrs>
-							<Form.Label>Name</Form.Label>
-							<Input {...attrs} bind:value={$formData.name} />
-						</Form.Control>
-						<Form.Description>This is your public display name.</Form.Description>
-						<Form.FieldErrors />
-					</Form.Field>
+					<Field {form} name="name">
+						<Control>
+							{#snippet children({ props })}
+								<FormLabel>Name</FormLabel>
+								<Input {...props} bind:value={$formData.name} />
+							{/snippet}
+						</Control>
+						<Description>This is your public display name.</Description>
+						<FieldErrors />
+					</Field>
 
-					<Form.Field {form} name="blurb">
-						<Form.Control let:attrs>
-							<Form.Label>Blurb</Form.Label>
-							<Textarea {...attrs} bind:value={$formData.blurb} />
-						</Form.Control>
-						<Form.Description>Help people find you :)</Form.Description>
-						<Form.FieldErrors />
-					</Form.Field>
+					<Field {form} name="blurb">
+						<Control>
+							{#snippet children({ props })}
+								<FormLabel>Blurb</FormLabel>
+								<Textarea {...props} bind:value={$formData.blurb} />
+							{/snippet}
+						</Control>
+						<Description>Help people find you :)</Description>
+						<FieldErrors />
+					</Field>
 
-					<Form.Field {form} name="string_tags">
-						<Form.Control let:attrs>
-							<Form.Label>Tags</Form.Label>
-							<Input {...attrs} bind:value={$formData.string_tags} />
-						</Form.Control>
-						<Form.Description
+					<Field {form} name="string_tags">
+						<Control>
+							{#snippet children({ props })}
+								<FormLabel>Tags</FormLabel>
+								<Input {...props} bind:value={$formData.string_tags} />
+							{/snippet}
+						</Control>
+						<Description
 							>To help people search for you. @xamples are the name of your town, college, or friend
 							group
-						</Form.Description>
-						<Form.FieldErrors />
-					</Form.Field>
+						</Description>
+						<FieldErrors />
+					</Field>
 					<div class="space-x-2 mb-4">
 						{#each tags as tag}
 							<Badge>{tag}</Badge>
@@ -101,7 +108,7 @@
 					</div>
 
 					<div class="flex flex-col space-y-2">
-						<Form.Button>Update</Form.Button>
+						<Button type="submit">Update</Button>
 					</div>
 				</Card.Content>
 			</Card.Root>
@@ -112,33 +119,38 @@
 					<H1>Edit your account details</H1>
 				</Card.Header>
 				<Card.Content>
-					<Form.Field {form} name="email">
-						<Form.Control let:attrs>
-							<Form.Label>Email</Form.Label>
-							<Input {...attrs} bind:value={$formData.email} />
-						</Form.Control>
-						<Form.Description>Your account email.</Form.Description>
-						<Form.FieldErrors />
-					</Form.Field>
+					<Field {form} name="email">
+						<Control>
+							{#snippet children({ props })}
+								<FormLabel>Email</FormLabel>
+								<Input {...props} bind:value={$formData.email} />
+							{/snippet}
+						</Control>
+						<Description>Your account email.</Description>
+						<FieldErrors />
+					</Field>
 					<Button
 						type="button"
 						onclick={() => {
 							edit_password = !edit_password;
-						}}>Edit password</Button
-					>
+						}}
+						>Edit password
+					</Button>
 					{#if edit_password}
-						<Form.Field {form} name="password">
-							<Form.Control let:attrs>
-								<Form.Label>Set password</Form.Label>
-								<Input type="password" {...attrs} bind:value={$formData.password} />
-							</Form.Control>
-							<Form.Description>Overwrite your old password</Form.Description>
-							<Form.FieldErrors />
-						</Form.Field>
+						<Field {form} name="password">
+							<Control>
+								{#snippet children({ props })}
+									<FormLabel>Set password</FormLabel>
+									<Input type="password" {...props} bind:value={$formData.password} />
+								{/snippet}
+							</Control>
+							<Description>Overwrite your old password</Description>
+							<FieldErrors />
+						</Field>
 					{/if}
 
 					<div class="flex flex-col mt-4">
-						<Form.Button>Update</Form.Button>
+						<Button type="submit">Update</Button>
 					</div>
 				</Card.Content>
 			</Card.Root>

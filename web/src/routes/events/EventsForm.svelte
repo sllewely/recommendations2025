@@ -162,42 +162,45 @@
 					</Control>
 					<FormFieldErrors />
 				</Field>
+				<Field {form} name="time_zone">
+					<input hidden value={getLocalTimeZone()} name="time_zone" />
+				</Field>
 			</div>
-			<Field {form} name="time_zone">
-				<input hidden value={getLocalTimeZone()} name="time_zone" />
-			</Field>
-			<Field {form} name="description">
-				<Control>
-					{#snippet children({ props })}
-						<Card.Root>
-							<Card.Header>
-								<Card.Title>Preview of the description</Card.Title>
-								<Card.Description>
-									{#if rendering}
-										pause typing to render...
-									{:else}
-										markdown supported
-									{/if}
-								</Card.Description>
-							</Card.Header>
-							<Card.Content>
-								<MarkedDownPost {captured_text} />
-							</Card.Content>
-						</Card.Root>
-						<div class="pt-6">
-							<FormLabel>Description</FormLabel>
-							<Textarea
-								{...props}
-								id="description"
-								bind:value={$formData.description}
-								onkeyup={({ target: { value } }) => debounce(value)}
-							/>
-						</div>
-					{/snippet}
-				</Control>
-				<Description class="text-xs font-light">Hype it up!!</Description>
-				<FormFieldErrors />
-			</Field>
+
+			<div class="pt-6">
+				<Field {form} name="description">
+					<Control>
+						{#snippet children({ props })}
+							<Card.Root>
+								<Card.Header>
+									<Card.Title>Preview of the description</Card.Title>
+									<Card.Description>
+										{#if rendering}
+											pause typing to render...
+										{:else}
+											markdown supported
+										{/if}
+									</Card.Description>
+								</Card.Header>
+								<Card.Content>
+									<MarkedDownPost {captured_text} />
+								</Card.Content>
+							</Card.Root>
+							<div class="pt-6">
+								<FormLabel>Description</FormLabel>
+								<Textarea
+									{...props}
+									id="description"
+									bind:value={$formData.description}
+									onkeyup={({ target: { value } }) => debounce(value)}
+								/>
+							</div>
+						{/snippet}
+					</Control>
+					<Description class="text-xs font-light">Hype it up!!</Description>
+					<FormFieldErrors />
+				</Field>
+			</div>
 			<Field {form} name="address">
 				<Control>
 					{#snippet children({ props })}
@@ -252,6 +255,4 @@
 			</div>
 		</form>
 	</div>
-
-	<SuperDebug data={$formData} />
 </div>

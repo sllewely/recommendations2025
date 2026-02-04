@@ -4,7 +4,7 @@
 	import { Button } from "$lib/components/ui/button";
 	import { Calendar } from "$lib/components/ui/calendar";
 	import * as Popover from "$lib/components/ui/popover";
-	import { Input } from "$lib/components/ui/input/index.js";
+	import { Input } from "$lib/components/ui/input";
 	import { type EventsFormSchema, eventsFormSchema } from "./schema";
 	import { type SuperValidated, type Infer, superForm } from "sveltekit-superforms";
 	import { zodClient } from "sveltekit-superforms/adapters";
@@ -23,9 +23,9 @@
 		parseAbsoluteToLocal,
 	} from "@internationalized/date";
 	import MarkedDownPost from "$lib/components/posts/MarkedDownPost.svelte";
-	import { Field, Control, Label, Description, FieldErrors } from "formsnap";
+	import { Field, Control, Description, FieldErrors } from "formsnap";
+	import FormLabel from "$lib/components/form/FormLabel.svelte";
 	import { Spinner } from "$lib/components/ui/spinner";
-	import HorizontalLabelInput from "$lib/components/form/HorizontalLabelInput.svelte";
 
 	let { data }: { data: { form: SuperValidated<Infer<EventsFormSchema>>; event: any } } = $props();
 
@@ -110,11 +110,11 @@
 			<Field {form} name="title">
 				<Control>
 					{#snippet children({ props })}
-						<HorizontalLabelInput label_title="Title" {...props} bind:value={$formData.title} />
-						<!--						<div class="flex flex-row gap-6 pb-6">-->
-						<!--							<Label class="font-semibold">Title</Label>-->
-						<!--							<Input {...props} bind:value={$formData.title} />-->
-						<!--						</div>-->
+						<!--						<HorizontalLabelInput label_title="Title" {...props} bind:value={$formData.title} />-->
+						<div class="flex flex-row gap-6 pb-6">
+							<FormLabel>Title</FormLabel>
+							<Input {...props} bind:value={$formData.title} />
+						</div>
 					{/snippet}
 				</Control>
 				<FieldErrors />
@@ -124,38 +124,40 @@
 			</Field>
 			<div class="flex flex-row pb-6 items-end gap-6">
 				<Field {form} name="start_date">
-					<label class="font-semibold">Date</label>
-					<Popover.Root>
-						<Popover.Trigger>
-							<Button variant="outline">
-								<CalendarIcon class="mr-2 size-4" />
-								{start_date_value
-									? df.format(start_date_value.toDate(getLocalTimeZone()))
-									: "Select a date"}
-							</Button>
-						</Popover.Trigger>
-						<Popover.Content class="w-auto p-0">
-							<Calendar
-								bind:value={start_date_value}
-								type="single"
-								initialFocus
-								onValueChange={(v) => {
-									if (v) {
-										$formData.start_date = v.toString();
-									} else {
-										$formData.start_date = "";
-									}
-								}}
-							/>
-						</Popover.Content>
-					</Popover.Root>
-					<input hidden value={$formData.start_date} name="start_date" />
+					<Control>
+						<FormLabel>Date</FormLabel>
+						<Popover.Root>
+							<Popover.Trigger>
+								<Button variant="outline">
+									<CalendarIcon class="mr-2 size-4" />
+									{start_date_value
+										? df.format(start_date_value.toDate(getLocalTimeZone()))
+										: "Select a date"}
+								</Button>
+							</Popover.Trigger>
+							<Popover.Content class="w-auto p-0">
+								<Calendar
+									bind:value={start_date_value}
+									type="single"
+									initialFocus
+									onValueChange={(v) => {
+										if (v) {
+											$formData.start_date = v.toString();
+										} else {
+											$formData.start_date = "";
+										}
+									}}
+								/>
+							</Popover.Content>
+						</Popover.Root>
+						<input hidden value={$formData.start_date} name="start_date" />
+					</Control>
 					<FieldErrors />
 				</Field>
 				<Field {form} name="start_time">
 					<Control>
 						{#snippet children({ props })}
-							<Label class="font-semibold">Start Time</Label>
+							<FormLabel>Start Time</FormLabel>
 							<input type="time" {...props} bind:value={$formData.start_time} />
 						{/snippet}
 					</Control>
@@ -184,7 +186,7 @@
 							</Card.Content>
 						</Card.Root>
 						<div class="pt-6">
-							<Label class="font-semibold">Description</Label>
+							<FormLabel>Description</FormLabel>
 							<Textarea
 								{...props}
 								id="description"
@@ -201,7 +203,7 @@
 				<Control>
 					{#snippet children({ props })}
 						<div class="flex flex-row gap-6 pt-6 items-end">
-							<Label class="font-semibold">Address</Label>
+							<FormLabel>Address</FormLabel>
 							<Input {...props} bind:value={$formData.address} />
 						</div>
 					{/snippet}
@@ -212,7 +214,7 @@
 				<Control>
 					{#snippet children({ props })}
 						<div class="flex flex-row gap-6 pt-6 items-end">
-							<Label class="font-semibold">Url</Label>
+							<FormLabel>Url</FormLabel>
 							<Input {...props} bind:value={$formData.url} />
 						</div>
 					{/snippet}
@@ -224,7 +226,7 @@
 				<Control>
 					{#snippet children({ props })}
 						<div class="flex flex-row gap-6 pt-6 items-end">
-							<Label class="text-nowrap font-semibold">Event Type</Label>
+							<FormLabel>Event Type</FormLabel>
 							<Input {...props} bind:value={$formData.event_type} />
 						</div>
 					{/snippet}
@@ -242,7 +244,7 @@
 				</Control>
 			</Field>
 			<div class="pt-6">
-				<Button onclick={onSubmit} disabled={creating}>
+				<Button type="submit" disabled={creating}>
 					{#if creating}
 						<Spinner />
 					{/if}

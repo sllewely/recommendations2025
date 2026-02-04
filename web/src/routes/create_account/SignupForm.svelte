@@ -5,7 +5,8 @@
 	import { signupFormSchema, type SignupFormSchema } from "./schema";
 	import { type SuperValidated, type Infer, superForm } from "sveltekit-superforms";
 	import { zodClient } from "sveltekit-superforms/adapters";
-	import { Field, Control, Label, Description, FieldErrors } from "formsnap";
+	import { Field, Control, Description, FieldErrors } from "formsnap";
+	import FormLabel from "$lib/components/form/FormLabel.svelte";
 	import { newToast, ToastType } from "$lib/state/toast.svelte.js";
 	import { Button } from "$lib/components/ui/button";
 
@@ -49,7 +50,7 @@
 			<Field {form} name="name">
 				<Control>
 					{#snippet children({ props })}
-						<Label class="font-semibold">Name</Label>
+						<FormLabel>Name</FormLabel>
 						<Input {...props} bind:value={$formData.name} />
 					{/snippet}
 				</Control>
@@ -59,7 +60,7 @@
 			<Field {form} name="email">
 				<Control>
 					{#snippet children({ props })}
-						<Label class="font-semibold">E-mail</Label>
+						<FormLabel>E-mail</FormLabel>
 						<Input {...props} bind:value={$formData.email} />
 					{/snippet}
 				</Control>
@@ -68,7 +69,7 @@
 			<Field {form} name="password">
 				<Control>
 					{#snippet children({ props })}
-						<Label class="font-semibold">Password</Label>
+						<FormLabel>Password</FormLabel>
 						<Input {...props} bind:value={$formData.password} type="password" />
 					{/snippet}
 				</Control>

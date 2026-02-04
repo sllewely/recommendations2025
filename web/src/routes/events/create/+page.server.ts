@@ -38,7 +38,7 @@ export const actions = {
 			keepLocalTime: true,
 		});
 
-		const response = await api.post(
+		return await api.post(
 			"events",
 			{
 				title: form.data.title,
@@ -51,14 +51,5 @@ export const actions = {
 			},
 			jwt,
 		);
-
-		if (!response.success) {
-			return fail(400, {
-				form,
-				...response,
-			});
-		}
-
-		return message(form, response);
 	},
 };

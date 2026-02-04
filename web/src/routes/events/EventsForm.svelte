@@ -90,7 +90,7 @@
 			use:enhance={() => {
 				creating = true;
 				return async ({ update, result }) => {
-					await update({ reset: false });
+					await update();
 					creating = false;
 					let res = result.data;
 					if (res.success) {
@@ -101,6 +101,8 @@
 						}
 						goto("/posts");
 					} else {
+						console.log("error result", result);
+						console.log("error message", res);
 						console.log(res.message);
 						newToast("Error creating an event: " + res.message, ToastType.Error);
 					}

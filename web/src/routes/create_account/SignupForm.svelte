@@ -1,13 +1,15 @@
 <script lang="ts">
 	import { enhance } from "$app/forms";
 	import { goto } from "$app/navigation";
-	import * as Form from "$lib/components/ui/form";
 	import { Input } from "$lib/components/ui/input";
 	import { signupFormSchema, type SignupFormSchema } from "./schema";
 	import { type SuperValidated, type Infer, superForm } from "sveltekit-superforms";
 	import { zodClient } from "sveltekit-superforms/adapters";
-
+	import { Field, Control, Description } from "formsnap";
+	import FormLabel from "$lib/components/form/FormLabel.svelte";
+	import FormFieldErrors from "$lib/components/form/FormFieldErrors.svelte";
 	import { newToast, ToastType } from "$lib/state/toast.svelte.js";
+	import { Button } from "$lib/components/ui/button";
 
 	let creating = $state(false);
 
@@ -31,7 +33,7 @@
 		use:enhance={() => {
 			creating = true;
 			return async ({ update, result }) => {
-				await update();
+				await update({ reset: false });
 				creating = false;
 				let res = result.data;
 				if (res.success) {
@@ -46,29 +48,35 @@
 		}}
 	>
 		<div class="flex flex-col">
-			<Form.Field {form} name="name">
-				<Form.Control let:attrs>
-					<Form.Label>Name</Form.Label>
-					<Input {...attrs} bind:value={$formData.name} />
-				</Form.Control>
-				<Form.Description>Display name visible to others</Form.Description>
-				<Form.FieldErrors />
-			</Form.Field>
-			<Form.Field {form} name="email">
-				<Form.Control let:attrs>
-					<Form.Label>E-mail</Form.Label>
-					<Input {...attrs} bind:value={$formData.email} />
-				</Form.Control>
-				<Form.FieldErrors />
-			</Form.Field>
-			<Form.Field {form} name="password">
-				<Form.Control let:attrs>
-					<Form.Label>Password</Form.Label>
-					<Input {...attrs} bind:value={$formData.password} type="password" />
-				</Form.Control>
-				<Form.FieldErrors />
-			</Form.Field>
+			<Field {form} name="name">
+				<Control>
+					{#snippet children({ props })}
+						<FormLabel>Name</FormLabel>
+						<Input {...props} bind:value={$formData.name} />
+					{/snippet}
+				</Control>
+				<Description>Display name visible to others</Description>
+				<FormFieldErrors />
+			</Field>
+			<Field {form} name="email">
+				<Control>
+					{#snippet children({ props })}
+						<FormLabel>E-mail</FormLabel>
+						<Input {...props} bind:value={$formData.email} />
+					{/snippet}
+				</Control>
+				<FormFieldErrors />
+			</Field>
+			<Field {form} name="password">
+				<Control>
+					{#snippet children({ props })}
+						<FormLabel>Password</FormLabel>
+						<Input {...props} bind:value={$formData.password} type="password" />
+					{/snippet}
+				</Control>
+				<FormFieldErrors />
+			</Field>
 		</div>
-		<Form.Button>Create account</Form.Button>
+		<Button type="submit">Create account</Button>
 	</form>
 </div>

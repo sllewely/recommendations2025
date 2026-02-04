@@ -1,7 +1,11 @@
 class EventsController < ApplicationController
 
   def index
-    @events = Event.by_friends(current_user.friend_ids).includes(:user, rsvps: :user, comments: :user).where('start_date_time > ?', DateTime.now - 1.day).order(start_date_time: :asc)
+    @events = Event
+                .by_friends(current_user.friend_ids)
+                .includes(:user, rsvps: :user, comments: :user)
+                # .can_see(current_user.id)
+                .upcoming.order(start_date_time: :asc)
 
     # TODO: improve query performance
     render json: EventBlueprint.render(@events, view: :authed), status: :ok
@@ -60,7 +64,7 @@ class EventsController < ApplicationController
   private
 
   def event_params
-    params.except(:id).permit(:title, :description, :start_date_time, :address, :url, :event_type, :end_date_time)
+    params.except(:id).permit(:title, :description, :start_date_time, :address, :url, :event_type, :end_date_time, :is_public)
   end
 
 end

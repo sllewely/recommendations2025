@@ -1,13 +1,12 @@
 <script lang="ts">
 	import { enhance } from "$app/forms";
-	import * as Form from "$lib/components/ui/form";
 	import * as Card from "$lib/components/ui/card/index.js";
 	import { Button } from "$lib/components/ui/button";
 	import { Calendar } from "$lib/components/ui/calendar";
 	import * as Popover from "$lib/components/ui/popover";
 	import { Input } from "$lib/components/ui/input";
 	import { type EventsFormSchema, eventsFormSchema } from "./schema";
-	import { type SuperValidated, type Infer, superForm } from "sveltekit-superforms";
+	import SuperDebug, { type SuperValidated, type Infer, superForm } from "sveltekit-superforms";
 	import { zodClient } from "sveltekit-superforms/adapters";
 	import { newToast, ToastType } from "$lib/state/toast.svelte.js";
 	import { goto } from "$app/navigation";
@@ -24,6 +23,10 @@
 		parseAbsoluteToLocal,
 	} from "@internationalized/date";
 	import MarkedDownPost from "$lib/components/posts/MarkedDownPost.svelte";
+	import { Field, Control, Description } from "formsnap";
+	import FormLabel from "$lib/components/form/FormLabel.svelte";
+	import { Spinner } from "$lib/components/ui/spinner";
+	import FormFieldErrors from "$lib/components/form/FormFieldErrors.svelte";
 
 	let { data }: { data: { form: SuperValidated<Infer<EventsFormSchema>>; event: any } } = $props();
 
@@ -31,7 +34,7 @@
 		validators: zodClient(eventsFormSchema),
 	});
 
-	const { form: formData } = form;
+	const { form: formData, enhance: superEnhance } = form;
 
 	const df = new DateFormatter("en-US", {
 		dateStyle: "long",
@@ -51,6 +54,7 @@
 
 	$effect(() => {
 		$formData.start_date = start_date_value.toString();
+		$formData.is_public = true;
 	});
 
 	let creating = $state(false);
@@ -75,6 +79,7 @@
 			<p>creating...</p>
 		{/if}
 		<form
+			id="events_form"
 			method="POST"
 			use:enhance={() => {
 				creating = true;
@@ -90,29 +95,39 @@
 						}
 						goto("/posts");
 					} else {
-						newToast("Error creating an event: " + res.message, ToastType.Error);
+						console.log("error result", result);
+						console.log("error message", res);
+						console.log(res.error);
+						if (res.error) {
+							newToast("Error creating an event: " + res.error, ToastType.Error);
+						} else {
+							newToast("Error creating an event", ToastType.Error);
+						}
 					}
 				};
 			}}
 		>
-			<Form.Field {form} name="title">
-				<Form.Control let:attrs>
-					<Form.Label>Title</Form.Label>
-					<Input {...attrs} bind:value={$formData.title} />
-				</Form.Control>
-				<Form.Description>Name of the event.</Form.Description>
-				<Form.FieldErrors />
-			</Form.Field>
-			<Form.Field {form} name="id">
+			<Field {form} name="title">
+				<Control>
+					{#snippet children({ props })}
+						<div class="flex flex-row gap-6">
+							<FormLabel>Title</FormLabel>
+							<Input {...props} bind:value={$formData.title} />
+						</div>
+					{/snippet}
+				</Control>
+				<FormFieldErrors />
+			</Field>
+			<Field {form} name="id">
 				<input hidden value={$formData.id} name="id" />
-			</Form.Field>
-			<div class="flex flex-row justify-between">
-				<Form.Field {form} name="start_date">
-					<Form.Control let:attrs>
-						<Form.Label>Date</Form.Label>
+			</Field>
+			<div class="flex flex-row pt-6 items-end gap-6">
+				<Field {form} name="start_date">
+					<Control>
+						<FormLabel>Date</FormLabel>
 						<Popover.Root>
 							<Popover.Trigger>
-								<Button variant="outline" {...attrs}>
+								<Button variant="outline">
 									<CalendarIcon class="mr-2 size-4" />
 									{start_date_value
 										? df.format(start_date_value.toDate(getLocalTimeZone()))
@@ -135,75 +150,108 @@
 							</Popover.Content>
 						</Popover.Root>
 						<input hidden value={$formData.start_date} name="start_date" />
-					</Form.Control>
-					<Form.FieldErrors />
-				</Form.Field>
-				<Form.Field {form} name="start_time">
-					<Form.Control let:attrs>
-						<Form.Label>Start Time</Form.Label>
-						<input type="time" {...attrs} bind:value={$formData.start_time} />
-					</Form.Control>
-					<Form.FieldErrors />
-				</Form.Field>
+					</Control>
+					<FormFieldErrors />
+				</Field>
+				<Field {form} name="start_time">
+					<Control>
+						{#snippet children({ props })}
+							<FormLabel>Start Time</FormLabel>
+							<input type="time" {...props} bind:value={$formData.start_time} />
+						{/snippet}
+					</Control>
+					<FormFieldErrors />
+				</Field>
 			</div>
-			<Form.Field {form} name="time_zone">
-				<Form.Control>
-					<input hidden value={getLocalTimeZone()} name="time_zone" />
-				</Form.Control>
-				<Form.FieldErrors />
-			</Form.Field>
-			<Form.Field {form} name="description">
-				<Form.Control let:attrs>
-					<Card.Root>
-						<Card.Header>
-							<Card.Title>Preview of the description</Card.Title>
-							<Card.Description>
-								{#if rendering}
-									<p>pause typing to render...</p>
-								{:else}
-									<p>markdown supported</p>
-								{/if}
-							</Card.Description>
-						</Card.Header>
-						<Card.Content>
-							<MarkedDownPost {captured_text} />
-						</Card.Content>
-					</Card.Root>
-					<Form.Label>Description</Form.Label>
-					<Textarea
-						{...attrs}
-						bind:value={$formData.description}
-						onkeyup={({ target: { value } }) => debounce(value)}
-					/>
-				</Form.Control>
-				<Form.Description>Hype it up!!</Form.Description>
-				<Form.FieldErrors />
-			</Form.Field>
-			<Form.Field {form} name="address">
-				<Form.Control let:attrs>
-					<Form.Label>Address</Form.Label>
-					<Input {...attrs} bind:value={$formData.address} />
-				</Form.Control>
-				<Form.Description>Location.</Form.Description>
-				<Form.FieldErrors />
-			</Form.Field>
-			<Form.Field {form} name="url">
-				<Form.Control let:attrs>
-					<Form.Label>Url</Form.Label>
-					<Input {...attrs} bind:value={$formData.url} />
-				</Form.Control>
-				<Form.Description>Ticket or event link.</Form.Description>
-				<Form.FieldErrors />
-			</Form.Field>
-			<Form.Field {form} name="event_type">
-				<Form.Control let:attrs>
-					<Form.Label>Event Type</Form.Label>
-					<Input {...attrs} bind:value={$formData.event_type} />
-				</Form.Control>
-				<Form.Description>Help people find what they're interested in.</Form.Description>
-				<Form.FieldErrors />
-			</Form.Field>
-			<Form.Button>Submit</Form.Button>
+			<Field {form} name="time_zone">
+				<input hidden value={getLocalTimeZone()} name="time_zone" />
+			</Field>
+			<Field {form} name="description">
+				<Control>
+					{#snippet children({ props })}
+						<Card.Root>
+							<Card.Header>
+								<Card.Title>Preview of the description</Card.Title>
+								<Card.Description>
+									{#if rendering}
+										pause typing to render...
+									{:else}
+										markdown supported
+									{/if}
+								</Card.Description>
+							</Card.Header>
+							<Card.Content>
+								<MarkedDownPost {captured_text} />
+							</Card.Content>
+						</Card.Root>
+						<div class="pt-6">
+							<FormLabel>Description</FormLabel>
+							<Textarea
+								{...props}
+								id="description"
+								bind:value={$formData.description}
+								onkeyup={({ target: { value } }) => debounce(value)}
+							/>
+						</div>
+					{/snippet}
+				</Control>
+				<Description class="text-xs font-light">Hype it up!!</Description>
+				<FormFieldErrors />
+			</Field>
+			<Field {form} name="address">
+				<Control>
+					{#snippet children({ props })}
+						<div class="flex flex-row gap-6 pt-6 items-end">
+							<FormLabel>Address</FormLabel>
+							<Input {...props} bind:value={$formData.address} />
+						</div>
+					{/snippet}
+				</Control>
+				<FormFieldErrors />
+			</Field>
+			<Field {form} name="url">
+				<Control>
+					{#snippet children({ props })}
+						<div class="flex flex-row gap-6 pt-6 items-end">
+							<FormLabel>Url</FormLabel>
+							<Input {...props} bind:value={$formData.url} />
+						</div>
+					{/snippet}
+				</Control>
+				<Description class="font-light text-xs">Ticket or event link.</Description>
+				<FormFieldErrors />
+			</Field>
+			<Field {form} name="event_type">
+				<Control>
+					{#snippet children({ props })}
+						<div class="flex flex-row gap-6 pt-6 items-end">
+							<FormLabel>Event Type</FormLabel>
+							<Input {...props} bind:value={$formData.event_type} />
+						</div>
+					{/snippet}
+				</Control>
+				<Description class="text-xs font-light"
+					>Help people find what they're interested in.
+				</Description>
+				<FormFieldErrors />
+			</Field>
+			<Field {form} name="is_public">
+				<Control>
+					{#snippet children({ props })}
+						<input hidden value={true} {...props} />
+					{/snippet}
+				</Control>
+			</Field>
+			<div class="pt-6">
+				<Button type="submit" disabled={creating}>
+					{#if creating}
+						<Spinner />
+					{/if}
+					Submit
+				</Button>
+			</div>
 		</form>
 	</div>
+
+	<SuperDebug data={$formData} />
 </div>

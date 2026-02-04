@@ -1,17 +1,17 @@
 <script lang="ts">
 	import { enhance } from "$app/forms";
 	import { goto } from "$app/navigation";
-	import FormButton from "$lib/components/form/FormButton.svelte";
-	import H1 from "$lib/components/text/H1.svelte";
-	import Link from "$lib/components/text/Link.svelte";
-	import * as Form from "$lib/components/ui/form";
 	import { Input } from "$lib/components/ui/input";
 	import { signinFormSchema, type SigninFormSchema } from "./schema";
 	import { type SuperValidated, type Infer, superForm } from "sveltekit-superforms";
 	import { zodClient } from "sveltekit-superforms/adapters";
+	import { Field, Control, Description } from "formsnap";
+	import FormLabel from "$lib/components/form/FormLabel.svelte";
+	import FormFieldErrors from "$lib/components/form/FormFieldErrors.svelte";
 
 	import { current_user } from "$lib/state/current_user.svelte.js";
 	import { setPendingToast, newToast, ToastType } from "$lib/state/toast.svelte.js";
+	import { Button } from "$lib/components/ui/button";
 
 	let creating = $state(false);
 
@@ -51,22 +51,26 @@
 		}}
 	>
 		<div class="flex flex-col">
-			<Form.Field {form} name="email">
-				<Form.Control let:attrs>
-					<Form.Label>E-mail</Form.Label>
-					<Input {...attrs} bind:value={$formData.email} />
-				</Form.Control>
-				<Form.FieldErrors />
-			</Form.Field>
-			<Form.Field {form} name="password">
-				<Form.Control let:attrs>
-					<Form.Label>Password</Form.Label>
-					<Input {...attrs} bind:value={$formData.password} type="password" />
-				</Form.Control>
-				<Form.Description>Message Sarah if you forgot your password</Form.Description>
-				<Form.FieldErrors />
-			</Form.Field>
+			<Field {form} name="email">
+				<Control>
+					{#snippet children({ props })}
+						<FormLabel>E-mail</FormLabel>
+						<Input {...props} bind:value={$formData.email} />
+					{/snippet}
+				</Control>
+				<FormFieldErrors />
+			</Field>
+			<Field {form} name="password">
+				<Control>
+					{#snippet children({ props })}
+						<FormLabel>Password</FormLabel>
+						<Input {...props} bind:value={$formData.password} type="password" />
+					{/snippet}
+				</Control>
+				<Description>Message Sarah if you forgot your password</Description>
+				<FormFieldErrors />
+			</Field>
 		</div>
-		<Form.Button>Sign in</Form.Button>
+		<Button type="submit">Sign in</Button>
 	</form>
 </div>

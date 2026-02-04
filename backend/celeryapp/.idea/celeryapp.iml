@@ -56,11 +56,12 @@
     <orderEntry type="library" scope="PROVIDED" name="builder (v3.3.0, RVM: ruby-3.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="bundler (v2.4.10, RVM: ruby-3.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="childprocess (v5.1.0, RVM: ruby-3.2.2) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="chronic (v0.10.2, RVM: ruby-3.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="concurrent-ruby (v1.3.5, RVM: ruby-3.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="connection_pool (v2.5.4, RVM: ruby-3.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="crass (v1.0.6, RVM: ruby-3.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="csv (v3.3.5, RVM: ruby-3.2.2) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="database_cleaner (v2.1.0, RVM: ruby-3.2.2) [gem]" level="application" />
+    <orderEntry type="library" scope="TEST" name="database_cleaner (v2.1.0, RVM: ruby-3.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="database_cleaner-active_record (v2.2.2, RVM: ruby-3.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="database_cleaner-core (v2.0.1, RVM: ruby-3.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="date (v3.5.0, RVM: ruby-3.2.2) [gem]" level="application" />
@@ -70,8 +71,8 @@
     <orderEntry type="library" scope="PROVIDED" name="erb (v6.0.0, RVM: ruby-3.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="erubi (v1.13.1, RVM: ruby-3.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="factory_bot (v6.5.6, RVM: ruby-3.2.2) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="factory_bot_rails (v6.5.1, RVM: ruby-3.2.2) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="faker (v3.5.2, RVM: ruby-3.2.2) [gem]" level="application" />
+    <orderEntry type="library" scope="TEST" name="factory_bot_rails (v6.5.1, RVM: ruby-3.2.2) [gem]" level="application" />
+    <orderEntry type="library" scope="TEST" name="faker (v3.5.2, RVM: ruby-3.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="globalid (v1.3.0, RVM: ruby-3.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="httparty (v0.23.2, RVM: ruby-3.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="i18n (v1.14.7, RVM: ruby-3.2.2) [gem]" level="application" />
@@ -120,7 +121,7 @@
     <orderEntry type="library" scope="PROVIDED" name="rspec-core (v3.13.6, RVM: ruby-3.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rspec-expectations (v3.13.5, RVM: ruby-3.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rspec-mocks (v3.13.7, RVM: ruby-3.2.2) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="rspec-rails (v8.0.2, RVM: ruby-3.2.2) [gem]" level="application" />
+    <orderEntry type="library" scope="TEST" name="rspec-rails (v8.0.2, RVM: ruby-3.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="rspec-support (v3.13.6, RVM: ruby-3.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="securerandom (v0.4.1, RVM: ruby-3.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="stringio (v3.1.8, RVM: ruby-3.2.2) [gem]" level="application" />
@@ -133,6 +134,7 @@
     <orderEntry type="library" scope="PROVIDED" name="web-push (v3.0.2, RVM: ruby-3.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="websocket-driver (v0.8.0, RVM: ruby-3.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="websocket-extensions (v0.1.5, RVM: ruby-3.2.2) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="whenever (v1.1.1, RVM: ruby-3.2.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="zeitwerk (v2.7.3, RVM: ruby-3.2.2) [gem]" level="application" />
   </component>
   <component name="RModuleSettingsStorage">

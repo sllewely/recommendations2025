@@ -6,7 +6,7 @@ export const eventsFormSchema = z.object({
 	end_date: z.string().nullable(),
 	start_time: z.string().default("17:00"),
 	time_zone: z.string(),
-	description: z.string().nullable(),
+	description: z.string(),
 	address: z.string().nullable(),
 	url: z.string().nullable(),
 	event_type: z.string().nullable(),

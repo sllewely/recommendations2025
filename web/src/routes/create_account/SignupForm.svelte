@@ -5,8 +5,9 @@
 	import { signupFormSchema, type SignupFormSchema } from "./schema";
 	import { type SuperValidated, type Infer, superForm } from "sveltekit-superforms";
 	import { zodClient } from "sveltekit-superforms/adapters";
-	import { Field, Control, Description, FieldErrors } from "formsnap";
+	import { Field, Control, Description } from "formsnap";
 	import FormLabel from "$lib/components/form/FormLabel.svelte";
+	import FormFieldErrors from "$lib/components/form/FormFieldErrors.svelte";
 	import { newToast, ToastType } from "$lib/state/toast.svelte.js";
 	import { Button } from "$lib/components/ui/button";
 
@@ -55,7 +56,7 @@
 					{/snippet}
 				</Control>
 				<Description>Display name visible to others</Description>
-				<FieldErrors />
+				<FormFieldErrors />
 			</Field>
 			<Field {form} name="email">
 				<Control>
@@ -64,7 +65,7 @@
 						<Input {...props} bind:value={$formData.email} />
 					{/snippet}
 				</Control>
-				<FieldErrors />
+				<FormFieldErrors />
 			</Field>
 			<Field {form} name="password">
 				<Control>
@@ -73,7 +74,7 @@
 						<Input {...props} bind:value={$formData.password} type="password" />
 					{/snippet}
 				</Control>
-				<FieldErrors />
+				<FormFieldErrors />
 			</Field>
 		</div>
 		<Button type="submit">Create account</Button>

@@ -6,7 +6,7 @@
 	import * as Popover from "$lib/components/ui/popover";
 	import { Input } from "$lib/components/ui/input";
 	import { type EventsFormSchema, eventsFormSchema } from "./schema";
-	import { type SuperValidated, type Infer, superForm } from "sveltekit-superforms";
+	import SuperDebug, { type SuperValidated, type Infer, superForm } from "sveltekit-superforms";
 	import { zodClient } from "sveltekit-superforms/adapters";
 	import { newToast, ToastType } from "$lib/state/toast.svelte.js";
 	import { goto } from "$app/navigation";
@@ -23,9 +23,10 @@
 		parseAbsoluteToLocal,
 	} from "@internationalized/date";
 	import MarkedDownPost from "$lib/components/posts/MarkedDownPost.svelte";
-	import { Field, Control, Description, FieldErrors } from "formsnap";
+	import { Field, Control, Description } from "formsnap";
 	import FormLabel from "$lib/components/form/FormLabel.svelte";
 	import { Spinner } from "$lib/components/ui/spinner";
+	import FormFieldErrors from "$lib/components/form/FormFieldErrors.svelte";
 
 	let { data }: { data: { form: SuperValidated<Infer<EventsFormSchema>>; event: any } } = $props();
 
@@ -33,7 +34,7 @@
 		validators: zodClient(eventsFormSchema),
 	});
 
-	const { form: formData } = form;
+	const { form: formData, enhance: superEnhance } = form;
 
 	const df = new DateFormatter("en-US", {
 		dateStyle: "long",
@@ -53,6 +54,7 @@
 
 	$effect(() => {
 		$formData.start_date = start_date_value.toString();
+		$formData.is_public = true;
 	});
 
 	let creating = $state(false);
@@ -68,14 +70,6 @@
 			captured_text = v;
 			rendering = false;
 		}, 500);
-	};
-
-	let submitDisabled = $state(false);
-
-	const onSubmit = () => {
-		console.log("submitting");
-		document.getElementById("events_form").submit();
-		submitDisabled = true;
 	};
 </script>
 
@@ -103,8 +97,12 @@
 					} else {
 						console.log("error result", result);
 						console.log("error message", res);
-						console.log(res.message);
-						newToast("Error creating an event: " + res.message, ToastType.Error);
+						console.log(res.error);
+						if (res.error) {
+							newToast("Error creating an event: " + res.error, ToastType.Error);
+						} else {
+							newToast("Error creating an event", ToastType.Error);
+						}
 					}
 				};
 			}}
@@ -112,19 +110,18 @@
 			<Field {form} name="title">
 				<Control>
 					{#snippet children({ props })}
-						<!--						<HorizontalLabelInput label_title="Title" {...props} bind:value={$formData.title} />-->
-						<div class="flex flex-row gap-6 pb-6">
+						<div class="flex flex-row gap-6">
 							<FormLabel>Title</FormLabel>
 							<Input {...props} bind:value={$formData.title} />
 						</div>
 					{/snippet}
 				</Control>
-				<FieldErrors />
+				<FormFieldErrors />
 			</Field>
 			<Field {form} name="id">
 				<input hidden value={$formData.id} name="id" />
 			</Field>
-			<div class="flex flex-row pb-6 items-end gap-6">
+			<div class="flex flex-row pt-6 items-end gap-6">
 				<Field {form} name="start_date">
 					<Control>
 						<FormLabel>Date</FormLabel>
@@ -154,7 +151,7 @@
 						</Popover.Root>
 						<input hidden value={$formData.start_date} name="start_date" />
 					</Control>
-					<FieldErrors />
+					<FormFieldErrors />
 				</Field>
 				<Field {form} name="start_time">
 					<Control>
@@ -163,7 +160,7 @@
 							<input type="time" {...props} bind:value={$formData.start_time} />
 						{/snippet}
 					</Control>
-					<FieldErrors />
+					<FormFieldErrors />
 				</Field>
 			</div>
 			<Field {form} name="time_zone">
@@ -199,7 +196,7 @@
 					{/snippet}
 				</Control>
 				<Description class="text-xs font-light">Hype it up!!</Description>
-				<FieldErrors />
+				<FormFieldErrors />
 			</Field>
 			<Field {form} name="address">
 				<Control>
@@ -210,7 +207,7 @@
 						</div>
 					{/snippet}
 				</Control>
-				<FieldErrors />
+				<FormFieldErrors />
 			</Field>
 			<Field {form} name="url">
 				<Control>
@@ -222,7 +219,7 @@
 					{/snippet}
 				</Control>
 				<Description class="font-light text-xs">Ticket or event link.</Description>
-				<FieldErrors />
+				<FormFieldErrors />
 			</Field>
 			<Field {form} name="event_type">
 				<Control>
@@ -236,12 +233,12 @@
 				<Description class="text-xs font-light"
 					>Help people find what they're interested in.
 				</Description>
-				<FieldErrors />
+				<FormFieldErrors />
 			</Field>
 			<Field {form} name="is_public">
 				<Control>
 					{#snippet children({ props })}
-						<input hidden value={$formData.is_public ?? true} {...props} />
+						<input hidden value={true} {...props} />
 					{/snippet}
 				</Control>
 			</Field>
@@ -255,4 +252,6 @@
 			</div>
 		</form>
 	</div>
+
+	<SuperDebug data={$formData} />
 </div>

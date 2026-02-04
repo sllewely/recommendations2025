@@ -13,8 +13,9 @@
 	import * as Tabs from "$lib/components/ui/tabs";
 	import * as Card from "$lib/components/ui/card";
 	import { Button } from "$lib/components/ui/button";
-	import { Field, Control, Description, FieldErrors } from "formsnap";
+	import { Field, Control, Description } from "formsnap";
 	import FormLabel from "$lib/components/form/FormLabel.svelte";
+	import FormFieldErrors from "$lib/components/form/FormFieldErrors.svelte";
 
 	interface Props {
 		form_data: SuperValidated<Infer<FormSchema>>;
@@ -74,7 +75,7 @@
 							{/snippet}
 						</Control>
 						<Description>This is your public display name.</Description>
-						<FieldErrors />
+						<FormFieldErrors />
 					</Field>
 
 					<Field {form} name="blurb">
@@ -85,7 +86,7 @@
 							{/snippet}
 						</Control>
 						<Description>Help people find you :)</Description>
-						<FieldErrors />
+						<FormFieldErrors />
 					</Field>
 
 					<Field {form} name="string_tags">
@@ -99,7 +100,7 @@
 							>To help people search for you. @xamples are the name of your town, college, or friend
 							group
 						</Description>
-						<FieldErrors />
+						<FormFieldErrors />
 					</Field>
 					<div class="space-x-2 mb-4">
 						{#each tags as tag}
@@ -127,7 +128,7 @@
 							{/snippet}
 						</Control>
 						<Description>Your account email.</Description>
-						<FieldErrors />
+						<FormFieldErrors />
 					</Field>
 					<Button
 						type="button"
@@ -145,7 +146,7 @@
 								{/snippet}
 							</Control>
 							<Description>Overwrite your old password</Description>
-							<FieldErrors />
+							<FormFieldErrors />
 						</Field>
 					{/if}
 

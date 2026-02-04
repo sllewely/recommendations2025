@@ -11,8 +11,9 @@
 	import { Textarea } from "$lib/components/ui/textarea/index.js";
 	import MarkedDownPost from "$lib/components/posts/MarkedDownPost.svelte";
 	import H1 from "$lib/components/text/H1.svelte";
-	import { Field, Control, Description, FieldErrors } from "formsnap";
+	import { Field, Control, Description } from "formsnap";
 	import FormLabel from "$lib/components/form/FormLabel.svelte";
+	import FormFieldErrors from "$lib/components/form/FormFieldErrors.svelte";
 
 	let { data }: { data: { form: SuperValidated<Infer<PostFormSchema>>; event: any } } = $props();
 	const form = superForm(data.form, {
@@ -182,6 +183,7 @@
 									/>
 								{/snippet}
 							</Control>
+							<FormFieldErrors />
 						</Field>
 
 						<Field {form} name="id">

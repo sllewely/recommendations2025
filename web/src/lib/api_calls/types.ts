@@ -59,6 +59,7 @@ export interface User {
 	string_tags?: string;
 	blurb: string;
 	presigned_url: string;
+	profile_photo_url?: string;
 }
 
 export interface Event {

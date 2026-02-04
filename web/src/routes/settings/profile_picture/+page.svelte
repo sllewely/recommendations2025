@@ -27,7 +27,7 @@
 		upload_url = res.url;
 		console.log("uploadurl", JSON.stringify(upload_url));
 
-		if (data.user.presigned_url) {
+		if (data.user.profile_photo_url) {
 			const cloudflare_get_url = await fetch(data.user.presigned_url, {
 				method: "GET",
 			});
@@ -99,7 +99,8 @@
 		<div class="flex flex-col space-y-2">
 			<Form.Button onclick={submitUpload} disabled={uploading ? "true" : undefined}>
 				{#if uploading}
-					<Spinner /> Uploading...
+					<Spinner />
+					Uploading...
 				{:else}
 					Update
 				{/if}

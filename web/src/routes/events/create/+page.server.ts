@@ -48,6 +48,7 @@ export const actions = {
 				event_type: form.data.event_type,
 				start_date_time: zoned_date_time.toISO(),
 				is_public: form.data.is_public,
+				invited_friend_ids: form.data.invited_friend_ids,
 			},
 			jwt,
 		);

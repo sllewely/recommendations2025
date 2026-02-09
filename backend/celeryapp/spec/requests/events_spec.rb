@@ -66,6 +66,17 @@ RSpec.describe "Events", type: :request do
       expect(friend.notifications.size).to eq(1)
       expect(friend.notifications.first.message).to eq("#{@my_user.name} created a new event")
     end
+
+    it 'creates a private event and invites your friends' do
+      friend = create(:user)
+      post "/events", params: { title: 'k flay', description: "come see this fun show with me", start_date_time: DateTime.now + 5.days, is_public: false,
+                                invited_friend_ids: [friend.id] }, headers: @headers
+
+      expect(response).to have_http_status(:created)
+      res = JSON.parse(response.body)
+      expect(res['title']).to eq('k flay')
+      expect(Event.find_by(id: res['id']).rsvps.size).to eq(1)
+    end
   end
 
   describe 'index' do

@@ -12,6 +12,7 @@ export const badgeVariants = tv({
 				"bg-destructive text-destructive-foreground hover:bg-destructive/80 border-transparent",
 			outline: "text-foreground",
 			going: "bg-lime-200 text-secondary-foreground hover:bg-primary/80 border-transparent",
+			invited: "bg-orange-200 text-secondary-foreground hover:bg-primary/80 border-transparent",
 			interested: "bg-amber-200 text-secondary-foreground hover:bg-primary/80 border-transparent",
 			not_going: "bg-slate-200 text-secondary-foreground hover:bg-primary/80 border-transparent",
 			hide: "bg-slate-200 text-secondary-foreground hover:bg-primary/80 border-transparent",

@@ -19,11 +19,20 @@ class EventsController < ApplicationController
       current_user.friends.each do |friend|
         friend.notifications << Notification.created_a_feedable(current_user, @event)
       end
+      (params[:invited_friend_ids] || []).each do |friend_id|
+        Rsvp.create!(user_id: friend_id, event: @event, status: :invited)
+      end
     rescue ActiveRecord::RecordInvalid
       render json: { error: @event.errors_to_s }, status: :unprocessable_content and return
     end
-    current_user.friends.each do |friend|
-      PushNotification.send_push_notification(friend, "New Event", "#{current_user.name} posted a new event")
+    if @event.is_public
+      current_user.friends.each do |friend|
+        PushNotification.send_push_notification(friend, "New Event", "#{current_user.name} posted a new event")
+      end
+    else
+      @event.rsvps.each do |rsvp|
+        PushNotification.send_push_notification(rsvp.user, "New Event", "#{current_user.name} invited you to an event")
+      end
     end
     render json: EventBlueprint.render(@event, view: :authed), status: :created
   end
@@ -39,6 +48,7 @@ class EventsController < ApplicationController
   end
 
   def update
+    # TODO: update rsvp list
     # find will raise; find_by_id will return nil if the object not found
     @event = current_user.events.find_by(id: params[:id])
     if @event.nil?

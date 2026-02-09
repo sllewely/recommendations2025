@@ -14,8 +14,7 @@ export const badgeVariants = tv({
 			going: "bg-lime-200 text-secondary-foreground hover:bg-primary/80 border-transparent",
 			interested: "bg-amber-200 text-secondary-foreground hover:bg-primary/80 border-transparent",
 			not_going: "bg-slate-200 text-secondary-foreground hover:bg-primary/80 border-transparent",
-			not_interested:
-				"bg-slate-200 text-secondary-foreground hover:bg-primary/80 border-transparent",
+			hide: "bg-slate-200 text-secondary-foreground hover:bg-primary/80 border-transparent",
 			not_rsvpd: "bg-teal-200 text-secondary-foreground hover:bg-primary/80 border-transparent",
 		},
 	},

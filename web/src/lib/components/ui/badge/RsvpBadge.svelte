@@ -18,8 +18,8 @@
 				return ["Interested", "interested"];
 			case "cant_go":
 				return ["Not going", "not_going"];
-			case "not_interested":
-				return ["Not interested", "not_interested"];
+			case "hide":
+				return ["Not interested", "hide"];
 			default:
 				return ["Not rsvp'd", "not_rsvpd"];
 		}

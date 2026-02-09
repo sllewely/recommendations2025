@@ -132,7 +132,7 @@ RSpec.describe "Events", type: :request do
       create(:rsvp, event: event1, user: @my_user, status: 'going')
       create(:rsvp, event: event1, user: @friend)
       create(:rsvp, event: event2, user: @my_user)
-      create(:rsvp, event: event2, user: @friend, status: 'not_interested')
+      create(:rsvp, event: event2, user: @friend, status: 'hide')
 
       get '/events', headers: @headers
 

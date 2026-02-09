@@ -43,12 +43,12 @@ RSpec.describe "Rsvps", type: :request do
     it 'update an rsvp' do
       event = create(:event)
       create(:rsvp, event: event, user: @my_user)
-      post "/rsvps", params: { event_id: event.id, status: 'not_interested' }, headers: @headers
+      post "/rsvps", params: { event_id: event.id, status: 'hide' }, headers: @headers
 
       expect(response).to have_http_status(:created)
       res = JSON.parse(response.body)
       expect(res['id']).to_not be_nil
-      expect(res['status']).to eq("not_interested")
+      expect(res['status']).to eq("hide")
     end
 
   end

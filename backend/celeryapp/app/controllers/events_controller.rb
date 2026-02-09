@@ -15,8 +15,8 @@ class EventsController < ApplicationController
     ActiveRecord::Base.transaction do
       @event = current_user.events.new(event_params)
       @event.save!
-      @event.feed_item = FeedItem.create!(user: current_user, feedable: @event)
       if params[:is_public] == "true"
+        @event.feed_item = FeedItem.create!(user: current_user, feedable: @event)
         current_user.friends.each do |friend|
           friend.notifications << Notification.created_a_feedable(current_user, @event)
         end

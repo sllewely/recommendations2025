@@ -170,6 +170,37 @@ RSpec.describe "Events", type: :request do
       expect(res.first['user']['id']).to_not be_nil
     end
 
+    it 'doesnt show private events' do
+      event1 = create(:event, user: @friend, is_public: false)
+
+      get '/events', headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      res = JSON.parse(response.body)
+      expect(res.size).to eq(0)
+    end
+
+    it 'I can see a private event if im rsvpd' do
+      event1 = create(:event, user: @friend, is_public: false)
+      event1.rsvps.create(user: @my_user, status: :invited)
+
+      get '/events', headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      res = JSON.parse(response.body)
+      expect(res.size).to eq(1)
+    end
+
+    it 'I can see a private event if its mine' do
+      event1 = create(:event, user: @my_user, is_public: false)
+
+      get '/events', headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      res = JSON.parse(response.body)
+      expect(res.size).to eq(1)
+    end
+
   end
 
   describe 'show' do

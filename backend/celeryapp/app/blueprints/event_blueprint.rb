@@ -1,6 +1,6 @@
 class EventBlueprint < Blueprinter::Base
   identifier :id
-  fields :created_at, :start_date_time, :end_date_time
+  fields :created_at, :start_date_time, :end_date_time, :is_public
 
   field :class_name do
     "Event"

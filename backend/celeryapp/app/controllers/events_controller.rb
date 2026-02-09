@@ -57,11 +57,32 @@ class EventsController < ApplicationController
     if @event.nil?
       render json: { error: "event not found" }, status: :not_found and return
     end
-    if @event.update(event_params)
-      render json: EventBlueprint.render(@event, view: :authed), status: :ok
-    else
-      render json: { error: @event.errors_to_s }, status: :unprocessable_content
+    ActiveRecord::Base.transaction do
+      @event.update(event_params)
+      if !@event.is_public
+        # find the difference between the current friends and the invited friends
+        old_invited_friends = @event.rsvps.pluck(:user_id)
+        invited_friends = params[:invited_friend_ids] || []
+        # Remove users
+        (old_invited_friends - invited_friends).each do |friend_id|
+          rsvp = @event.rsvps.find_by(user_id: friend_id)
+          rsvp.destroy! if rsvp
+          # json query to remove the notification linking to the event
+          Notification.where(notif_type: :event_invitation, user_id: friend_id)
+                      .where("extras ->> 'event_id' = '#{@event.id}'")
+                      .destroy_all
+        end
+        # Add users
+        (invited_friends - old_invited_friends).each do |friend_id|
+          Notification.invited_to_event(current_user, @event, friend_id).save
+          Rsvp.create!(user_id: friend_id, event: @event, status: :invited)
+        end
+      end
+    rescue ActiveRecord::RecordInvalid
+      render json: { error: @event.errors_to_s }, status: :unprocessable_content and return
     end
+
+    render json: EventBlueprint.render(@event, view: :authed), status: :ok
 
   end
 

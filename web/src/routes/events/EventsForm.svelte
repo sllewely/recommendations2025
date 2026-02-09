@@ -28,8 +28,13 @@
 	import { Spinner } from "$lib/components/ui/spinner";
 	import FormFieldErrors from "$lib/components/form/FormFieldErrors.svelte";
 	import FriendItem from "../circles/FriendItem.svelte";
+	import type { Event as EventType } from "$lib/api_calls/types";
 
-	let { data }: { data: { form: SuperValidated<Infer<EventsFormSchema>>; event: any } } = $props();
+	let {
+		data,
+	}: {
+		data: { form: SuperValidated<Infer<EventsFormSchema>>; event: EventType };
+	} = $props();
 
 	const form = superForm(data.form, {
 		validators: zodClient(eventsFormSchema),
@@ -44,15 +49,6 @@
 	let default_date = today(getLocalTimeZone()).add({ days: 1 });
 	let start_date_value = $state<DateValue>(default_date);
 
-	if (data.event) {
-		let start_date_time = data.event.start_date_time;
-		let start_date_localized = parseAbsoluteToLocal(start_date_time);
-		start_date_value = toCalendarDate(start_date_localized);
-
-		$formData.start_time = toTime(start_date_localized).toString().substring(0, 5);
-		$formData.id = data.event.id;
-	}
-
 	$effect(() => {
 		$formData.start_date = start_date_value.toString();
 	});
@@ -63,6 +59,16 @@
 	let friend_results = $state([]);
 	let friends_to_invite = $state([]);
 	let invited_friend_ids = $derived(friends_to_invite.map((f) => f.id));
+
+	if (data.event) {
+		let start_date_time = data.event.start_date_time;
+		let start_date_localized = parseAbsoluteToLocal(start_date_time);
+		start_date_value = toCalendarDate(start_date_localized);
+
+		$formData.start_time = toTime(start_date_localized).toString().substring(0, 5);
+		$formData.id = data.event.id;
+		friends_to_invite = data.event.rsvps.map((rsvp) => rsvp.user);
+	}
 
 	$effect(() => {
 		$formData.invited_friend_ids = invited_friend_ids;

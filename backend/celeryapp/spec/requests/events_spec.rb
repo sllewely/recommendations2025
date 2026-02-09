@@ -79,7 +79,8 @@ RSpec.describe "Events", type: :request do
         description: "come see this fun show with me",
         start_date_time: DateTime.now + 5.days,
         is_public: false,
-        invited_friend_ids: [friend.id] }, headers: @headers
+        invited_friend_ids: [friend.id]
+      }, headers: @headers
 
       expect(response).to have_http_status(:created)
       res = JSON.parse(response.body)
@@ -259,6 +260,58 @@ RSpec.describe "Events", type: :request do
       expect(response).to have_http_status(:not_found)
       res = JSON.parse(response.body)
       expect(res['error']).to eq("event not found")
+    end
+
+    it 'removes notifications when a user is removed from the private event' do
+      friend1 = create(:user)
+      friend2 = create(:user)
+      post "/events", params: {
+        title: 'k flay',
+        description: "come see this fun show with me",
+        start_date_time: DateTime.now + 5.days,
+        is_public: false,
+        invited_friend_ids: [friend1.id, friend2.id]
+      }, headers: @headers
+
+      expect(response).to have_http_status(:created)
+      res = JSON.parse(response.body)
+      event = Event.find_by(id: res['id'])
+      expect(friend2.notifications.size).to eq(1)
+
+      patch "/events/#{event.id}", params: { title: "new title", invited_friend_ids: [friend1.id] }, headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      res = JSON.parse(response.body)
+      event = Event.find_by(id: res['id'])
+      expect(event.rsvps.size).to eq(1)
+      expect(friend2.notifications.size).to eq(0)
+
+    end
+
+    it 'adds notifications when a user is added to the private event' do
+      friend1 = create(:user)
+      friend2 = create(:user)
+      post "/events", params: {
+        title: 'k flay',
+        description: "come see this fun show with me",
+        start_date_time: DateTime.now + 5.days,
+        is_public: false,
+        invited_friend_ids: [friend1.id]
+      }, headers: @headers
+
+      expect(response).to have_http_status(:created)
+      res = JSON.parse(response.body)
+      event = Event.find_by(id: res['id'])
+      expect(friend2.notifications.size).to eq(0)
+
+      patch "/events/#{event.id}", params: { title: "new title", invited_friend_ids: [friend1.id, friend2.id] }, headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      res = JSON.parse(response.body)
+      event = Event.find_by(id: res['id'])
+      friend2 = User.find(friend2.id)
+      expect(event.rsvps.size).to eq(2)
+      expect(friend2.notifications.size).to eq(1)
     end
 
   end

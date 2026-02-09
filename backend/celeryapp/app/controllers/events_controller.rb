@@ -16,10 +16,13 @@ class EventsController < ApplicationController
       @event = current_user.events.new(event_params)
       @event.save!
       @event.feed_item = FeedItem.create!(user: current_user, feedable: @event)
-      current_user.friends.each do |friend|
-        friend.notifications << Notification.created_a_feedable(current_user, @event)
+      if params[:is_public] == "true"
+        current_user.friends.each do |friend|
+          friend.notifications << Notification.created_a_feedable(current_user, @event)
+        end
       end
       (params[:invited_friend_ids] || []).each do |friend_id|
+        Notification.invited_to_event(current_user, @event, friend_id).save
         Rsvp.create!(user_id: friend_id, event: @event, status: :invited)
       end
     rescue ActiveRecord::RecordInvalid

@@ -16,7 +16,7 @@ RSpec.describe "Events", type: :request do
 
     it 'creates an event' do
 
-      post "/events", params: { title: 'k flay', description: "come see this fun show with me", start_date_time: DateTime.now + 5.days, }, headers: @headers
+      post "/events", params: { title: 'k flay', description: "come see this fun show with me", start_date_time: DateTime.now + 5.days, is_public: true }, headers: @headers
 
       expect(response).to have_http_status(:created)
       res = JSON.parse(response.body)
@@ -26,7 +26,7 @@ RSpec.describe "Events", type: :request do
     end
 
     it 'creates an event with end time' do
-      post "/events", params: { title: 'k flay', description: "come see this fun show with me", start_date_time: DateTime.now + 5.days, end_date_time: DateTime.now + 10.days }, headers: @headers
+      post "/events", params: { title: 'k flay', description: "come see this fun show with me", start_date_time: DateTime.now + 5.days, end_date_time: DateTime.now + 10.days, is_public: true }, headers: @headers
 
       expect(response).to have_http_status(:created)
       res = JSON.parse(response.body)
@@ -35,7 +35,7 @@ RSpec.describe "Events", type: :request do
 
     it 'requires a title' do
 
-      post "/events", params: { description: "come see this fun show with me", start_date_time: DateTime.now + 5.days, }, headers: @headers
+      post "/events", params: { description: "come see this fun show with me", start_date_time: DateTime.now + 5.days, is_public: true }, headers: @headers
 
       expect(response).to have_http_status(:unprocessable_content)
       res = JSON.parse(response.body)
@@ -44,7 +44,7 @@ RSpec.describe "Events", type: :request do
 
     it 'requires a time' do
 
-      post "/events", params: { title: 'k flay', description: "come see this fun show with me" }, headers: @headers
+      post "/events", params: { title: 'k flay', description: "come see this fun show with me", is_public: true }, headers: @headers
 
       expect(response).to have_http_status(:unprocessable_content)
       res = JSON.parse(response.body)
@@ -55,7 +55,12 @@ RSpec.describe "Events", type: :request do
       friend = create(:user)
       Friendship.create_bidirectional_friendship!(@my_user, friend)
 
-      post "/events", params: { title: 'k flay', description: "come see this fun show with me", start_date_time: DateTime.now + 5.days, }, headers: @headers
+      post "/events", params: {
+        title: 'k flay',
+        description: "come see this fun show with me",
+        start_date_time: DateTime.now + 5.days,
+        is_public: true
+      }, headers: @headers
 
       expect(response).to have_http_status(:created)
       res = JSON.parse(response.body)
@@ -69,13 +74,19 @@ RSpec.describe "Events", type: :request do
 
     it 'creates a private event and invites your friends' do
       friend = create(:user)
-      post "/events", params: { title: 'k flay', description: "come see this fun show with me", start_date_time: DateTime.now + 5.days, is_public: false,
-                                invited_friend_ids: [friend.id] }, headers: @headers
+      post "/events", params: {
+        title: 'k flay',
+        description: "come see this fun show with me",
+        start_date_time: DateTime.now + 5.days,
+        is_public: false,
+        invited_friend_ids: [friend.id] }, headers: @headers
 
       expect(response).to have_http_status(:created)
       res = JSON.parse(response.body)
       expect(res['title']).to eq('k flay')
       expect(Event.find_by(id: res['id']).rsvps.size).to eq(1)
+      expect(friend.rsvps.size).to eq(1)
+      expect(friend.notifications.first.message).to eq("#{@my_user.name} invited you to an event")
     end
   end
 

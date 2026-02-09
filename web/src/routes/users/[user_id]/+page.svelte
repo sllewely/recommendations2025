@@ -61,7 +61,7 @@
 		<div class="flex flex-row">
 			<div class="rounded-full w-12 h-12 overflow-hidden mr-2">
 				{#if user.profile_photo_url}
-					<img src={user.profile_photo_url} alt="profile picture" />
+					<img src={"https://" + user.profile_photo_url} alt="profile picture" />
 				{:else}
 					<img src={bblogo} />
 				{/if}

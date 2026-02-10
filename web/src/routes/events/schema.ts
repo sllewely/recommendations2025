@@ -10,7 +10,8 @@ export const eventsFormSchema = z.object({
 	address: z.string().nullable(),
 	url: z.string().nullable(),
 	event_type: z.string().nullable(),
-	is_public: z.boolean().nullable(),
+	is_public: z.boolean().default(true),
+	invited_friend_ids: z.string().array().default([]),
 	id: z.string().nullable(),
 });
 

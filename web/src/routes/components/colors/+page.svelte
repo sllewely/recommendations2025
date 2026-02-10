@@ -4,12 +4,12 @@
 
 	const going_rsvp: Rsvp = { id: "1", status: "going" };
 	const interested_rsvp = { id: "2", status: "interested" };
-	const not_interested_rsvp = { id: "2", status: "not_interested" };
+	const hide_rsvp = { id: "2", status: "hide" };
 	const not_going_rsvp = { id: "2", status: "cant_go" };
 </script>
 
 <RsvpBadge rsvp={going_rsvp} />
 <RsvpBadge rsvp={interested_rsvp} />
-<RsvpBadge rsvp={not_interested_rsvp} />
+<RsvpBadge rsvp={hide_rsvp} />
 <RsvpBadge rsvp={not_going_rsvp} />
 <RsvpBadge rsvp={null} />

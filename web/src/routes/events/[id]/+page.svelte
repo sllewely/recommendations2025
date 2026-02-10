@@ -49,7 +49,7 @@
 	})();
 	let rsvp_status = $state(current_user_rsvp ? current_user_rsvp.status : null);
 
-	const rsvp_statuses = ["going", "interested", "cant_go", "not_interested", "not_rsvpd"];
+	const rsvp_statuses = ["going", "interested", "cant_go", "hide", "not_rsvpd"];
 
 	let delete_event = async () => {
 		const response = await fetch("/api/delete_event", {

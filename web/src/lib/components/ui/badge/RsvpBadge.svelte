@@ -8,7 +8,7 @@
 
 	let { rsvp }: Props = $props();
 
-	type rsvpVariants = "not_rsvpd" | "going" | "interested" | "not_going" | "not_interested";
+	type rsvpVariants = "not_rsvpd" | "going" | "interested" | "not_going" | "hide" | "invited";
 	const [badgeText, badgeVariant] = (function (): [string, rsvpVariants] {
 		if (!rsvp) return ["Not rsvp'd", "not_rsvpd"];
 		switch (rsvp.status) {
@@ -18,8 +18,10 @@
 				return ["Interested", "interested"];
 			case "cant_go":
 				return ["Not going", "not_going"];
-			case "not_interested":
-				return ["Not interested", "not_interested"];
+			case "invited":
+				return ["Invited", "invited"];
+			case "hide":
+				return ["Not interested", "hide"];
 			default:
 				return ["Not rsvp'd", "not_rsvpd"];
 		}

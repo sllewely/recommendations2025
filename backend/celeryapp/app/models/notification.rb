@@ -6,7 +6,8 @@ class Notification < ApplicationRecord
     :accepted_friend_request,
     :commented_on_your_commentable,
     :commented_on_a_commentable_you_are_following,
-    :created_a_feedable
+    :created_a_feedable,
+    :event_invitation
   ]
 
   scope :active, -> { where(active: true) }
@@ -42,6 +43,18 @@ class Notification < ApplicationRecord
       message: "#{user.name} created a new #{key}",
       notif_type: Notification.notif_types[:created_a_feedable],
       extras: { user_id: user.id, "#{key}_id" => feedable.id }
+    )
+  end
+
+  ###########################
+  # Events
+
+  def self.invited_to_event(user, event, invitee_id)
+    Notification.new(
+      user_id: invitee_id,
+      message: "#{user.name} invited you to an event",
+      notif_type: Notification.notif_types[:event_invitation],
+      extras: { user_id: user.id, "event_id" => event.id }
     )
   end
 

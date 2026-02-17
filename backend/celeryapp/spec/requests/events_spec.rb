@@ -25,6 +25,21 @@ RSpec.describe "Events", type: :request do
       expect(res['end_date_time']).to_not be_nil
     end
 
+    it 'creates a feed item if public' do
+
+      post "/events", params: { title: 'k flay', description: "come see this fun show with me", start_date_time: DateTime.now + 5.days, is_public: true }, headers: @headers
+
+      expect(response).to have_http_status(:created)
+      res = JSON.parse(response.body)
+      expect(res['title']).to eq('k flay')
+      expect(res['start_date_time']).to_not be_nil
+      expect(res['end_date_time']).to_not be_nil
+      expect(res['id']).to be_present
+
+      event = Event.find_by(id: res['id'])
+      expect(event.feed_item).to be_present
+    end
+
     it 'creates an event with end time' do
       post "/events", params: { title: 'k flay', description: "come see this fun show with me", start_date_time: DateTime.now + 5.days, end_date_time: DateTime.now + 10.days, is_public: true }, headers: @headers
 

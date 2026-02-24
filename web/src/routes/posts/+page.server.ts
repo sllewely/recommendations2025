@@ -6,12 +6,19 @@ import { RecommendationStatus } from "$lib/enums.js";
 import { redirect } from "@sveltejs/kit";
 import { createComment, type CommentPayload } from "$lib/api_calls/comments.svelte.js";
 import { formDataToGeneric } from "$lib/api_calls/utils";
+import { getUser } from "$lib/api_calls/users.svelte";
+import { VITE_API_URL } from "$env/static/private";
 
 export const load = withAuth(async ({ jwt, user_id }: LoadAuthContext) => {
 	const [postsResponse, eventsResponse] = await Promise.all([getPosts(jwt), getEvents(jwt)]);
+	const user = await getUser(user_id, jwt);
+
+	const calendar_url = VITE_API_URL + "calendars/?token=" + user["res"].calendar_api_key;
+
 	return {
 		posts_response: postsResponse.success ? (postsResponse.res ?? {}) : {},
 		events: eventsResponse["res"],
+		calendar_url: calendar_url,
 		current_user_id: user_id,
 	};
 });

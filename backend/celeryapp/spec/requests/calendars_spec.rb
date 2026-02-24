@@ -17,7 +17,7 @@ RSpec.describe "Calendars", type: :request do
     it 'returns ics of events' do
       event = create(:event, user: @my_user)
 
-      get "/calendars/?api_key=#{@my_user.calendar_api_key}"
+      get "/calendars/?token=#{@my_user.calendar_api_key}"
 
       expect(response).to have_http_status(:ok)
       expect(response.body).to start_with('BEGIN:VCALENDAR')

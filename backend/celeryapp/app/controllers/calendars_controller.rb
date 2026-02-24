@@ -5,7 +5,7 @@ class CalendarsController < ApplicationController
   skip_before_action :authenticate
 
   def index
-    current_user = User.find_by(calendar_api_key: params[:api_key])
+    current_user = User.find_by(calendar_api_key: params[:token])
     if current_user.nil?
       return render plain: "Invalid API key", status: :unauthorized
     end
@@ -16,6 +16,10 @@ class CalendarsController < ApplicationController
                 .order(start_date_time: :asc)
 
     cal = Icalendar::Calendar.new
+    cal.timezone do |t|
+      t.tzid = 'America/New_York'
+    end
+
     @events.each do |event|
       cal.event do |e|
         e.dtstart = event.start_date_time
@@ -30,7 +34,6 @@ class CalendarsController < ApplicationController
     cal.publish
 
     render plain: cal.to_ical, status: :ok
-
   end
 
 end

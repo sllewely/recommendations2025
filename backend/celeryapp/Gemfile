@@ -39,6 +39,8 @@ gem "bootsnap", require: false
 
 gem "whenever", require: false
 
+gem "icalendar"
+
 # emails
 gem 'resend'
 

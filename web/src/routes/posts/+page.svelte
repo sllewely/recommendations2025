@@ -86,9 +86,17 @@
 		<Link url="/friends">Add friends!!</Link>
 	</div>
 
-	<div class="flex flex-col gap-2 bg-pink-300 border-1 border-black rounded-lg p-4 text-center">
-		<span>I made calendar export! click to show this url into your calendar:</span>
-		<code>{data.calendar_url}</code>
+	<div
+		class="flex flex-col gap-2 bg-pink-300 border-1 border-black rounded-lg p-4 text-center text-black"
+	>
+		<Collapsible.Root>
+			<Collapsible.Trigger>
+				<span>I made calendar export! click to show this url into your calendar:</span>
+			</Collapsible.Trigger>
+			<Collapsible.Content>
+				<code>{data.calendar_url}</code>
+			</Collapsible.Content>
+		</Collapsible.Root>
 	</div>
 
 	<!-- Mobile toggle buttons -->

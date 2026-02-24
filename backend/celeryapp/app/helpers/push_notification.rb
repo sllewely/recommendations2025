@@ -2,11 +2,12 @@ require 'web-push'
 
 module PushNotification
   # make this a job
-  def self.send_push_notification(user, message_title, message_body)
+  def self.send_push_notification(user, message_title, message_body, url)
 
     message_json = {
       title: message_title,
       body: message_body,
+      url: url
       # icon: ActionController::Base.helpers.asset_url("app-icons/icon-192.png")
     }.to_json
 

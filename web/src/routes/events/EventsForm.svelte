@@ -269,6 +269,11 @@
 				</Control>
 				<Description class="text-xs font-light">
 					Public means visible to all of your friends.
+					<br />
+					<span class="font-bold"
+						>I temporarily removed the privacy filter for events! Use private events at your own
+						peril</span
+					>
 				</Description>
 				<FormFieldErrors />
 			</Field>

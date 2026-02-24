@@ -5,7 +5,7 @@ class EventsController < ApplicationController
                 .by_friends(current_user.friend_ids)
                 .includes(:user, rsvps: :user, comments: :user)
                 .upcoming.order(start_date_time: :asc)
-                .can_see(current_user.id)
+    # .can_see(current_user.id)
 
     # TODO: improve query performance
     render json: EventBlueprint.render(@events, view: :authed), status: :ok

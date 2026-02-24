@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_16_175909) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_24_230956) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -250,6 +250,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_16_175909) do
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.text "blurb"
+    t.uuid "calendar_api_key", default: -> { "gen_random_uuid()" }, null: false
     t.datetime "created_at", null: false
     t.string "email", null: false
     t.string "name"
@@ -260,6 +261,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_16_175909) do
     t.datetime "updated_at", null: false
     t.string "username"
     t.boolean "verified", default: false, null: false
+    t.index ["calendar_api_key"], name: "index_users_on_calendar_api_key", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["id"], name: "index_users_on_id", unique: true
     t.index ["presigned_url_expires"], name: "index_users_on_presigned_url_expires"

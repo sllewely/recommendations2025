@@ -140,6 +140,12 @@ GEM
       multi_xml (>= 0.5.2)
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
+    icalendar (2.12.1)
+      base64
+      ice_cube (~> 0.16)
+      logger
+      ostruct
+    ice_cube (0.17.0)
     io-console (0.8.1)
     irb (1.15.3)
       pp (>= 0.6.0)
@@ -186,6 +192,7 @@ GEM
     nokogiri (1.18.10-x86_64-linux-gnu)
       racc (~> 1.4)
     openssl (3.3.2)
+    ostruct (0.6.3)
     pagy (9.4.0)
     pg (1.6.2-arm64-darwin)
     pg (1.6.2-x86_64-linux)
@@ -300,6 +307,7 @@ DEPENDENCIES
   debug
   factory_bot_rails
   faker
+  icalendar
   letter_opener
   pagy (~> 9.3)
   pg

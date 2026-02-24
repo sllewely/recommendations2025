@@ -35,6 +35,7 @@ Rails.application.routes.draw do
     post "add"
     post "remove"
   end
+  resources :calendars
   resources :comments
   resources :user_statuses, only: [:create, :index]
   resources :images do

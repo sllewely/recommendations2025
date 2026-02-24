@@ -15,6 +15,7 @@ class Event < ApplicationRecord
   scope :invited, ->(user_id) { where(is_public: false).joins(:rsvps).where(rsvps: { user_id: user_id }) }
   scope :public_events, -> { where(is_public: true) }
   scope :upcoming, -> { where('start_date_time > ?', DateTime.now - 1.day) }
+  scope :month_past_onward, -> { where('start_date_time > ?', DateTime.now - 1.month) }
   scope :can_see, ->(user_id) do
     left_outer_joins(:rsvps)
       .where(

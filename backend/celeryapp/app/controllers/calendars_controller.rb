@@ -5,7 +5,7 @@ class CalendarsController < ApplicationController
   skip_before_action :authenticate
 
   def index
-    # need api key for user
+    
     # get events going into the past by a month
     @events = Event
                 .month_past_onward

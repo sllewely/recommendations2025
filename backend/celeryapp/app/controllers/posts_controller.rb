@@ -39,7 +39,11 @@ class PostsController < ApplicationController
       render json: { error: @post.errors_to_s }, status: :unprocessable_content and return
     end
     current_user.friends.each do |friend|
-      PushNotification.send_push_notification(friend, "New Post", "#{current_user.name} posted a new post")
+      PushNotification.send_push_notification(
+        friend,
+        "New Post",
+        "#{current_user.name} posted a new post",
+        "/posts/#{@post.id}")
     end
 
     render json: PostBlueprint.render(@post), status: :created

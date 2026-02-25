@@ -23,6 +23,7 @@
 		// show my saved registrations?
 		const response = await fetch("/api/web_push/get_registrations");
 		const res = await response.json();
+		console.log("saved registrations", res);
 		saved_registrations = res;
 
 		// check if any endpoints match my current subscription

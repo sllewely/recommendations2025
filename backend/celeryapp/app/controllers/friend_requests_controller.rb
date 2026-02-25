@@ -50,7 +50,12 @@ class FriendRequestsController < ApplicationController
     end
     friend_request = user.friend_requests.where(incoming_friend_id: current_user.id)&.first
     FriendshipMailer.with(user: user, friend: current_user).pending_friend_request.deliver_now!
-    PushNotification.send_push_notification(user, "Friend request", "You have a pending friend request from #{current_user.name}")
+    PushNotification.send_push_notification(
+      user,
+      "Friend request",
+      "You have a pending friend request from #{current_user.name}",
+      "/users/#{current_user.id}"
+    )
     render json: FriendRequestBlueprint.render(friend_request), status: :created
   end
 end

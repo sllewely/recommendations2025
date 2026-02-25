@@ -28,7 +28,11 @@ class FriendshipsController < ApplicationController
       current_user.notifications.active.pending_friend_requests.update_all(active: false)
       friend_request.delete
     end
-    PushNotification.send_push_notification(user, "New friend", "#{current_user.name} is your friend!")
+    PushNotification.send_push_notification(
+      user,
+      "New friend",
+      "#{current_user.name} is your friend!",
+      "/users/#{current_user.id}")
     render json: UserBlueprint.render(user, view: :authed), status: :created
     # TODO Error handling maybe?
   end

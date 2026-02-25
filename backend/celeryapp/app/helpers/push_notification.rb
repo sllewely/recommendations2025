@@ -2,11 +2,28 @@ require 'web-push'
 
 module PushNotification
   # make this a job
-  def self.send_push_notification(user, message_title, message_body)
+  def self.send_push_notification(user, message_title, message_body, url)
+
+    prepended_url = case Rails.env
+                    when "production"
+                      "https://bumblebeans.social"
+                    when "development"
+                      "http://localhost:5173"
+                    else
+                      ""
+                    end
 
     message_json = {
       title: message_title,
       body: message_body,
+      actions: [{
+                  action: 'view',
+                  url: prepended_url + url,
+                  title: "View"
+                }],
+      data: {
+        url: prepended_url + url
+      }
       # icon: ActionController::Base.helpers.asset_url("app-icons/icon-192.png")
     }.to_json
 

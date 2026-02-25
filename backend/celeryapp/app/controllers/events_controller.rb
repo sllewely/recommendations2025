@@ -30,11 +30,18 @@ class EventsController < ApplicationController
     end
     if @event.is_public
       current_user.friends.each do |friend|
-        PushNotification.send_push_notification(friend, "New Event", "#{current_user.name} posted a new event")
+        PushNotification.send_push_notification(
+          friend,
+          "New Event",
+          "#{current_user.name} posted a new event",
+          "/events/#{@event.id}")
       end
     else
       @event.rsvps.each do |rsvp|
-        PushNotification.send_push_notification(rsvp.user, "New Event", "#{current_user.name} invited you to an event")
+        PushNotification.send_push_notification(
+          rsvp.user,
+          "New Event", "#{current_user.name} invited you to an event",
+          "/events/#{@event.id}")
       end
     end
     render json: EventBlueprint.render(@event, view: :authed), status: :created

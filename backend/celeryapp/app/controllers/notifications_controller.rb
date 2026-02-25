@@ -26,7 +26,12 @@ class NotificationsController < ApplicationController
 
   # This is a test endpoint to send myself a notification
   def create
-    PushNotification.send_push_notification(current_user, "test notification", "talking to yourself again hmm")
+    PushNotification.send_push_notification(
+      current_user,
+      "test notification",
+      "talking to yourself again hmm",
+      "/settings/notifications"
+    )
     render json: {}, status: :ok
   end
 

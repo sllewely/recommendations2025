@@ -7,7 +7,14 @@ module PushNotification
     message_json = {
       title: message_title,
       body: message_body,
-      url: url
+      actions: [{
+                  action: 'view',
+                  url: url,
+                  title: "View"
+                }],
+      data: {
+        url: url
+      }
       # icon: ActionController::Base.helpers.asset_url("app-icons/icon-192.png")
     }.to_json
 

@@ -25,6 +25,7 @@ const ASSETS = [
 
 self.addEventListener("install", (event) => {
 	console.log("here i am, install - sarah");
+
 	// Create a new cache and add all files to it
 	async function addFilesToCache() {
 		const cache = await caches.open(CACHE);
@@ -40,6 +41,7 @@ self.addEventListener("install", (event) => {
 
 self.addEventListener("activate", (event) => {
 	console.log("activate - sarah");
+
 	// Remove previous cached data from disk
 	async function deleteOldCaches() {
 		for (const key of await caches.keys()) {
@@ -103,20 +105,26 @@ self.addEventListener("fetch", (event) => {
 // Listen to `push` notification event. Define the text to be displayed
 // and show the notification.
 self.addEventListener("push", function (event) {
-	console.log("push - sarah");
-	console.log(event);
-
 	const data = event.data?.json() ?? {};
 	const title = data.title || "Something Has Happened";
 	const message = data.body || "Here's something you might want to check out.";
-
-	console.log(data);
 
 	event.waitUntil(
 		self.registration.showNotification(title, {
 			body: message,
 		}),
 	);
+});
+
+self.addEventListener("notificationclick", async function (event) {
+	console.log("notificationclick - sarah");
+	console.log("event", event);
+	console.log("notification", event.notification);
+	let url = event.notification.data?.url;
+	if (!url) {
+		url = "https://bumblebeans.social/notifications";
+	}
+	await self.clients.openWindow(url);
 });
 
 self.addEventListener("pushsubscriptionchange", (event) => {

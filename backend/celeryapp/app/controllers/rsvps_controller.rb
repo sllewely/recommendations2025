@@ -35,7 +35,7 @@ class RsvpsController < ApplicationController
           event_user,
           "New rsvp",
           "#{current_user.name} rsvp'd to your event #{@rsvp.event.title}",
-          "https://bumblebeans.social/events/#{@rsvp.event.id}"
+          "/events/#{@rsvp.event.id}"
         )
       end
       render json: RsvpBlueprint.render(@rsvp, view: :authed), status: :created

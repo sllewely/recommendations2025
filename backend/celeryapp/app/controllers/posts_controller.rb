@@ -43,7 +43,7 @@ class PostsController < ApplicationController
         friend,
         "New Post",
         "#{current_user.name} posted a new post",
-        "https://bumblebeans.social/posts/#{commentable.id}")
+        "/posts/#{@post.id}")
     end
 
     render json: PostBlueprint.render(@post), status: :created

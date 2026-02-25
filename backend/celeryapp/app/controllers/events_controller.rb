@@ -34,14 +34,14 @@ class EventsController < ApplicationController
           friend,
           "New Event",
           "#{current_user.name} posted a new event",
-          "https://bumblebeans.social/events/#{@event.id}")
+          "/events/#{@event.id}")
       end
     else
       @event.rsvps.each do |rsvp|
         PushNotification.send_push_notification(
           rsvp.user,
           "New Event", "#{current_user.name} invited you to an event",
-          "https://bumblebeans.social/events/#{@event.id}")
+          "/events/#{@event.id}")
       end
     end
     render json: EventBlueprint.render(@event, view: :authed), status: :created

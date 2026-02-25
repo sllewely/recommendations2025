@@ -30,7 +30,7 @@ class NotificationsController < ApplicationController
       current_user,
       "test notification",
       "talking to yourself again hmm",
-      "https://bumblebeans.social/"
+      "/settings/notifications"
     )
     render json: {}, status: :ok
   end

@@ -32,7 +32,7 @@ class FriendshipsController < ApplicationController
       user,
       "New friend",
       "#{current_user.name} is your friend!",
-      "https://bumblebeans.social/users/#{current_user.id}")
+      "/users/#{current_user.id}")
     render json: UserBlueprint.render(user, view: :authed), status: :created
     # TODO Error handling maybe?
   end

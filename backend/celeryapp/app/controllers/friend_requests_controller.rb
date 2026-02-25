@@ -54,7 +54,7 @@ class FriendRequestsController < ApplicationController
       user,
       "Friend request",
       "You have a pending friend request from #{current_user.name}",
-      "https://bumblebeans.social/users/#{current_user.id}"
+      "/users/#{current_user.id}"
     )
     render json: FriendRequestBlueprint.render(friend_request), status: :created
   end

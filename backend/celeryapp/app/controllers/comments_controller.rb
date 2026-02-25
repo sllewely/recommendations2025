@@ -13,6 +13,7 @@ class CommentsController < ApplicationController
   def create
     # TODO: Can only post on comment within friends
     @comment = current_user.comments.new(comment_params)
+    commentable = @comment.commentable
     commentable_type = @comment.commentable.class.name.downcase.pluralize
 
     ActiveRecord::Base.transaction do
@@ -23,7 +24,7 @@ class CommentsController < ApplicationController
           commentable.user,
           "New Comment",
           "#{current_user.name} commented on your post",
-          "https://bumblebeans.social/#{commentable_type}/#{commentable.id}"
+          "/#{commentable_type}/#{commentable.id}"
         )
         commentable.user.notifications << Notification.commented_on_your_commentable(current_user, commentable)
       end
@@ -34,7 +35,7 @@ class CommentsController < ApplicationController
           user,
           "New Comment",
           "#{current_user.name} commented on a post you're following",
-          "https://bumblebeans.social/#{commentable_type}/#{commentable.id}")
+          "/#{commentable_type}/#{commentable.id}")
         user.notifications << Notification.commented_on_a_commentable_you_are_following(current_user, commentable)
       end
     rescue ActiveRecord::RecordInvalid => e

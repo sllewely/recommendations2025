@@ -78,6 +78,12 @@
 						link: "/posts/" + notification.extras.post_id,
 					};
 				}
+			case "event_rsvp":
+			case "event_invitation":
+				return {
+					icon: CalendarPlus,
+					link: "/events/" + notification.extras.event_id,
+				};
 			default:
 				return {
 					icon: Bell,

@@ -118,7 +118,9 @@ export type NotifTypes =
 	| "accepted_friend_request"
 	| "created_a_feedable"
 	| "commented_on_your_commentable"
-	| "commented_on_a_commentable_you_are_following";
+	| "commented_on_a_commentable_you_are_following"
+	| "event_invitation"
+	| "event_rsvp";
 
 export interface Pagy {
 	overflow: boolean;

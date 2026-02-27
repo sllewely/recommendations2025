@@ -51,6 +51,19 @@ RSpec.describe "Rsvps", type: :request do
       expect(res['status']).to eq("hide")
     end
 
+    it 'creates a notification for the event creator' do
+      user = create(:user)
+      event = create(:event, user: user)
+      create(:rsvp, event: event, user: @my_user)
+      post "/rsvps", params: { event_id: event.id, status: 'going' }, headers: @headers
+
+      expect(response).to have_http_status(:created)
+      res = JSON.parse(response.body)
+      expect(res['id']).to_not be_nil
+      expect(user.notifications.size).to eq(1)
+      expect(user.notifications.first.message).to include("#{@my_user.name} rsvp'd to your event")
+    end
+
   end
 
   describe "GET /rsvps" do

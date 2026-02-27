@@ -37,6 +37,7 @@ class RsvpsController < ApplicationController
           "#{current_user.name} rsvp'd to your event #{@rsvp.event.title}",
           "/events/#{@rsvp.event.id}"
         )
+        event_user.notifications << Notification.rsvpd_to_event(current_user, @rsvp.event)
       end
       render json: RsvpBlueprint.render(@rsvp, view: :authed), status: :created
     else

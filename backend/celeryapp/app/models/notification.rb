@@ -7,7 +7,8 @@ class Notification < ApplicationRecord
     :commented_on_your_commentable,
     :commented_on_a_commentable_you_are_following,
     :created_a_feedable,
-    :event_invitation
+    :event_invitation,
+    :event_rsvp
   ]
 
   scope :active, -> { where(active: true) }
@@ -54,6 +55,14 @@ class Notification < ApplicationRecord
       user_id: invitee_id,
       message: "#{user.name} invited you to an event",
       notif_type: Notification.notif_types[:event_invitation],
+      extras: { user_id: user.id, "event_id" => event.id }
+    )
+  end
+
+  def self.rsvpd_to_event(user, event)
+    Notification.new(
+      message: "#{user.name} rsvp'd to your event",
+      notif_type: Notification.notif_types[:event_rsvp],
       extras: { user_id: user.id, "event_id" => event.id }
     )
   end

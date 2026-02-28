@@ -7,11 +7,16 @@
 	import { afterNavigate } from "$app/navigation";
 	import { checkAndShowPendingToasts } from "$lib/state/toast.svelte.js";
 	import { Toaster } from "$lib/components/ui/sonner";
+	import { global } from "$lib/state/global.svelte";
 
 	let { children, data } = $props();
 
 	if (data.current_user_id) {
 		current_user.id = data.current_user_id;
+	}
+
+	if (data.calendar_url) {
+		global.calendarUrl = data.calendar_url;
 	}
 
 	onMount(() => {});

@@ -160,6 +160,8 @@ export type PendingFriendRequest = {
 	message: string;
 };
 
+export type CalendarUrl = string;
+
 export type CreateRecommendationData = unknown;
 
 export type FriendStatus =

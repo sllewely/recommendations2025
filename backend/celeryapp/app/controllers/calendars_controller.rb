@@ -35,9 +35,10 @@ class CalendarsController < ApplicationController
     end
 
     cal.ip_name = 'Bumblebeans Calendar'
-    cal.refresh_interval = 'PT1M'
+    cal.refresh_interval = 'PT15M'
 
-    cal.refresh
+    cal.x_wr_calname = 'Bumblebeans Calendar'
+    cal.x_published_ttl = 'PT15M'
 
     @events.each do |event|
       cal.event do |e|

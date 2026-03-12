@@ -14,13 +14,16 @@ RSpec.describe "Calendars", type: :request do
       @headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{auth_token}" }
     end
 
-    it 'returns ics of events' do
+    it 'returns ics of events with timezone information' do
       event = create(:event, user: @my_user)
 
       get "/calendars/?token=#{@my_user.calendar_api_key}"
 
       expect(response).to have_http_status(:ok)
-      expect(response.body).to start_with('BEGIN:VCALENDAR')
+      expect(response.body).to include('BEGIN:VTIMEZONE')
+      expect(response.body).to include('TZID:America/New_York')
+      expect(response.body).to include('BEGIN:DAYLIGHT')
+      expect(response.body).to include('BEGIN:STANDARD')
       expect(response.body).to include(event.title)
       expect(response.body).to include('END:VCALENDAR')
     end

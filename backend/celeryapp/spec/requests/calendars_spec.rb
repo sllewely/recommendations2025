@@ -19,6 +19,8 @@ RSpec.describe "Calendars", type: :request do
 
       get "/calendars/?token=#{@my_user.calendar_api_key}"
 
+      debugger
+
       expect(response).to have_http_status(:ok)
       expect(response.body).to include('BEGIN:VTIMEZONE')
       expect(response.body).to include('TZID:America/New_York')

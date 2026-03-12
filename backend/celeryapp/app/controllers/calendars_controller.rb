@@ -26,7 +26,7 @@ class CalendarsController < ApplicationController
         e.dtend = event.start_date_time + 2.hours
         e.summary = event.title
         e.description = event.description
-        e.ip_class = "PRIVATE"
+        e.ip_class = "PUBLIC"
       end
     end
 

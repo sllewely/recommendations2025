@@ -20,6 +20,11 @@ class CalendarsController < ApplicationController
       t.tzid = 'America/New_York'
     end
 
+    cal.ip_name = 'Bumblebeans Calendar'
+    cal.refresh_interval = 'PT1M'
+
+    cal.refresh
+
     @events.each do |event|
       cal.event do |e|
         e.dtstart = event.start_date_time

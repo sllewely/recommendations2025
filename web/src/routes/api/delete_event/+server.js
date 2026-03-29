@@ -8,7 +8,10 @@ export async function POST({ request, cookies }) {
 	const { id } = await request.json();
 
 	// {success: true, res: null}
+	// TODO does nto handle del properly
 	const response = await api.del("events/" + id, jwt);
+
+	console.log("delete response", response);
 
 	return json(response);
 }

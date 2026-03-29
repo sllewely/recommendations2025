@@ -13,7 +13,7 @@
 	import RsvpBadge from "$lib/components/ui/badge/RsvpBadge.svelte";
 	import { parseAbsoluteToLocal } from "@internationalized/date";
 	import { onMount } from "svelte";
-	import type { Event } from "$lib/api_calls/types";
+	import type { Event, User } from "$lib/api_calls/types";
 	import { Separator } from "$lib/components/ui/separator";
 	import * as Select from "$lib/components/ui/select/index.js";
 	import Commentable from "$lib/components/posts/Commentable.svelte";
@@ -29,15 +29,7 @@
 	}
 
 	let { data }: Props = $props();
-	// let user = data.user;
 	let my_user_id = data.my_user_id;
-
-	// // Svelte pitfall.  Page updates are not triggered by load data prop change!!
-	// // This is the workaround
-	// let event = $state(data.event);
-	// $effect(() => {
-	// 	event = data.event;
-	// });
 
 	let comments = data.event.comments || [];
 
@@ -50,9 +42,6 @@
 		}
 		return data.event.rsvps.find((rsvp) => rsvp.user.id === my_user_id) ?? null;
 	})();
-	let rsvp_status = $state(current_user_rsvp ? current_user_rsvp.status : null);
-
-	const rsvp_statuses = ["going", "interested", "cant_go", "hide", "not_rsvpd"];
 
 	let delete_event = async () => {
 		const response = await fetch("/api/delete_event", {
@@ -64,8 +53,9 @@
 		});
 		let res = await response.json();
 		if (res.success) {
+			console.log("deleted", res);
 			newToast("Successfully deleted event");
-			goto("/posts");
+			// goto("/posts");
 		} else {
 			newToast("Error deleting a event: " + res.message, ToastType.Error);
 		}

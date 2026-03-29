@@ -16,7 +16,8 @@
 <Button
 	variant={rsvp_decoration.variant}
 	class={selected ? " border-2 border-black" : ""}
+	size="sm"
 	onclick={click_handler}
 >
-	{rsvp_decoration.text}
+	<span class="text-xs">{rsvp_decoration.text}</span>
 </Button>

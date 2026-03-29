@@ -13,7 +13,6 @@
 	import ShouldShowNotificationSubscribeButtonCard from "$lib/components/notifications/push/ShouldShowNotificationSubscribeButtonCard.svelte";
 	import EventCard from "$lib/components/posts/EventCard.svelte";
 	import * as Collapsible from "$lib/components/ui/collapsible";
-	import CalendarCopy from "$lib/CalendarCopy.svelte";
 
 	let { data }: PageProps = $props();
 
@@ -86,8 +85,6 @@
 	>
 		<Link url="/friends">Add friends!!</Link>
 	</div>
-
-	<CalendarCopy />
 
 	<!-- Mobile toggle buttons -->
 	<div class="md:hidden mb-4">

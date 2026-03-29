@@ -1,21 +1,28 @@
 import * as api from "$lib/api_calls/api.svelte";
+import { getUser } from "$lib/api_calls/users.svelte";
 
 export async function load({ cookies, params }) {
 	const jwt = cookies.get("jwt");
 	const my_user_id = cookies.get("user_id");
 	const event_id = params.id;
 
-	let eventApiCall =
-		typeof jwt === "string"
-			? api.get(`events/` + event_id, jwt)
-			: api.get(`public/events/` + event_id);
+	// signed in
+	if (typeof jwt === "string") {
+		let event_response = await api.get(`events/` + event_id, jwt);
+		let user_response = await getUser(my_user_id, jwt);
 
-	let res = await eventApiCall;
+		return {
+			event: event_response["res"],
+			user: user_response["res"],
+			my_user_id: my_user_id,
+		};
+	}
+
+	// not signed in
+	let event_response = await api.get(`public/events/` + event_id);
 
 	return {
-		event: res["res"],
-		// user: user,
-		my_user_id: my_user_id,
+		event: event_response["res"],
 	};
 }
 

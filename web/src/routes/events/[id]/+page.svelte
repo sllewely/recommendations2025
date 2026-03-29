@@ -18,10 +18,12 @@
 	import * as Select from "$lib/components/ui/select/index.js";
 	import Commentable from "$lib/components/posts/Commentable.svelte";
 	import SelectRsvp from "$lib/components/rsvp/SelectRsvp.svelte";
+	import CalendarCopy from "$lib/CalendarCopy.svelte";
 
 	interface Props {
 		data: {
 			event: Event;
+			user: User;
 			my_user_id: string;
 		};
 	}
@@ -104,6 +106,10 @@
 </script>
 
 <div>
+	{#if signed_in}
+		<CalendarCopy />
+	{/if}
+
 	{#if my_user_id === data.event.user.id}
 		<div class="float-right relative">
 			<LinkButton url="/events/{data.event.id}/edit">Edit</LinkButton>

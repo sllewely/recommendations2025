@@ -16,7 +16,11 @@
 	>
 		<span class="font-bold">You can now import bumblebeans events in your calendar!</span>
 		<div>
-			<span class="text-sm">Copy this url into your calendar app: </span>
+			{#if copied}
+				<span class="text-sm">Now open google or apple calendar and add "from url": </span>
+			{:else}
+				<span class="text-sm">Copy this url into your calendar app: </span>
+			{/if}
 			<Button onclick={clickCopy}>
 				{#if copied}
 					Copied!

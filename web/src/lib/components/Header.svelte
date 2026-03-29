@@ -2,7 +2,7 @@
 	import { goto } from "$app/navigation";
 	import { current_user, isSignedIn } from "$lib/state/current_user.svelte";
 	import { setPendingToast, ToastType } from "$lib/state/toast.svelte";
-	import { Settings, Menu, X, BellRing, Bell } from "@lucide/svelte";
+	import { Settings, Menu, X, BellRing, Bell, RotateCw } from "@lucide/svelte";
 	import bblogo from "$lib/assets/android-launchericon-72-72.png";
 	import { onMount } from "svelte";
 
@@ -15,6 +15,10 @@
 
 	const closeMobileMenu = () => {
 		mobileMenuOpen = false;
+	};
+
+	const reloadPage = () => {
+		window.location.reload();
 	};
 
 	let log_out = async () => {
@@ -119,6 +123,9 @@
 
 		<!-- Mobile right side: hamburger menu -->
 		<div class="md:hidden flex items-center pr-4">
+			<a href="" onclick={reloadPage}>
+				<RotateCw class="text-gray-400 hover:text-orange-400" size={24} />
+			</a>
 			{#if hasNotifications}
 				<a class="font-semibold text-red-600 hover:text-orange-400" href="/notifications">
 					<BellRing />
@@ -192,8 +199,9 @@
 							onclick={() => {
 								closeMobileMenu();
 								log_out();
-							}}>Log out</button
-						>
+							}}
+							>Log out
+						</button>
 					</li>
 				{:else}
 					<li>

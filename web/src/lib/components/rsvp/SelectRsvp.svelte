@@ -16,7 +16,6 @@
 
 	let { rsvp }: Props = $props();
 
-	let current_user_rsvp = $derived(rsvp ? rsvp : { status: "not_rsvpd" });
 	let open_choices = $state(false);
 
 	// On click, pop up choices for rsvp
@@ -26,12 +25,17 @@
 <div>
 	<div class={"flex flex-row gap-2 absolute" + (open_choices ? "" : " hidden")}>
 		{#each RSVP_STATUSES as status}
-			<Button variant="outline" class="rounded-full">
-				{rsvpStatusToText(status).text}
-			</Button>
+			<RsvpButton
+				rsvp_status={status}
+				click_handler={() => (open_choices = false)}
+				selected={rsvp?.status === status}
+			/>
 			<!--			<RsvpBadge rsvp={{ status: status }} selected={current_user_rsvp?.status === status}/>-->
 		{/each}
 	</div>
 
-	<RsvpButton rsvp={current_user_rsvp} click_handler={() => (open_choices = !open_choices)} />
+	<RsvpButton
+		rsvp_status={rsvp?.status ?? null}
+		click_handler={() => (open_choices = !open_choices)}
+	/>
 </div>

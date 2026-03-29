@@ -92,16 +92,16 @@ export type RsvpDecorataions = {
 export const rsvpStatusToText = (status: RsvpStatus | null): RsvpDecorataions => {
 	switch (status) {
 		case "going":
-			return { text: "Going", variant: "going" };
+			return { text: "Going", variant: "rsvp_going" };
 		case "interested":
-			return { text: "Interested", variant: "interested" };
+			return { text: "Interested", variant: "rsvp_interested" };
 		case "cant_go":
-			return { text: "Can't go", variant: "cant_go" };
+			return { text: "Can't go", variant: "rsvp_hide" };
 		case "hide":
-			return { text: "Not interested", variant: "hide" };
+			return { text: "Not interested", variant: "rsvp_hide" };
 		case "invited":
 		default:
-			return { text: "Not rsvp'd", variant: "not_rsvpd" };
+			return { text: "Not rsvp'd", variant: "rsvp_invited" };
 	}
 };
 

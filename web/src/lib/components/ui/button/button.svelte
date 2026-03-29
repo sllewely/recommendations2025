@@ -18,6 +18,10 @@
 				event: "bg-event text-primary-foreground hover:bg-event/90",
 				post: "bg-post text-primary-foreground hover:bg-post/90",
 				recommendation: "bg-recommendation text-primary-foreground hover:bg-recommendation/90",
+				rsvp_going: "rounded-full bg-lime-200 text-black hover:bg-primary/90 shadow-xs",
+				rsvp_interested: "rounded-full bg-amber-200 text-black hover:bg-primary/90 shadow-xs",
+				rsvp_invited: "rounded-full bg-yellow-200 text-black hover:bg-primary/90 shadow-xs",
+				rsvp_hide: "rounded-full bg-slate-200 text-black hover:bg-primary/90 shadow-xs",
 			},
 			size: {
 				default: "h-9 px-4 py-2 has-[>svg]:px-3",

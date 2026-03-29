@@ -1,17 +1,22 @@
 <script lang="ts">
-	import { type Rsvp, type RsvpDecorataions, rsvpStatusToText } from "$lib/api_calls/types";
+	import { type RsvpDecorataions, type RsvpStatus, rsvpStatusToText } from "$lib/api_calls/types";
 	import { Button } from "$lib/components/ui/button";
 
 	interface Props {
-		rsvp: Rsvp;
+		rsvp_status: RsvpStatus | null;
+		selected?: boolean;
 		click_handler: () => void;
 	}
 
-	let { rsvp, click_handler }: Props = $props();
+	let { rsvp_status, click_handler, selected }: Props = $props();
 
-	let rsvp_decoration = $derived(rsvpStatusToText(rsvp.status));
+	let rsvp_decoration = $derived(rsvpStatusToText(rsvp_status));
 </script>
 
-<Button variant="outline" class="rounded-full" onclick={click_handler}>
+<Button
+	variant={rsvp_decoration.variant}
+	class={selected ? " border-2 border-black" : ""}
+	onclick={click_handler}
+>
 	{rsvp_decoration.text}
 </Button>

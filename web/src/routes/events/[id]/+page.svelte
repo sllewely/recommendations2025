@@ -17,6 +17,7 @@
 	import { Separator } from "$lib/components/ui/separator";
 	import * as Select from "$lib/components/ui/select/index.js";
 	import Commentable from "$lib/components/posts/Commentable.svelte";
+	import SelectRsvp from "$lib/components/rsvp/SelectRsvp.svelte";
 
 	interface Props {
 		data: {
@@ -167,64 +168,65 @@
 								<span>at {data.event.address}</span>
 							{/if}
 						</div>
-						<div class="flex flex-row justify-between">
-							{#if signed_in}
-								<div>
-									<form
-										method="POST"
-										action="?/update_rsvp"
-										use:enhance={() => {
-											creating = true;
-											return async ({ update, result }) => {
-												await update();
-												creating = false;
-												let res = result.data;
-												if (res.success) {
-													newToast("Success updating your rsvp");
-												} else {
-													newToast("Error updating rsvp: " + res.message, ToastType.Error);
-												}
-											};
-										}}
-									>
-										<Select.Root type="single" name="rsvpStatus" bind:value={rsvp_status}>
-											<Select.Trigger>
-												<RsvpBadge rsvp={current_user_rsvp} />
-											</Select.Trigger>
-											<Select.Content>
-												<Select.Group>
-													{#each rsvp_statuses as status}
-														<Select.Item
-															value={status}
-															onclick={() => {
-																update_rsvp(status);
-															}}
-														>
-															<RsvpBadge rsvp={{ status: status }} />
-														</Select.Item>
-													{/each}
-												</Select.Group>
-											</Select.Content>
-										</Select.Root>
-									</form>
-								</div>
-							{:else}
-								<RsvpBadge rsvp={{ status: "not_rsvpd" }} />
-								<span>Sign in to rsvp</span>
-							{/if}
-							{#if data.event.url}
-								<Tooltip.Provider>
-									<Tooltip.Root>
-										<Tooltip.Trigger>
-											<Link url={data.event.url}>link</Link>
-										</Tooltip.Trigger>
-										<Tooltip.Content>
-											<span>{data.event.url}</span>
-										</Tooltip.Content>
-									</Tooltip.Root>
-								</Tooltip.Provider>
-							{/if}
-						</div>
+						{#if signed_in}
+							<div>
+								<form
+									method="POST"
+									action="?/update_rsvp"
+									use:enhance={() => {
+										creating = true;
+										return async ({ update, result }) => {
+											await update();
+											creating = false;
+											let res = result.data;
+											if (res.success) {
+												newToast("Success updating your rsvp");
+											} else {
+												newToast("Error updating rsvp: " + res.message, ToastType.Error);
+											}
+										};
+									}}
+								>
+									<Select.Root type="single" name="rsvpStatus" bind:value={rsvp_status}>
+										<Select.Trigger>
+											<RsvpBadge rsvp={current_user_rsvp} />
+										</Select.Trigger>
+										<Select.Content>
+											<Select.Group>
+												{#each rsvp_statuses as status}
+													<Select.Item
+														value={status}
+														onclick={() => {
+															update_rsvp(status);
+														}}
+													>
+														<RsvpBadge rsvp={{ status: status }} />
+													</Select.Item>
+												{/each}
+											</Select.Group>
+										</Select.Content>
+									</Select.Root>
+								</form>
+							</div>
+							<div>
+								<SelectRsvp rsvp={current_user_rsvp} />
+							</div>
+						{:else}
+							<RsvpBadge rsvp={{ status: "not_rsvpd" }} />
+							<span>Sign in to rsvp</span>
+						{/if}
+						{#if data.event.url}
+							<Tooltip.Provider>
+								<Tooltip.Root>
+									<Tooltip.Trigger>
+										<Link url={data.event.url}>link</Link>
+									</Tooltip.Trigger>
+									<Tooltip.Content>
+										<span>{data.event.url}</span>
+									</Tooltip.Content>
+								</Tooltip.Root>
+							</Tooltip.Provider>
+						{/if}
 						<Separator class="my-6" />
 						<div class="">
 							<span class="text-xl">Rsvps</span>

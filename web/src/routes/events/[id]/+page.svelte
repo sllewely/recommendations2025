@@ -170,46 +170,7 @@
 						</div>
 						{#if signed_in}
 							<div>
-								<form
-									method="POST"
-									action="?/update_rsvp"
-									use:enhance={() => {
-										creating = true;
-										return async ({ update, result }) => {
-											await update();
-											creating = false;
-											let res = result.data;
-											if (res.success) {
-												newToast("Success updating your rsvp");
-											} else {
-												newToast("Error updating rsvp: " + res.message, ToastType.Error);
-											}
-										};
-									}}
-								>
-									<Select.Root type="single" name="rsvpStatus" bind:value={rsvp_status}>
-										<Select.Trigger>
-											<RsvpBadge rsvp={current_user_rsvp} />
-										</Select.Trigger>
-										<Select.Content>
-											<Select.Group>
-												{#each rsvp_statuses as status}
-													<Select.Item
-														value={status}
-														onclick={() => {
-															update_rsvp(status);
-														}}
-													>
-														<RsvpBadge rsvp={{ status: status }} />
-													</Select.Item>
-												{/each}
-											</Select.Group>
-										</Select.Content>
-									</Select.Root>
-								</form>
-							</div>
-							<div>
-								<SelectRsvp rsvp={current_user_rsvp} />
+								<SelectRsvp rsvp={current_user_rsvp} event_id={data.event.id} />
 							</div>
 						{:else}
 							<RsvpBadge rsvp={{ status: "not_rsvpd" }} />

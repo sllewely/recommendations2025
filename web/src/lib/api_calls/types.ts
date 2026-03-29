@@ -106,11 +106,10 @@ export const rsvpStatusToText = (status: RsvpStatus | null): RsvpDecorataions =>
 };
 
 export interface Rsvp {
-	id: string;
-	created_at: string;
-	updated_at: string;
+	id?: string;
+	created_at?: string;
+	updated_at?: string;
 	event_id: string;
-	user_id: string;
 	status: RsvpStatus;
 	user: User;
 }

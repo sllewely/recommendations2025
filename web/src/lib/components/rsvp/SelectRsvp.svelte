@@ -1,27 +1,37 @@
 <script lang="ts">
 	import RsvpBadge from "$lib/components/ui/badge/RsvpBadge.svelte";
-	import type { Rsvp } from "$lib/api_calls/types";
+	import {
+		type Rsvp,
+		RSVP_STATUSES,
+		type RsvpStatus,
+		rsvpStatusToText,
+		type RsvpVariant,
+	} from "$lib/api_calls/types";
+	import { Button } from "$lib/components/ui/button";
+	import RsvpButton from "$lib/components/rsvp/RsvpButton.svelte";
 
 	interface Props {
-		rsvp: Rsvp | null | { status: string };
+		rsvp: Rsvp | null | { status: RsvpStatus };
 	}
 
 	let { rsvp }: Props = $props();
 
 	let current_user_rsvp = $derived(rsvp ? rsvp : { status: "not_rsvpd" });
+	let open_choices = $state(false);
 
 	// On click, pop up choices for rsvp
-
-	const rsvp_statuses = ["going", "interested", "cant_go", "hide", "not_rsvpd"];
 </script>
 
 {console.log("rsvp", rsvp)}
 <div>
-	<div class="flex flex-row gap-2 absolute">
-		{#each rsvp_statuses as status}
-			<RsvpBadge rsvp={{ status: status }} selected={current_user_rsvp?.status === status} />
+	<div class={"flex flex-row gap-2 absolute" + (open_choices ? "" : " hidden")}>
+		{#each RSVP_STATUSES as status}
+			<Button variant="outline" class="rounded-full">
+				{rsvpStatusToText(status).text}
+			</Button>
+			<!--			<RsvpBadge rsvp={{ status: status }} selected={current_user_rsvp?.status === status}/>-->
 		{/each}
 	</div>
 
-	<RsvpBadge rsvp={current_user_rsvp} />
+	<RsvpButton rsvp={current_user_rsvp} click_handler={() => (open_choices = !open_choices)} />
 </div>

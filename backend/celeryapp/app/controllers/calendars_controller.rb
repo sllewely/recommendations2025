@@ -11,7 +11,7 @@ class CalendarsController < ApplicationController
     end
     # TODO: PRIVACY
     @events = Event
-                .by_friends(current_user.friend_ids)
+                .want_to_see(current_user.id)
                 .month_past_onward
                 .order(start_date_time: :asc)
 

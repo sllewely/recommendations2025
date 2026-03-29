@@ -101,28 +101,6 @@
 			timeZone: localizedCreateTime.timeZone,
 		}).format(localizedStartTime.toDate());
 	});
-
-	const update_rsvp = async (status: String) => {
-		console.log("update_rsvp", status);
-		const response = await fetch("/api/rsvp/update", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-				user_id: my_user_id,
-				event_id: data.event.id,
-				status: status,
-			}),
-		});
-		const json = await response.json();
-		if (json["errors"]) {
-		} else {
-			console.log("json", json);
-			// await invalidate(`/events/${data.event.id}`);
-			window.location.reload();
-		}
-	};
 </script>
 
 <div>
@@ -160,34 +138,41 @@
 						</Card.Description>
 					</Card.Header>
 					<Card.Content>
-						{#if data.event.description}
-							<MarkedDownPost captured_text={data.event.description} />
-						{/if}
-						<div class="text-sm text-gray-500">
-							{#if data.event.address}
-								<span>at {data.event.address}</span>
+						<div class="flex flex-col gap-2">
+							{#if data.event.description}
+								<MarkedDownPost captured_text={data.event.description} />
+							{/if}
+							<div class="text-sm text-gray-500">
+								{#if data.event.address}
+									<span>at {data.event.address}</span>
+								{/if}
+							</div>
+							{#if data.event.url}
+								<p class="w-full truncate">
+									<Tooltip.Provider>
+										<Tooltip.Root>
+											<Tooltip.Trigger>
+												<Link url={data.event.url}>
+													<span class="text-sm">{data.event.url}</span>
+												</Link>
+											</Tooltip.Trigger>
+											<Tooltip.Content>
+												<span>{data.event.url}</span>
+											</Tooltip.Content>
+										</Tooltip.Root>
+									</Tooltip.Provider>
+								</p>
+							{/if}
+							{#if signed_in}
+								<div>
+									<SelectRsvp rsvp={current_user_rsvp} event_id={data.event.id} />
+								</div>
+							{:else}
+								<RsvpBadge rsvp={{ status: "not_rsvpd" }} />
+								<span>Sign in to rsvp</span>
 							{/if}
 						</div>
-						{#if signed_in}
-							<div>
-								<SelectRsvp rsvp={current_user_rsvp} event_id={data.event.id} />
-							</div>
-						{:else}
-							<RsvpBadge rsvp={{ status: "not_rsvpd" }} />
-							<span>Sign in to rsvp</span>
-						{/if}
-						{#if data.event.url}
-							<Tooltip.Provider>
-								<Tooltip.Root>
-									<Tooltip.Trigger>
-										<Link url={data.event.url}>link</Link>
-									</Tooltip.Trigger>
-									<Tooltip.Content>
-										<span>{data.event.url}</span>
-									</Tooltip.Content>
-								</Tooltip.Root>
-							</Tooltip.Provider>
-						{/if}
+
 						<Separator class="my-6" />
 						<div class="">
 							<span class="text-xl">Rsvps</span>

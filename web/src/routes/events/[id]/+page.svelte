@@ -132,75 +132,73 @@
 			</div>
 		</div>
 		<div class="p-2">
-			<a href="/events/{data.event.id}">
-				<Card.Root class=" border-lime-500 ">
-					<Card.Header>
-						{#if data.event.title}
-							<Card.Title>{data.event.title}</Card.Title>
+			<Card.Root class=" border-lime-500 ">
+				<Card.Header>
+					{#if data.event.title}
+						<Card.Title>{data.event.title}</Card.Title>
+					{/if}
+					<Card.Description>
+						{formattedStartDate}
+						at {formattedStartTime}
+					</Card.Description>
+				</Card.Header>
+				<Card.Content>
+					<div class="flex flex-col gap-2">
+						{#if data.event.description}
+							<MarkedDownPost captured_text={data.event.description} />
 						{/if}
-						<Card.Description>
-							{formattedStartDate}
-							at {formattedStartTime}
-						</Card.Description>
-					</Card.Header>
-					<Card.Content>
-						<div class="flex flex-col gap-2">
-							{#if data.event.description}
-								<MarkedDownPost captured_text={data.event.description} />
+						<div class="text-sm text-gray-500">
+							{#if data.event.address}
+								<span>at {data.event.address}</span>
 							{/if}
-							<div class="text-sm text-gray-500">
-								{#if data.event.address}
-									<span>at {data.event.address}</span>
-								{/if}
+						</div>
+						{#if data.event.url}
+							<p class="w-full truncate">
+								<Tooltip.Provider>
+									<Tooltip.Root>
+										<Tooltip.Trigger>
+											<Link url={data.event.url}>
+												<span class="text-sm">{data.event.url}</span>
+											</Link>
+										</Tooltip.Trigger>
+										<Tooltip.Content>
+											<span>{data.event.url}</span>
+										</Tooltip.Content>
+									</Tooltip.Root>
+								</Tooltip.Provider>
+							</p>
+						{/if}
+						{#if signed_in}
+							<div>
+								<SelectRsvp rsvp={current_user_rsvp} event_id={data.event.id} />
 							</div>
-							{#if data.event.url}
-								<p class="w-full truncate">
-									<Tooltip.Provider>
-										<Tooltip.Root>
-											<Tooltip.Trigger>
-												<Link url={data.event.url}>
-													<span class="text-sm">{data.event.url}</span>
-												</Link>
-											</Tooltip.Trigger>
-											<Tooltip.Content>
-												<span>{data.event.url}</span>
-											</Tooltip.Content>
-										</Tooltip.Root>
-									</Tooltip.Provider>
-								</p>
-							{/if}
-							{#if signed_in}
-								<div>
-									<SelectRsvp rsvp={current_user_rsvp} event_id={data.event.id} />
-								</div>
-							{:else}
-								<RsvpBadge rsvp={{ status: "not_rsvpd" }} />
-								<span>Sign in to rsvp</span>
-							{/if}
-						</div>
+						{:else}
+							<RsvpBadge rsvp={{ status: "not_rsvpd" }} />
+							<span>Sign in to rsvp</span>
+						{/if}
+					</div>
 
-						<Separator class="my-6" />
-						<div class="">
-							<span class="text-xl">Rsvps</span>
-							{#if signed_in}
-								{#each data.event.rsvps as rsvp}
-									<div class="flex flex-row justify-between">
-										<div>
-											{rsvp.user.name}
-										</div>
-										<div>
-											<RsvpBadge {rsvp} />
-										</div>
+					<Separator class="my-6" />
+					<div class="">
+						<span class="text-xl">Rsvps</span>
+						{#if signed_in}
+							{#each data.event.rsvps as rsvp}
+								<div class="flex flex-row justify-between">
+									<div>
+										{rsvp.user.name}
 									</div>
-								{/each}
-							{:else}
-								<span>Sign in to see who's coming</span>
-								<span>Rsvps: {data.event.rsvps.length}</span>
-							{/if}
-						</div>
-					</Card.Content>
-				</Card.Root>
-			</a>
+									<div>
+										<RsvpBadge {rsvp} />
+									</div>
+								</div>
+							{/each}
+						{:else}
+							<span>Sign in to see who's coming</span>
+							<span>Rsvps: {data.event.rsvps.length}</span>
+						{/if}
+					</div>
+				</Card.Content>
+			</Card.Root>
 		</div>
 	</div>
 	<div>

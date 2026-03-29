@@ -154,14 +154,8 @@
 							<Card.Title>{data.event.title}</Card.Title>
 						{/if}
 						<Card.Description>
-							<div class="flex flex-col">
-								<div>
-									{formattedStartDate}
-								</div>
-								<div>
-									At {formattedStartTime}
-								</div>
-							</div>
+							{formattedStartDate}
+							at {formattedStartTime}
 						</Card.Description>
 					</Card.Header>
 					<Card.Content>

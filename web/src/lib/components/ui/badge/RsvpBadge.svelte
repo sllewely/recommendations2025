@@ -4,9 +4,10 @@
 
 	interface Props {
 		rsvp: Rsvp | null | { status: string };
+		selected?: boolean;
 	}
 
-	let { rsvp }: Props = $props();
+	let { rsvp, selected }: Props = $props();
 
 	type rsvpVariants = "not_rsvpd" | "going" | "interested" | "not_going" | "hide" | "invited";
 	const [badgeText, badgeVariant] = (function (): [string, rsvpVariants] {
@@ -29,6 +30,6 @@
 </script>
 
 <div>
-	<div class="hidden">{rsvp?.status}</div>
-	<Badge variant={badgeVariant}>{badgeText}</Badge>
+	<div class="hidden border-2 border-black">{rsvp?.status}</div>
+	<Badge variant={badgeVariant} class={selected ? "border-2 border-black" : ""}>{badgeText}</Badge>
 </div>

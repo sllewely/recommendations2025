@@ -82,13 +82,35 @@ export interface Event {
 	rsvps: Rsvp[];
 }
 
+export type RsvpVariant = "not_rsvpd" | "going" | "interested" | "not_going" | "hide" | "invited";
+export type RsvpStatus = "interested" | "going" | "cant_go" | "hide" | "invited";
+export const RSVP_STATUSES = ["going", "interested", "cant_go", "hide"] as const;
+export type RsvpDecorataions = {
+	text: string;
+	variant: string;
+};
+export const rsvpStatusToText = (status: RsvpStatus | null): RsvpDecorataions => {
+	switch (status) {
+		case "going":
+			return { text: "Going", variant: "rsvp_going" };
+		case "interested":
+			return { text: "Interested", variant: "rsvp_interested" };
+		case "cant_go":
+			return { text: "Can't go", variant: "rsvp_hide" };
+		case "hide":
+			return { text: "Not interested", variant: "rsvp_hide" };
+		case "invited":
+		default:
+			return { text: "Not rsvp'd", variant: "rsvp_invited" };
+	}
+};
+
 export interface Rsvp {
-	id: string;
-	created_at: string;
-	updated_at: string;
+	id?: string;
+	created_at?: string;
+	updated_at?: string;
 	event_id: string;
-	user_id: string;
-	status: string;
+	status: RsvpStatus;
 	user: User;
 }
 

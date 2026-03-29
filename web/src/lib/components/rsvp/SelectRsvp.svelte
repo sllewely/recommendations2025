@@ -22,8 +22,8 @@
 </script>
 
 {console.log("rsvp", rsvp)}
-<div>
-	<div class={"flex flex-row gap-2 absolute" + (open_choices ? "" : " hidden")}>
+<div class="relative">
+	<div class={"flex flex-row gap-2 absolute -top-10" + (open_choices ? "" : " hidden")}>
 		{#each RSVP_STATUSES as status}
 			<RsvpButton
 				rsvp_status={status}

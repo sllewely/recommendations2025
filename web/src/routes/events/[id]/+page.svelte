@@ -53,9 +53,8 @@
 		});
 		let res = await response.json();
 		if (res.success) {
-			console.log("deleted", res);
 			newToast("Successfully deleted event");
-			// goto("/posts");
+			goto("/posts");
 		} else {
 			newToast("Error deleting a event: " + res.message, ToastType.Error);
 		}

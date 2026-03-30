@@ -28,6 +28,11 @@
 
 <div class="app dark:bg-gray-900 dark:text-gray-200">
 	<Header />
+	<script
+		defer
+		src="https://cloud.umami.is/script.js"
+		data-website-id="f7acc72f-23e8-4e39-93d7-cc6d2ff593b0"
+	></script>
 	<Toaster closeButton={true} richColors={true} />
 	<main>
 		{@render children()}

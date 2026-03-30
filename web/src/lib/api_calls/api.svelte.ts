@@ -39,6 +39,12 @@ async function send<T = unknown, D = unknown>({
 
 	try {
 		const res = await fetch(`${root_url}/${path}`, opts);
+
+		// Del returns 204 and no body
+		if (method === "DELETE" && res.ok) {
+			return { success: true, res: null as T };
+		}
+
 		const json = await res.json();
 
 		if (res.ok) {

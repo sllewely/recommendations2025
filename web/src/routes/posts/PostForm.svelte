@@ -14,6 +14,7 @@
 	import { Field, Control, Description } from "formsnap";
 	import FormLabel from "$lib/components/form/FormLabel.svelte";
 	import FormFieldErrors from "$lib/components/form/FormFieldErrors.svelte";
+	import { Spinner } from "$lib/components/ui/spinner";
 
 	let { data }: { data: { form: SuperValidated<Infer<PostFormSchema>>; event: any } } = $props();
 	const form = superForm(data.form, {
@@ -86,17 +87,6 @@
 
 			user_search_results = await response.json();
 		}, 0);
-
-		// call the backend, and return some users
-
-		const users = [{ name: "sarah", id: "2a3e5720-27a5-493b-adfd-dd4b99afd4d9" }];
-
-		// hover box with options I can tab throough and select with enter
-		// but also escape out
-		// or just keep typing
-		// or just click on the user
-
-		//target.value = searchstring.replace(`@${username}`, `[${username}](/users/${username})`);
 	};
 </script>
 
@@ -190,7 +180,12 @@
 							<input hidden value={$formData.id} name="id" />
 						</Field>
 						<div class="pt-4">
-							<Button type="submit">Submit</Button>
+							<Button type="submit" disabled={creating}>
+								{#if creating}
+									<Spinner />
+								{/if}
+								Submit
+							</Button>
 						</div>
 					</form>
 				</Card.Content>

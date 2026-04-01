@@ -195,3 +195,11 @@ export type FriendStatus =
 
 // key is a user uuid.  If missing, status is "none".
 export type FriendsMap = Map<string, FriendStatus>;
+
+export type Group = {
+	id: string;
+	name: string;
+	created_at: string;
+	updated_at: string;
+	users: User[];
+};

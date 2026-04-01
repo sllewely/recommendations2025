@@ -91,22 +91,23 @@
 	<div class="md:hidden mb-4">
 		<div class="flex bg-gray-200 rounded-lg p-1">
 			<button
-				class="flex-1 py-2 px-4 rounded-md font-medium transition-colors {activeTab === 'posts'
+				class="flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-md font-medium transition-colors {activeTab ===
+				'posts'
 					? 'bg-white text-gray-900 shadow-sm'
 					: 'text-gray-600 hover:text-gray-900'}"
 				onclick={() => (activeTab = "posts")}
 			>
-				<NotebookPen />
+				<NotebookPen size={18} />
 				Posts
 			</button>
 			<button
-				class="flex-1 py-2 px-4 rounded-md font-medium transition-colors align-baseline {activeTab ===
+				class="flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-md font-medium transition-colors {activeTab ===
 				'events'
 					? 'bg-white text-gray-900 shadow-sm'
 					: 'text-gray-600 hover:text-gray-900'}"
 				onclick={() => (activeTab = "events")}
 			>
-				<CalendarDays />
+				<CalendarDays size={18} />
 				Calendar
 			</button>
 		</div>

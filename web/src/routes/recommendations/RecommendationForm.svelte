@@ -84,6 +84,7 @@
 					let res = result.data;
 					if (res.success) {
 						newToast("You have successfully created a recommendation", ToastType.Success);
+						goto("/posts");
 					} else {
 						newToast("Error creating recommendation: " + res.message, ToastType.Error);
 					}
@@ -239,10 +240,10 @@
 
 				<div class="flex flex-row justify-center space-x-4">
 					<input type="hidden" name="status" value={status} />
-					<Button onclick={submitWithStatus("recommend")}>
+					<Button onclick={submitWithStatus("recommend")} disabled={creating}>
 						<MessageCircleHeart /> &nbsp; Share a review
 					</Button>
-					<Button onclick={submitWithStatus("interested_in")}>
+					<Button onclick={submitWithStatus("interested_in")} disabled={creating}>
 						<BookmarkPlus />
 						&nbsp; Interested in
 					</Button>

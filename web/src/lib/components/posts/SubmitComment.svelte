@@ -10,6 +10,7 @@
 		feed_item: Feedable;
 		update_comments: (comments: Comment[]) => void;
 	}
+
 	let { feed_item, update_comments }: Props = $props();
 
 	let posting = $state(false);
@@ -42,7 +43,7 @@
 		<input type="hidden" name="commentable_type" value={feed_item.class_name} />
 		<Textarea name="body" placeholder="I was thinking..." />
 		<div class="flex justify-center pt-2">
-			<Button type="submit">
+			<Button type="submit" disabled={posting}>
 				<MessageCirclePlus /> &nbsp; Submit Comment
 			</Button>
 		</div>

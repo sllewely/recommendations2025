@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_24_230956) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_01_193936) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -114,6 +114,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_24_230956) do
     t.index ["uuid"], name: "index_friendships_on_uuid", unique: true
   end
 
+  create_table "group_users", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.uuid "group_id", null: false
+    t.datetime "updated_at", null: false
+    t.uuid "user_id", null: false
+    t.index ["group_id"], name: "index_group_users_on_group_id"
+    t.index ["user_id", "group_id"], name: "index_group_users_on_user_id_and_group_id", unique: true
+    t.index ["user_id"], name: "index_group_users_on_user_id"
+  end
+
   create_table "groups", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name", null: false
@@ -213,16 +223,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_24_230956) do
     t.index ["member_id"], name: "index_user_circles_on_member_id"
   end
 
-  create_table "user_groups", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.uuid "group_id", null: false
-    t.datetime "updated_at", null: false
-    t.uuid "user_id", null: false
-    t.index ["group_id"], name: "index_user_groups_on_group_id"
-    t.index ["user_id", "group_id"], name: "index_user_groups_on_user_id_and_group_id", unique: true
-    t.index ["user_id"], name: "index_user_groups_on_user_id"
-  end
-
   create_table "user_statuses", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "numeric_user_id"
@@ -285,6 +285,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_24_230956) do
   add_foreign_key "friend_codes", "users", on_delete: :cascade
   add_foreign_key "friend_requests", "users", on_delete: :cascade
   add_foreign_key "friendships", "users", on_delete: :cascade
+  add_foreign_key "group_users", "groups"
+  add_foreign_key "group_users", "users"
   add_foreign_key "notifications", "users", on_delete: :cascade
   add_foreign_key "posts", "users", on_delete: :cascade
   add_foreign_key "recommendations", "users", on_delete: :cascade
@@ -293,8 +295,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_24_230956) do
   add_foreign_key "sessions", "users", on_delete: :cascade
   add_foreign_key "user_circles", "circles"
   add_foreign_key "user_circles", "users", column: "member_id"
-  add_foreign_key "user_groups", "groups"
-  add_foreign_key "user_groups", "users"
   add_foreign_key "user_statuses", "users", on_delete: :cascade
   add_foreign_key "user_tags", "tags"
   add_foreign_key "user_tags", "users", on_delete: :cascade

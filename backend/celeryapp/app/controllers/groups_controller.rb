@@ -15,7 +15,7 @@ class GroupsController < ApplicationController
     group = Group.find_by(id: group_id)
     render json: {}, status: :not_found and return if group.nil?
 
-    render json: group, status: :ok
+    render json: GroupBlueprint.render(group), status: :ok
   end
 
 end

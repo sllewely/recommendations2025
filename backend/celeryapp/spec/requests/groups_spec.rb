@@ -57,6 +57,20 @@ RSpec.describe "Groups", type: :request do
         get "/groups/#{group.id}", headers: @headers
 
         expect(json_response["id"]).to eq(group.id)
+        expect(json_response["name"]).to eq(group.name)
+      end
+
+      it "the group has users" do
+        u1 = create(:user)
+        u2 = create(:user)
+        u3 = create(:user)
+        group.users = [u1, u2, u3]
+        group.save!
+
+        get "/groups/#{group.id}", headers: @headers
+
+        expect(json_response["id"]).to eq(group.id)
+        expect(json_response["users"].size).to eq(3)
       end
     end
 

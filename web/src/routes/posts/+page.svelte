@@ -13,6 +13,7 @@
 	import ShouldShowNotificationSubscribeButtonCard from "$lib/components/notifications/push/ShouldShowNotificationSubscribeButtonCard.svelte";
 	import EventCard from "$lib/components/posts/EventCard.svelte";
 	import * as Collapsible from "$lib/components/ui/collapsible";
+	import { CalendarDays, NotebookPen } from "lucide-svelte";
 
 	let { data }: PageProps = $props();
 
@@ -90,20 +91,24 @@
 	<div class="md:hidden mb-4">
 		<div class="flex bg-gray-200 rounded-lg p-1">
 			<button
-				class="flex-1 py-2 px-4 rounded-md font-medium transition-colors {activeTab === 'posts'
+				class="flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-md font-medium transition-colors {activeTab ===
+				'posts'
 					? 'bg-white text-gray-900 shadow-sm'
 					: 'text-gray-600 hover:text-gray-900'}"
 				onclick={() => (activeTab = "posts")}
 			>
+				<NotebookPen size={18} />
 				Posts
 			</button>
 			<button
-				class="flex-1 py-2 px-4 rounded-md font-medium transition-colors {activeTab === 'events'
+				class="flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-md font-medium transition-colors {activeTab ===
+				'events'
 					? 'bg-white text-gray-900 shadow-sm'
 					: 'text-gray-600 hover:text-gray-900'}"
 				onclick={() => (activeTab = "events")}
 			>
-				Events
+				<CalendarDays size={18} />
+				Calendar
 			</button>
 		</div>
 	</div>
@@ -150,7 +155,7 @@
 			{/if}
 		</div>
 		<div class="flex flex-col pl-2">
-			<H1>Events</H1>
+			<H1>Calendar</H1>
 
 			<div class="flex justify-center pt-2 pb-2">
 				<Button href="/events/create" class={buttonVariants({ variant: "event" })}>
@@ -221,7 +226,7 @@
 			</div>
 		{:else}
 			<div class="flex flex-col">
-				<H1>Events</H1>
+				<H1>Calendar</H1>
 
 				<div class="flex justify-center pt-2 pb-2">
 					<Button href="/events/create" class={buttonVariants({ variant: "event" })}>

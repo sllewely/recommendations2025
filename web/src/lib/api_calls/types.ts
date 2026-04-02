@@ -10,6 +10,12 @@ export interface ApiResponse<T = unknown> {
 	message?: string;
 }
 
+export type CurrentUser = {
+	auth_token: string;
+	id: string;
+	groups: Group[];
+};
+
 export interface PostsResponse {
 	feed_items: Feedable[];
 	pagy: unknown;
@@ -60,6 +66,7 @@ export interface User {
 	blurb: string;
 	presigned_url: string;
 	profile_photo_url?: string;
+	groups: Group[];
 }
 
 export interface Event {
@@ -195,3 +202,11 @@ export type FriendStatus =
 
 // key is a user uuid.  If missing, status is "none".
 export type FriendsMap = Map<string, FriendStatus>;
+
+export type Group = {
+	id: string;
+	name: string;
+	created_at: string;
+	updated_at: string;
+	users: User[];
+};

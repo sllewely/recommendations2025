@@ -57,6 +57,20 @@ RSpec.describe "Groups", type: :request do
         get "/groups/#{group.id}", headers: @headers
 
         expect(json_response["id"]).to eq(group.id)
+        expect(json_response["name"]).to eq(group.name)
+      end
+
+      it "the group has users" do
+        u1 = create(:user)
+        u2 = create(:user)
+        u3 = create(:user)
+        group.users = [u1, u2, u3]
+        group.save!
+
+        get "/groups/#{group.id}", headers: @headers
+
+        expect(json_response["id"]).to eq(group.id)
+        expect(json_response["users"].size).to eq(3)
       end
     end
 
@@ -66,6 +80,86 @@ RSpec.describe "Groups", type: :request do
         get "/groups/0", headers: @headers
 
         expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
+
+  describe "POST /groups/:id/join" do
+    let!(:group) { create(:group) }
+
+    before(:all) do
+      @my_user = create(:user)
+
+      headers = { 'ACCEPT' => 'application/json' }
+      post "/sign_in", params: { email: @my_user.email, password: @my_user.password }, headers: headers
+
+      auth_token = JSON.parse(response.body)["auth_token"]
+      @headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{auth_token}" }
+
+    end
+
+    context "when group exists" do
+
+      it "I can join the group" do
+        post "/groups/#{group.id}/join", headers: @headers
+
+        expect(response).to have_http_status(:success)
+
+        expect(json_response['users'].map { |e| e['id'] }).to include(@my_user.id)
+      end
+
+      it "I am already a member" do
+        group.users << @my_user
+        group.save!
+
+        post "/groups/#{group.id}/join", headers: @headers
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(json_response["error"]).to eq("Already a member of group #{group.name}")
+      end
+
+    end
+
+    context "when group does not exist" do
+
+      it "returns http not found" do
+        post "/groups/0/join", headers: @headers
+
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
+
+  describe "GET /groups/:id/posts" do
+    let!(:group) { create(:group) }
+
+    before(:all) do
+      @my_user = create(:user)
+
+      headers = { 'ACCEPT' => 'application/json' }
+      post "/sign_in", params: { email: @my_user.email, password: @my_user.password }, headers: headers
+
+      auth_token = JSON.parse(response.body)["auth_token"]
+      @headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{auth_token}" }
+
+    end
+
+    context "when group exists" do
+
+      it "returns posts by users" do
+
+        u1 = create(:user)
+        u2 = create(:user)
+        group.users = [u1, u2]
+        create(:post, user: u1)
+        create(:post, user: u1)
+        create(:post, user: u2)
+
+        get "/groups/#{group.id}/posts", headers: @headers
+
+        expect(response).to have_http_status(:success)
+
+        expect(json_response["feed_items"].size).to eq(3)
       end
     end
   end

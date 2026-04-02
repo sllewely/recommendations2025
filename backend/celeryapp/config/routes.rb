@@ -19,7 +19,12 @@ Rails.application.routes.draw do
   resources :posts
   resources :rsvps
   resources :users, only: [:index, :show, :update]
-  resources :groups, only: [:index, :show]
+  resources :groups, only: [:index, :show] do
+    member do
+      post 'join'
+      get "posts"
+    end
+  end
   resources :friendships do
     collection do
       get 'friends_map'

@@ -7,9 +7,11 @@ export async function load({ cookies, params }) {
 	const group_id = params.id;
 
 	let group_response = await api.get(`groups/` + group_id, jwt);
+	let group_posts_response = await api.get(`groups/` + group_id + "/posts", jwt);
 
 	return {
 		group: group_response["res"],
+		feed_items: group_posts_response["res"]["feed_items"],
 	};
 }
 

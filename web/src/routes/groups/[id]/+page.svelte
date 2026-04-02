@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Group } from "$lib/api_calls/types";
+	import type { Group, Feedable } from "$lib/api_calls/types";
 	import UserCard from "$lib/components/users/UserCard.svelte";
 	import * as Collapsible from "$lib/components/ui/collapsible";
 	import Link from "$lib/components/text/Link.svelte";
@@ -8,12 +8,16 @@
 	import { enhance } from "$app/forms";
 	import { newToast, ToastType } from "$lib/state/toast.svelte";
 	import { current_user, isSignedIn } from "$lib/state/current_user.svelte";
+	import FeedItem from "$lib/components/posts/FeedItem.svelte";
 
 	interface Props {
 		data: {
 			group: Group;
+			feed_items: Feedable[];
 		};
 	}
+
+	// TODO: pagination
 
 	let { data }: Props = $props();
 
@@ -72,4 +76,10 @@
 	</Collapsible.Root>
 
 	<h2>Posts</h2>
+
+	<div>
+		{#each data.feed_items as feed_item}
+			<FeedItem feed_item={feed_item.feedable} />
+		{/each}
+	</div>
 </div>

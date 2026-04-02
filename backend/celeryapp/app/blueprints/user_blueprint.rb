@@ -23,6 +23,9 @@ class UserBlueprint < Blueprinter::Base
     # field :tags do |user|
     #   user.tags.pluck(:tag)
     # end
+    field :groups do |user, options|
+      user.groups
+    end
   end
 
   view :self do

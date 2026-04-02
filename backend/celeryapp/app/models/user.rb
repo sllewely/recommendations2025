@@ -15,7 +15,8 @@ class User < ApplicationRecord
   has_many :user_tags
   has_many :tags, through: :user_tags
   has_many :user_statuses, dependent: :destroy
-  has_many :groups, through: :user_groups
+  has_many :group_users, dependent: :destroy
+  has_many :groups, through: :group_users
   has_many :web_push_registrations
   has_many :circles
 

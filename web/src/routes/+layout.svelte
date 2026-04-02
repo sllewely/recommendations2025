@@ -18,6 +18,7 @@
 	if (data.calendar_url) {
 		global.calendarUrl = data.calendar_url;
 	}
+	global.groups = data.groups;
 
 	onMount(() => {});
 

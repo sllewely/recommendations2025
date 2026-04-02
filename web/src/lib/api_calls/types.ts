@@ -10,6 +10,12 @@ export interface ApiResponse<T = unknown> {
 	message?: string;
 }
 
+export type CurrentUser = {
+	auth_token: string;
+	id: string;
+	groups: Group[];
+};
+
 export interface PostsResponse {
 	feed_items: Feedable[];
 	pagy: unknown;
@@ -60,6 +66,7 @@ export interface User {
 	blurb: string;
 	presigned_url: string;
 	profile_photo_url?: string;
+	groups: Group[];
 }
 
 export interface Event {

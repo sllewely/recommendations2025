@@ -22,6 +22,7 @@ Rails.application.routes.draw do
   resources :groups, only: [:index, :show] do
     member do
       post 'join'
+      get "posts"
     end
   end
   resources :friendships do

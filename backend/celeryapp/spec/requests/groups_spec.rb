@@ -84,7 +84,7 @@ RSpec.describe "Groups", type: :request do
     end
   end
 
-  describe "GET /groups/:id/join" do
+  describe "POST /groups/:id/join" do
     let!(:group) { create(:group) }
 
     before(:all) do
@@ -126,6 +126,40 @@ RSpec.describe "Groups", type: :request do
         post "/groups/0/join", headers: @headers
 
         expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
+
+  describe "GET /groups/:id/posts" do
+    let!(:group) { create(:group) }
+
+    before(:all) do
+      @my_user = create(:user)
+
+      headers = { 'ACCEPT' => 'application/json' }
+      post "/sign_in", params: { email: @my_user.email, password: @my_user.password }, headers: headers
+
+      auth_token = JSON.parse(response.body)["auth_token"]
+      @headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{auth_token}" }
+
+    end
+
+    context "when group exists" do
+
+      it "returns posts by users" do
+
+        u1 = create(:user)
+        u2 = create(:user)
+        group.users = [u1, u2]
+        create(:post, user: u1)
+        create(:post, user: u1)
+        create(:post, user: u2)
+
+        get "/groups/#{group.id}/posts", headers: @headers
+
+        expect(response).to have_http_status(:success)
+
+        expect(json_response["feed_items"].size).to eq(3)
       end
     end
   end

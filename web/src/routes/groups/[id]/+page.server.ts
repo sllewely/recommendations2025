@@ -12,3 +12,15 @@ export async function load({ cookies, params }) {
 		group: group_response["res"],
 	};
 }
+
+export const actions = {
+	join: async ({ cookies, request }) => {
+		const data = await request.formData();
+
+		const jwt = cookies.get("jwt");
+
+		const response = await api.post("groups/" + data.get("group_id") + "/join", {}, jwt);
+
+		return response;
+	},
+};

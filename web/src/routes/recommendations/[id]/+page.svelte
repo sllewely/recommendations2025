@@ -17,18 +17,9 @@
 
 	let { data }: Props = $props();
 
-	// Svelte pitfall.  Page updates are not triggered by load data prop change!!
-	// This is the workaround
-	let recommendation = $state(data.recommendation);
-	$effect(() => {
-		recommendation = data.recommendation;
-	});
+	let comments = $derived(data.recommendation.comments);
 
-	let comments = $derived(recommendation.comments);
-
-	let num_comments = $derived(comments.length);
-
-	const localizedCreateTime = parseAbsoluteToLocal(recommendation.created_at);
+	const localizedCreateTime = parseAbsoluteToLocal(data.recommendation.created_at);
 	const formattedCreateTime = new Intl.DateTimeFormat("en-US", {
 		dateStyle: "medium",
 		timeStyle: "short",
@@ -37,27 +28,39 @@
 </script>
 
 <div>
-	{#if data.my_user_id.toString() === recommendation.user.id.toString()}
+	{#if data.my_user_id.toString() === data.recommendation.user.id.toString()}
 		<div class="float-right relative">
-			<LinkButton url="/recommendations/{recommendation.id}/edit">Edit</LinkButton>
-			<LinkButton url="/recommendations/{recommendation.id}/delete">Delete</LinkButton>
+			<LinkButton url="/recommendations/{data.recommendation.id}/edit">Edit</LinkButton>
+			<LinkButton url="/recommendations/{data.recommendation.id}/delete">Delete</LinkButton>
 		</div>
 	{/if}
-	<H2>{recommendation.user.name}'s recommendation</H2>
-	<Card>
-		<H1>{recommendation.title}</H1>
-		<p>{recommendation.media_type}</p>
-		<p>{recommendation.notes}</p>
-		{#if recommendation.who_recommended}
-			<p>Who recommended? {recommendation.who_recommended}</p>
-		{/if}
-		<p>Added: {formattedCreateTime}</p>
-		{#if recommendation.url}
-			<Link url={recommendation.url}>{recommendation.url}</Link>
-		{/if}
-	</Card>
-
 	<div>
-		<Commentable feed_item={recommendation} {comments} />
+		<div class="flex flex-row justify-between">
+			<div>
+				<span class="font-bold">
+					<Link url="/users/{data.recommendation.user.id}">{data.recommendation.user.name}</Link>
+				</span>'s recommendation
+			</div>
+			<div>
+				<span class="text-sm">posted at {formattedCreateTime}</span>
+			</div>
+		</div>
+		<Card>
+			<H1>{data.recommendation.title}</H1>
+			<p>{data.recommendation.media_type}</p>
+			<p>{data.recommendation.notes}</p>
+			{#if data.recommendation.who_recommended}
+				<p>Who recommended? {data.recommendation.who_recommended}</p>
+			{/if}
+			<p class="truncate">
+				{#if data.recommendation.url}
+					<Link url={data.recommendation.url}>{data.recommendation.url}</Link>
+				{/if}
+			</p>
+		</Card>
+
+		<div>
+			<Commentable feed_item={data.recommendation} comments={data.recommendation.comments} />
+		</div>
 	</div>
 </div>

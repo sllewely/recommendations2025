@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from "$app/forms";
-	import Card from "$lib/components/Card.svelte";
+	import * as Card from "$lib/components/ui/card/index.js";
 	import Link from "$lib/components/text/Link.svelte";
 	import H2 from "$lib/components/text/H2.svelte";
 	import PlusCircle from "$lib/components/posts/PlusCircle.svelte";
@@ -64,13 +64,24 @@
 		{/if}
 		<div class="p-2">
 			<a href="/recommendations/{feed_item.id}">
-				<Card {border_color} hover_color="hover:bg-yellow-100">
-					<p>{feed_item.media_type}</p>
-					<H2>{feed_item.title}</H2>
-					{#if feed_item.notes}
-						<p>{feed_item.notes}</p>
-					{/if}
-				</Card>
+				<Card.Root
+					class="border-yellow-500 hover:bg-yellow-100 border-2 dark:hover:bg-yellow-950 dark:bg-gray-900 dark:text-gray-200"
+				>
+					<Card.Header>
+						<Card.Title>{feed_item.title}</Card.Title>
+					</Card.Header>
+					<Card.Content>
+						<p>{feed_item.media_type}</p>
+						{#if feed_item.notes}
+							<p>{feed_item.notes}</p>
+						{/if}
+						{#if feed_item.url}
+							<p class="truncate">
+								<Link url={feed_item.url}>{feed_item.url}</Link>
+							</p>
+						{/if}
+					</Card.Content>
+				</Card.Root>
 			</a>
 		</div>
 	</div>

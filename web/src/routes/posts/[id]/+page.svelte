@@ -57,15 +57,11 @@
 	{/if}
 	<div>
 		<div class="flex flex-row justify-between">
-			<!--        <svelte:boundary>-->
 			<div>
 				<span class="font-bold">
-					<!-- I just broke this for the feed TODO SARAH -->
 					<Link url="/users/{data.post.user.id}">{data.post.user.name}</Link>
 				</span>'s post
 			</div>
-			<!--        <div><span class="font-bold"><a class="text-teal-400 hover:text-orange-400" href="/users/{data.event.creator_id}">{data.event.creator_name}</a></span> posted an upcoming event</div>-->
-			<!--        </svelte:boundary>-->
 			<div>
 				<span class="text-sm">posted at {formattedCreateTime}</span>
 			</div>

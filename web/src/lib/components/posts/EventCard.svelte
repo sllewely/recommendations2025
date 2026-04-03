@@ -83,22 +83,22 @@
 							<p>at {feed_item.address}</p>
 						{/if}
 					</div>
-					<div class="flex flex-row justify-between">
-						<div>
-							<RsvpBadge rsvp={current_user_rsvp} />
-						</div>
-						{#if feed_item.url}
+					{#if feed_item.url}
+						<p class="truncate">
 							<Tooltip.Provider>
 								<Tooltip.Root>
 									<Tooltip.Trigger>
-										<Link url={feed_item.url}>link</Link>
+										<Link url={feed_item.url}>{feed_item.url}</Link>
 									</Tooltip.Trigger>
 									<Tooltip.Content>
 										<p>{feed_item.url}</p>
 									</Tooltip.Content>
 								</Tooltip.Root>
 							</Tooltip.Provider>
-						{/if}
+						</p>
+					{/if}
+					<div>
+						<RsvpBadge rsvp={current_user_rsvp} />
 					</div>
 				</Card.Content>
 			</Card.Root>

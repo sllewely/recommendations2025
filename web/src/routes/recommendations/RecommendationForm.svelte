@@ -6,6 +6,7 @@
 	import { Label } from "$lib/components/ui/label";
 	import { Button } from "$lib/components/ui/button";
 	import { Textarea } from "$lib/components/ui/textarea";
+	import { goto } from "$app/navigation";
 
 	import { MediaType, RecommendationStatus } from "$lib/enums";
 	import { current_user } from "$lib/state/current_user.svelte.js";

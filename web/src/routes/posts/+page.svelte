@@ -13,7 +13,7 @@
 	import ShouldShowNotificationSubscribeButtonCard from "$lib/components/notifications/push/ShouldShowNotificationSubscribeButtonCard.svelte";
 	import EventCard from "$lib/components/posts/EventCard.svelte";
 	import * as Collapsible from "$lib/components/ui/collapsible";
-	import { CalendarDays, NotebookPen } from "lucide-svelte";
+	import { CalendarDays, CalendarPlus, NotebookPen } from "lucide-svelte";
 
 	let { data }: PageProps = $props();
 
@@ -79,8 +79,24 @@
 	});
 </script>
 
-<div id="top_detector">
+<div>
 	<ShouldShowNotificationSubscribeButtonCard />
+	<div>
+		<div class="flex flex-row gap-2 items-center justify-center">
+			<Button href="/posts/create" class={buttonVariants({ variant: "post" })}>
+				<NotebookPen />
+				Post
+			</Button>
+			<Button href="/events/create" class={buttonVariants({ variant: "event" })}>
+				<CalendarPlus />
+				Event
+			</Button>
+			<Button href="/recommendations/create" class={buttonVariants({ variant: "recommendation" })}>
+				<MessageCircleHeart />
+				Recommendation
+			</Button>
+		</div>
+	</div>
 	<div
 		class="flex justify-center p-2 mb-2 font-bold border-gray-800 rounded-sm bg-lime-200 border-1"
 	>
@@ -118,17 +134,6 @@
 		<div class="flex flex-col col-span-2">
 			<H1>Posts</H1>
 
-			<div class="flex justify-center pt-2 pb-2 space-x-2">
-				<Button href="/posts/create" class={buttonVariants({ variant: "post" })}>
-					<MessageSquareText /> &nbsp; New post
-				</Button>
-				<Button
-					href="/recommendations/create"
-					class={buttonVariants({ variant: "recommendation" })}
-				>
-					<MessageCircleHeart /> &nbsp; Share a recommendation
-				</Button>
-			</div>
 			{#if feed_items.length === 0}
 				<div
 					class="flex justify-center p-2 mb-2 font-bold border-gray-800 rounded-sm bg-lime-200 border-1"
@@ -157,11 +162,6 @@
 		<div class="flex flex-col pl-2">
 			<H1>Calendar</H1>
 
-			<div class="flex justify-center pt-2 pb-2">
-				<Button href="/events/create" class={buttonVariants({ variant: "event" })}>
-					<CalendarPlus2 /> &nbsp; Create event
-				</Button>
-			</div>
 			{#if events_and_date_headers.length === 0}
 				<div
 					class="flex justify-center p-2 mb-2 font-bold border-gray-800 rounded-sm bg-lime-200 border-1 dark:text-gray-900"
@@ -188,17 +188,6 @@
 			<div class="flex flex-col">
 				<H1>Posts</H1>
 
-				<div class="flex justify-center pt-2 pb-2 space-x-2">
-					<Button href="/posts/create" class={buttonVariants({ variant: "post" })}>
-						<MessageSquareText /> &nbsp; New post
-					</Button>
-					<Button
-						href="/recommendations/create"
-						class={buttonVariants({ variant: "recommendation" })}
-					>
-						<MessageCircleHeart /> &nbsp; Share a recommendation
-					</Button>
-				</div>
 				{#if feed_items.length === 0}
 					<div
 						class="flex justify-center p-2 mb-2 font-bold border-gray-800 rounded-sm bg-lime-200 border-1"
@@ -228,11 +217,6 @@
 			<div class="flex flex-col">
 				<H1>Calendar</H1>
 
-				<div class="flex justify-center pt-2 pb-2">
-					<Button href="/events/create" class={buttonVariants({ variant: "event" })}>
-						<CalendarPlus2 /> &nbsp; Create event
-					</Button>
-				</div>
 				{#if events_and_date_headers.length === 0}
 					<div
 						class="flex justify-center p-2 mb-2 font-bold border-gray-800 rounded-sm bg-lime-200 border-1 dark:text-gray-900"

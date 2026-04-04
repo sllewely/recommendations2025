@@ -122,7 +122,7 @@
 		</div>
 
 		<!-- Mobile right side: hamburger menu -->
-		<div class="md:hidden flex items-center pr-4">
+		<div class="md:hidden flex items-center pr-4 gap-2">
 			<a href="" onclick={reloadPage}>
 				<RotateCw class="text-gray-400 hover:text-orange-400" size={24} />
 			</a>

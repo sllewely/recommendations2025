@@ -1,5 +1,7 @@
 class PostsController < ApplicationController
 
+  skip_before_action :authenticate, only: [:rss]
+
   def index
     user_id = params[:user_id]
 
@@ -15,6 +17,20 @@ class PostsController < ApplicationController
       feed_items: FeedItemBlueprint.render_as_hash(@feed_items, current_user: current_user),
       pagy: @pagy,
     }, status: :ok
+  end
+
+  def rss
+    # get rss api key
+    current_user = User.find_by(rss_api_key: params[:rss_api_key])
+
+    feed = FeedItem.by_friends(current_user.friend_ids).includes(feedable: [event: [:user, comments: [:user]], post: [:user, comments: [:user]], recommendation: [:user, comments: [:user]]]).order(created_at: :desc)
+    feed = feed.where(user_id: current_user.id)
+    feed = feed
+
+    # limit to latest 30
+    # use rss gem https://github.com/ruby/rss
+
+    render xml: FeedItemBlueprint.render_as_xml(feed, current_user: current_user), status: :ok
   end
 
   def show

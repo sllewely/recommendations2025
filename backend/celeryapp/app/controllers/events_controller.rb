@@ -2,7 +2,6 @@ class EventsController < ApplicationController
 
   def index
     @events = Event
-                .by_friends(current_user.friend_ids)
                 .public_events
                 .includes(:user, rsvps: :user, comments: :user)
                 .upcoming.order(start_date_time: :asc)

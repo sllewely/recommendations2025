@@ -253,6 +253,7 @@ GEM
       io-console (~> 0.5)
     resend (1.0.0)
       httparty (>= 0.21.0)
+    rexml (3.4.4)
     rspec-core (3.13.6)
       rspec-support (~> 3.13.0)
     rspec-expectations (3.13.5)
@@ -270,6 +271,8 @@ GEM
       rspec-mocks (~> 3.13)
       rspec-support (~> 3.13)
     rspec-support (3.13.6)
+    rss (0.3.2)
+      rexml
     securerandom (0.4.1)
     stringio (3.1.8)
     thor (1.4.0)
@@ -315,6 +318,7 @@ DEPENDENCIES
   rails (~> 8.0)
   resend
   rspec-rails
+  rss
   tzinfo-data
   web-push
   whenever

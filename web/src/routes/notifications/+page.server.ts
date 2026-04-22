@@ -6,9 +6,12 @@ export async function load({ cookies }) {
 
 	const notifications: ApiResponse<NotificationResponse> = await api.get("notifications", jwt);
 
+	const friend_requests_response = await api.get("friend_requests", jwt);
+
 	return {
 		notifications: notifications["res"]["notifications"],
 		pagy: notifications["res"]["pagy"],
+		friend_requests: friend_requests_response["res"]["incoming_friend_requests"],
 	};
 }
 

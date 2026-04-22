@@ -9,6 +9,7 @@
 	import { friends_map, fetch_friends_map } from "$lib/state/friends_map.svelte";
 	import { parseAbsoluteToLocal } from "@internationalized/date";
 	import type { PendingFriendRequest } from "$lib/api_calls/types";
+	import UserCard from "$lib/components/users/UserCard.svelte";
 
 	interface Props {
 		pending_friend_request: PendingFriendRequest;
@@ -27,10 +28,8 @@
 
 <div class="p-4 border-1 border-gray-200 rounded-sm flex flex-row gap-4">
 	<div class="flex flex-row justify-between w-100% grow">
+		<UserCard user={pending_friend_request.incoming_friend} />
 		<div>
-			<Link url="/users/{pending_friend_request['incoming_friend']['id']}">
-				<p>{pending_friend_request.incoming_friend.name}</p>
-			</Link>
 			<p>{pending_friend_request.message}</p>
 		</div>
 		<div class="text-sm">{formattedCreateTime}</div>

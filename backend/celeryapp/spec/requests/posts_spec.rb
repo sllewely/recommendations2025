@@ -209,6 +209,52 @@ RSpec.describe "Posts", type: :request do
 
   end
 
+  describe "GET /rss" do
+    before(:context) do
+      @my_user = create(:user)
+
+      headers = { 'ACCEPT' => 'application/json' }
+      post "/sign_in", params: { email: @my_user.email, password: @my_user.password }, headers: headers
+
+      auth_token = JSON.parse(response.body)["auth_token"]
+      @headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{auth_token}" }
+
+      @friend = create(:user)
+      Friendship.create_bidirectional_friendship!(@my_user, @friend)
+    end
+
+    it 'gets all posts' do
+      3.times do
+        create(:post, user: @friend)
+      end
+      post1 = create(:post, user: @friend)
+      get "/rss?rss_api_key=" + @my_user.rss_api_key, headers: @headers
+
+      expect(response).to have_http_status(:ok)
+
+      expect(response.body).to_not be_nil
+      expect(response.body).to include("<title>#{CGI.escapeHTML(post1.content.lines.first)}</title>")
+      expect(response.body).to include("<summary>#{CGI.escapeHTML(post1.content)}</summary>")
+    end
+
+    it 'gets recommendations, events, posts' do
+      post1 = create(:post, user: @friend)
+      event1 = create(:event, user: @friend)
+      recommendation1 = create(:recommendation, user: @friend)
+      get "/rss?rss_api_key=" + @my_user.rss_api_key, headers: @headers
+
+      expect(response).to have_http_status(:ok)
+
+      expect(response.body).to_not be_nil
+      expect(response.body).to include("<title>#{CGI.escapeHTML(post1.content.lines.first)}</title>")
+      expect(response.body).to include("<summary>#{CGI.escapeHTML(post1.content)}</summary>")
+      expect(response.body).to include("<title>#{CGI.escapeHTML(event1.title)}</title>")
+      expect(response.body).to include("<summary>#{CGI.escapeHTML(event1.description)}</summary>")
+      expect(response.body).to include("<title>#{CGI.escapeHTML(recommendation1.title)}</title>")
+      expect(response.body).to include("<summary>#{CGI.escapeHTML(recommendation1.notes)}</summary>")
+    end
+  end
+
   describe "GET /posts/:id" do
     before(:context) do
       @my_user = create(:user)

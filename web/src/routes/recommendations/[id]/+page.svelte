@@ -7,6 +7,9 @@
 	import type { Recommendation, User } from "$lib/api_calls/types";
 	import { parseAbsoluteToLocal } from "@internationalized/date";
 	import Commentable from "$lib/components/posts/Commentable.svelte";
+	import { newToast, ToastType } from "$lib/state/toast.svelte";
+	import { goto } from "$app/navigation";
+	import { Button } from "$lib/components/ui/button";
 
 	interface Props {
 		data: {
@@ -25,13 +28,30 @@
 		timeStyle: "short",
 		timeZone: localizedCreateTime.timeZone,
 	}).format(localizedCreateTime.toDate());
+
+	let delete_recommendation = async () => {
+		const response = await fetch("/api/recommendations/delete", {
+			method: "POST",
+			body: JSON.stringify({ id: data.recommendation.id }),
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+		let res = await response.json();
+		if (res.success) {
+			newToast("Successfully deleted recommendation");
+			goto("/posts");
+		} else {
+			newToast("Error deleting a recommendation: " + res.message, ToastType.Error);
+		}
+	};
 </script>
 
 <div>
 	{#if data.my_user_id.toString() === data.recommendation.user.id.toString()}
 		<div class="float-right relative">
 			<LinkButton url="/recommendations/{data.recommendation.id}/edit">Edit</LinkButton>
-			<LinkButton url="/recommendations/{data.recommendation.id}/delete">Delete</LinkButton>
+			<Button onclick={delete_recommendation} variant="destructive">Delete</Button>
 		</div>
 	{/if}
 	<div>

@@ -53,6 +53,15 @@ class RecommendationsController < ApplicationController
     render json: RecommendationBlueprint.render(@recommendation), status: :created
   end
 
+  def destroy
+    @recommendation = current_user.recommendations.find_by(id: params[:id])
+    if @recommendation.nil?
+      render json: { error: "recommendation not found" }, status: :not_found and return
+    end
+    @recommendation.destroy
+    render json: nil, status: :no_content
+  end
+
   private
 
   def recommendation_params

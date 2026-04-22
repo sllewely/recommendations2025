@@ -12,7 +12,6 @@
 	import { Spinner } from "$lib/components/ui/spinner/index.js";
 	import ShouldShowNotificationSubscribeButtonCard from "$lib/components/notifications/push/ShouldShowNotificationSubscribeButtonCard.svelte";
 	import EventCard from "$lib/components/posts/EventCard.svelte";
-	import * as Collapsible from "$lib/components/ui/collapsible";
 	import { CalendarDays, CalendarPlus, NotebookPen } from "lucide-svelte";
 
 	let { data }: PageProps = $props();

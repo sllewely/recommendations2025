@@ -19,7 +19,7 @@ class UserBlueprint < Blueprinter::Base
   end
 
   view :authed do
-    fields :blurb, :username, :calendar_api_key
+    fields :blurb, :username, :calendar_api_key, :rss_api_key
     # field :tags do |user|
     #   user.tags.pluck(:tag)
     # end

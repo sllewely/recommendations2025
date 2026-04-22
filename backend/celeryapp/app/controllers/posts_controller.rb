@@ -18,8 +18,8 @@ class PostsController < ApplicationController
 
   def rss
     # get rss api key
-    current_user = User.find_by(rss_api_key: params[:rss_api_key])
-    render json: { error: "Invalid RSS API key" }, status: :unprocessable_content and return if current_user.nil?
+    user = User.find_by(rss_api_key: params[:rss_api_key])
+    render json: { error: "Invalid RSS API key" }, status: :unprocessable_content and return if user.nil?
 
     feed = feed_items.limit(30)
 

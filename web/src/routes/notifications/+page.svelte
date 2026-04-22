@@ -49,7 +49,7 @@
 	});
 </script>
 
-<div class="flex flex-col gap-4 p-4">
+<div class="flex flex-col gap-4">
 	{#if data.friend_requests.length > 0}
 		<span class="text-3xl">Friend Requests</span>
 

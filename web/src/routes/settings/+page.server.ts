@@ -5,6 +5,7 @@ import { profileFormSchema } from "./schema";
 import { zod } from "sveltekit-superforms/adapters";
 import { fail } from "@sveltejs/kit";
 import { withAuth, type ActionAuthContext, type LoadAuthContext } from "$lib/auth";
+import { VITE_API_URL } from "$env/static/private";
 
 export const load: PageServerLoad = withAuth(async ({ jwt, user_id }: LoadAuthContext) => {
 	let user = await getUser(user_id, jwt);
@@ -14,9 +15,11 @@ export const load: PageServerLoad = withAuth(async ({ jwt, user_id }: LoadAuthCo
 	if (user_obj) {
 		user_obj.string_tags = string_tags;
 	}
+	const rss_url = VITE_API_URL + "posts/rss?rss_api_key=" + user_obj.rss_api_key;
 
 	return {
 		user: user_obj,
+		rss_url: rss_url,
 		form: await superValidate(user_obj, zod(profileFormSchema)),
 	};
 });

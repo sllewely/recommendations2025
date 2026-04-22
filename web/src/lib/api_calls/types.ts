@@ -67,6 +67,7 @@ export interface User {
 	presigned_url: string;
 	profile_photo_url?: string;
 	groups: Group[];
+	rss_api_key?: string;
 }
 
 export interface Event {

@@ -227,134 +227,32 @@ RSpec.describe "Posts", type: :request do
       3.times do
         create(:post, user: @friend)
       end
+      post1 = create(:post, user: @friend)
       get "/rss?rss_api_key=" + @my_user.rss_api_key, headers: @headers
 
       expect(response).to have_http_status(:ok)
-      res = JSON.parse(response.body)
 
-      debugger
-      expect(res.size).to eq(2)
-      feed_items_res = res['feed_items']
-      expect(feed_items_res.size).to eq(3)
-      expect(feed_items_res.first["feedable"]['title']).to_not be_nil
-      expect(feed_items_res.first["feedable"]['content']).to_not be_nil
-      expect(feed_items_res.first["feedable"]['user']['id']).to_not be_nil
+      expect(response.body).to_not be_nil
+      expect(response.body).to include("<title>#{CGI.escapeHTML(post1.content.lines.first)}</title>")
+      expect(response.body).to include("<summary>#{CGI.escapeHTML(post1.content)}</summary>")
     end
 
-    # it 'wont show posts from my not-friend' do
-    #   user = create(:user)
-    #   3.times do
-    #     create(:post, user: user)
-    #   end
-    #   get "/posts", params: {}, headers: @headers
-    #
-    #   expect(response).to have_http_status(:ok)
-    #   res = JSON.parse(response.body)
-    #   expect(res.size).to eq(2)
-    #   feed_items_res = res['feed_items']
-    #   expect(feed_items_res.size).to eq(0)
-    # end
-    #
-    # it 'gets all posts and recommendations' do
-    #   create(:post, user: @friend)
-    #   create(:recommendation, user: @friend)
-    #   create(:post, user: @my_user)
-    #
-    #   get "/posts", params: {}, headers: @headers
-    #
-    #   expect(response).to have_http_status(:ok)
-    #   res = JSON.parse(response.body)
-    #   feed_items_res = res['feed_items']
-    #   expect(feed_items_res.size).to eq(3)
-    #   expect(feed_items_res.first["feedable"]['title']).to_not be_nil
-    #   expect(feed_items_res.first["feedable"]['content']).to_not be_nil
-    #   expect(feed_items_res.first["feedable"]['user']['id']).to_not be_nil
-    #   expect(feed_items_res[1]["feedable"]['title']).to_not be_nil
-    #   expect(feed_items_res[1]["feedable"]['status']).to eq("interested")
-    # end
-    #
-    # it 'gets all posts, recommendations, and events' do
-    #   create(:post, user: @friend)
-    #   create(:recommendation, user: @friend)
-    #   create(:event, user: @friend)
-    #   create(:post, user: @my_user)
-    #
-    #   get "/posts", params: {}, headers: @headers
-    #
-    #   expect(response).to have_http_status(:ok)
-    #   res = JSON.parse(response.body)
-    #   feed_items_res = res['feed_items']
-    #   expect(feed_items_res.size).to eq(4)
-    #   expect(feed_items_res.first["feedable"]['title']).to_not be_nil
-    #   expect(feed_items_res.first["feedable"]['content']).to_not be_nil
-    #   expect(feed_items_res.first["feedable"]['user']['id']).to_not be_nil
-    #   expect(feed_items_res[2]["feedable"]['title']).to_not be_nil
-    #   expect(feed_items_res[2]["feedable"]['status']).to eq("interested")
-    # end
-    #
-    # it 'gets events' do
-    #   create(:event, user: @friend)
-    #   create(:event, user: @my_user)
-    #
-    #   get "/posts", params: {}, headers: @headers
-    #
-    #   expect(response).to have_http_status(:ok)
-    #   res = JSON.parse(response.body)
-    #   feed_items_res = res['feed_items']
-    #   expect(feed_items_res.size).to eq(2)
-    #   first_post = feed_items_res[0]["feedable"]
-    #   expect(first_post['title']).to_not be_nil
-    #   expect(first_post['description']).to_not be_nil
-    #   expect(first_post['user_id']).to_not be_nil
-    #   expect(first_post['address']).to_not be_nil
-    #   expect(first_post['url']).to_not be_nil
-    #   expect(first_post['start_date_time']).to_not be_nil
-    #   expect(first_post['user']['name']).to_not be_nil
-    #   expect(first_post['class_name']).to eq('Event')
-    # end
-    #
-    # it 'gets posts with comments' do
-    #   post1 = create(:post, user: @friend)
-    #   create(:comment, :for_post, commentable: post1, user: @my_user)
-    #   create(:comment, :for_post, commentable: post1, user: @friend)
-    #
-    #   get "/posts", params: {}, headers: @headers
-    #
-    #   expect(response).to have_http_status(:ok)
-    #   res = JSON.parse(response.body)
-    #   feed_items_res = res['feed_items']
-    #   expect(feed_items_res.size).to eq(1)
-    #   expect(feed_items_res[0]["feedable"]['comments'].size).to eq(2)
-    #   expect(feed_items_res[0]["feedable"]['comments'][0]['body']).to_not be_nil
-    # end
-    #
-    # it 'paginates' do
-    #   create(:post, user: @friend)
-    #   create(:recommendation, user: @friend)
-    #   create(:post, user: @my_user)
-    #   create(:post, user: @friend)
-    #   create(:post, user: @friend)
-    #   create(:event, user: @friend)
-    #   15.times do
-    #     create(:post, user: @friend)
-    #     create(:event, user: @friend)
-    #   end
-    #
-    #   get "/posts", params: {}, headers: @headers
-    #
-    #   expect(response).to have_http_status(:ok)
-    #   res = JSON.parse(response.body)
-    #   feed_items_res = res['feed_items']
-    #   expect(feed_items_res.size).to eq(30)
-    #   expect(res['pagy']['next']).to eq(2)
-    #
-    #   get "/posts?page=2", params: {}, headers: @headers
-    #   expect(response).to have_http_status(:ok)
-    #   res = JSON.parse(response.body)
-    #   feed_items_res = res['feed_items']
-    #   expect(feed_items_res.size).to eq(6)
-    # end
+    it 'gets recommendations, events, posts' do
+      post1 = create(:post, user: @friend)
+      event1 = create(:event, user: @friend)
+      recommendation1 = create(:recommendation, user: @friend)
+      get "/rss?rss_api_key=" + @my_user.rss_api_key, headers: @headers
 
+      expect(response).to have_http_status(:ok)
+
+      expect(response.body).to_not be_nil
+      expect(response.body).to include("<title>#{CGI.escapeHTML(post1.content.lines.first)}</title>")
+      expect(response.body).to include("<summary>#{CGI.escapeHTML(post1.content)}</summary>")
+      expect(response.body).to include("<title>#{CGI.escapeHTML(event1.title)}</title>")
+      expect(response.body).to include("<summary>#{CGI.escapeHTML(event1.description)}</summary>")
+      expect(response.body).to include("<title>#{CGI.escapeHTML(recommendation1.title)}</title>")
+      expect(response.body).to include("<summary>#{CGI.escapeHTML(recommendation1.notes)}</summary>")
+    end
   end
 
   describe "GET /posts/:id" do

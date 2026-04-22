@@ -5,11 +5,8 @@ class PostsController < ApplicationController
   def index
     user_id = params[:user_id]
 
-    feed = FeedItem
-             .includes(feedable: [event: [:user, comments: [:user]], post: [:user, comments: [:user]], recommendation: [:user, comments: [:user]]])
-             .order(created_at: :desc)
+    feed = feed_items
     feed = feed.where(user_id: user_id) if user_id
-    feed = feed
 
     # TODO: privacy
     @pagy, @feed_items = pagy(feed, limit: 30)
@@ -22,15 +19,41 @@ class PostsController < ApplicationController
   def rss
     # get rss api key
     current_user = User.find_by(rss_api_key: params[:rss_api_key])
+    render json: { error: "Invalid RSS API key" }, status: :unprocessable_content and return if current_user.nil?
 
-    feed = FeedItem.by_friends(current_user.friend_ids).includes(feedable: [event: [:user, comments: [:user]], post: [:user, comments: [:user]], recommendation: [:user, comments: [:user]]]).order(created_at: :desc)
-    feed = feed.where(user_id: current_user.id)
-    feed = feed
+    feed = feed_items.limit(30)
+
+    base_url = Rails.env == "production" ? "https://bumblebeans.social" : "http://localhost:5173"
 
     # limit to latest 30
     # use rss gem https://github.com/ruby/rss
+    rss = RSS::Maker.make("atom") do |maker|
+      maker.channel.author = "celery"
+      maker.channel.updated = Time.now.to_s
+      maker.channel.about = "https://bumblebeans.social/posts/rss.rss"
+      maker.channel.title = "Bumblebeans Social"
 
-    render xml: FeedItemBlueprint.render_as_xml(feed, current_user: current_user), status: :ok
+      feed.each do |feed_item|
+        maker.items.new_item do |item|
+          item.link = "#{base_url}/#{feed_item.feedable_type.downcase.pluralize}/#{feed_item.feedable_id}"
+          case feed_item.feedable_type
+          when "Event"
+            item.title = feed_item.feedable.title
+            item.summary = feed_item.feedable.description
+          when "Recommendation"
+            item.title = feed_item.feedable.title
+            item.summary = feed_item.feedable.notes
+          when "Post"
+            item.title = feed_item.feedable.content.lines.first
+            item.summary = feed_item.feedable.content
+          end
+
+          item.updated = feed_item.feedable.updated_at.to_s
+        end
+      end
+    end
+
+    render xml: rss.to_s, status: :ok
   end
 
   def show
@@ -97,6 +120,12 @@ class PostsController < ApplicationController
   end
 
   private
+
+  def feed_items
+    FeedItem
+      .includes(feedable: [event: [:user, comments: [:user]], post: [:user, comments: [:user]], recommendation: [:user, comments: [:user]]])
+      .order(created_at: :desc)
+  end
 
   def post_params
     params.permit(:title, :content)

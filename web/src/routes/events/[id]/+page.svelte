@@ -44,7 +44,7 @@
 	})();
 
 	let delete_event = async () => {
-		const response = await fetch("/api/delete_event", {
+		const response = await fetch("/api/events/delete", {
 			method: "POST",
 			body: JSON.stringify({ id: data.event.id }),
 			headers: {

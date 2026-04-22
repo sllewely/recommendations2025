@@ -16,8 +16,8 @@ Rails.application.routes.draw do
   resources :events
   resources :community_events
   resources :recommendations
+  get "posts/rss", to: "posts#rss", defaults: { format: "rss" }
   resources :posts
-  get "rss", to: "posts#rss", defaults: { format: "rss" }
   resources :rsvps
   resources :users, only: [:index, :show, :update]
   resources :groups, only: [:index, :show] do

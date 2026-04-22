@@ -5,6 +5,7 @@
 	import { buttonVariants } from "$lib/components/ui/button/index.js";
 	import { ClipboardCheck, ClipboardPlus } from "lucide-svelte";
 	import { global } from "$lib/state/global.svelte";
+	import CalendarCopy from "$lib/CalendarCopy.svelte";
 
 	let { data, form } = $props();
 
@@ -23,7 +24,7 @@
 	</div>
 	<Collapsible.Root class="w-full">
 		<Collapsible.Trigger class={buttonVariants({ variant: "secondary", size: "lg", class: "" })}>
-			Show RSS API key
+			Show RSS API key url
 		</Collapsible.Trigger>
 		<Collapsible.Content class="w-full">
 			<div class="flex flex-row justify-between border-1 p-2">

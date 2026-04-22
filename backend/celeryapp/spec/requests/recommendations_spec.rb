@@ -196,4 +196,36 @@ RSpec.describe "Recommendations", type: :request do
 
   end
 
+  describe 'DESTROY /recommendations/:id' do
+    before(:all) do
+      @my_user = create(:user)
+
+      headers = { 'ACCEPT' => 'application/json' }
+      post "/sign_in", params: { email: @my_user.email, password: @my_user.password }, headers: headers
+
+      auth_token = JSON.parse(response.body)["auth_token"]
+      @headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{auth_token}" }
+    end
+
+    it 'deletes my recommendation' do
+      rec = create(:recommendation, user: @my_user)
+
+      delete "/recommendations/#{rec.id}", headers: @headers
+
+      expect(response).to have_http_status(:no_content)
+      deleted_rec = Recommendation.find_by(id: rec.id)
+      expect(deleted_rec).to be_nil
+    end
+
+    it 'cannot delete someone elses recommendation' do
+      rec = create(:recommendation)
+
+      delete "/recommendations/#{rec.id}", headers: @headers
+
+      expect(response).to have_http_status(:not_found)
+      deleted_rec = Recommendation.find_by(id: rec.id)
+      expect(deleted_rec).to_not be_nil
+    end
+  end
+
 end

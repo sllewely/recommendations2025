@@ -1,6 +1,7 @@
 <script lang="ts">
-	import type { Notification, Pagy } from "$lib/api_calls/types";
+	import type { Notification, Pagy, PendingFriendRequest } from "$lib/api_calls/types";
 	import * as Item from "$lib/components/ui/item/index.js";
+	import PendingFriendRequestComponent from "$lib/components/users/PendingFriendRequest.svelte";
 
 	import NotificationItem from "$lib/components/notifications/NotificationItem.svelte";
 	import { onMount } from "svelte";
@@ -10,6 +11,7 @@
 		data: {
 			notifications: Notification[];
 			pagy: Pagy;
+			friend_requests: PendingFriendRequest[];
 		};
 	}
 
@@ -47,8 +49,18 @@
 	});
 </script>
 
-<div>
-	<span>this page is a work in progress!! lmk what notif features you want</span>
+<div class="flex flex-col gap-4 p-4">
+	{#if data.friend_requests.length > 0}
+		<span class="text-3xl">Friend Requests</span>
+
+		<div class="flex flex-col gap-2">
+			{#each data.friend_requests as pending_friend_request}
+				<PendingFriendRequestComponent {pending_friend_request} />
+			{/each}
+		</div>
+	{/if}
+
+	<span class="text-3xl">Notifications</span>
 	<Item.Group>
 		{#each data.notifications as notification}
 			<NotificationItem {notification} />

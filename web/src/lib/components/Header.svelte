@@ -5,6 +5,7 @@
 	import { Settings, Menu, X, BellRing, Bell, RotateCw } from "@lucide/svelte";
 	import bblogo from "$lib/assets/android-launchericon-72-72.png";
 	import { onMount } from "svelte";
+	import { User } from "lucide-svelte";
 
 	let mobileMenuOpen = $state(false);
 	let hasNotifications = $state(false);
@@ -91,12 +92,16 @@
 			<a class="font-semibold text-gray-400 hover:text-orange-400" href="/bug_report"
 				>Report a bug</a
 			>
-			<span>|</span>
 			{#if isSignedIn()}
+				<a
+					href="/users/{current_user.id}"
+					class="font-semibold text-gray-400 hover:text-orange-400"
+				>
+					<User />
+				</a>
 				<a class="font-semibold text-gray-400 hover:text-orange-400" href="/settings">
 					<Settings />
 				</a>
-				<span>|</span>
 				{#if hasNotifications}
 					<a class="font-semibold text-red-600 hover:text-orange-400" href="/notifications">
 						<BellRing />
@@ -106,7 +111,6 @@
 						<Bell />
 					</a>
 				{/if}
-				<span>|</span>
 				<button
 					type="button"
 					class="cursor-pointer font-semibold text-gray-400 hover:text-orange-400"

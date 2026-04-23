@@ -10,6 +10,8 @@
 	import { parseAbsoluteToLocal } from "@internationalized/date";
 	import type { PendingFriendRequest } from "$lib/api_calls/types";
 	import UserCard from "$lib/components/users/UserCard.svelte";
+	import { Button } from "$lib/components/ui/button";
+	import { Spinner } from "$lib/components/ui/spinner";
 
 	interface Props {
 		pending_friend_request: PendingFriendRequest;
@@ -41,6 +43,7 @@
 			action="?/accept_friend_request"
 			use:enhance={() => {
 				updating = true;
+
 				return async ({ update, result }) => {
 					await update();
 					updating = false;
@@ -56,7 +59,16 @@
 			}}
 		>
 			<input type="hidden" name="user_id" value={pending_friend_request["incoming_friend"]["id"]} />
-			<FormButton>Accept friend request</FormButton>
+			<Button
+				type="submit"
+				class="bg-transparent hover:bg-orange-500 text-teal-700 font-semibold hover:text-white py-2 px-4 border border-teal-500 hover:border-transparent rounded"
+				disabled={updating}
+			>
+				{#if updating}
+					<Spinner />
+				{/if}
+				Accept friend request
+			</Button>
 		</form>
 	</div>
 </div>

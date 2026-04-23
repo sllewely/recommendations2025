@@ -91,7 +91,7 @@
 				{data.friends.length} friends...
 			</Collapsible.Trigger>
 			<Collapsible.Content class="w-full">
-				<div class="grid auto-cols-auto grid-flow-col gap-2">
+				<div class="grid md:grid-cols-4 grid-cols-2 gap-2">
 					{#each data.friends as friend}
 						<UserCard user={friend} />
 					{/each}

@@ -7,6 +7,9 @@
 	import { Spinner } from "$lib/components/ui/spinner/index.js";
 	import { onMount } from "svelte";
 	import bblogo from "$lib/assets/android-launchericon-72-72.png";
+	import * as Collapsible from "$lib/components/ui/collapsible";
+	import { buttonVariants } from "$lib/components/ui/button/index.js";
+	import UserCard from "$lib/components/users/UserCard.svelte";
 
 	interface Props {
 		data: {
@@ -16,6 +19,7 @@
 				feed_items: Feedable[];
 				pagy: any;
 			};
+			friends: User[];
 		};
 	}
 
@@ -58,15 +62,18 @@
 
 <div>
 	<div class="flex space-x-2 mb-4 items-baseline">
-		<div class="flex flex-row">
-			<div class="rounded-full w-12 h-12 overflow-hidden mr-2">
-				{#if user.profile_photo_url}
-					<img src={"https://" + user.profile_photo_url} alt="profile picture" />
-				{:else}
-					<img src={bblogo} />
-				{/if}
+		<div class="flex flex-row justify-between w-full">
+			<div class="flex flex-row">
+				<div class="rounded-full w-12 h-12 overflow-hidden mr-2">
+					{#if user.profile_photo_url}
+						<img src={"https://" + user.profile_photo_url} alt="profile picture" />
+					{:else}
+						<img src={bblogo} />
+					{/if}
+				</div>
+				<H1>{user.name}</H1>
 			</div>
-			<H1>{user.name}</H1>
+			<FriendStatusButton user={data.user} friend_status_prop={data.friend_status.status} />
 		</div>
 		{#if tags}
 			<div class="space-x-2 mb-4">
@@ -76,10 +83,22 @@
 			</div>
 		{/if}
 	</div>
-	<div>
-		<FriendStatusButton user={data.user} friend_status_prop={data.friend_status.status} />
-	</div>
 	<div>{user.blurb}</div>
+
+	<div class="w-full">
+		<Collapsible.Root class="w-full">
+			<Collapsible.Trigger class={buttonVariants({ variant: "outline" })}>
+				{data.friends.length} friends...
+			</Collapsible.Trigger>
+			<Collapsible.Content class="w-full">
+				<div class="grid md:grid-cols-4 grid-cols-2 gap-2">
+					{#each data.friends as friend}
+						<UserCard user={friend} />
+					{/each}
+				</div>
+			</Collapsible.Content>
+		</Collapsible.Root>
+	</div>
 
 	<div>
 		{#each feed_items as feed_item}

@@ -16,15 +16,15 @@ export async function load({ cookies }) {
 }
 
 export const actions = {
-	add_friend: async ({ cookies, request }) => {
+	accept_friend_request: async ({ cookies, request }) => {
 		const data = await request.formData();
 
 		const jwt = cookies.get("jwt");
 
 		const response = await api.post(
-			"friend_requests",
+			"friendships",
 			{
-				user_id: data.get("user_id"),
+				friend_id: data.get("user_id"),
 			},
 			jwt,
 		);

@@ -4,6 +4,7 @@ class Event < ApplicationRecord
   # create scopes for each rsvp status
   has_many :rsvps
   has_many :comments, as: :commentable, dependent: :destroy
+  has_many :reactions, as: :reactable, dependent: :destroy
   has_one :feed_item, as: :feedable, dependent: :destroy
 
   before_save :ensure_end_time

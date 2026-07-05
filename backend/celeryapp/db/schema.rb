@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_08_195023) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_05_174143) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -156,6 +156,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_08_195023) do
     t.index ["numeric_user_id"], name: "index_posts_on_numeric_user_id"
   end
 
+  create_table "reactions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "react", null: false
+    t.uuid "reactable_id"
+    t.string "reactable_type"
+    t.datetime "updated_at", null: false
+    t.uuid "user_id", null: false
+    t.index ["reactable_type", "reactable_id"], name: "index_reactions_on_reactable"
+    t.index ["user_id"], name: "index_reactions_on_user_id"
+  end
+
   create_table "recommendations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "media_type"
@@ -291,6 +302,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_08_195023) do
   add_foreign_key "group_users", "users"
   add_foreign_key "notifications", "users", on_delete: :cascade
   add_foreign_key "posts", "users", on_delete: :cascade
+  add_foreign_key "reactions", "users"
   add_foreign_key "recommendations", "users", on_delete: :cascade
   add_foreign_key "rsvps", "events", on_delete: :cascade
   add_foreign_key "rsvps", "users", on_delete: :cascade

@@ -3,6 +3,7 @@ class Post < ApplicationRecord
 
   belongs_to :user
   has_many :comments, as: :commentable, dependent: :destroy
+  has_many :reactions, as: :reactable, dependent: :destroy
   has_one :feed_item, as: :feedable, dependent: :destroy
 
   validates :content, presence: true

@@ -9,6 +9,7 @@ class RecommendationBlueprint < Blueprinter::Base
 
   association :comments, blueprint: CommentBlueprint, view: :authed
   association :user, blueprint: UserBlueprint, view: :authed
+  association :reactions, blueprint: ReactionBlueprint
 
   view :authed do
   end

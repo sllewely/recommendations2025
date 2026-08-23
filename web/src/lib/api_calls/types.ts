@@ -34,6 +34,7 @@ export interface Post {
 	updated_at: string;
 	user: User;
 	comments: Comment[];
+	reactions: Reaction[];
 	title: string;
 	content?: string;
 	class_name: "Post";
@@ -46,6 +47,11 @@ export interface Comment {
 	commentable_id: number;
 	user_id: number;
 	body: string;
+}
+
+export interface Reaction {
+	react: string;
+	user: User;
 }
 
 // TODO: Theres a zod schema for this, can derive it from the schema
@@ -88,6 +94,7 @@ export interface Event {
 	rsvps_count: number;
 	comments: Comment[];
 	rsvps: Rsvp[];
+	reactions: Reaction[];
 }
 
 export type RsvpVariant = "not_rsvpd" | "going" | "interested" | "not_going" | "hide" | "invited";
@@ -141,6 +148,7 @@ export interface Recommendation {
 	created_at: string;
 	updated_at: string;
 	comments: Comment[];
+	reactions: Reaction[];
 }
 
 export type NotifTypes =

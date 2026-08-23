@@ -9,6 +9,7 @@ class PostBlueprint < Blueprinter::Base
 
   association :user, blueprint: UserBlueprint, view: :authed
   association :comments, blueprint: CommentBlueprint, view: :authed
+  association :reactions, blueprint: ReactionBlueprint
 
   view :authed do
   end

@@ -13,6 +13,14 @@
 
 	let open_choices = $state(false);
 
+	// a hash of reactions counts grouped by react type
+	let grouped_reactions = $derived(
+		feedable.reactions.reduce<Record<string, number>>((counts, reaction) => {
+			counts[reaction.react] = (counts[reaction.react] ?? 0) + 1;
+			return counts;
+		}, {}),
+	);
+
 	const update_reactions = async (react: String) => {
 		console.log(react);
 		const response = await fetch("/api/reactions/update", {
@@ -50,10 +58,15 @@
 		{/each}
 	</div>
 
-	<ReactButton
-		click_handler={() => {
-			open_choices = !open_choices;
-		}}
-		react="like"
-	/>
+	<div class="flex flex-row gap-2">
+		<ReactButton
+			click_handler={() => {
+				open_choices = !open_choices;
+			}}
+			react="like"
+		/>
+		{#each Object.entries(grouped_reactions) as [react, count]}
+			<span>{react}: {count}</span>
+		{/each}
+	</div>
 </div>

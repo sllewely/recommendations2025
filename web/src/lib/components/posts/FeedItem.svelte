@@ -54,6 +54,6 @@
 		</div>
 	{/if}
 
-	<Reactions {feed_item} />
+	<Reactions feedable={feed_item} />
 	<ExpandableCommentable comments={feed_item["comments"]} {feed_item} />
 </div>

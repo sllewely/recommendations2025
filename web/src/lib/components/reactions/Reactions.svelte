@@ -2,6 +2,7 @@
 	import ReactButton from "$lib/components/reactions/ReactButton.svelte";
 	import { type Post, type Recommendation, type Event } from "$lib/api_calls/types";
 	import { newToast, ToastType } from "$lib/state/toast.svelte";
+	import { current_user, isSignedIn } from "$lib/state/current_user.svelte";
 
 	interface Props {
 		feedable: Post | Recommendation | Event;
@@ -19,6 +20,10 @@
 			counts[reaction.react] = (counts[reaction.react] ?? 0) + 1;
 			return counts;
 		}, {}),
+	);
+
+	let my_reaction = $derived(
+		feedable.reactions.find((reaction) => reaction.user.id === current_user.id)?.react ?? "like",
 	);
 
 	const update_reactions = async (react: String) => {
@@ -63,7 +68,7 @@
 			click_handler={() => {
 				open_choices = !open_choices;
 			}}
-			react="like"
+			react={my_reaction}
 		/>
 		{#each Object.entries(grouped_reactions) as [react, count]}
 			<span>{react}: {count}</span>

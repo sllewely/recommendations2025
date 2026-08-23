@@ -100,6 +100,7 @@
 					<div>
 						<RsvpBadge rsvp={current_user_rsvp} />
 					</div>
+					<div></div>
 				</Card.Content>
 			</Card.Root>
 		</a>

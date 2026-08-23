@@ -36,7 +36,7 @@ export interface Post {
 	comments: Comment[];
 	title: string;
 	content?: string;
-	class_name: string;
+	class_name: "Post";
 }
 
 export interface Comment {
@@ -84,7 +84,7 @@ export interface Event {
 	end_date_time: Date;
 	is_public: boolean;
 	user: User;
-	class_name: string;
+	class_name: "Event";
 	rsvps_count: number;
 	comments: Comment[];
 	rsvps: Rsvp[];
@@ -128,7 +128,7 @@ export type EventWithDateHeader =
 
 export interface Recommendation {
 	id: string;
-	class_name: string;
+	class_name: "Recommendation";
 	user: User;
 	user_id: string;
 	title: string;

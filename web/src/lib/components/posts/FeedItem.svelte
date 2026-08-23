@@ -1,15 +1,12 @@
 <script lang="ts">
-	import Link from "$lib/components/text/Link.svelte";
 	import RecommendationCard from "$lib/components/posts/RecommendationCard.svelte";
 	import PostCard from "$lib/components/posts/PostCard.svelte";
 	import EventCard from "$lib/components/posts/EventCard.svelte";
-	import { Textarea } from "$lib/components/ui/textarea";
-	import { Button } from "$lib/components/ui/button";
 	import UserCard from "$lib/components/users/UserCard.svelte";
-	import { MessageCircleMore } from "@lucide/svelte";
 	import ExpandableCommentable from "$lib/components/posts/ExpandableCommentable.svelte";
 	import type { Post, Event, Recommendation } from "$lib/api_calls/types";
 	import { parseAbsoluteToLocal } from "@internationalized/date";
+	import Reactions from "$lib/components/reactions/Reactions.svelte";
 
 	interface Props {
 		feed_item: Post | Event | Recommendation;
@@ -56,5 +53,7 @@
 			<EventCard {feed_item} />
 		</div>
 	{/if}
+
+	<Reactions {feed_item} />
 	<ExpandableCommentable comments={feed_item["comments"]} {feed_item} />
 </div>

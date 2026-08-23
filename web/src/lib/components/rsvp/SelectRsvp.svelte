@@ -1,13 +1,5 @@
 <script lang="ts">
-	import RsvpBadge from "$lib/components/ui/badge/RsvpBadge.svelte";
-	import {
-		type Rsvp,
-		RSVP_STATUSES,
-		type RsvpStatus,
-		rsvpStatusToText,
-		type RsvpVariant,
-	} from "$lib/api_calls/types";
-	import { Button } from "$lib/components/ui/button";
+	import { type Rsvp, RSVP_STATUSES } from "$lib/api_calls/types";
 	import RsvpButton from "$lib/components/rsvp/RsvpButton.svelte";
 	import { newToast, ToastType } from "$lib/state/toast.svelte";
 
@@ -21,7 +13,6 @@
 	let open_choices = $state(false);
 
 	const update_rsvp = async (status: String) => {
-		console.log("update_rsvp", status);
 		const response = await fetch("/api/rsvp/update", {
 			method: "POST",
 			headers: {

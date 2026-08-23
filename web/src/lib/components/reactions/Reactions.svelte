@@ -1,16 +1,20 @@
 <script lang="ts">
 	import ReactButton from "$lib/components/reactions/ReactButton.svelte";
-	import { type Post, type Recommendation, type Event } from "$lib/api_calls/types";
+	import {
+		type Post,
+		type Recommendation,
+		type Event,
+		REACTS,
+		reactToEmoji,
+	} from "$lib/api_calls/types";
 	import { newToast, ToastType } from "$lib/state/toast.svelte";
-	import { current_user, isSignedIn } from "$lib/state/current_user.svelte";
+	import { current_user } from "$lib/state/current_user.svelte";
 
 	interface Props {
 		feedable: Post | Recommendation | Event;
 	}
 
 	let { feedable }: Props = $props();
-
-	const REACTS = ["like", "heart", "celebrate"];
 
 	let open_choices = $state(false);
 
@@ -71,7 +75,7 @@
 			react={my_reaction}
 		/>
 		{#each Object.entries(grouped_reactions) as [react, count]}
-			<span>{react}: {count}</span>
+			<span>{reactToEmoji[react] || react}: {count}</span>
 		{/each}
 	</div>
 </div>

@@ -49,6 +49,16 @@ export interface Comment {
 	body: string;
 }
 
+export const REACTS = ["like", "heart", "celebrate", "muscle", "eyes", "upsidedown_face"];
+export const reactToEmoji: Record<string, string> = {
+	like: "👍",
+	heart: "❤️",
+	celebrate: "🎉",
+	muscle: "💪",
+	eyes: "👀",
+	upsidedown_face: "🙃",
+};
+
 export interface Reaction {
 	react: string;
 	user: User;

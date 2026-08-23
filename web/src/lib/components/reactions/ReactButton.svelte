@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Button } from "$lib/components/ui/button";
+	import { reactToEmoji } from "$lib/api_calls/types";
 
 	interface Props {
 		react: string;
@@ -11,5 +12,5 @@
 </script>
 
 <Button size="sm" onclick={click_handler}>
-	<span>{react}</span>
+	<span>{reactToEmoji[react] || react}</span>
 </Button>

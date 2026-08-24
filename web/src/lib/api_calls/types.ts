@@ -34,9 +34,10 @@ export interface Post {
 	updated_at: string;
 	user: User;
 	comments: Comment[];
+	reactions: Reaction[];
 	title: string;
 	content?: string;
-	class_name: string;
+	class_name: "Post";
 }
 
 export interface Comment {
@@ -46,6 +47,21 @@ export interface Comment {
 	commentable_id: number;
 	user_id: number;
 	body: string;
+}
+
+export const REACTS = ["like", "heart", "celebrate", "muscle", "eyes", "upsidedown_face"];
+export const reactToEmoji: Record<string, string> = {
+	like: "👍",
+	heart: "❤️",
+	celebrate: "🎉",
+	muscle: "💪",
+	eyes: "👀",
+	upsidedown_face: "🙃",
+};
+
+export interface Reaction {
+	react: string;
+	user: User;
 }
 
 // TODO: Theres a zod schema for this, can derive it from the schema
@@ -84,10 +100,11 @@ export interface Event {
 	end_date_time: Date;
 	is_public: boolean;
 	user: User;
-	class_name: string;
+	class_name: "Event";
 	rsvps_count: number;
 	comments: Comment[];
 	rsvps: Rsvp[];
+	reactions: Reaction[];
 }
 
 export type RsvpVariant = "not_rsvpd" | "going" | "interested" | "not_going" | "hide" | "invited";
@@ -128,7 +145,7 @@ export type EventWithDateHeader =
 
 export interface Recommendation {
 	id: string;
-	class_name: string;
+	class_name: "Recommendation";
 	user: User;
 	user_id: string;
 	title: string;
@@ -141,6 +158,7 @@ export interface Recommendation {
 	created_at: string;
 	updated_at: string;
 	comments: Comment[];
+	reactions: Reaction[];
 }
 
 export type NotifTypes =

@@ -12,6 +12,7 @@ class EventBlueprint < Blueprinter::Base
     association :rsvps, blueprint: RsvpBlueprint, view: :unauthed
     association :user, blueprint: UserBlueprint, view: :unauthed
     association :comments, blueprint: CommentBlueprint, view: :unauthed
+    association :reactions, blueprint: ReactionBlueprint
   end
 
   view :authed do

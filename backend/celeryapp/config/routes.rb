@@ -43,6 +43,7 @@ Rails.application.routes.draw do
   end
   resources :calendars
   resources :comments
+  resources :reactions
   resources :user_statuses, only: [:create, :index]
   resources :images do
     collection do

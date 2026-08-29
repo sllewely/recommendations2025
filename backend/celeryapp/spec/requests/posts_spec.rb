@@ -207,6 +207,16 @@ RSpec.describe "Posts", type: :request do
       expect(feed_items_res.size).to eq(6)
     end
 
+    it 'unauthorized if not signed in' do
+      3.times do
+        create(:post, user: @friend)
+      end
+      get "/posts", params: {}
+
+      expect(response).to have_http_status(:unauthorized)
+
+    end
+
   end
 
   describe "GET /rss" do

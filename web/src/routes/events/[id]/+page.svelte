@@ -163,7 +163,7 @@
 							</div>
 						{:else}
 							<RsvpBadge rsvp={{ status: "not_rsvpd" }} />
-							<span>Sign in to rsvp</span>
+							<span><Link url="/sign_in">Sign in to rsvp</Link></span>
 						{/if}
 					</div>
 
@@ -182,7 +182,7 @@
 								</div>
 							{/each}
 						{:else}
-							<span>Sign in to see who's coming</span>
+							<span><Link url="/sign_in">Sign in to see who's coming</Link></span>
 							<span>Rsvps: {data.event.rsvps.length}</span>
 						{/if}
 					</div>

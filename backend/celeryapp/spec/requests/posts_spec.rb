@@ -180,6 +180,38 @@ RSpec.describe "Posts", type: :request do
       expect(feed_items_res[0]["feedable"]['comments'][0]['body']).to_not be_nil
     end
 
+    it 'returns correct friendship_status for post author and comment author' do
+      stranger = create(:user)
+      pending_friend = create(:user)
+      create(:friend_request, user: @my_user, incoming_friend: pending_friend)
+
+      post1 = create(:post, user: @friend)
+      create(:comment, :for_post, commentable: post1, user: @my_user)
+      create(:comment, :for_post, commentable: post1, user: stranger)
+
+      post2 = create(:post, user: pending_friend)
+      post3 = create(:post, user: @my_user)
+
+      get "/posts", params: {}, headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      res = JSON.parse(response.body)
+      feed_items_res = res['feed_items']
+
+      p1_feed = feed_items_res.find { |fi| fi['feedable']['id'] == post1.id }
+      expect(p1_feed['feedable']['user']['friendship_status']).to eq('friends')
+      c_self = p1_feed['feedable']['comments'].find { |c| c['user']['id'] == @my_user.id }
+      expect(c_self['user']['friendship_status']).to eq('self')
+      c_stranger = p1_feed['feedable']['comments'].find { |c| c['user']['id'] == stranger.id }
+      expect(c_stranger['user']['friendship_status']).to eq('none')
+
+      p2_feed = feed_items_res.find { |fi| fi['feedable']['id'] == post2.id }
+      expect(p2_feed['feedable']['user']['friendship_status']).to eq('pending_friend_request')
+
+      p3_feed = feed_items_res.find { |fi| fi['feedable']['id'] == post3.id }
+      expect(p3_feed['feedable']['user']['friendship_status']).to eq('self')
+    end
+
     it 'paginates' do
       create(:post, user: @friend)
       create(:recommendation, user: @friend)
@@ -289,6 +321,7 @@ RSpec.describe "Posts", type: :request do
       expect(res['content']).to_not be_nil
       expect(res['user']).to_not be_nil
       expect(res['user']['id']).to_not be_nil
+      expect(res['user']['friendship_status']).to eq('friends')
     end
 
     it 'gets the post with comments' do
@@ -304,8 +337,13 @@ RSpec.describe "Posts", type: :request do
       expect(res['content']).to_not be_nil
       expect(res['user']).to_not be_nil
       expect(res['user']['id']).to_not be_nil
+      expect(res['user']['friendship_status']).to eq('friends')
 
       expect(res['comments'].size).to eq(2)
+      c1 = res['comments'].find { |c| c['user']['id'] == @my_user.id }
+      expect(c1['user']['friendship_status']).to eq('self')
+      c2 = res['comments'].find { |c| c['user']['id'] == @friend.id }
+      expect(c2['user']['friendship_status']).to eq('friends')
     end
 
     it 'will not return the post if not friends' do

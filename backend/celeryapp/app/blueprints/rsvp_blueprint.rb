@@ -7,6 +7,6 @@ class RsvpBlueprint < Blueprinter::Base
   end
 
   view :authed do
-    association :user, blueprint: UserBlueprint, view: :authed
+    association :user, blueprint: UserBlueprint, view: :authed, options: ->(options) { options }
   end
 end

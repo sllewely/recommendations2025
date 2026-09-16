@@ -61,7 +61,7 @@ class User < ApplicationRecord
 
   def friend_status(user_id)
     return :self if user_id == self.id
-    return :friends if self.friends.where(user_id: user_id).exists?
+    return :friends if self.friends.where(id: user_id).exists?
     return :sent_friend_request if self.outgoing_friend_requests.where(user_id: user_id).exists?
     return :pending_friend_request if self.friend_requests.where(incoming_friend_id: user_id).exists?
     :none # default otherwise

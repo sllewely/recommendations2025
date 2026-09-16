@@ -11,7 +11,11 @@ class PostsController < ApplicationController
     # TODO: privacy
     @pagy, @feed_items = pagy(feed, limit: 30)
     render json: {
-      feed_items: FeedItemBlueprint.render_as_hash(@feed_items, current_user: current_user),
+      feed_items: FeedItemBlueprint.render_as_hash(
+        @feed_items,
+        current_user: current_user,
+        friend_statuses: current_user&.friend_statuses
+      ),
       pagy: @pagy,
     }, status: :ok
   end
@@ -60,7 +64,11 @@ class PostsController < ApplicationController
     post_id = params[:id]
     @post = Post.includes(:user, comments: :user).find_by(id: post_id)
     if @post
-      render json: PostBlueprint.render(@post), status: :ok
+      render json: PostBlueprint.render(
+        @post,
+        current_user: current_user,
+        friend_statuses: current_user&.friend_statuses
+      ), status: :ok
     else
       render json: { error: "post not found" }, status: :not_found
     end

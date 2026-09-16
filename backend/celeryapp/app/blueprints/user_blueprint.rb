@@ -26,6 +26,14 @@ class UserBlueprint < Blueprinter::Base
     field :groups do |user, options|
       user.groups
     end
+    field :friendship_status do |user, options|
+      statuses = options[:friend_statuses] || (options[:current_user] || Current.user)&.friend_statuses
+      if statuses
+        statuses[user.id] || :none
+      else
+        :none
+      end
+    end
   end
 
   view :self do

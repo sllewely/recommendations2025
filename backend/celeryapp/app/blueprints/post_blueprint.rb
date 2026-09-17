@@ -7,8 +7,8 @@ class PostBlueprint < Blueprinter::Base
 
   fields :title, :content, :created_at
 
-  association :user, blueprint: UserBlueprint, view: :authed
-  association :comments, blueprint: CommentBlueprint, view: :authed
+  association :user, blueprint: UserBlueprint, view: :authed, options: ->(options) { options }
+  association :comments, blueprint: CommentBlueprint, view: :authed, options: ->(options) { options }
   association :reactions, blueprint: ReactionBlueprint
 
   view :authed do

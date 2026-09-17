@@ -18,8 +18,8 @@ class EventBlueprint < Blueprinter::Base
   view :authed do
     include_view :unauthed
     field :address
-    association :rsvps, blueprint: RsvpBlueprint, view: :authed
-    association :comments, blueprint: CommentBlueprint, view: :authed
-    association :user, blueprint: UserBlueprint, view: :authed
+    association :rsvps, blueprint: RsvpBlueprint, view: :authed, options: ->(options) { options }
+    association :comments, blueprint: CommentBlueprint, view: :authed, options: ->(options) { options }
+    association :user, blueprint: UserBlueprint, view: :authed, options: ->(options) { options }
   end
 end

@@ -11,6 +11,7 @@
 	import Commentable from "$lib/components/posts/Commentable.svelte";
 	import Link from "$lib/components/text/Link.svelte";
 	import { parseAbsoluteToLocal } from "@internationalized/date";
+	import FriendshipBadge from "$lib/components/ui/badge/FriendshipBadge.svelte";
 
 	interface Props {
 		data: {
@@ -56,11 +57,16 @@
 		</div>
 	{/if}
 	<div>
-		<div class="flex flex-row justify-between">
-			<div>
-				<span class="font-bold">
-					<Link url="/users/{data.post.user.id}">{data.post.user.name}</Link>
-				</span>'s post
+		<div class="flex flex-row justify-between items-center">
+			<div class="flex flex-row items-center gap-2">
+				<div>
+					<span class="font-bold">
+						<Link url="/users/{data.post.user.id}">{data.post.user.name}</Link>
+					</span>'s post
+				</div>
+				{#if data.post.user?.friendship_status}
+					<FriendshipBadge status={data.post.user.friendship_status} />
+				{/if}
 			</div>
 			<div>
 				<span class="text-sm">posted at {formattedCreateTime}</span>

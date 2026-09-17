@@ -1,6 +1,8 @@
 import { type VariantProps, tv } from "tailwind-variants";
 
 export { default as Badge } from "./badge.svelte";
+export { default as RsvpBadge } from "./RsvpBadge.svelte";
+export { default as FriendshipBadge } from "./FriendshipBadge.svelte";
 
 export const badgeVariants = tv({
 	base: "focus:ring-ring inline-flex select-none items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2",

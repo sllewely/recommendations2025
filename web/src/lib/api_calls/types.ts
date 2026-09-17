@@ -47,6 +47,7 @@ export interface Comment {
 	commentable_id: number;
 	user_id: number;
 	body: string;
+	user?: User;
 }
 
 export const REACTS = ["like", "heart", "celebrate", "muscle", "eyes", "upsidedown_face"];
@@ -73,6 +74,13 @@ export interface UserUpdatePayload {
 	password: string;
 }
 
+export type FriendshipStatus =
+	| "friends"
+	| "self"
+	| "none"
+	| "pending_friend_request"
+	| "sent_friend_request";
+
 export interface User {
 	id: string;
 	username: string;
@@ -84,6 +92,7 @@ export interface User {
 	profile_photo_url?: string;
 	groups: Group[];
 	rss_api_key?: string;
+	friendship_status: FriendshipStatus;
 }
 
 export interface Event {

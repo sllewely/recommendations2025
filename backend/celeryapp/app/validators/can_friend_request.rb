@@ -1,5 +1,10 @@
 class CanFriendRequest < ActiveModel::Validator
   def validate(record)
+    if record.incoming_friend_id == record.user_id
+      record.errors.add(:base, "Cannot send friend request to yourself")
+      return
+    end
+
     # I already have a friend request
     if record.incoming_friend.friend_requests.where(incoming_friend_id: record.user_id).exists?
       record.errors.add(:base, "You already have a pending friend request from #{record.user.name}")

@@ -5,17 +5,16 @@ import { superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
 import { postFormSchema } from "$src/routes/posts/schema";
 import { fail } from "@sveltejs/kit";
+import { withAuth, type LoadAuthContext, type ActionAuthContext } from "$lib/auth";
 
-export async function load({ cookies, params }) {
+export const load = withAuth(async () => {
 	return {
 		form: await superValidate(zod(postFormSchema)),
 	};
-}
+});
 
 export const actions = {
-	create_post: async ({ cookies, request }) => {
-		const jwt = cookies.get("jwt");
-
+	create_post: withAuth(async ({ jwt, request }: ActionAuthContext) => {
 		const form = await superValidate(request, zod(postFormSchema));
 		if (!form.valid) {
 			return fail(400, {
@@ -32,5 +31,5 @@ export const actions = {
 		);
 
 		return response;
-	},
+	}),
 };

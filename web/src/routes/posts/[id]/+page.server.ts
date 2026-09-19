@@ -2,25 +2,25 @@ import * as api from "$lib/api_calls/api.svelte.js";
 import { getPost } from "$lib/api_calls/posts.svelte.js";
 import { RecommendationStatus } from "$lib/enums";
 import { redirect } from "@sveltejs/kit";
+import { withAuth, type LoadAuthContext, type ActionAuthContext } from "$lib/auth";
 
-export async function load({ cookies, params }) {
-	const jwt = cookies.get("jwt");
-	const my_user_id = cookies.get("user_id");
+export const load = withAuth(async ({ jwt, user_id, params }: LoadAuthContext) => {
 	const post_id = params.id;
-
-	// TODO: Will crash if backend not running
 	let res = await getPost(post_id, jwt);
+
+	if (res.unauthorized) {
+		throw redirect(302, "/sign_in");
+	}
 
 	return {
 		post: res["res"],
-		my_user_id: my_user_id,
+		my_user_id: user_id,
 	};
-}
+});
 
 export const actions = {
-	submit_comment: async ({ cookies, request }) => {
+	submit_comment: withAuth(async ({ jwt, request }: ActionAuthContext) => {
 		const data = await request.formData();
-		const jwt = cookies.get("jwt");
 
 		return await api.post(
 			"comments",
@@ -31,5 +31,5 @@ export const actions = {
 			},
 			jwt,
 		);
-	},
+	}),
 };

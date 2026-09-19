@@ -1,5 +1,6 @@
 import { redirect } from "@sveltejs/kit";
 import type { Cookies, RequestEvent } from "@sveltejs/kit";
+import type { ApiResponse } from "./api_calls/types";
 
 /**
  * Gets the JWT token and user_id from cookies
@@ -15,7 +16,7 @@ export function parseCookies(cookies: Cookies): { jwt: string | null; user_id: s
 /**
  * Ensures the user is authenticated by checking for JWT
  * @param {Cookies} cookies - The cookies object from SvelteKit
- * @returns {{ jwt: string | null, user_id: string | null }} An object with jwt and user_id or null if not found
+ * @returns {{ jwt: string; user_id: string }} An object with jwt and user_id
  * @throws {import("@sveltejs/kit").Redirect} Redirects to sign_in if no JWT found
  */
 export function requireAuth(cookies: Cookies): { jwt: string; user_id: string } {
@@ -24,6 +25,16 @@ export function requireAuth(cookies: Cookies): { jwt: string; user_id: string } 
 		throw redirect(302, "/sign_in");
 	}
 	return { jwt, user_id };
+}
+
+/**
+ * Ensures that an API response is authenticated. If unauthorized, redirects to /sign_in.
+ */
+export function ensureAuth<T>(response?: ApiResponse<T> | null): T {
+	if (!response || response.unauthorized || response.status === 401) {
+		throw redirect(302, "/sign_in");
+	}
+	return response.res as T;
 }
 
 // Base type for any authenticated context
@@ -46,6 +57,34 @@ export function withAuth<T extends AuthContext, R = unknown>(
 ) {
 	return async (context: T): Promise<R> => {
 		const { jwt, user_id } = requireAuth(context.cookies);
-		return apiCall({ ...context, jwt, user_id });
+		try {
+			const result = await apiCall({ ...context, jwt, user_id });
+
+			if (result && typeof result === "object") {
+				if ("unauthorized" in result && (result as any).unauthorized) {
+					throw redirect(302, "/sign_in");
+				}
+				for (const val of Object.values(result)) {
+					if (
+						val &&
+						typeof val === "object" &&
+						"unauthorized" in val &&
+						(val as any).unauthorized
+					) {
+						throw redirect(302, "/sign_in");
+					}
+				}
+			}
+
+			return result;
+		} catch (err: any) {
+			if (err && typeof err === "object" && err.status === 302) {
+				throw err;
+			}
+			if (err && typeof err === "object" && err.unauthorized) {
+				throw redirect(302, "/sign_in");
+			}
+			throw err;
+		}
 	};
 }

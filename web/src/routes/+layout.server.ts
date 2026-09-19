@@ -8,9 +8,15 @@ export async function load({ cookies }) {
 	let groups: Group[] = [];
 	try {
 		const { jwt, user_id } = parseCookies(cookies);
-		const user = await getUser(user_id, jwt);
-		calendar_url = VITE_API_URL + "calendars/?token=" + user["res"].calendar_api_key;
-		groups = user["res"].groups;
+		if (jwt && user_id) {
+			const user = await getUser(user_id, jwt);
+			if (user.success && user.res) {
+				calendar_url = user.res.calendar_api_key
+					? VITE_API_URL + "calendars/?token=" + user.res.calendar_api_key
+					: null;
+				groups = user.res.groups || [];
+			}
+		}
 	} catch (error) {
 		// User may not be logged in, which is okay
 	}

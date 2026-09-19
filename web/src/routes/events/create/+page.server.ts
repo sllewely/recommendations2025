@@ -7,18 +7,17 @@ import { zod } from "sveltekit-superforms/adapters";
 import { type EventsFormSchema, eventsFormSchema } from "../schema";
 import { fail } from "@sveltejs/kit";
 import { DateTime } from "luxon";
+import { withAuth, type ActionAuthContext } from "$lib/auth";
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = withAuth(async () => {
 	return {
 		form: await superValidate(zod(eventsFormSchema)),
 	};
-};
+});
 
 // named action for create events
 export const actions = {
-	default: async ({ cookies, request }) => {
-		const jwt = cookies.get("jwt");
-
+	default: withAuth(async ({ jwt, request }: ActionAuthContext) => {
 		const form = await superValidate(request, zod(eventsFormSchema));
 
 		2 + 5;
@@ -52,5 +51,5 @@ export const actions = {
 			},
 			jwt,
 		);
-	},
+	}),
 };

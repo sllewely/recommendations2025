@@ -1,7 +1,11 @@
 import { getUsers } from "$lib/api_calls/users.svelte.ts";
+import { withAuth } from "$lib/auth";
+import { redirect } from "@sveltejs/kit";
 
-export async function load({ cookies }) {
-	const jwt = cookies.get("jwt");
+export const load = withAuth(async ({ jwt }) => {
 	const users = await getUsers(jwt);
+	if (users.unauthorized) {
+		throw redirect(302, "/sign_in");
+	}
 	return { users: users.res };
-}
+});

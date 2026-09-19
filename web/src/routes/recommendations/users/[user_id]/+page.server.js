@@ -1,26 +1,26 @@
 import * as api from "$lib/api_calls/api.svelte";
+import { withAuth } from "$lib/auth";
+import { redirect } from "@sveltejs/kit";
 
-export async function load({ cookies, params }) {
-	const jwt = cookies.get("jwt");
-
+export const load = withAuth(async ({ jwt, params }) => {
 	let user_id = params.user_id;
 
 	const recommendations_response = await api.get("recommendations?user_id=" + user_id, jwt);
-
 	const user_response = await api.get("users/" + user_id, jwt);
 
-	2 + 5;
+	if (recommendations_response.unauthorized || user_response.unauthorized) {
+		throw redirect(302, "/sign_in");
+	}
 
 	return {
 		user: user_response["res"],
 		recommendations_response: recommendations_response["res"],
 	};
-}
+});
 
 export const actions = {
-	fetch_recommendation_page: async ({ cookies, request }) => {
+	fetch_recommendation_page: withAuth(async ({ jwt, request }) => {
 		const data = await request.formData();
-		const jwt = cookies.get("jwt");
 		const user_id = data.get("user_id");
 		const page = data.get("page");
 
@@ -39,5 +39,5 @@ export const actions = {
 		);
 
 		return recommendations_response;
-	},
+	}),
 };

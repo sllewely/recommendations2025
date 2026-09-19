@@ -1,24 +1,29 @@
 import * as api from "$lib/api_calls/api.svelte.js";
 import { getUser } from "$lib/api_calls/users.svelte.js";
+import { withAuth, type LoadAuthContext, type ActionAuthContext } from "$lib/auth";
+import { redirect } from "@sveltejs/kit";
 
-export async function load({ cookies, params }) {
-	const jwt = cookies.get("jwt");
-	const my_user_id = cookies.get("user_id");
-
+export const load = withAuth(async ({ jwt, user_id }: LoadAuthContext) => {
 	const friends = await api.get("friendships", jwt);
-	if (!friends["success"]) {
-		console.log("GET /friends", friends);
+	if (friends.unauthorized) {
+		throw redirect(302, "/sign_in");
 	}
+
 	const friends_map_response = await api.get("friendships/friends_map", jwt);
-
 	const friend_requests_response = await api.get("friend_requests", jwt);
+	let user_res = await getUser(user_id, jwt);
 
-	// TODO: error handling ... with errors?
-	let user_res = await getUser(my_user_id, jwt);
+	if (
+		friends_map_response.unauthorized ||
+		friend_requests_response.unauthorized ||
+		user_res.unauthorized
+	) {
+		throw redirect(302, "/sign_in");
+	}
 
 	const outgoing_friend_requests =
-		friend_requests_response["res"]["outgoing_friend_requests"] ?? [];
-	let outgoing_friend_request_map = new Map(outgoing_friend_requests.map((f) => [f.id, f]));
+		friend_requests_response["res"]?.["outgoing_friend_requests"] ?? [];
+	let outgoing_friend_request_map = new Map(outgoing_friend_requests.map((f: any) => [f.id, f]));
 
 	return {
 		my_user: user_res,
@@ -27,13 +32,11 @@ export async function load({ cookies, params }) {
 		friend_requests_response: friend_requests_response,
 		outgoing_friend_request_map: outgoing_friend_request_map,
 	};
-}
+});
 
 export const actions = {
-	add_friend: async ({ cookies, request }) => {
+	add_friend: withAuth(async ({ jwt, request }: ActionAuthContext) => {
 		const data = await request.formData();
-
-		const jwt = cookies.get("jwt");
 
 		const response = await api.post(
 			"friend_requests",
@@ -44,30 +47,27 @@ export const actions = {
 		);
 
 		return response;
-	},
-	search_users: async ({ cookies, request }) => {
+	}),
+	search_users: withAuth(async ({ jwt, request }: ActionAuthContext) => {
 		const data = await request.formData();
-		const jwt = cookies.get("jwt");
 		const query = data.get("search");
 		const tag_query = data.get("tag");
 
-		let paramsObj = {};
+		let paramsObj: Record<string, string> = {};
 		if (query) {
-			paramsObj["search"] = query;
+			paramsObj["search"] = String(query);
 		}
 		if (tag_query) {
-			paramsObj["tag"] = tag_query;
+			paramsObj["tag"] = String(tag_query);
 		}
 		const searchParams = new URLSearchParams(paramsObj);
 
 		const response = await api.get("users?" + searchParams.toString(), jwt);
 
 		return response;
-	},
-	accept_friend_request: async ({ cookies, request }) => {
+	}),
+	accept_friend_request: withAuth(async ({ jwt, request }: ActionAuthContext) => {
 		const data = await request.formData();
-
-		const jwt = cookies.get("jwt");
 
 		const response = await api.post(
 			"friendships",
@@ -78,5 +78,5 @@ export const actions = {
 		);
 
 		return response;
-	},
+	}),
 };

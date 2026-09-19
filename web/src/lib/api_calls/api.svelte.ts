@@ -12,6 +12,18 @@ interface RequestOptions<T = unknown> {
 }
 
 /**
+ * Checks if an API response indicates the user is not logged in / unauthorized
+ */
+export function isUnauthorized(response?: ApiResponse<unknown> | null): boolean {
+	if (!response) return false;
+	return Boolean(response.unauthorized || response.status === 401);
+}
+
+export function isNotLoggedIn(response?: ApiResponse<unknown> | null): boolean {
+	return isUnauthorized(response);
+}
+
+/**
  * Sends an HTTP request to the API
  * @throws {Error} If the request fails
  */
@@ -42,18 +54,30 @@ async function send<T = unknown, D = unknown>({
 
 		// Del returns 204 and no body
 		if (method === "DELETE" && res.ok) {
-			return { success: true, res: null as T };
+			return { success: true, res: null as T, status: res.status };
 		}
 
-		const json = await res.json();
+		let json: any = null;
+		const text = await res.text();
+		try {
+			json = text ? JSON.parse(text) : null;
+		} catch {
+			json = null;
+		}
 
 		if (res.ok) {
-			return { success: true, res: json as T };
+			return { success: true, res: (json ?? null) as T, status: res.status };
 		} else {
-			const error = json as ApiError;
+			const isUnauth = res.status === 401;
+			const error = json as ApiError | null;
 			return {
 				success: false,
-				message: error.exception ?? error.error ?? null,
+				status: res.status,
+				unauthorized: isUnauth,
+				message:
+					error?.exception ??
+					error?.error ??
+					(isUnauth ? "Not logged in" : text || "Network error occurred"),
 			};
 		}
 	} catch (e) {

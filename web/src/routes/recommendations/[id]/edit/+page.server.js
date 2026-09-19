@@ -1,30 +1,33 @@
 import { redirect } from "@sveltejs/kit";
 import { getRecommendation } from "$lib/api_calls/recommendations.svelte.ts";
 import { getUser } from "$lib/api_calls/users.svelte.ts";
+import { withAuth } from "$lib/auth";
 import { VITE_API_URL } from "$env/static/private";
 
 let root_url = VITE_API_URL;
 
-export async function load({ cookies, params }) {
-	const jwt = cookies.get("jwt");
-	const user_id = cookies.get("user_id");
-
+export const load = withAuth(async ({ jwt, user_id, params }) => {
 	let recommendation_id = params.id;
-	let recommendation = await getRecommendation(jwt, recommendation_id);
-	let user = await getUser(jwt, recommendation.creator_id);
-	let my_user_id = cookies.get("user_id");
+	let recommendation = await getRecommendation(recommendation_id, jwt);
+	if (recommendation.unauthorized) {
+		throw redirect(302, "/sign_in");
+	}
+
+	let user = await getUser(recommendation.res?.user_id || user_id, jwt);
+	if (user.unauthorized) {
+		throw redirect(302, "/sign_in");
+	}
 
 	return {
-		recommendation: recommendation,
-		user: user,
-		my_user_id: my_user_id,
+		recommendation: recommendation.res,
+		user: user.res,
+		my_user_id: user_id,
 	};
-}
+});
 
 export const actions = {
-	edit_recommendation: async ({ cookies, request }) => {
+	edit_recommendation: withAuth(async ({ jwt, request }) => {
 		const data = await request.formData();
-		const jwt = cookies.get("jwt");
 
 		try {
 			const response = await fetch(root_url + "recommendations/" + data.get("id"), {
@@ -42,18 +45,17 @@ export const actions = {
 					Authorization: "Token " + jwt,
 				},
 			});
-			// if (!response.ok) {
-			//     throw new Error(`Response status: ${response.status}`);
-			// }
+			if (response.status === 401) {
+				throw redirect(302, "/sign_in");
+			}
 			const json = await response.json();
-
-			2 + 5;
 		} catch (error) {
-			console.error(error.message);
+			if (error?.status === 302) throw error;
+			console.error(error?.message);
 		}
 
 		//TODO: Success toast
 
-		redirect(302, "/posts");
-	},
+		throw redirect(302, "/posts");
+	}),
 };

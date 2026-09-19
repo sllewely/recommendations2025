@@ -10,10 +10,19 @@ import { getUser } from "$lib/api_calls/users.svelte";
 import { VITE_API_URL } from "$env/static/private";
 
 export const load = withAuth(async ({ jwt, user_id }: LoadAuthContext) => {
-	const [postsResponse, eventsResponse] = await Promise.all([getPosts(jwt), getEvents(jwt)]);
-	const user = await getUser(user_id, jwt);
+	const [postsResponse, eventsResponse, user] = await Promise.all([
+		getPosts(jwt),
+		getEvents(jwt),
+		getUser(user_id, jwt),
+	]);
 
-	const calendar_url = VITE_API_URL + "calendars/?token=" + user["res"].calendar_api_key;
+	if (postsResponse.unauthorized || eventsResponse.unauthorized || user.unauthorized) {
+		throw redirect(302, "/sign_in");
+	}
+
+	const calendar_url = user.res?.calendar_api_key
+		? VITE_API_URL + "calendars/?token=" + user.res.calendar_api_key
+		: null;
 
 	return {
 		posts_response: postsResponse.success ? (postsResponse.res ?? {}) : {},

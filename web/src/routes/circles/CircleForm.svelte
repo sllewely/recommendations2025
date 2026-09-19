@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { enhance } from "$app/forms";
-	import * as Form from "$lib/components/ui/form";
 	import { type SuperValidated, type Infer, superForm } from "sveltekit-superforms";
 	import { zodClient } from "sveltekit-superforms/adapters";
 	import { Input } from "$lib/components/ui/input";
@@ -9,8 +8,12 @@
 	import { Button } from "$lib/components/ui/button/index.js";
 	import * as Card from "$lib/components/ui/card/index.js";
 	import FriendItem from "./FriendItem.svelte";
+	import { Field, Control } from "formsnap";
+	import FormLabel from "$lib/components/form/FormLabel.svelte";
+	import FormFieldErrors from "$lib/components/form/FormFieldErrors.svelte";
+	import type { User } from "$lib/api_calls/types";
 
-	let { data }: { data: { form: SuperValidated<Infer<CircleFormSchema>>; event: any } } = $props();
+	let { data }: { data: { form: SuperValidated<Infer<CircleFormSchema>> } } = $props();
 
 	const form = superForm(data.form, {
 		validators: zodClient(circleFormSchema),
@@ -19,8 +22,8 @@
 	const { form: formData } = form;
 
 	let creating = $state(false);
-	let friend_results = $state([]);
-	let friends_to_add = $state([]);
+	let friend_results = $state<User[]>([]);
+	let friends_to_add = $state<User[]>([]);
 
 	let member_ids = $derived(friends_to_add.map((friend) => friend.id));
 
@@ -47,58 +50,76 @@
 					return async ({ update, result }) => {
 						await update();
 						creating = false;
-						let res = result.data;
-						if (res.success) {
+						let res = (result as any).data;
+						if (res?.success) {
 							console.log("success create circle");
 							newToast("You have successfully created a circle!!");
 						} else {
-							newToast("Error creating circle: " + res.message, ToastType.Error);
+							newToast(
+								"Error creating circle: " + (res?.message ?? "Unknown error"),
+								ToastType.Error,
+							);
 						}
 					};
 				}}
 			>
-				<Form.Field {form} name="name">
-					<Form.Control let:attrs>
-						<Form.Label>Name</Form.Label>
-						<Input {...attrs} bind:value={$formData.name} />
-					</Form.Control>
-					<Form.Control let:attrs>
-						<Form.Label>Friends</Form.Label>
-						<div class="flex gap-2">
-							<Input {...attrs} id="search" name="search" />
-							<Button
-								type="button"
-								class="rounded hover:bg-orange-500 text-teal-700 font-semibold hover:text-white py-2 px-4 h-9 border border-teal-500 hover:border-transparent"
-								variant="outline"
-								onclick={async () => {
-									// call search_friends to populate potential friends
-									const name = document.getElementById("search").value;
-									console.log("searching for", name);
-									const response = await fetch(`/api/friends/search?search=${name}`, {
+				<Field {form} name="name">
+					<Control>
+						{#snippet children({ props })}
+							<FormLabel>Name</FormLabel>
+							<Input {...props} bind:value={$formData.name} />
+						{/snippet}
+					</Control>
+					<FormFieldErrors />
+				</Field>
+
+				<div class="mt-4">
+					<label
+						for="search"
+						class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+					>
+						Friends
+					</label>
+					<div class="flex gap-2 mt-2">
+						<Input id="search" name="search" />
+						<Button
+							type="button"
+							class="rounded hover:bg-orange-500 text-teal-700 font-semibold hover:text-white py-2 px-4 h-9 border border-teal-500 hover:border-transparent"
+							variant="outline"
+							onclick={async () => {
+								const searchEl = document.getElementById("search") as HTMLInputElement;
+								const name = searchEl ? searchEl.value : "";
+								console.log("searching for", name);
+								const response = await fetch(
+									`/api/friends/search?search=${encodeURIComponent(name)}`,
+									{
 										method: "GET",
 										headers: { "Content-Type": "application/json" },
-									});
-									friend_results = await response.json();
-									console.log("friends", friend_results);
+									},
+								);
+								friend_results = await response.json();
+								console.log("friends", friend_results);
+							}}
+						>
+							Search
+						</Button>
+					</div>
+					<ul id="potential_friends" class="mt-2">
+						{#each friend_results as friend}
+							<FriendItem
+								{friend}
+								buttonLabel={"+"}
+								buttonAriaLabel={"add to circle"}
+								onclick={() => {
+									friends_to_add = [...friends_to_add, friend];
+									friend_results = friend_results.filter((f) => f.id !== friend.id);
 								}}
-								>Search
-							</Button>
-						</div>
-						<ul id="potential_friends">
-							{#each friend_results as friend}
-								<FriendItem
-									{friend}
-									buttonLabel={"+"}
-									buttonAriaLabel={"add to circle"}
-									onclick={() => {
-										friends_to_add = [...friends_to_add, friend];
-										friend_results = friend_results.filter((f) => f.id !== friend.id);
-									}}
-								/>
-							{/each}
-						</ul>
-						<div>friends slated for the circle</div>
-						<ul>
+							/>
+						{/each}
+					</ul>
+					{#if friends_to_add.length > 0}
+						<div class="font-medium text-sm mt-4">friends slated for the circle</div>
+						<ul class="mt-2">
 							{#each friends_to_add as friend}
 								<FriendItem
 									{friend}
@@ -110,14 +131,15 @@
 								/>
 							{/each}
 						</ul>
-						<div>{member_ids}</div>
-					</Form.Control>
-					<Form.FieldErrors />
-				</Form.Field>
-				<Form.Field {form} name="member_ids">
+					{/if}
+				</div>
+
+				<Field {form} name="member_ids">
 					<input hidden value={$formData.member_ids} name="member_ids" />
-				</Form.Field>
-				<Form.Button>Submit</Form.Button>
+				</Field>
+				<div class="pt-4">
+					<Button type="submit">Submit</Button>
+				</div>
 			</form>
 		</Card.Content>
 	</Card.Root>

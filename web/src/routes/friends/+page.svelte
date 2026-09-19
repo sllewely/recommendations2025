@@ -11,7 +11,7 @@
 	import H2 from "$lib/components/text/H2.svelte";
 	import UserSearchResult from "$lib/components/users/UserSearchResult.svelte";
 	import PendingFriendRequest from "$lib/components/users/PendingFriendRequest.svelte";
-	import Friend from "$lib/components/users/Friend.svelte";
+	import UserCard from "$lib/components/users/UserCard.svelte";
 	import type { User, FriendStatus, FriendsMap } from "$lib/api_calls/types";
 	import Link from "$lib/components/text/Link.svelte";
 	import FriendStatusButton from "$lib/components/users/FriendStatusButton.svelte";
@@ -179,9 +179,9 @@
 		{#if friends.length === 0}
 			<p>You have no friends yet! Make some new ones :)</p>
 		{/if}
-		<div>
+		<div class="grid md:grid-cols-4 grid-cols-2 gap-2">
 			{#each friends as friend}
-				<Friend user={friend} />
+				<UserCard user={friend} />
 			{/each}
 		</div>
 	</div>

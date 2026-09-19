@@ -34,5 +34,7 @@ end
 private
 
 def circle_params
-  params.permit(:name, member_ids: [])
+  p = params.permit(:name, member_ids: [])
+  p[:member_ids] = p[:member_ids].reject(&:blank?) if p[:member_ids].is_a?(Array)
+  p
 end

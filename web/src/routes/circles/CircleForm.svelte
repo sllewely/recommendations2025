@@ -25,7 +25,7 @@
 	let friend_results = $state<User[]>([]);
 	let friends_to_add = $state<User[]>([]);
 
-	let member_ids = $derived(friends_to_add.map((friend) => friend.id));
+	let member_ids = $derived(friends_to_add.map((friend) => friend.id).filter(Boolean));
 
 	$effect(() => {
 		$formData.member_ids = member_ids;
@@ -54,6 +54,8 @@
 						if (res?.success) {
 							console.log("success create circle");
 							newToast("You have successfully created a circle!!");
+							friends_to_add = [];
+							friend_results = [];
 						} else {
 							newToast(
 								"Error creating circle: " + (res?.message ?? "Unknown error"),
@@ -135,7 +137,14 @@
 				</div>
 
 				<Field {form} name="member_ids">
-					<input hidden value={$formData.member_ids} name="member_ids" />
+					<Control>
+						{#snippet children({ props })}
+							{#each friends_to_add as friend}
+								<input type="hidden" name="member_ids" value={friend.id} />
+							{/each}
+						{/snippet}
+					</Control>
+					<FormFieldErrors />
 				</Field>
 				<div class="pt-4">
 					<Button type="submit">Submit</Button>

@@ -34,12 +34,29 @@ RSpec.describe "Circles", type: :request do
       @headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{auth_token}" }
     end
 
-    it 'creates a circle' do
+    it 'fails to create a circle without a name' do
+      u1 = create(:user)
+      post "/circles", params: { member_ids: [u1.id] }, headers: @headers
+
+      expect(response).to have_http_status(:unprocessable_content)
+      res = JSON.parse(response.body)
+      expect(res['error']).to include("name")
+    end
+
+    it 'fails to create a circle without members' do
       post "/circles", params: { name: "my circle" }, headers: @headers
 
-      expect(response).to have_http_status(:created)
+      expect(response).to have_http_status(:unprocessable_content)
       res = JSON.parse(response.body)
-      expect(res['name']).to eq("my circle")
+      expect(res['error']).to include("members")
+    end
+
+    it 'fails to create a circle with empty or blank member_ids' do
+      post "/circles", params: { name: "my circle", member_ids: ["", nil] }.to_json, headers: @headers.merge({ 'CONTENT_TYPE' => 'application/json' })
+
+      expect(response).to have_http_status(:unprocessable_content)
+      res = JSON.parse(response.body)
+      expect(res['error']).to include("members")
     end
 
     it 'creates a circle with users' do

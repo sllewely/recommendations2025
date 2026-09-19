@@ -1,24 +1,24 @@
 import * as api from "$lib/api_calls/api.svelte.js";
 import { superValidate } from "sveltekit-superforms";
 import { circleFormSchema } from "./schema";
-import { fail } from "@sveltejs/kit";
+import { fail, redirect } from "@sveltejs/kit";
 import { zod } from "sveltekit-superforms/adapters";
+import { withAuth, type LoadAuthContext, type ActionAuthContext } from "$lib/auth";
 
-export async function load({ cookies, params }) {
-	const jwt = cookies.get("jwt");
-	const my_user_id = cookies.get("user_id");
+export const load = withAuth(async ({ jwt }: LoadAuthContext) => {
 	const circles = await api.get("circles", jwt);
+	if (circles.unauthorized) {
+		throw redirect(302, "/sign_in");
+	}
 
 	return {
 		circles_response: circles,
 		form: await superValidate(zod(circleFormSchema)),
 	};
-}
+});
 
 export const actions = {
-	create_circle: async ({ cookies, request }) => {
-		const jwt = cookies.get("jwt");
-
+	create_circle: withAuth(async ({ jwt, request }: ActionAuthContext) => {
 		const form = await superValidate(request, zod(circleFormSchema));
 		if (!form.valid) {
 			return fail(400, {
@@ -36,5 +36,5 @@ export const actions = {
 		);
 
 		return response;
-	},
+	}),
 };

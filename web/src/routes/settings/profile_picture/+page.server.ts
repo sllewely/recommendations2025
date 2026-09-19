@@ -1,14 +1,15 @@
 import { getUser } from "$lib/api_calls/users.svelte.js";
 import type { PageServerLoad } from "./$types.js";
+import { withAuth, type LoadAuthContext } from "$lib/auth";
+import { redirect } from "@sveltejs/kit";
 
-export const load: PageServerLoad = async ({ cookies, params }) => {
-	let user_id = cookies.get("user_id");
-	const jwt = cookies.get("jwt");
+export const load: PageServerLoad = withAuth(async ({ jwt, user_id }: LoadAuthContext) => {
 	let user = await getUser(user_id, jwt);
-	const user_obj = user["res"];
+	if (user.unauthorized) {
+		throw redirect(302, "/sign_in");
+	}
 
-	// TODO: error handling
 	return {
 		user: user["res"],
 	};
-};
+});

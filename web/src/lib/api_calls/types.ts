@@ -8,6 +8,8 @@ export interface ApiResponse<T = unknown> {
 	success: boolean;
 	res?: T;
 	message?: string;
+	status?: number;
+	unauthorized?: boolean;
 }
 
 export type CurrentUser = {

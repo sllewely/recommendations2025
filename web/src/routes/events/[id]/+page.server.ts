@@ -7,18 +7,20 @@ export async function load({ cookies, params }) {
 	const event_id = params.id;
 
 	// signed in
-	if (typeof jwt === "string") {
+	if (typeof jwt === "string" && jwt.trim() !== "") {
 		let event_response = await api.get(`events/` + event_id, jwt);
-		let user_response = await getUser(my_user_id, jwt);
+		if (event_response.success) {
+			let user_response = my_user_id ? await getUser(my_user_id, jwt) : null;
 
-		return {
-			event: event_response["res"],
-			user: user_response["res"],
-			my_user_id: my_user_id,
-		};
+			return {
+				event: event_response["res"],
+				user: user_response?.["res"],
+				my_user_id: my_user_id,
+			};
+		}
 	}
 
-	// not signed in
+	// not signed in or unauthorized
 	let event_response = await api.get(`public/events/` + event_id);
 
 	return {

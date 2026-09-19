@@ -3,27 +3,28 @@ import { getEvent } from "$lib/api_calls/events.svelte.js";
 import { superValidate } from "sveltekit-superforms";
 import { zod } from "sveltekit-superforms/adapters";
 import { eventsFormSchema } from "../../schema";
-import { fail } from "@sveltejs/kit";
+import { fail, redirect } from "@sveltejs/kit";
 import { DateTime } from "luxon";
+import { withAuth, type LoadAuthContext, type ActionAuthContext } from "$lib/auth";
 
-export async function load({ locals, cookies, params }) {
-	const jwt = cookies.get("jwt");
+export const load = withAuth(async ({ jwt, params }: LoadAuthContext) => {
 	const event_id = params.id;
 
 	let event_response = await getEvent(event_id, jwt);
+	if (event_response.unauthorized) {
+		throw redirect(302, "/sign_in");
+	}
 	let event = event_response["res"];
 
 	return {
 		event: event,
 		form: await superValidate(event, zod(eventsFormSchema)),
 	};
-}
+});
 
 // named action for sign in form
 export const actions = {
-	default: async ({ cookies, request }) => {
-		const jwt = cookies.get("jwt");
-
+	default: withAuth(async ({ jwt, request }: ActionAuthContext) => {
 		const form = await superValidate(request, zod(eventsFormSchema));
 		if (!form.valid) {
 			return fail(400, {
@@ -61,5 +62,5 @@ export const actions = {
 			});
 		}
 		return response;
-	},
+	}),
 };

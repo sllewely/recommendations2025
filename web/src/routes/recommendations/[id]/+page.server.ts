@@ -4,10 +4,15 @@ import * as api from "$lib/api_calls/api.svelte.js";
 import { formDataToGeneric } from "$lib/api_calls/utils";
 import { createComment, type CommentPayload } from "$lib/api_calls/comments.svelte.js";
 import { withAuth, type ActionAuthContext, type LoadAuthContext } from "$lib/auth";
+import { redirect } from "@sveltejs/kit";
 
 export const load = withAuth(async ({ jwt, params, user_id }: LoadAuthContext) => {
 	let recommendation_id = params.id;
 	let recommendation = await getRecommendation(recommendation_id, jwt);
+
+	if (recommendation.unauthorized) {
+		throw redirect(302, "/sign_in");
+	}
 
 	return {
 		recommendation: recommendation["res"],

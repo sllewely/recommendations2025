@@ -11,6 +11,8 @@ class UserBlueprint < Blueprinter::Base
         "prod.bumblebeans.xyz/profile_picture/#{user.id}"
       when "development"
         "dev.bumblebeans.xyz/profile_picture/#{user.id}"
+      when "test"
+        "test.test.xyz/profile_picture/#{user.id}"
       end
     end
   end

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Button } from "$lib/components/ui/button/index.js";
 	import type { User } from "$lib/api_calls/types";
+	import bblogo from "$lib/assets/android-launchericon-72-72.png";
 
 	let {
 		friend,
@@ -15,7 +16,14 @@
 	} = $props();
 </script>
 
-<li class="flex gap-2 mb-2">
+<li class="flex items-center gap-2 mb-2">
+	<div class="rounded-full w-8 h-8 overflow-hidden mr-1 shrink-0">
+		{#if friend.profile_photo_url}
+			<img src={"https://" + friend.profile_photo_url} alt="profile picture" />
+		{:else}
+			<img src={bblogo} alt="profile picture" />
+		{/if}
+	</div>
 	<p>{friend.name}</p>
 	<Button
 		type="button"

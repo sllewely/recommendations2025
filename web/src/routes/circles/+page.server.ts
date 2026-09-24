@@ -26,11 +26,13 @@ export const actions = {
 			});
 		}
 
+		const member_ids = (form.data.member_ids || []).filter((id) => Boolean(id && id.trim()));
+
 		const response = await api.post(
 			"circles",
 			{
 				name: form.data.name,
-				member_ids: form.data.member_ids || [],
+				member_ids,
 			},
 			jwt,
 		);

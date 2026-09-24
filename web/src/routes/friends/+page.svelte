@@ -11,10 +11,11 @@
 	import H2 from "$lib/components/text/H2.svelte";
 	import UserSearchResult from "$lib/components/users/UserSearchResult.svelte";
 	import PendingFriendRequest from "$lib/components/users/PendingFriendRequest.svelte";
-	import Friend from "$lib/components/users/Friend.svelte";
+	import UserCard from "$lib/components/users/UserCard.svelte";
 	import type { User, FriendStatus, FriendsMap } from "$lib/api_calls/types";
 	import Link from "$lib/components/text/Link.svelte";
 	import FriendStatusButton from "$lib/components/users/FriendStatusButton.svelte";
+	import bblogo from "$lib/assets/android-launchericon-72-72.png";
 
 	interface Props {
 		data: {
@@ -157,9 +158,18 @@
 						<div
 							class="p-2 my-2 border-1 border-gray-200 rounded-sm flex flex-row justify-between items-center"
 						>
-							<span>
-								<Link url="/users/{user.id}"><p>{user.name}</p></Link>
-							</span>
+							<div class="flex flex-row items-center">
+								<div class="rounded-full w-10 h-10 overflow-hidden mr-2 shrink-0">
+									{#if user.profile_photo_url}
+										<img src={"https://" + user.profile_photo_url} alt="profile picture" />
+									{:else}
+										<img src={bblogo} alt="profile picture" />
+									{/if}
+								</div>
+								<span>
+									<Link url="/users/{user.id}"><p>{user.name}</p></Link>
+								</span>
+							</div>
 
 							<div>
 								<FriendStatusButton
@@ -179,9 +189,9 @@
 		{#if friends.length === 0}
 			<p>You have no friends yet! Make some new ones :)</p>
 		{/if}
-		<div>
+		<div class="grid md:grid-cols-4 grid-cols-2 gap-2">
 			{#each friends as friend}
-				<Friend user={friend} />
+				<UserCard user={friend} />
 			{/each}
 		</div>
 	</div>

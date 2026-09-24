@@ -12,7 +12,7 @@ class UserBlueprint < Blueprinter::Base
       when "development"
         "dev.bumblebeans.xyz/profile_picture/#{user.id}"
       when "test"
-        "test.bumblebeans.xyz/profile_picture/#{user.id}"
+        "test.test.xyz/profile_picture/#{user.id}"
       end
     end
   end

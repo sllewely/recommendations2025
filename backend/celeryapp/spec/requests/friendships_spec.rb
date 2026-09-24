@@ -28,7 +28,7 @@ RSpec.describe "Friendships", type: :request do
     end
 
     it 'filters my friends' do
-      friend = create(:user, name: 'james')
+      friend = create(:user, name: 'james', presigned_url: 'sample.jpg')
       friend2 = create(:user, name: 'jimothy')
       friend3 = create(:user, name: '123')
       create(:friendship, user: @my_user, friend: friend)
@@ -40,7 +40,9 @@ RSpec.describe "Friendships", type: :request do
       expect(response).to have_http_status(:ok)
       res = JSON.parse(response.body)
       expect(res.size).to eq(2)
-      expect(res.first.keys).to include("name")
+      expect(res.first.keys).to include("name", "profile_photo_url", "presigned_url")
+      james = res.find { |u| u["name"] == "james" }
+      expect(james["profile_photo_url"]).to be_present
     end
   end
 

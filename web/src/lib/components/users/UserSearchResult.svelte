@@ -6,6 +6,7 @@
 	import FormButton from "$lib/components/form/FormButton.svelte";
 	import Form from "$lib/components/form/Form.svelte";
 	import { Button } from "$lib/components/ui/button";
+	import bblogo from "$lib/assets/android-launchericon-72-72.png";
 
 	let { user, is_friend, is_pending } = $props();
 
@@ -15,9 +16,18 @@
 <div
 	class="p-2 my-2 border-1 border-gray-200 rounded-sm flex flex-row justify-between items-center"
 >
-	<span>
-		<Link url="/users/{user.id}"><p>{user.name}</p></Link>
-	</span>
+	<div class="flex flex-row items-center">
+		<div class="rounded-full w-10 h-10 overflow-hidden mr-2 shrink-0">
+			{#if user.profile_photo_url}
+				<img src={"https://" + user.profile_photo_url} alt="profile picture" />
+			{:else}
+				<img src={bblogo} alt="profile picture" />
+			{/if}
+		</div>
+		<span>
+			<Link url="/users/{user.id}"><p>{user.name}</p></Link>
+		</span>
+	</div>
 	{#if !is_friend}
 		<div>
 			<form

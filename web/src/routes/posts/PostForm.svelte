@@ -15,6 +15,7 @@
 	import FormLabel from "$lib/components/form/FormLabel.svelte";
 	import FormFieldErrors from "$lib/components/form/FormFieldErrors.svelte";
 	import { Spinner } from "$lib/components/ui/spinner";
+	import bblogo from "$lib/assets/android-launchericon-72-72.png";
 
 	let { data }: { data: { form: SuperValidated<Infer<PostFormSchema>>; event: any } } = $props();
 	const form = superForm(data.form, {
@@ -152,10 +153,22 @@
 											<div style="position:absolute; left: 10px; bottom: -10px">
 												<Card.Root>
 													<Card.Content>
-														<div class="flex flex-col">
+														<div class="flex flex-col gap-1">
 															{#each user_search_results as user}
-																<div>
-																	{user.name}
+																<div class="flex flex-row items-center gap-2">
+																	<div class="rounded-full w-6 h-6 overflow-hidden shrink-0">
+																		{#if user.profile_photo_url}
+																			<img
+																				src={"https://" + user.profile_photo_url}
+																				alt="profile picture"
+																			/>
+																		{:else}
+																			<img src={bblogo} alt="profile picture" />
+																		{/if}
+																	</div>
+																	<div>
+																		{user.name}
+																	</div>
 																</div>
 															{/each}
 														</div>

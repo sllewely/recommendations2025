@@ -72,7 +72,7 @@
 				<span class="text-sm">posted at {formattedCreateTime}</span>
 			</div>
 		</div>
-		<PostCard feed_item={data.post} />
+		<PostCard feed_item={data.post} truncate={false} />
 
 		<div>
 			<Commentable feed_item={data.post} comments={data.post.comments} />

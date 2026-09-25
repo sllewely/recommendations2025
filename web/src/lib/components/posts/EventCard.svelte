@@ -5,6 +5,7 @@
 	import type { Event } from "$lib/api_calls/types";
 	import RsvpBadge from "$lib/components/ui/badge/RsvpBadge.svelte";
 	import MarkedDownPost from "$lib/components/posts/MarkedDownPost.svelte";
+	import TruncatedContent from "$lib/components/posts/TruncatedContent.svelte";
 	import * as Tooltip from "$lib/components/ui/tooltip/index.js";
 	import * as Card from "$lib/components/ui/card/index.js";
 	import { onMount } from "svelte";
@@ -76,7 +77,9 @@
 				</Card.Header>
 				<Card.Content>
 					{#if feed_item.description}
-						<MarkedDownPost captured_text={feed_item.description} />
+						<TruncatedContent text={feed_item.description}>
+							<MarkedDownPost captured_text={feed_item.description} />
+						</TruncatedContent>
 					{/if}
 					<div class="text-sm text-gray-500">
 						{#if feed_item.address}

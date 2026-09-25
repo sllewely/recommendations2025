@@ -11,6 +11,7 @@
 	import { newToast, ToastType } from "$lib/state/toast.svelte.js";
 	import { goto } from "$app/navigation";
 	import { Textarea } from "$lib/components/ui/textarea";
+	import * as Tabs from "$lib/components/ui/tabs/index.js";
 	import { CalendarIcon } from "lucide-svelte";
 	import {
 		type DateValue,
@@ -54,7 +55,6 @@
 	});
 
 	let creating = $state(false);
-	let rendering = $state(false);
 
 	let friend_results = $state([]);
 	let friends_to_invite = $state([]);
@@ -73,18 +73,6 @@
 	$effect(() => {
 		$formData.invited_friend_ids = invited_friend_ids;
 	});
-
-	let captured_text = $state("");
-
-	let timer: number;
-	const debounce = (v: string) => {
-		rendering = true;
-		clearTimeout(timer);
-		timer = setTimeout(() => {
-			captured_text = v;
-			rendering = false;
-		}, 500);
-	};
 </script>
 
 <div>
@@ -182,38 +170,39 @@
 			</div>
 
 			<div class="pt-6">
-				<Field {form} name="description">
-					<Control>
-						{#snippet children({ props })}
-							<Card.Root>
-								<Card.Header>
-									<Card.Title>Preview of the description</Card.Title>
-									<Card.Description>
-										{#if rendering}
-											pause typing to render...
-										{:else}
-											markdown supported
-										{/if}
-									</Card.Description>
-								</Card.Header>
-								<Card.Content>
-									<MarkedDownPost {captured_text} />
-								</Card.Content>
-							</Card.Root>
-							<div class="pt-6">
-								<FormLabel>Description</FormLabel>
-								<Textarea
-									{...props}
-									id="description"
-									bind:value={$formData.description}
-									onkeyup={({ target: { value } }) => debounce(value)}
-								/>
-							</div>
-						{/snippet}
-					</Control>
-					<Description class="text-xs font-light">Hype it up!!</Description>
-					<FormFieldErrors />
-				</Field>
+				<label for="description" class="font-semibold text-nowrap">Description</label>
+				<Tabs.Root value="write" class="w-full mt-2">
+					<Tabs.List class="grid w-full grid-cols-2">
+						<Tabs.Trigger value="write">Write</Tabs.Trigger>
+						<Tabs.Trigger value="preview">Preview Markdown</Tabs.Trigger>
+					</Tabs.List>
+					<Tabs.Content value="write" class="pt-4">
+						<Field {form} name="description">
+							<Control>
+								{#snippet children({ props })}
+									<Textarea
+										{...props}
+										id="description"
+										bind:value={$formData.description}
+										placeholder="Write event description here... (markdown supported)"
+										class="min-h-32"
+									/>
+								{/snippet}
+							</Control>
+							<Description class="text-xs font-light">Hype it up!!</Description>
+							<FormFieldErrors />
+						</Field>
+					</Tabs.Content>
+					<Tabs.Content value="preview" class="pt-4">
+						<div class="min-h-32 rounded-md border border-input bg-background p-4">
+							{#if $formData.description && $formData.description.trim().length > 0}
+								<MarkedDownPost captured_text={$formData.description} />
+							{:else}
+								<p class="text-sm text-muted-foreground italic">Nothing to preview</p>
+							{/if}
+						</div>
+					</Tabs.Content>
+				</Tabs.Root>
 			</div>
 			<Field {form} name="address">
 				<Control>

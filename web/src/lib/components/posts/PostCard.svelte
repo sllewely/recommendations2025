@@ -3,12 +3,14 @@
 	import * as Card from "$lib/components/ui/card/index.js";
 	import type { Post } from "$lib/api_calls/types";
 	import MarkedDownPost from "$lib/components/posts/MarkedDownPost.svelte";
+	import TruncatedContent from "$lib/components/posts/TruncatedContent.svelte";
 
 	interface Props {
 		feed_item: Post;
+		truncate?: boolean;
 	}
 
-	let { feed_item }: Props = $props();
+	let { feed_item, truncate = true }: Props = $props();
 
 	if (feed_item.class_name !== "Post") {
 		console.error("not a post feed item");
@@ -30,7 +32,9 @@
 
 					<Card.Content>
 						{#if feed_item.content}
-							<MarkedDownPost captured_text={feed_item.content} />
+							<TruncatedContent text={feed_item.content} enabled={truncate}>
+								<MarkedDownPost captured_text={feed_item.content} />
+							</TruncatedContent>
 						{/if}
 					</Card.Content>
 				</Card.Root>

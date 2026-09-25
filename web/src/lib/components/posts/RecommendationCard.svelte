@@ -4,6 +4,7 @@
 	import Link from "$lib/components/text/Link.svelte";
 	import H2 from "$lib/components/text/H2.svelte";
 	import PlusCircle from "$lib/components/posts/PlusCircle.svelte";
+	import TruncatedContent from "$lib/components/posts/TruncatedContent.svelte";
 	import { current_user } from "$lib/state/current_user.svelte";
 	import type { Recommendation } from "$lib/api_calls/types";
 	import { parseAbsoluteToLocal } from "@internationalized/date";
@@ -73,7 +74,9 @@
 					<Card.Content>
 						<p>{feed_item.media_type}</p>
 						{#if feed_item.notes}
-							<p>{feed_item.notes}</p>
+							<TruncatedContent text={feed_item.notes}>
+								<p>{feed_item.notes}</p>
+							</TruncatedContent>
 						{/if}
 						{#if feed_item.url}
 							<p class="truncate">

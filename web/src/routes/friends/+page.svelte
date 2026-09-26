@@ -57,6 +57,8 @@
 		circles = data.circles_response?.["res"] ?? [];
 	});
 
+	let new_circle_name = $state("");
+
 	let selected_circle_id = $state<string | null>(null);
 
 	let selected_circle = $derived(circles.find((c) => c.id === selected_circle_id) ?? null);
@@ -313,6 +315,32 @@
 	<div class="flex flex-col p-2">
 		<H1>Circles</H1>
 		Create groups for tagging or privacy
+
+		<form
+			method="POST"
+			action="?/create_circle"
+			class="flex flex-row gap-2 pt-2"
+			use:enhance={() => {
+				return async ({ result }) => {
+					const res = result.data;
+					if (res?.success) {
+						circles = [...circles, res["res"]];
+						new_circle_name = "";
+					} else {
+						newToast("Error creating circle: " + res?.message, ToastType.Error);
+					}
+				};
+			}}
+		>
+			<Input
+				id="circle_name"
+				name="name"
+				placeholder="close friends"
+				autocomplete="off"
+				bind:value={new_circle_name}
+			/>
+			<Button type="submit" disabled={!new_circle_name.trim()}>Add</Button>
+		</form>
 
 		{#if circles.length === 0}
 			<p class="pt-2">You have no circles yet!</p>

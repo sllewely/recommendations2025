@@ -1,6 +1,6 @@
 import * as api from "$lib/api_calls/api.svelte.js";
 import { getUser } from "$lib/api_calls/users.svelte.js";
-import { getCircles, addMember, removeMember } from "$lib/api_calls/circles.svelte";
+import { getCircles, addMember, removeMember, createCircle } from "$lib/api_calls/circles.svelte";
 import { withAuth, type LoadAuthContext, type ActionAuthContext } from "$lib/auth";
 import { redirect } from "@sveltejs/kit";
 
@@ -67,6 +67,18 @@ export const actions = {
 		const searchParams = new URLSearchParams(paramsObj);
 
 		const response = await api.get("users?" + searchParams.toString(), jwt);
+
+		return response;
+	}),
+	create_circle: withAuth(async ({ jwt, request }: ActionAuthContext) => {
+		const data = await request.formData();
+		const name = String(data.get("name") ?? "").trim();
+
+		if (!name) {
+			return { success: false, message: "Name is required" };
+		}
+
+		const response = await createCircle({ name, member_ids: [] }, jwt);
 
 		return response;
 	}),

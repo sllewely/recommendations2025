@@ -12,7 +12,7 @@
 	import UserSearchResult from "$lib/components/users/UserSearchResult.svelte";
 	import PendingFriendRequest from "$lib/components/users/PendingFriendRequest.svelte";
 	import UserCard from "$lib/components/users/UserCard.svelte";
-	import type { User, FriendStatus, FriendsMap } from "$lib/api_calls/types";
+	import type { User, FriendStatus, FriendsMap, Circle } from "$lib/api_calls/types";
 	import Link from "$lib/components/text/Link.svelte";
 	import FriendStatusButton from "$lib/components/users/FriendStatusButton.svelte";
 	import bblogo from "$lib/assets/android-launchericon-72-72.png";
@@ -23,6 +23,7 @@
 			friends_map: FriendsMap;
 			friend_requests_response: any;
 			friends_response: any;
+			circles_response: any;
 			outgoing_friend_request_map: Map<string, any>;
 		};
 		form: any;
@@ -49,6 +50,11 @@
 	let friends = $state(data.friends_response["res"] ?? []);
 	$effect(() => {
 		friends = data.friends_response["res"] ?? [];
+	});
+
+	let circles = $state<Circle[]>(data.circles_response?.["res"] ?? []);
+	$effect(() => {
+		circles = data.circles_response?.["res"] ?? [];
 	});
 
 	function debounce(func, timeout = 300) {
@@ -214,5 +220,21 @@
 	<div class="flex flex-col p-2">
 		<H1>Circles</H1>
 		Create groups for tagging or privacy
+
+		{#if circles.length === 0}
+			<p class="pt-2">You have no circles yet!</p>
+		{:else}
+			<div class="flex flex-col gap-1 pt-2">
+				{#each circles as circle (circle.id)}
+					<div class="flex flex-row items-baseline gap-2">
+						<span class="font-semibold">{circle.name}</span>
+						<span class="text-sm text-gray-500">
+							{circle.members?.length ?? 0}
+							{(circle.members?.length ?? 0) === 1 ? "member" : "members"}
+						</span>
+					</div>
+				{/each}
+			</div>
+		{/if}
 	</div>
 </div>

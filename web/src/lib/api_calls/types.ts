@@ -97,6 +97,12 @@ export interface User {
 	friendship_status: FriendshipStatus;
 }
 
+export interface Circle {
+	id: string;
+	name: string;
+	members: User[];
+}
+
 export interface Event {
 	id: string;
 	created_at: string;

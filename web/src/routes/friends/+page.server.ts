@@ -1,5 +1,6 @@
 import * as api from "$lib/api_calls/api.svelte.js";
 import { getUser } from "$lib/api_calls/users.svelte.js";
+import { getCircles } from "$lib/api_calls/circles.svelte";
 import { withAuth, type LoadAuthContext, type ActionAuthContext } from "$lib/auth";
 import { redirect } from "@sveltejs/kit";
 
@@ -11,11 +12,13 @@ export const load = withAuth(async ({ jwt, user_id }: LoadAuthContext) => {
 
 	const friends_map_response = await api.get("friendships/friends_map", jwt);
 	const friend_requests_response = await api.get("friend_requests", jwt);
+	const circles_response = await getCircles(jwt);
 	let user_res = await getUser(user_id, jwt);
 
 	if (
 		friends_map_response.unauthorized ||
 		friend_requests_response.unauthorized ||
+		circles_response.unauthorized ||
 		user_res.unauthorized
 	) {
 		throw redirect(302, "/sign_in");
@@ -30,6 +33,7 @@ export const load = withAuth(async ({ jwt, user_id }: LoadAuthContext) => {
 		friends_response: friends,
 		friends_map: friends_map_response["res"],
 		friend_requests_response: friend_requests_response,
+		circles_response: circles_response,
 		outgoing_friend_request_map: outgoing_friend_request_map,
 	};
 });

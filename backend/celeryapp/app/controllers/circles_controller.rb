@@ -1,7 +1,7 @@
 class CirclesController < ApplicationController
 
   def index
-    circles = current_user.circles
+    circles = current_user.circles.includes(:members)
     render json: CircleBlueprint.render(circles), status: :ok
   end
 

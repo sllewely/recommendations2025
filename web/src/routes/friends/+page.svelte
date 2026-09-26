@@ -39,6 +39,8 @@
 		pending_friends = data.friend_requests_response["res"]["incoming_friend_requests"] ?? [];
 	});
 
+	let show_search = $state(false);
+
 	let creating = $state(false);
 	let searching = $state(false);
 
@@ -80,106 +82,120 @@
 
 		<div class="flex">
 			<div class="flex-auto">
-				<Card>
-					<H2>Search for a user</H2>
+				<button
+					type="button"
+					class="text-sm font-semibold text-teal-400 hover:text-orange-400 hover:underline inline-block my-2 focus:outline-none cursor-pointer"
+					onclick={() => {
+						show_search = !show_search;
+						if (show_search) {
+							setTimeout(() => document.getElementById("search")?.focus(), 0);
+						}
+					}}
+				>
+					{show_search ? "hide" : "add friends..."}
+				</button>
 
-					{#if searching}
-						<p>searching...</p>
-					{/if}
-					<form
-						id="search_form"
-						method="POST"
-						action="?/search_users"
-						bind:this={form}
-						use:enhance={() => {
-							creating = true;
-							return async ({ update, result }) => {
-								// Do not clear form on success
-								await update({ reset: false });
-								creating = false;
-								let res = result.data;
-								if (res.success) {
-									searchResultUsers = res["res"].filter((user) => {
-										return user.id !== my_user.res.id;
-									});
-								} else {
-									newToast("Error searching: " + res.message, ToastType.Error);
-								}
-							};
-						}}
-					>
-						<div class="flex flex-col sm:flex-row justify-between sm:space-x-4">
-							<div class="flex-auto">
-								<Label for="search">by name:</Label>
-								<Input
-									id="search"
-									name="search"
-									placeholder="sarah"
-									autofocus
-									autocomplete="off"
-									onkeyup={() => {
-										document.getElementById("search_form").requestSubmit();
-									}}
-								/>
-							</div>
-							<div class="flex-1">
-								<Label for="tag">by tag:</Label>
-								<Input id="tag" name="tag" placeholder="nyc" autofocus autocomplete="off" />
-							</div>
-						</div>
-						<div class="flex row gap-2">
-							<div class="my-6">
-								<Button
-									type="submit"
-									class="rounded hover:bg-orange-500 text-teal-700 font-semibold hover:text-white py-2 px-4 border border-teal-500 hover:border-transparent"
-									variant="outline"
-									>Search
-								</Button>
-							</div>
-							<div class="my-6">
-								<Button
-									type="button"
-									class="rounded hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent"
-									variant="outline"
-									on:click={() => {
-										document.getElementById("search_form").reset();
-										searchResultUsers = [];
-										document.getElementById("search").focus();
-									}}
-									>Clear
-								</Button>
-							</div>
-						</div>
-					</form>
+				{#if show_search}
+					<Card>
+						<H2>Search for a user</H2>
 
-					<div>
-						{#each searchResultUsers as user}
-							<div
-								class="p-2 my-2 border-1 border-gray-200 rounded-sm flex flex-row justify-between items-center"
-							>
-								<div class="flex flex-row items-center">
-									<div class="rounded-full w-10 h-10 overflow-hidden mr-2 shrink-0">
-										{#if user.profile_photo_url}
-											<img src={"https://" + user.profile_photo_url} alt="profile picture" />
-										{:else}
-											<img src={bblogo} alt="profile picture" />
-										{/if}
-									</div>
-									<span>
-										<Link url="/users/{user.id}"><p>{user.name}</p></Link>
-									</span>
-								</div>
-
-								<div>
-									<FriendStatusButton
-										{user}
-										friend_status_prop={data.friends_map[user.id] ?? "none"}
+						{#if searching}
+							<p>searching...</p>
+						{/if}
+						<form
+							id="search_form"
+							method="POST"
+							action="?/search_users"
+							bind:this={form}
+							use:enhance={() => {
+								creating = true;
+								return async ({ update, result }) => {
+									// Do not clear form on success
+									await update({ reset: false });
+									creating = false;
+									let res = result.data;
+									if (res.success) {
+										searchResultUsers = res["res"].filter((user) => {
+											return user.id !== my_user.res.id;
+										});
+									} else {
+										newToast("Error searching: " + res.message, ToastType.Error);
+									}
+								};
+							}}
+						>
+							<div class="flex flex-col sm:flex-row justify-between sm:space-x-4">
+								<div class="flex-auto">
+									<Label for="search">by name:</Label>
+									<Input
+										id="search"
+										name="search"
+										placeholder="sarah"
+										autocomplete="off"
+										onkeyup={() => {
+											document.getElementById("search_form").requestSubmit();
+										}}
 									/>
 								</div>
+								<div class="flex-1">
+									<Label for="tag">by tag:</Label>
+									<Input id="tag" name="tag" placeholder="nyc" autocomplete="off" />
+								</div>
 							</div>
-						{/each}
-					</div>
-				</Card>
+							<div class="flex row gap-2">
+								<div class="my-6">
+									<Button
+										type="submit"
+										class="rounded hover:bg-orange-500 text-teal-700 font-semibold hover:text-white py-2 px-4 border border-teal-500 hover:border-transparent"
+										variant="outline"
+										>Search
+									</Button>
+								</div>
+								<div class="my-6">
+									<Button
+										type="button"
+										class="rounded hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent"
+										variant="outline"
+										on:click={() => {
+											document.getElementById("search_form").reset();
+											searchResultUsers = [];
+											document.getElementById("search").focus();
+										}}
+										>Clear
+									</Button>
+								</div>
+							</div>
+						</form>
+
+						<div>
+							{#each searchResultUsers as user}
+								<div
+									class="p-2 my-2 border-1 border-gray-200 rounded-sm flex flex-row justify-between items-center"
+								>
+									<div class="flex flex-row items-center">
+										<div class="rounded-full w-10 h-10 overflow-hidden mr-2 shrink-0">
+											{#if user.profile_photo_url}
+												<img src={"https://" + user.profile_photo_url} alt="profile picture" />
+											{:else}
+												<img src={bblogo} alt="profile picture" />
+											{/if}
+										</div>
+										<span>
+											<Link url="/users/{user.id}"><p>{user.name}</p></Link>
+										</span>
+									</div>
+
+									<div>
+										<FriendStatusButton
+											{user}
+											friend_status_prop={data.friends_map[user.id] ?? "none"}
+										/>
+									</div>
+								</div>
+							{/each}
+						</div>
+					</Card>
+				{/if}
 			</div>
 		</div>
 

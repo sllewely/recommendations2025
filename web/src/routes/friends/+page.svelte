@@ -57,6 +57,33 @@
 		circles = data.circles_response?.["res"] ?? [];
 	});
 
+	let selected_circle_id = $state<string | null>(null);
+
+	let selected_circle = $derived(circles.find((c) => c.id === selected_circle_id) ?? null);
+
+	let circle_member_ids = $derived(
+		new Set((selected_circle?.members ?? []).map((m: User) => m.id)),
+	);
+
+	let sorted_friends = $derived(
+		selected_circle
+			? [...friends].sort((a: User, b: User) => {
+					const a_in = circle_member_ids.has(a.id) ? 0 : 1;
+					const b_in = circle_member_ids.has(b.id) ? 0 : 1;
+					if (a_in !== b_in) return a_in - b_in;
+					return (a.name ?? "").localeCompare(b.name ?? "");
+				})
+			: friends,
+	);
+
+	function toggle_circle(circle_id: string) {
+		selected_circle_id = selected_circle_id === circle_id ? null : circle_id;
+	}
+
+	function update_circle(updated: Circle) {
+		circles = circles.map((c) => (c.id === updated.id ? updated : c));
+	}
+
 	function debounce(func, timeout = 300) {
 		let timer;
 		return (...args) => {
@@ -210,9 +237,75 @@
 			{#if friends.length === 0}
 				<p>You have no friends yet! Make some new ones :)</p>
 			{/if}
+			{#if selected_circle}
+				<p class="text-sm text-gray-500 pb-2">
+					Editing members of <span class="font-semibold">{selected_circle.name}</span>
+				</p>
+			{/if}
 			<div class="grid grid-cols-2 gap-2">
-				{#each friends as friend}
-					<UserCard user={friend} />
+				{#each sorted_friends as friend (friend.id)}
+					<div class="flex flex-row items-center gap-2">
+						{#if selected_circle}
+							{#if circle_member_ids.has(friend.id)}
+								<form
+									method="POST"
+									action="?/remove_from_circle"
+									use:enhance={() => {
+										return async ({ result }) => {
+											const res = result.data;
+											if (res?.success) {
+												update_circle(res["res"]);
+											} else {
+												newToast("Error removing from circle: " + res?.message, ToastType.Error);
+											}
+										};
+									}}
+								>
+									<input type="hidden" name="circle_id" value={selected_circle.id} />
+									<input type="hidden" name="user_id" value={friend.id} />
+									<button
+										type="submit"
+										title={"Remove from " + selected_circle.name}
+										aria-label={"Remove from " + selected_circle.name}
+										class="w-6 h-6 shrink-0 rounded-full border border-red-500 text-red-600 hover:bg-red-500 hover:text-white font-bold leading-none cursor-pointer"
+										>&minus;</button
+									>
+								</form>
+							{:else}
+								<form
+									method="POST"
+									action="?/add_to_circle"
+									use:enhance={() => {
+										return async ({ result }) => {
+											const res = result.data;
+											if (res?.success) {
+												update_circle(res["res"]);
+											} else {
+												newToast("Error adding to circle: " + res?.message, ToastType.Error);
+											}
+										};
+									}}
+								>
+									<input type="hidden" name="circle_id" value={selected_circle.id} />
+									<input type="hidden" name="user_id" value={friend.id} />
+									<button
+										type="submit"
+										title={"Add to " + selected_circle.name}
+										aria-label={"Add to " + selected_circle.name}
+										class="w-6 h-6 shrink-0 rounded-full border border-teal-500 text-teal-600 hover:bg-teal-500 hover:text-white font-bold leading-none cursor-pointer"
+										>+</button
+									>
+								</form>
+							{/if}
+						{/if}
+						<div
+							class={selected_circle && !circle_member_ids.has(friend.id)
+								? "opacity-40 grayscale"
+								: ""}
+						>
+							<UserCard user={friend} />
+						</div>
+					</div>
 				{/each}
 			</div>
 		</div>
@@ -227,7 +320,16 @@
 			<div class="flex flex-col gap-1 pt-2">
 				{#each circles as circle (circle.id)}
 					<div class="flex flex-row items-baseline gap-2">
-						<span class="font-semibold">{circle.name}</span>
+						<button
+							type="button"
+							class="font-semibold text-teal-400 hover:text-orange-400 hover:underline focus:outline-none cursor-pointer {selected_circle_id ===
+							circle.id
+								? 'underline text-orange-400'
+								: ''}"
+							onclick={() => toggle_circle(circle.id)}
+						>
+							{circle.name}
+						</button>
 						<span class="text-sm text-gray-500">
 							{circle.members?.length ?? 0}
 							{(circle.members?.length ?? 0) === 1 ? "member" : "members"}

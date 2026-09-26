@@ -1,7 +1,7 @@
 class CirclesController < ApplicationController
 
   def index
-    circles = current_user.circles
+    circles = current_user.circles.includes(:members)
     render json: CircleBlueprint.render(circles), status: :ok
   end
 
@@ -24,9 +24,32 @@ class CirclesController < ApplicationController
       render json: { error: "user not found" }, status: :not_found and return
     end
 
-    circle.members << user
-    render json: circle, status: :ok
+    circle.members << user unless circle.members.exists?(user.id)
+    render json: CircleBlueprint.render(circle.reload), status: :ok
+  end
 
+  def remove
+    circle = current_user.circles.find_by_id(params[:id])
+    if circle.nil?
+      render json: { error: "circle not found" }, status: :not_found and return
+    end
+    user = User.find_by_id(params[:user_id])
+    if user.nil?
+      render json: { error: "user not found" }, status: :not_found and return
+    end
+
+    circle.members.delete(user)
+    render json: CircleBlueprint.render(circle.reload), status: :ok
+  end
+
+  def destroy
+    circle = current_user.circles.find_by_id(params[:id])
+    if circle.nil?
+      render json: { error: "circle not found" }, status: :not_found and return
+    end
+
+    circle.destroy
+    render json: {}, status: :no_content
   end
 
 end

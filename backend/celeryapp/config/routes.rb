@@ -38,8 +38,10 @@ Rails.application.routes.draw do
     end
   end
   resources :circles do
-    post "add"
-    post "remove"
+    member do
+      post "add"
+      post "remove"
+    end
   end
   resources :calendars
   resources :comments

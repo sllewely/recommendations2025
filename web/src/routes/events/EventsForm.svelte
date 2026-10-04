@@ -28,6 +28,7 @@
 	import FormLabel from "$lib/components/form/FormLabel.svelte";
 	import { Spinner } from "$lib/components/ui/spinner";
 	import FormFieldErrors from "$lib/components/form/FormFieldErrors.svelte";
+	import SharingPrivacy from "$lib/components/form/SharingPrivacy.svelte";
 	import FriendItem from "../circles/FriendItem.svelte";
 	import type { Event as EventType } from "$lib/api_calls/types";
 
@@ -334,6 +335,10 @@
 					<input type="hidden" name="invited_friend_ids" value={friend_id} />
 				{/each}
 			</Field>
+
+			<div class="pt-6">
+				<SharingPrivacy />
+			</div>
 
 			<div class="pt-6">
 				<Button type="submit" disabled={creating}>

@@ -15,6 +15,7 @@
 	import { Field, Control, Description } from "formsnap";
 	import FormLabel from "$lib/components/form/FormLabel.svelte";
 	import FormFieldErrors from "$lib/components/form/FormFieldErrors.svelte";
+	import SharingPrivacy from "$lib/components/form/SharingPrivacy.svelte";
 	import { Spinner } from "$lib/components/ui/spinner";
 	import bblogo from "$lib/assets/android-launchericon-72-72.png";
 
@@ -182,6 +183,9 @@
 				<Field {form} name="id">
 					<input hidden value={$formData.id} name="id" />
 				</Field>
+				<div class="pt-4">
+					<SharingPrivacy />
+				</div>
 				<div class="pt-4">
 					<Button type="submit" disabled={creating}>
 						{#if creating}

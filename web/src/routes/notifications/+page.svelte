@@ -6,6 +6,7 @@
 	import NotificationItem from "$lib/components/notifications/NotificationItem.svelte";
 	import { onMount } from "svelte";
 	import { Spinner } from "$lib/components/ui/spinner";
+	import ShouldShowNotificationSubscribeButtonCard from "$lib/components/notifications/push/ShouldShowNotificationSubscribeButtonCard.svelte";
 
 	interface Props {
 		data: {
@@ -59,6 +60,8 @@
 			{/each}
 		</div>
 	{/if}
+
+	<ShouldShowNotificationSubscribeButtonCard />
 
 	<span class="text-3xl">Notifications</span>
 	<Item.Group>

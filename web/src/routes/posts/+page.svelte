@@ -10,7 +10,6 @@
 	import type { Event } from "$lib/api_calls/types";
 	import { onMount } from "svelte";
 	import { Spinner } from "$lib/components/ui/spinner/index.js";
-	import ShouldShowNotificationSubscribeButtonCard from "$lib/components/notifications/push/ShouldShowNotificationSubscribeButtonCard.svelte";
 	import EventCard from "$lib/components/posts/EventCard.svelte";
 	import { CalendarDays, CalendarPlus, NotebookPen } from "lucide-svelte";
 
@@ -79,29 +78,6 @@
 </script>
 
 <div>
-	<ShouldShowNotificationSubscribeButtonCard />
-	<div>
-		<div class="flex flex-row gap-2 items-center justify-center">
-			<Button href="/posts/create" class={buttonVariants({ variant: "post" })}>
-				<NotebookPen />
-				Post
-			</Button>
-			<Button href="/events/create" class={buttonVariants({ variant: "event" })}>
-				<CalendarPlus />
-				Event
-			</Button>
-			<Button href="/recommendations/create" class={buttonVariants({ variant: "recommendation" })}>
-				<MessageCircleHeart />
-				Recommendation
-			</Button>
-		</div>
-	</div>
-	<div
-		class="flex justify-center p-2 mb-2 font-bold border-gray-800 rounded-sm bg-lime-200 border-1"
-	>
-		<Link url="/friends">Add friends!!</Link>
-	</div>
-
 	<!-- Mobile toggle buttons -->
 	<div class="md:hidden mb-4">
 		<div class="flex bg-gray-200 rounded-lg p-1">
@@ -131,6 +107,25 @@
 	<!-- Desktop layout (unchanged) -->
 	<div class="hidden md:grid md:grid-cols-3">
 		<div class="flex flex-col col-span-2">
+			<div>
+				<div class="flex flex-row gap-2 items-center justify-center pb-2">
+					<Button href="/posts/create" class={buttonVariants({ variant: "post" })}>
+						<NotebookPen />
+						Post
+					</Button>
+					<Button href="/events/create" class={buttonVariants({ variant: "event" })}>
+						<CalendarPlus />
+						Event
+					</Button>
+					<Button
+						href="/recommendations/create"
+						class={buttonVariants({ variant: "recommendation" })}
+					>
+						<MessageCircleHeart />
+						Recommendation
+					</Button>
+				</div>
+			</div>
 			<H1>Posts</H1>
 
 			{#if feed_items.length === 0}
@@ -159,6 +154,10 @@
 			{/if}
 		</div>
 		<div class="flex flex-col pl-2">
+			<Button href="/events/create" class={buttonVariants({ variant: "event" })}>
+				<CalendarPlus />
+				Event
+			</Button>
 			<H1>Calendar</H1>
 
 			{#if events_and_date_headers.length === 0}
@@ -185,6 +184,25 @@
 	<div class="md:hidden">
 		{#if activeTab === "posts"}
 			<div class="flex flex-col">
+				<div>
+					<div class="flex flex-row gap-2 items-center justify-center pb-2">
+						<Button href="/posts/create" class={buttonVariants({ variant: "post" })}>
+							<NotebookPen />
+							Post
+						</Button>
+						<Button href="/events/create" class={buttonVariants({ variant: "event" })}>
+							<CalendarPlus />
+							Event
+						</Button>
+						<Button
+							href="/recommendations/create"
+							class={buttonVariants({ variant: "recommendation" })}
+						>
+							<MessageCircleHeart />
+							Recommendation
+						</Button>
+					</div>
+				</div>
 				<H1>Posts</H1>
 
 				{#if feed_items.length === 0}
@@ -214,6 +232,10 @@
 			</div>
 		{:else}
 			<div class="flex flex-col">
+				<Button href="/events/create" class={buttonVariants({ variant: "event" })}>
+					<CalendarPlus />
+					Event
+				</Button>
 				<H1>Calendar</H1>
 
 				{#if events_and_date_headers.length === 0}

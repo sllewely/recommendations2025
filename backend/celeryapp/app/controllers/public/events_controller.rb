@@ -2,8 +2,8 @@ class Public::EventsController < ApplicationController
   skip_before_action :authenticate
 
   def show
-    @event = Event.find(params[:id])
-    # TODO: PERMISSIONS
+    # logged-out pages only show events that are public to Bumblebeans
+    @event = Event.public_events.find_by(id: params[:id])
 
     if @event
       render json: EventBlueprint.render(@event, view: :unauthed), status: :ok

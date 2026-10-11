@@ -16,7 +16,7 @@ RSpec.describe "Events", type: :request do
 
     it 'creates an event' do
 
-      post "/events", params: { title: 'k flay', description: "come see this fun show with me", start_date_time: DateTime.now + 5.days, is_public: true }, headers: @headers
+      post "/events", params: { title: 'k flay', description: "come see this fun show with me", start_date_time: DateTime.now + 5.days }, headers: @headers
 
       expect(response).to have_http_status(:created)
       res = JSON.parse(response.body)
@@ -27,7 +27,7 @@ RSpec.describe "Events", type: :request do
 
     it 'creates a feed item if public' do
 
-      post "/events", params: { title: 'k flay', description: "come see this fun show with me", start_date_time: DateTime.now + 5.days, is_public: true }, headers: @headers
+      post "/events", params: { title: 'k flay', description: "come see this fun show with me", start_date_time: DateTime.now + 5.days }, headers: @headers
 
       expect(response).to have_http_status(:created)
       res = JSON.parse(response.body)
@@ -41,7 +41,7 @@ RSpec.describe "Events", type: :request do
     end
 
     it 'creates an event with end time' do
-      post "/events", params: { title: 'k flay', description: "come see this fun show with me", start_date_time: DateTime.now + 5.days, end_date_time: DateTime.now + 10.days, is_public: true }, headers: @headers
+      post "/events", params: { title: 'k flay', description: "come see this fun show with me", start_date_time: DateTime.now + 5.days, end_date_time: DateTime.now + 10.days }, headers: @headers
 
       expect(response).to have_http_status(:created)
       res = JSON.parse(response.body)
@@ -50,7 +50,7 @@ RSpec.describe "Events", type: :request do
 
     it 'requires a title' do
 
-      post "/events", params: { description: "come see this fun show with me", start_date_time: DateTime.now + 5.days, is_public: true }, headers: @headers
+      post "/events", params: { description: "come see this fun show with me", start_date_time: DateTime.now + 5.days }, headers: @headers
 
       expect(response).to have_http_status(:unprocessable_content)
       res = JSON.parse(response.body)
@@ -59,7 +59,7 @@ RSpec.describe "Events", type: :request do
 
     it 'requires a time' do
 
-      post "/events", params: { title: 'k flay', description: "come see this fun show with me", is_public: true }, headers: @headers
+      post "/events", params: { title: 'k flay', description: "come see this fun show with me" }, headers: @headers
 
       expect(response).to have_http_status(:unprocessable_content)
       res = JSON.parse(response.body)
@@ -74,7 +74,6 @@ RSpec.describe "Events", type: :request do
         title: 'k flay',
         description: "come see this fun show with me",
         start_date_time: DateTime.now + 5.days,
-        is_public: true
       }, headers: @headers
 
       expect(response).to have_http_status(:created)
@@ -89,11 +88,12 @@ RSpec.describe "Events", type: :request do
 
     it 'creates a private event and invites your friends' do
       friend = create(:user)
+      Friendship.create_bidirectional_friendship!(@my_user, friend)
       post "/events", params: {
         title: 'k flay',
         description: "come see this fun show with me",
         start_date_time: DateTime.now + 5.days,
-        is_public: false,
+        privacy: "specific",
         invited_friend_ids: [friend.id]
       }, headers: @headers
 
@@ -201,8 +201,8 @@ RSpec.describe "Events", type: :request do
     end
 
     it 'doesnt show private events' do
-      skip "undo private events filter for now"
-      event1 = create(:event, user: @friend, is_public: false)
+      event1 = create(:event, user: @friend)
+      event1.apply_privacy!(visibility: "specific")
 
       get '/events', headers: @headers
 
@@ -211,10 +211,9 @@ RSpec.describe "Events", type: :request do
       expect(res.size).to eq(0)
     end
 
-    # I broke privacy
-    skip 'I can see a private event if im rsvpd' do
-      event1 = create(:event, user: @friend, is_public: false)
-      event1.rsvps.create(user: @my_user, status: :invited)
+    it 'I can see a private event if im in the audience' do
+      event1 = create(:event, user: @friend)
+      event1.apply_privacy!(visibility: "specific", user_ids: [@my_user.id])
 
       get '/events', headers: @headers
 
@@ -223,14 +222,29 @@ RSpec.describe "Events", type: :request do
       expect(res.size).to eq(1)
     end
 
-    skip 'I can see a private event if its mine' do
-      event1 = create(:event, user: @my_user, is_public: false)
+    it 'I can see a friends only event from my friend' do
+      event1 = create(:event, user: @friend)
+      event1.apply_privacy!(visibility: "friends")
+      event2 = create(:event, user: other_user)
+      event2.apply_privacy!(visibility: "friends")
+
+      get '/events', headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      res = JSON.parse(response.body)
+      expect(res.map { |e| e['id'] }).to eq([event1.id])
+    end
+
+    it 'I can see a private event if its mine' do
+      event1 = create(:event, user: @my_user)
+      event1.apply_privacy!(visibility: "specific")
 
       get '/events', headers: @headers
 
       expect(response).to have_http_status(:ok)
       res = JSON.parse(response.body)
       expect(res.size).to eq(1)
+      expect(res.first['visibility']).to eq('specific')
     end
 
   end
@@ -274,6 +288,15 @@ RSpec.describe "Events", type: :request do
       expect(res['start_date_string']).to match(/\d?\d\/\d?\d\/\d\d\d\d/)
       expect(res['start_time_string']).to match(/\d?\d:\d\d/)
       expect(res['rsvps'].first['status']).to eq('interested')
+    end
+
+    it 'returns not found for a private event im not invited to' do
+      event = create(:event, user: @friend)
+      event.apply_privacy!(visibility: "specific")
+
+      get "/events/#{event.id}", headers: @headers
+
+      expect(response).to have_http_status(:not_found)
     end
 
     it 'has comments' do
@@ -328,11 +351,13 @@ RSpec.describe "Events", type: :request do
     it 'removes notifications when a user is removed from the private event' do
       friend1 = create(:user)
       friend2 = create(:user)
+      Friendship.create_bidirectional_friendship!(@my_user, friend1)
+      Friendship.create_bidirectional_friendship!(@my_user, friend2)
       post "/events", params: {
         title: 'k flay',
         description: "come see this fun show with me",
         start_date_time: DateTime.now + 5.days,
-        is_public: false,
+        privacy: "specific",
         invited_friend_ids: [friend1.id, friend2.id]
       }, headers: @headers
 
@@ -354,11 +379,13 @@ RSpec.describe "Events", type: :request do
     it 'adds notifications when a user is added to the private event' do
       friend1 = create(:user)
       friend2 = create(:user)
+      Friendship.create_bidirectional_friendship!(@my_user, friend1)
+      Friendship.create_bidirectional_friendship!(@my_user, friend2)
       post "/events", params: {
         title: 'k flay',
         description: "come see this fun show with me",
         start_date_time: DateTime.now + 5.days,
-        is_public: false,
+        privacy: "specific",
         invited_friend_ids: [friend1.id]
       }, headers: @headers
 
@@ -375,6 +402,35 @@ RSpec.describe "Events", type: :request do
       friend2 = User.find(friend2.id)
       expect(event.rsvps.size).to eq(2)
       expect(friend2.notifications.size).to eq(1)
+      expect(event.visible_to?(friend2)).to be true
+    end
+
+    it 'creates a private event with a feed item only invitees can see' do
+      friend1 = create(:user)
+      Friendship.create_bidirectional_friendship!(@my_user, friend1)
+      post "/events", params: {
+        title: 'k flay',
+        start_date_time: DateTime.now + 5.days,
+        privacy: "specific",
+        invited_friend_ids: [friend1.id]
+      }, headers: @headers
+
+      expect(response).to have_http_status(:created)
+      event = Event.find(JSON.parse(response.body)['id'])
+      expect(event.feed_item).to be_present
+      expect(event.visible_to?(friend1)).to be true
+      expect(event.visible_to?(other_user)).to be false
+    end
+
+    it 'switches an event to public' do
+      event = create(:event, user: @my_user)
+      event.apply_privacy!(visibility: "specific")
+
+      patch "/events/#{event.id}", params: { privacy: "public" }, headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      expect(JSON.parse(response.body)['visibility']).to eq('public')
+      expect(Event.public_events).to include(event)
     end
 
   end

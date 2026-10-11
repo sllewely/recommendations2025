@@ -1,5 +1,5 @@
 import * as api from "./api.svelte";
-import type { ApiResponse, Event } from "./types";
+import type { ApiResponse, Event, Visibility } from "./types";
 
 const ENDPOINT = "events";
 
@@ -38,7 +38,11 @@ export async function getEvent(id: number, token: string): Promise<ApiResponse<E
  * @returns Promise with created event data or error
  */
 export async function createEvent(
-	data: Pick<Event, "title" | "description" | "start_date_time" | "address" | "url" | "is_public">,
+	data: Pick<Event, "title" | "description" | "start_date_time" | "address" | "url"> & {
+		privacy?: Visibility;
+		privacy_user_ids?: string[];
+		privacy_circle_ids?: string[];
+	},
 	token: string,
 ): Promise<ApiResponse<Event>> {
 	return api.post<Event>(ENDPOINT, data, token);

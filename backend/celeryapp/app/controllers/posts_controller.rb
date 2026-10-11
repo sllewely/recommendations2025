@@ -1,14 +1,14 @@
 class PostsController < ApplicationController
+  include PrivacyParams
 
   skip_before_action :authenticate, only: [:rss]
 
   def index
     user_id = params[:user_id]
 
-    feed = feed_items
+    feed = feed_items.visible_to(current_user)
     feed = feed.where(user_id: user_id) if user_id
 
-    # TODO: privacy
     @pagy, @feed_items = pagy(feed, limit: 30)
     render json: {
       feed_items: FeedItemBlueprint.render_as_hash(
@@ -25,7 +25,7 @@ class PostsController < ApplicationController
     user = User.find_by(rss_api_key: params[:rss_api_key])
     render json: { error: "Invalid RSS API key" }, status: :unprocessable_content and return if user.nil?
 
-    feed = feed_items.limit(30)
+    feed = feed_items.visible_to(user).limit(30)
 
     base_url = Rails.env == "production" ? "https://bumblebeans.social" : "http://localhost:5173"
 
@@ -63,7 +63,7 @@ class PostsController < ApplicationController
   def show
     post_id = params[:id]
     @post = Post.includes(:user, comments: :user).find_by(id: post_id)
-    if @post
+    if @post&.visible_to?(current_user)
       render json: PostBlueprint.render(
         @post,
         current_user: current_user,
@@ -77,18 +77,19 @@ class PostsController < ApplicationController
 
   def create
     @post = current_user.posts.new(post_params)
+    privacy = privacy_params
     begin
       ActiveRecord::Base.transaction do
         @post.save!
-        @post.feed_item = FeedItem.create!(user: current_user, feedable: @post)
-        current_user.friends.each do |friend|
+        @post.apply_privacy!(**privacy)
+        notify_friends.each do |friend|
           friend.notifications << Notification.created_a_feedable(current_user, @post)
         end
       end
     rescue ActiveRecord::RecordInvalid => e
       render json: { error: @post.errors_to_s }, status: :unprocessable_content and return
     end
-    current_user.friends.each do |friend|
+    notify_friends.each do |friend|
       PushNotification.send_push_notification(
         friend,
         "New Post",
@@ -96,7 +97,7 @@ class PostsController < ApplicationController
         "/posts/#{@post.id}")
     end
 
-    render json: PostBlueprint.render(@post), status: :created
+    render json: PostBlueprint.render(@post, current_user: current_user), status: :created
   end
 
   def update
@@ -105,8 +106,12 @@ class PostsController < ApplicationController
     if post.nil?
       render json: { error: "post not found" }, status: :unprocessable_content and return
     end
-    if post.update(post_params)
-      render json: PostBlueprint.render(post), status: :ok
+    privacy = privacy_params
+    updated = ActiveRecord::Base.transaction do
+      post.update(post_params).tap { |ok| post.apply_privacy!(**privacy) if ok }
+    end
+    if updated
+      render json: PostBlueprint.render(post, current_user: current_user), status: :ok
     else
       render json: { error: post.errors_to_s }, status: :unprocessable_content
     end
@@ -128,6 +133,11 @@ class PostsController < ApplicationController
   end
 
   private
+
+  # friends who are allowed to see the new post
+  def notify_friends
+    @notify_friends ||= @post.feed_item.viewers_among(current_user.friends).to_a
+  end
 
   def feed_items
     FeedItem

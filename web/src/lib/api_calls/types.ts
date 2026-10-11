@@ -30,6 +30,16 @@ export interface Feedable {
 	class_name: string;
 }
 
+export type Visibility = "public" | "friends" | "specific";
+
+// who an item is shared with (only returned to the owner)
+export interface AudienceEntry {
+	type: "user" | "circle";
+	id: string;
+	name: string;
+	members?: string[];
+}
+
 export interface Post {
 	id: string;
 	created_at: string;
@@ -40,6 +50,8 @@ export interface Post {
 	title: string;
 	content?: string;
 	class_name: "Post";
+	visibility?: Visibility;
+	audience?: AudienceEntry[];
 }
 
 export interface Comment {
@@ -115,7 +127,8 @@ export interface Event {
 	event_type: string;
 	user_id: number;
 	end_date_time: Date;
-	is_public: boolean;
+	visibility?: Visibility;
+	audience?: AudienceEntry[];
 	user: User;
 	class_name: "Event";
 	rsvps_count: number;
@@ -163,6 +176,8 @@ export type EventWithDateHeader =
 export interface Recommendation {
 	id: string;
 	class_name: "Recommendation";
+	visibility?: Visibility;
+	audience?: AudienceEntry[];
 	user: User;
 	user_id: string;
 	title: string;

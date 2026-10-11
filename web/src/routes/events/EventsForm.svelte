@@ -29,6 +29,7 @@
 	import { Spinner } from "$lib/components/ui/spinner";
 	import FormFieldErrors from "$lib/components/form/FormFieldErrors.svelte";
 	import SharingPrivacy from "$lib/components/form/SharingPrivacy.svelte";
+	import type { AudienceMember } from "$lib/components/form/AudiencePicker.svelte";
 	import FriendItem from "../circles/FriendItem.svelte";
 	import type { Event as EventType } from "$lib/api_calls/types";
 
@@ -60,6 +61,7 @@
 	let friend_results = $state([]);
 	let friends_to_invite = $state([]);
 	let invited_friend_ids = $derived(friends_to_invite.map((f) => f.id));
+	let audience = $state<AudienceMember[]>(data.event?.audience ?? []);
 
 	if (data.event) {
 		let start_date_time = data.event.start_date_time;
@@ -242,93 +244,65 @@
 				</Description>
 				<FormFieldErrors />
 			</Field>
-			<Field {form} name="is_public">
-				<Control>
-					{#snippet children({ props })}
-						<div class="flex items-center space-x-2 pt-6">
-							<input
-								type="checkbox"
-								{...props}
-								id="is_public"
-								bind:checked={$formData.is_public}
-								class="size-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-							/>
-							<FormLabel for="is_public">Public Event</FormLabel>
-						</div>
-					{/snippet}
-				</Control>
-				<Description class="text-xs font-light">
-					Public means visible to all of your friends.
-					<br />
-					<span class="font-bold"
-						>I temporarily removed the privacy filter for events! Use private events at your own
-						peril</span
+			<div class="pt-6">
+				<span>Invite Friends</span>
+				<div class="flex gap-2">
+					<Input
+						id="friend_search"
+						placeholder="Search friends... (click search to return all friends)"
+					/>
+					<Button
+						type="button"
+						variant="outline"
+						onclick={async () => {
+							const name = document.getElementById("friend_search").value;
+							const response = await fetch(`/api/friends/search?search=${name}`);
+							friend_results = await response.json();
+						}}
 					>
-				</Description>
-				<FormFieldErrors />
-			</Field>
+						Search
+					</Button>
+				</div>
 
-			{#if !$formData.is_public}
-				<div class="pt-6">
-					<span>Invite Friends</span>
-					<div class="flex gap-2">
-						<Input
-							id="friend_search"
-							placeholder="Search friends... (click search to return all friends)"
-						/>
-						<Button
-							type="button"
-							variant="outline"
-							onclick={async () => {
-								const name = document.getElementById("friend_search").value;
-								const response = await fetch(`/api/friends/search?search=${name}`);
-								friend_results = await response.json();
-							}}
-						>
-							Search
-						</Button>
-					</div>
-
-					{#if friend_results.length > 0}
-						<div class="pt-2">
-							<p class="text-sm font-medium">Results:</p>
-							<ul>
-								{#each friend_results as friend}
-									{#if !invited_friend_ids.includes(friend.id)}
-										<FriendItem
-											{friend}
-											buttonLabel="+"
-											buttonAriaLabel="invite friend"
-											onclick={() => {
-												friends_to_invite = [...friends_to_invite, friend];
-												friend_results = friend_results.filter((f) => f.id !== friend.id);
-											}}
-										/>
-									{/if}
-								{/each}
-							</ul>
-						</div>
-					{/if}
-
-					{#if friends_to_invite.length > 0}
-						<div class="pt-2">
-							<p class="text-sm font-medium">Invited:</p>
-							<ul>
-								{#each friends_to_invite as friend}
+				{#if friend_results.length > 0}
+					<div class="pt-2">
+						<p class="text-sm font-medium">Results:</p>
+						<ul>
+							{#each friend_results as friend}
+								{#if !invited_friend_ids.includes(friend.id)}
 									<FriendItem
 										{friend}
-										buttonLabel="-"
-										buttonAriaLabel="remove invitation"
+										buttonLabel="+"
+										buttonAriaLabel="invite friend"
 										onclick={() => {
-											friends_to_invite = friends_to_invite.filter((f) => f.id !== friend.id);
+											friends_to_invite = [...friends_to_invite, friend];
+											friend_results = friend_results.filter((f) => f.id !== friend.id);
 										}}
 									/>
-								{/each}
-							</ul>
-						</div>
-					{/if}
-				</div>
-			{/if}
+								{/if}
+							{/each}
+						</ul>
+					</div>
+				{/if}
+
+				{#if friends_to_invite.length > 0}
+					<div class="pt-2">
+						<p class="text-sm font-medium">Invited:</p>
+						<ul>
+							{#each friends_to_invite as friend}
+								<FriendItem
+									{friend}
+									buttonLabel="-"
+									buttonAriaLabel="remove invitation"
+									onclick={() => {
+										friends_to_invite = friends_to_invite.filter((f) => f.id !== friend.id);
+									}}
+								/>
+							{/each}
+						</ul>
+					</div>
+				{/if}
+			</div>
 
 			<Field {form} name="invited_friend_ids">
 				{#each $formData.invited_friend_ids as friend_id}
@@ -337,7 +311,7 @@
 			</Field>
 
 			<div class="pt-6">
-				<SharingPrivacy />
+				<SharingPrivacy bind:value={$formData.privacy} bind:audience />
 			</div>
 
 			<div class="pt-6">

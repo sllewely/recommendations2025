@@ -3,11 +3,14 @@
 		type: "user" | "circle";
 		id: string;
 		name: string;
+		// circle member names, shown when hovering a circle badge
+		members?: string[];
 	};
 </script>
 
 <script lang="ts">
 	import { Badge } from "$lib/components/ui/badge";
+	import * as Tooltip from "$lib/components/ui/tooltip";
 	import { Users, X } from "@lucide/svelte";
 	import type { Circle, User } from "$lib/api_calls/types";
 
@@ -57,7 +60,12 @@
 		const lowered = trimmed.toLowerCase();
 		const circle_matches: AudienceMember[] = all_circles
 			.filter((c) => c.name.toLowerCase().includes(lowered))
-			.map((c) => ({ type: "circle", id: c.id, name: c.name }));
+			.map((c) => ({
+				type: "circle",
+				id: c.id,
+				name: c.name,
+				members: (c.members ?? []).map((m) => m.name),
+			}));
 		const friend_matches: AudienceMember[] = ((friends ?? []) as User[]).map((f) => ({
 			type: "user",
 			id: f.id,
@@ -109,25 +117,55 @@
 		onclick={() => input_el?.focus()}
 		role="presentation"
 	>
-		{#each selected as member (key(member))}
-			<Badge variant={member.type === "circle" ? "secondary" : "default"} class="gap-1">
+		{#snippet removeButton(member: AudienceMember)}
+			<button
+				type="button"
+				class="cursor-pointer"
+				aria-label={`remove ${member.name}`}
+				onclick={(e) => {
+					e.stopPropagation();
+					remove(member);
+				}}
+			>
+				<X size={12} />
+			</button>
+		{/snippet}
+		<Tooltip.Provider delayDuration={200}>
+			{#each selected as member (key(member))}
 				{#if member.type === "circle"}
-					<Users size={12} />
+					<Tooltip.Root>
+						<Tooltip.Trigger>
+							{#snippet child({ props })}
+								<!-- span instead of the default button, since the badge contains its own button -->
+								<span {...props} class="inline-flex">
+									<Badge variant="secondary" class="gap-1">
+										<Users size={12} />
+										{member.name}
+										{@render removeButton(member)}
+									</Badge>
+								</span>
+							{/snippet}
+						</Tooltip.Trigger>
+						<Tooltip.Content>
+							{#if member.members && member.members.length > 0}
+								<ul>
+									{#each member.members as member_name}
+										<li>{member_name}</li>
+									{/each}
+								</ul>
+							{:else}
+								<p>No one in this circle yet</p>
+							{/if}
+						</Tooltip.Content>
+					</Tooltip.Root>
+				{:else}
+					<Badge class="gap-1">
+						{member.name}
+						{@render removeButton(member)}
+					</Badge>
 				{/if}
-				{member.name}
-				<button
-					type="button"
-					class="cursor-pointer"
-					aria-label={`remove ${member.name}`}
-					onclick={(e) => {
-						e.stopPropagation();
-						remove(member);
-					}}
-				>
-					<X size={12} />
-				</button>
-			</Badge>
-		{/each}
+			{/each}
+		</Tooltip.Provider>
 		<input
 			bind:this={input_el}
 			bind:value={query}

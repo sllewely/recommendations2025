@@ -26,6 +26,9 @@ export const actions = {
 			`posts/`,
 			{
 				content: form.data.content,
+				privacy: form.data.privacy,
+				privacy_user_ids: form.data.privacy_user_ids,
+				privacy_circle_ids: form.data.privacy_circle_ids,
 			},
 			jwt,
 		);

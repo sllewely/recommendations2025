@@ -290,13 +290,35 @@ RSpec.describe "Events", type: :request do
       expect(res['rsvps'].first['status']).to eq('interested')
     end
 
-    it 'returns not found for a private event im not invited to' do
+    it 'shows a private event to anyone with the link' do
       event = create(:event, user: @friend)
       event.apply_privacy!(visibility: "specific")
 
       get "/events/#{event.id}", headers: @headers
 
+      expect(response).to have_http_status(:ok)
+      expect(JSON.parse(response.body)['id']).to eq(event.id)
+      expect(JSON.parse(response.body)).not_to have_key('audience')
+    end
+
+    it 'returns not found for a missing event' do
+      get "/events/does-not-exist", headers: @headers
+
       expect(response).to have_http_status(:not_found)
+    end
+
+    it 'lists a private event to a user who rsvpd to it' do
+      stranger = create(:user)
+      event = create(:event, user: stranger, start_date_time: DateTime.now + 2.days)
+      event.apply_privacy!(visibility: "specific")
+      expect(Event.visible_to(@my_user)).not_to include(event)
+
+      create(:rsvp, user: @my_user, event: event, status: :going)
+
+      expect(Event.visible_to(@my_user)).to include(event)
+      expect(event.reload.visible_to?(@my_user)).to be true
+      get "/events", headers: @headers
+      expect(JSON.parse(response.body).map { |e| e['id'] }).to include(event.id)
     end
 
     it 'has comments' do

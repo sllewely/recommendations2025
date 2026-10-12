@@ -46,8 +46,9 @@ class EventsController < ApplicationController
   end
 
   def show
+    # anyone with the link can see an event; privacy only limits where it is listed
     @event = Event.includes(:comments).find_by(id: params[:id])
-    if @event&.visible_to?(current_user)
+    if @event
       render json: EventBlueprint.render(@event, view: :authed, current_user: current_user), status: :ok
     else
       render json: { error: "event not found" }, status: :not_found

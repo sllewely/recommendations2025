@@ -11,8 +11,8 @@ class FeedItem < ApplicationRecord
   scope :by_friends, ->(user_ids) { where(user_id: user_ids) }
 
   # Items the given user may see: own items, public items, friends-only items from
-  # people who friended them, and specific items where they (or a circle they are
-  # currently in) are part of the audience.
+  # people who friended them, specific items where they (or a circle they are
+  # currently in) are part of the audience, and events they have rsvp'd to.
   scope :visible_to, ->(viewer) do
     viewer_id = viewer.respond_to?(:id) ? viewer.id : viewer
     where(<<~SQL, me: viewer_id, public: visibilities[:public], friends: visibilities[:friends], specific: visibilities[:specific])
@@ -26,6 +26,9 @@ class FeedItem < ApplicationRecord
             WHERE a.feed_item_id = feed_items.id
               AND (a.user_id = :me
                    OR a.circle_id IN (SELECT uc.circle_id FROM user_circles uc WHERE uc.member_id = :me))))
+      OR (feed_items.feedable_type = 'Event' AND EXISTS (
+            SELECT 1 FROM rsvps r
+            WHERE r.event_id = feed_items.feedable_id AND r.user_id = :me))
     SQL
   end
 

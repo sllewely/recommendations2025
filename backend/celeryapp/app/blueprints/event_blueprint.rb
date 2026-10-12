@@ -1,6 +1,6 @@
 class EventBlueprint < Blueprinter::Base
   identifier :id
-  fields :created_at, :start_date_time, :end_date_time, :is_public
+  fields :created_at, :start_date_time, :end_date_time
 
   field :class_name do
     "Event"
@@ -18,6 +18,9 @@ class EventBlueprint < Blueprinter::Base
   view :authed do
     include_view :unauthed
     field :address
+    # privacy settings are only shown to the owner
+    field :visibility, if: ->(_field, obj, options) { options[:current_user]&.id == obj.user_id }
+    field :audience, if: ->(_field, obj, options) { options[:current_user]&.id == obj.user_id }
     association :rsvps, blueprint: RsvpBlueprint, view: :authed, options: ->(options) { options }
     association :comments, blueprint: CommentBlueprint, view: :authed, options: ->(options) { options }
     association :user, blueprint: UserBlueprint, view: :authed, options: ->(options) { options }

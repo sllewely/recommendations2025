@@ -15,16 +15,25 @@
 	import { Field, Control, Description } from "formsnap";
 	import FormLabel from "$lib/components/form/FormLabel.svelte";
 	import FormFieldErrors from "$lib/components/form/FormFieldErrors.svelte";
+	import SharingPrivacy from "$lib/components/form/SharingPrivacy.svelte";
+	import type { AudienceMember } from "$lib/components/form/AudiencePicker.svelte";
+	import type { ApiResponse, Post } from "$lib/api_calls/types";
 	import { Spinner } from "$lib/components/ui/spinner";
 	import bblogo from "$lib/assets/android-launchericon-72-72.png";
 
-	let { data }: { data: { form: SuperValidated<Infer<PostFormSchema>>; event: any } } = $props();
+	let {
+		data,
+	}: {
+		data: { form: SuperValidated<Infer<PostFormSchema>>; post_response?: ApiResponse<Post> };
+	} = $props();
 	const form = superForm(data.form, {
 		validators: zodClient(postFormSchema),
 	});
 	const { form: formData } = form;
 
 	let creating = $state(false);
+	// prefill the audience when editing an existing post
+	let audience = $state<AudienceMember[]>(data.post_response?.res?.audience ?? []);
 	let user_search_results = $state([]);
 	let searching_user = $state(false);
 
@@ -182,6 +191,9 @@
 				<Field {form} name="id">
 					<input hidden value={$formData.id} name="id" />
 				</Field>
+				<div class="pt-4">
+					<SharingPrivacy bind:value={$formData.privacy} bind:audience />
+				</div>
 				<div class="pt-4">
 					<Button type="submit" disabled={creating}>
 						{#if creating}

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_05_174143) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_04_130000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -45,7 +45,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_05_174143) do
     t.string "description"
     t.datetime "end_date_time"
     t.string "event_type"
-    t.boolean "is_public", default: false
     t.bigint "numeric_id", default: 0
     t.integer "numeric_user_id"
     t.datetime "start_date_time", null: false
@@ -56,9 +55,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_05_174143) do
     t.index ["end_date_time"], name: "index_events_on_end_date_time"
     t.index ["event_type"], name: "index_events_on_event_type"
     t.index ["id"], name: "index_events_on_id", unique: true
-    t.index ["is_public"], name: "index_events_on_is_public"
     t.index ["numeric_user_id"], name: "index_events_on_numeric_user_id"
     t.index ["start_date_time"], name: "index_events_on_start_date_time"
+  end
+
+  create_table "feed_item_audiences", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "circle_id"
+    t.datetime "created_at", null: false
+    t.uuid "feed_item_id", null: false
+    t.datetime "updated_at", null: false
+    t.uuid "user_id"
+    t.index ["circle_id", "feed_item_id"], name: "index_feed_item_audiences_on_circle_id_and_feed_item_id", unique: true, where: "(circle_id IS NOT NULL)"
+    t.index ["feed_item_id"], name: "index_feed_item_audiences_on_feed_item_id"
+    t.index ["user_id", "feed_item_id"], name: "index_feed_item_audiences_on_user_id_and_feed_item_id", unique: true, where: "(user_id IS NOT NULL)"
+    t.check_constraint "num_nonnulls(user_id, circle_id) = 1", name: "feed_item_audiences_one_grantee"
   end
 
   create_table "feed_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -67,6 +77,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_05_174143) do
     t.string "feedable_type", null: false
     t.datetime "updated_at", null: false
     t.uuid "user_id", null: false
+    t.integer "visibility", default: 0, null: false
+    t.index ["created_at"], name: "index_feed_items_on_created_at"
+    t.index ["feedable_type", "feedable_id"], name: "index_feed_items_on_feedable_type_and_feedable_id", unique: true
+    t.index ["user_id", "created_at"], name: "index_feed_items_on_user_id_and_created_at"
     t.index ["user_id"], name: "index_feed_items_on_user_id"
   end
 
@@ -231,6 +245,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_05_174143) do
     t.uuid "member_id", null: false
     t.datetime "updated_at", null: false
     t.index ["circle_id"], name: "index_user_circles_on_circle_id"
+    t.index ["member_id", "circle_id"], name: "index_user_circles_on_member_id_and_circle_id", unique: true
     t.index ["member_id"], name: "index_user_circles_on_member_id"
   end
 
@@ -294,6 +309,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_05_174143) do
   add_foreign_key "circles", "users"
   add_foreign_key "comments", "users", on_delete: :cascade
   add_foreign_key "events", "users", on_delete: :cascade
+  add_foreign_key "feed_item_audiences", "circles", on_delete: :cascade
+  add_foreign_key "feed_item_audiences", "feed_items", on_delete: :cascade
+  add_foreign_key "feed_item_audiences", "users", on_delete: :cascade
   add_foreign_key "feed_items", "users"
   add_foreign_key "friend_codes", "users", on_delete: :cascade
   add_foreign_key "friend_requests", "users", on_delete: :cascade

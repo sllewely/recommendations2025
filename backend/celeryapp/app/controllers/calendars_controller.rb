@@ -9,9 +9,9 @@ class CalendarsController < ApplicationController
     if current_user.nil?
       return render plain: "Invalid API key", status: :unauthorized
     end
-    # TODO: PRIVACY
     @events = Event
                 .want_to_see(current_user.id)
+                .visible_to(current_user)
                 .month_past_onward
                 .order(start_date_time: :asc)
 

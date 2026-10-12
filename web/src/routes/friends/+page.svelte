@@ -16,6 +16,7 @@
 	import Link from "$lib/components/text/Link.svelte";
 	import FriendStatusButton from "$lib/components/users/FriendStatusButton.svelte";
 	import bblogo from "$lib/assets/android-launchericon-72-72.png";
+	import { CircleDashed, Users } from "lucide-svelte";
 
 	interface Props {
 		data: {
@@ -39,6 +40,9 @@
 	$effect(() => {
 		pending_friends = data.friend_requests_response["res"]["incoming_friend_requests"] ?? [];
 	});
+
+	// Mobile toggle state
+	let activeTab = $state<"friends" | "circles">("friends");
 
 	let show_search = $state(false);
 
@@ -80,6 +84,10 @@
 
 	function toggle_circle(circle_id: string) {
 		selected_circle_id = selected_circle_id === circle_id ? null : circle_id;
+		// on mobile, jump to the friends tab to edit the selected circle's members
+		if (selected_circle_id) {
+			activeTab = "friends";
+		}
 	}
 
 	function update_circle(updated: Circle) {
@@ -101,8 +109,34 @@
 	}
 </script>
 
-<div class="grid grid-cols-3">
-	<div class="flex flex-col col-span-2 p-2">
+<!-- Mobile toggle buttons -->
+<div class="md:hidden mb-4">
+	<div class="flex bg-gray-200 rounded-lg p-1">
+		<button
+			class="flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-md font-medium transition-colors {activeTab ===
+			'friends'
+				? 'bg-white text-gray-900 shadow-sm'
+				: 'text-gray-600 hover:text-gray-900'}"
+			onclick={() => (activeTab = "friends")}
+		>
+			<Users size={18} />
+			Friends
+		</button>
+		<button
+			class="flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-md font-medium transition-colors {activeTab ===
+			'circles'
+				? 'bg-white text-gray-900 shadow-sm'
+				: 'text-gray-600 hover:text-gray-900'}"
+			onclick={() => (activeTab = "circles")}
+		>
+			<CircleDashed size={18} />
+			Circles
+		</button>
+	</div>
+</div>
+
+<div class="md:grid md:grid-cols-3">
+	<div class="flex-col col-span-2 p-2 {activeTab === 'friends' ? 'flex' : 'hidden md:flex'}">
 		<H1>Friends!</H1>
 
 		{#if pending_friends.length > 0}
@@ -242,6 +276,16 @@
 			{#if selected_circle}
 				<p class="text-sm text-gray-500 pb-2">
 					Editing members of <span class="font-semibold">{selected_circle.name}</span>
+					<button
+						type="button"
+						class="md:hidden ml-2 font-semibold text-teal-400 hover:text-orange-400 hover:underline cursor-pointer"
+						onclick={() => {
+							selected_circle_id = null;
+							activeTab = "circles";
+						}}
+					>
+						done
+					</button>
 				</p>
 			{/if}
 			<div class="grid grid-cols-2 gap-2">
@@ -312,7 +356,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="flex flex-col p-2">
+	<div class="flex-col p-2 {activeTab === 'circles' ? 'flex' : 'hidden md:flex'}">
 		<H1>Circles</H1>
 		Create groups for tagging or privacy
 

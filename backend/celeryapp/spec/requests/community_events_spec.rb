@@ -15,9 +15,9 @@ RSpec.describe "CommunityEvents", type: :request do
     end
 
     skip 'retrieves a list of events' do
-      create(:event, user: @my_user, is_public: true)
-      create(:event, user: other_user, is_public: true)
-      create(:event, user: other_user, is_public: true)
+      create(:event, user: @my_user)
+      create(:event, user: other_user)
+      create(:event, user: other_user)
 
       get '/events', headers: @headers
 

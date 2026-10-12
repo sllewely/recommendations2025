@@ -5,7 +5,7 @@ class Event < ApplicationRecord
   has_many :rsvps
   has_many :comments, as: :commentable, dependent: :destroy
   has_many :reactions, as: :reactable, dependent: :destroy
-  has_one :feed_item, as: :feedable, dependent: :destroy
+  include Feedable
 
   before_save :ensure_end_time
 
@@ -14,18 +14,10 @@ class Event < ApplicationRecord
 
   scope :by_friends, ->(friend_ids) { where(user_id: friend_ids) }
   scope :want_to_see, ->(user_id) { includes(:rsvps).where(rsvps: { user_id: user_id, status: [:invited, :interested, :going] }) }
-  scope :invited, ->(user_id) { where(is_public: false).joins(:rsvps).where(rsvps: { user_id: user_id }) }
-  scope :public_events, -> { where(is_public: true) }
+  # public to all of Bumblebeans (used by logged-out / community pages)
+  scope :public_events, -> { where(id: FeedItem.visibility_public.where(feedable_type: "Event").select(:feedable_id)) }
   scope :upcoming, -> { where('start_date_time > ?', DateTime.now - 1.day) }
   scope :month_past_onward, -> { where('start_date_time > ?', DateTime.now - 1.month) }
-  scope :can_see, ->(user_id) do
-    left_outer_joins(:rsvps)
-      .where(
-        "events.is_public = true OR events.user_id = :user_id OR(events.is_public = false AND rsvps.user_id = :user_id)",
-        user_id: user_id
-      )
-      .distinct
-  end
 
   def blueprint
     EventBlueprint

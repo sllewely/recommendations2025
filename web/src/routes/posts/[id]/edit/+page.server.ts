@@ -18,7 +18,10 @@ export const load = withAuth(async ({ jwt, params }: LoadAuthContext) => {
 
 	return {
 		post_response: post_response,
-		form: await superValidate(post, zod(postFormSchema)),
+		form: await superValidate(
+			post ? { ...post, privacy: post.visibility ?? "public" } : post,
+			zod(postFormSchema),
+		),
 	};
 });
 
@@ -35,6 +38,9 @@ export const actions = {
 			`posts/${form.data.id}`,
 			{
 				content: form.data.content,
+				privacy: form.data.privacy,
+				privacy_user_ids: form.data.privacy_user_ids,
+				privacy_circle_ids: form.data.privacy_circle_ids,
 			},
 			jwt,
 		);

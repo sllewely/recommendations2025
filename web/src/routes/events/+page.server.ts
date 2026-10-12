@@ -27,7 +27,7 @@ export const actions = {
 				start_date_time: datetime.toISOString(),
 				address: formObj["address"] as string,
 				url: formObj["url"] as string,
-				is_public: (formObj["public"] as string) === "on",
+				privacy: (formObj["public"] as string) === "on" ? "public" : "friends",
 			},
 			jwt,
 		);

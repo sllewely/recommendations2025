@@ -22,19 +22,22 @@
 	{/if}
 	<form
 		method="POST"
-		action="?/submit_comment"
-		use:enhance={() => {
+		action="/posts?/submit_comment"
+		use:enhance={({ formElement }) => {
 			posting = true;
-			return async ({ update, result }) => {
-				await update();
+			return async ({ result }) => {
 				posting = false;
-				let res = result.data;
-				if (res.success) {
-					console.log(res);
+				const res = result.type === "success" ? (result.data as any) : undefined;
+				if (res?.success) {
+					formElement.reset();
 					update_comments(res.res);
 					newToast("You have successfully created a comment ~~!", ToastType.Success);
+				} else if (result.type === "redirect") {
+					window.location.href = result.location;
 				} else {
-					newToast("Error creating a comment: " + res.message, ToastType.Error);
+					const message =
+						res?.message ?? (result.type === "error" ? result.error?.message : undefined);
+					newToast("Error creating a comment: " + (message ?? "unknown error"), ToastType.Error);
 				}
 			};
 		}}

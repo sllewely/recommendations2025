@@ -20,9 +20,6 @@ export const faro = initializeFaro({
 		/moz-extension:\/\//,
 	],
 	ignoreUrls: [
-		// Umami analytics
-		/cloud\.umami\.is/,
-		/api-gateway\.umami\.dev/,
 		// Mapbox tiles, styles, and telemetry
 		/mapbox\.com/,
 	],

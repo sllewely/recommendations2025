@@ -76,7 +76,7 @@
 					{#if in_feed}
 						<div class="flex flex-row items-center justify-between gap-2">
 							<Card.Description>
-								{formattedStartDate} at {formattedStartTime}
+								Happening at {formattedStartTime} on {formattedStartDate}
 							</Card.Description>
 							<RsvpBadge rsvp={current_user_rsvp} />
 						</div>
@@ -87,7 +87,7 @@
 									{formattedStartDate}
 								</div>
 								<div>
-									At {formattedStartTime}
+									Happening at {formattedStartTime}
 								</div>
 							</div>
 						</Card.Description>

@@ -41,7 +41,7 @@
 	     button sits right under the text (important to beat MarkedDownPost's unlayered styles) -->
 	<div
 		class={is_too_long
-			? `relative [&_section>:last-child]:mb-0! ${expanded ? "" : `${collapsedClass} overflow-hidden`}`
+			? `relative [&_section>:last-child]:mb-0! ${expanded ? "" : `${collapsedClass} overflow-clip`}`
 			: "relative"}
 	>
 		{@render children?.()}

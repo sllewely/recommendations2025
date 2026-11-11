@@ -39,24 +39,22 @@
 						</Card.Header>
 					{/if}
 
-					<Card.Content class="px-3 py-1 flex flex-row gap-2">
+					<Card.Content class="px-3 py-1 flow-root">
 						{#if in_feed && !feed_item.title}
-							<NotebookPen class="size-5 shrink-0 mt-1 text-orange-500" />
+							<NotebookPen class="size-5 float-left mr-2 mt-1.5 text-orange-500" />
 						{/if}
 						{#if feed_item.content}
-							<div class="min-w-0 flex-1">
-								<!-- ~6 lines: six 1.5rem lines plus the paragraph's top margin -->
-								<TruncatedContent
-									text={feed_item.content}
-									enabled={truncate}
-									thresholdLength={400}
-									thresholdLines={6}
-									collapsedClass="max-h-[9.25rem]"
-									buttonClass="text-xs leading-none"
-								>
-									<MarkedDownPost captured_text={feed_item.content} />
-								</TruncatedContent>
-							</div>
+							<!-- ~6 lines: six 1.5rem lines plus the paragraph's top margin -->
+							<TruncatedContent
+								text={feed_item.content}
+								enabled={truncate}
+								thresholdLength={400}
+								thresholdLines={6}
+								collapsedClass="max-h-[9.25rem]"
+								buttonClass="text-xs leading-none"
+							>
+								<MarkedDownPost captured_text={feed_item.content} />
+							</TruncatedContent>
 						{/if}
 					</Card.Content>
 				</Card.Root>

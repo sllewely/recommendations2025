@@ -16,6 +16,7 @@
 		Link as LinkIcon,
 		MessageCircleHeart,
 		MonitorPlay,
+		Shapes,
 		Soup,
 		Star,
 	} from "@lucide/svelte";
@@ -55,7 +56,7 @@
 		timeZone: localizedCreateTime.timeZone,
 	}).format(localizedCreateTime.toDate());
 
-	let MediaIcon = $derived(media_type_icons[feed_item.media_type] ?? MessageCircleHeart);
+	let MediaIcon = $derived(media_type_icons[feed_item.media_type] ?? Shapes);
 
 	let creating = $state(false);
 </script>
@@ -95,6 +96,7 @@
 				>
 					{#if in_feed}
 						<div class="flex flex-row items-center gap-2 px-3 py-2">
+							<MessageCircleHeart class="size-5 shrink-0 text-yellow-500" />
 							<MediaIcon class="size-5 shrink-0" />
 							<span class="truncate font-semibold">{feed_item.title}</span>
 							<div class="ml-auto flex flex-row shrink-0">

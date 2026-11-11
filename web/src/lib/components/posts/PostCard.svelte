@@ -4,6 +4,7 @@
 	import type { Post } from "$lib/api_calls/types";
 	import MarkedDownPost from "$lib/components/posts/MarkedDownPost.svelte";
 	import TruncatedContent from "$lib/components/posts/TruncatedContent.svelte";
+	import { NotebookPen } from "@lucide/svelte";
 
 	interface Props {
 		feed_item: Post;
@@ -29,15 +30,25 @@
 				>
 					{#if feed_item.title}
 						<Card.Header class="px-3 pt-2">
-							<Card.Title>{feed_item.title}</Card.Title>
+							<Card.Title class="flex flex-row items-center gap-2">
+								{#if in_feed}
+									<NotebookPen class="size-5 shrink-0 text-orange-500" />
+								{/if}
+								{feed_item.title}
+							</Card.Title>
 						</Card.Header>
 					{/if}
 
-					<Card.Content class="px-3 py-1">
+					<Card.Content class="px-3 py-1 flex flex-row gap-2">
+						{#if in_feed && !feed_item.title}
+							<NotebookPen class="size-5 shrink-0 mt-1 text-orange-500" />
+						{/if}
 						{#if feed_item.content}
-							<TruncatedContent text={feed_item.content} enabled={truncate}>
-								<MarkedDownPost captured_text={feed_item.content} />
-							</TruncatedContent>
+							<div class="min-w-0 flex-1">
+								<TruncatedContent text={feed_item.content} enabled={truncate}>
+									<MarkedDownPost captured_text={feed_item.content} />
+								</TruncatedContent>
+							</div>
 						{/if}
 					</Card.Content>
 				</Card.Root>

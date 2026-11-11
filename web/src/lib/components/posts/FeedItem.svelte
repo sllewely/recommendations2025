@@ -14,13 +14,13 @@
 
 	let { feed_item }: Props = $props();
 
-	let by_line = " posted";
-
+	let type_name = "a post";
 	let border_color = "border-orange-500";
 	if (feed_item.class_name === "Event") {
+		type_name = "an event";
 		border_color = "border-lime-500";
-		by_line = " posted an upcoming event";
 	} else if (feed_item.class_name === "Recommendation") {
+		type_name = "a recommendation";
 		border_color = "border-yellow-500";
 	}
 
@@ -35,7 +35,7 @@
 </script>
 
 <div class="px-2 py-1 my-2 border-l-4 {border_color} rounded-r-lg shadow-md">
-	<UserCard user={feed_item.user} subtitle="Posted {formattedCreateTime}" />
+	<UserCard user={feed_item.user} subtitle="Posted {type_name} {formattedCreateTime}" />
 
 	{#if feed_item.class_name === "Recommendation"}
 		<RecommendationCard {feed_item} in_feed />

@@ -9,6 +9,7 @@
 	import * as Tooltip from "$lib/components/ui/tooltip/index.js";
 	import * as Card from "$lib/components/ui/card/index.js";
 	import { onMount } from "svelte";
+	import { CalendarDays } from "@lucide/svelte";
 
 	interface Props {
 		feed_item: Event;
@@ -65,7 +66,12 @@
 			>
 				<Card.Header class="px-3 pt-2 space-y-0.5 {in_feed ? 'pb-2' : ''}">
 					{#if feed_item.title}
-						<Card.Title>{feed_item.title}</Card.Title>
+						<Card.Title class="flex flex-row items-center gap-2">
+							{#if in_feed}
+								<CalendarDays class="size-5 shrink-0 text-lime-500" />
+							{/if}
+							{feed_item.title}
+						</Card.Title>
 					{/if}
 					{#if in_feed}
 						<div class="flex flex-row items-center justify-between gap-2">

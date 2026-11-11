@@ -79,7 +79,9 @@ class FeedItem < ApplicationRecord
 
   # [{type, id, name, members?}] for serialization to the owner
   def audience
-    feed_item_audiences.includes(:user, circle: :members).map do |a|
+    # use preloaded audiences when the feed already loaded them
+    audiences = feed_item_audiences.loaded? ? feed_item_audiences : feed_item_audiences.includes(:user, circle: :members)
+    audiences.map do |a|
       if a.circle
         { type: "circle", id: a.circle.id, name: a.circle.name, members: a.circle.members.map(&:name) }
       else

@@ -141,7 +141,14 @@ class PostsController < ApplicationController
 
   def feed_items
     FeedItem
-      .includes(feedable: [event: [:user, comments: [:user]], post: [:user, comments: [:user]], recommendation: [:user, comments: [:user]]])
+    # Keep in sync with what the feedable blueprints serialize.
+      .includes(feedable: [
+        { feed_item: { feed_item_audiences: [:user, { circle: :members }] } },
+        { user: :groups },
+        { comments: { user: :groups } },
+        { reactions: :user },
+        { rsvps: { user: :groups } },
+      ])
       .order(created_at: :desc)
   end
 

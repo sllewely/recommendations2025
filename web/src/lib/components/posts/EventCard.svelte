@@ -29,6 +29,7 @@
 	let localizedStartTime = $state(parseAbsoluteToLocal(feed_item.start_date_time));
 	let formattedStartDate = $state();
 	let formattedStartTime = $state();
+	let briefStartDateTime = $state();
 
 	onMount(() => {
 		localizedCreateTime = parseAbsoluteToLocal(feed_item.created_at);
@@ -53,6 +54,26 @@
 			hour12: true,
 			timeZone: localizedCreateTime.timeZone,
 		}).format(localizedStartTime.toDate());
+
+		// e.g. "7PM Mon Sept 28" or "7:30PM Mon Sept 28"
+		const start = localizedStartTime.toDate();
+		const briefTime = new Intl.DateTimeFormat("en-US", {
+			hour: "numeric",
+			minute: localizedStartTime.minute === 0 ? undefined : "2-digit",
+			hour12: true,
+			timeZone: localizedStartTime.timeZone,
+		})
+			.format(start)
+			.replace(/\s/g, "");
+		const dateParts = new Intl.DateTimeFormat("en-US", {
+			weekday: "short",
+			month: "short",
+			day: "numeric",
+			timeZone: localizedStartTime.timeZone,
+		}).formatToParts(start);
+		const part = (type: string) => dateParts.find((p) => p.type === type)?.value;
+		const month = part("month") === "Sep" ? "Sept" : part("month");
+		briefStartDateTime = `${briefTime} ${part("weekday")} ${month} ${part("day")}`;
 	});
 </script>
 
@@ -76,7 +97,7 @@
 					{#if in_feed}
 						<div class="flex flex-row items-center justify-between gap-2">
 							<Card.Description>
-								Happening at {formattedStartTime} on {formattedStartDate}
+								Happening {briefStartDateTime}
 							</Card.Description>
 							<RsvpBadge rsvp={current_user_rsvp} />
 						</div>

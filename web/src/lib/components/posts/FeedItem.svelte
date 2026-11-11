@@ -26,8 +26,8 @@
 
 	const localizedCreateTime = parseAbsoluteToLocal(feed_item.created_at);
 	const formattedCreateTime = new Intl.DateTimeFormat("en-US", {
-		dateStyle: "medium",
-		timeStyle: "short",
+		month: "short",
+		day: "numeric",
 		timeZone: localizedCreateTime.timeZone,
 	}).format(localizedCreateTime.toDate());
 
@@ -35,14 +35,7 @@
 </script>
 
 <div class="px-2 py-1 my-2 border-l-4 {border_color} rounded-r-lg shadow-md">
-	<div class="flex flex-row justify-between">
-		<div>
-			<UserCard user={feed_item.user} />
-		</div>
-		<div>
-			<span class="text-sm">posted at {formattedCreateTime}</span>
-		</div>
-	</div>
+	<UserCard user={feed_item.user} subtitle="Posted {formattedCreateTime}" />
 
 	{#if feed_item.class_name === "Recommendation"}
 		<RecommendationCard {feed_item} in_feed />

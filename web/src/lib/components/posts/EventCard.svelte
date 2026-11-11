@@ -68,45 +68,52 @@
 						<Card.Title>{feed_item.title}</Card.Title>
 					{/if}
 					<Card.Description>
-						<div class="flex flex-col">
-							<div>
-								{formattedStartDate}
+						{#if in_feed}
+							{formattedStartDate} at {formattedStartTime}
+						{:else}
+							<div class="flex flex-col">
+								<div>
+									{formattedStartDate}
+								</div>
+								<div>
+									At {formattedStartTime}
+								</div>
 							</div>
-							<div>
-								At {formattedStartTime}
-							</div>
-						</div>
+						{/if}
 					</Card.Description>
 				</Card.Header>
 				<Card.Content class="px-3 py-1">
-					{#if feed_item.description}
-						<TruncatedContent text={feed_item.description}>
-							<MarkedDownPost captured_text={feed_item.description} />
-						</TruncatedContent>
-					{/if}
-					<div class="text-sm text-gray-500">
-						{#if feed_item.address}
-							<p>at {feed_item.address}</p>
-						{/if}
-					</div>
-					{#if feed_item.url}
-						<p class="truncate">
-							<Tooltip.Provider>
-								<Tooltip.Root>
-									<Tooltip.Trigger>
-										<Link url={feed_item.url}>{feed_item.url}</Link>
-									</Tooltip.Trigger>
-									<Tooltip.Content>
-										<p>{feed_item.url}</p>
-									</Tooltip.Content>
-								</Tooltip.Root>
-							</Tooltip.Provider>
-						</p>
-					{/if}
-					<div>
+					{#if in_feed}
 						<RsvpBadge rsvp={current_user_rsvp} />
-					</div>
-					<div></div>
+					{:else}
+						{#if feed_item.description}
+							<TruncatedContent text={feed_item.description}>
+								<MarkedDownPost captured_text={feed_item.description} />
+							</TruncatedContent>
+						{/if}
+						<div class="text-sm text-gray-500">
+							{#if feed_item.address}
+								<p>at {feed_item.address}</p>
+							{/if}
+						</div>
+						{#if feed_item.url}
+							<p class="truncate">
+								<Tooltip.Provider>
+									<Tooltip.Root>
+										<Tooltip.Trigger>
+											<Link url={feed_item.url}>{feed_item.url}</Link>
+										</Tooltip.Trigger>
+										<Tooltip.Content>
+											<p>{feed_item.url}</p>
+										</Tooltip.Content>
+									</Tooltip.Root>
+								</Tooltip.Provider>
+							</p>
+						{/if}
+						<div>
+							<RsvpBadge rsvp={current_user_rsvp} />
+						</div>
+					{/if}
 				</Card.Content>
 			</Card.Root>
 		</a>

@@ -45,6 +45,8 @@
 		"zod": "^3.25.76"
 	},
 	"dependencies": {
+		"@grafana/faro-web-sdk": "^2.14.0",
+		"@grafana/faro-web-tracing": "^2.14.0",
 		"@tailwindcss/vite": "^4.0.8",
 		"dotenv": "^16.5.0",
 		"luxon": "^3.7.2",

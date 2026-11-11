@@ -5,6 +5,7 @@ import type { Group } from "$lib/api_calls/types";
 
 export async function load({ cookies }) {
 	let calendar_url = null;
+	let name: string | null = null;
 	let groups: Group[] = [];
 	try {
 		const { jwt, user_id } = parseCookies(cookies);
@@ -15,6 +16,7 @@ export async function load({ cookies }) {
 					? VITE_API_URL + "calendars/?token=" + user.res.calendar_api_key
 					: null;
 				groups = user.res.groups || [];
+				name = user.res.name;
 			}
 		}
 	} catch (error) {
@@ -23,6 +25,7 @@ export async function load({ cookies }) {
 
 	return {
 		current_user_id: cookies.get("user_id"),
+		current_name: name,
 		calendar_url: calendar_url,
 		groups: groups,
 	};

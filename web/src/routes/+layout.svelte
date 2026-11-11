@@ -2,12 +2,13 @@
 	import Header from "$lib/components/Header.svelte";
 	import Footer from "$lib/components/Footer.svelte";
 	import "../app.css";
-	import { current_user } from "$lib/state/current_user.svelte.js";
+	import { current_user, isSignedIn } from "$lib/state/current_user.svelte.js";
 	import { onMount } from "svelte";
 	import { afterNavigate } from "$app/navigation";
 	import { checkAndShowPendingToasts } from "$lib/state/toast.svelte.js";
 	import { Toaster } from "$lib/components/ui/sonner";
 	import { global } from "$lib/state/global.svelte";
+	import { faro } from "@grafana/faro-web-sdk";
 
 	let { children, data } = $props();
 
@@ -22,19 +23,27 @@
 
 	onMount(() => {});
 
-	afterNavigate(() => {
+	// Keep the Faro user in sync with sign in / sign out
+	$effect(() => {
+		if (isSignedIn()) {
+			faro.api?.setUser({
+				id: String(current_user.id),
+				fullName: data.current_name ?? undefined,
+			});
+		} else {
+			faro.api?.resetUser();
+		}
+	});
+
+	afterNavigate(({ to }) => {
+		// Tag Faro signals with the route pattern (e.g. /events/[id]) instead of the raw URL
+		faro.api?.setView({ name: to?.route?.id ?? to?.url?.pathname ?? "" });
 		checkAndShowPendingToasts();
 	});
 </script>
 
 <svelte:head>
 	<title>Bumblebeans</title>
-	<script
-		defer
-		src="https://cloud.umami.is/script.js"
-		data-website-id="f7acc72f-23e8-4e39-93d7-cc6d2ff593b0"
-	>
-	</script>
 </svelte:head>
 
 <div class="app dark:bg-gray-900 dark:text-gray-200">

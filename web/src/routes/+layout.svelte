@@ -8,6 +8,7 @@
 	import { checkAndShowPendingToasts } from "$lib/state/toast.svelte.js";
 	import { Toaster } from "$lib/components/ui/sonner";
 	import { global } from "$lib/state/global.svelte";
+	import { faro } from "@grafana/faro-web-sdk";
 
 	let { children, data } = $props();
 
@@ -22,7 +23,9 @@
 
 	onMount(() => {});
 
-	afterNavigate(() => {
+	afterNavigate(({ to }) => {
+		// Tag Faro signals with the route pattern (e.g. /events/[id]) instead of the raw URL
+		faro.api?.setView({ name: to?.route?.id ?? to?.url?.pathname ?? "" });
 		checkAndShowPendingToasts();
 	});
 </script>

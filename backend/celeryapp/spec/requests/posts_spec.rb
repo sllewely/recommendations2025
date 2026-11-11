@@ -270,7 +270,7 @@ RSpec.describe "Posts", type: :request do
         create(:post, user: @friend)
       end
       post1 = create(:post, user: @friend)
-      get "/rss?rss_api_key=" + @my_user.rss_api_key
+      get "/posts/rss?rss_api_key=" + @my_user.rss_api_key
 
       expect(response).to have_http_status(:ok)
 
@@ -283,7 +283,7 @@ RSpec.describe "Posts", type: :request do
       post1 = create(:post, user: @friend)
       event1 = create(:event, user: @friend)
       recommendation1 = create(:recommendation, user: @friend)
-      get "/rss?rss_api_key=" + @my_user.rss_api_key
+      get "/posts/rss?rss_api_key=" + @my_user.rss_api_key
 
       expect(response).to have_http_status(:ok)
 

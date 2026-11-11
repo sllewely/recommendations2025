@@ -45,7 +45,7 @@
 		</div>
 		<div>
 			{#if num_comments > 0 && show_extra_comment}
-				<CommentComponent comment={all_comments.at(-1)} />
+				<CommentComponent comment={all_comments.at(-1)} truncate />
 			{/if}
 		</div>
 		<Collapsible.Content>

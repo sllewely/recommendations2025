@@ -8,6 +8,26 @@
 	import { current_user } from "$lib/state/current_user.svelte";
 	import type { Recommendation } from "$lib/api_calls/types";
 	import { parseAbsoluteToLocal } from "@internationalized/date";
+	import {
+		Book,
+		BookmarkPlus,
+		Clapperboard,
+		Gamepad2,
+		Link as LinkIcon,
+		MessageCircleHeart,
+		MonitorPlay,
+		Soup,
+		Star,
+	} from "@lucide/svelte";
+
+	const media_type_icons: Record<string, typeof Book> = {
+		book: Book,
+		movie: Clapperboard,
+		tv_show: MonitorPlay,
+		video_game: Gamepad2,
+		restaurant: Soup,
+		url: LinkIcon,
+	};
 
 	interface Props {
 		feed_item: Recommendation;
@@ -35,12 +55,14 @@
 		timeZone: localizedCreateTime.timeZone,
 	}).format(localizedCreateTime.toDate());
 
+	let MediaIcon = $derived(media_type_icons[feed_item.media_type] ?? MessageCircleHeart);
+
 	let creating = $state(false);
 </script>
 
 <div>
 	<div>
-		{#if current_user.id !== feed_item.user.id}
+		{#if !in_feed && current_user.id !== feed_item.user.id}
 			<div class="float-right relative">
 				<div class="absolute top-0 right-0">
 					<form
@@ -71,22 +93,38 @@
 						? 'border-0 shadow-none'
 						: 'border-yellow-500 border-2'} hover:bg-yellow-100 dark:hover:bg-yellow-950 dark:bg-gray-900 dark:text-gray-200"
 				>
-					<Card.Header class="px-3 pt-2">
-						<Card.Title>{feed_item.title}</Card.Title>
-					</Card.Header>
-					<Card.Content class="px-3 py-1">
-						<p>{feed_item.media_type}</p>
-						{#if feed_item.notes}
-							<TruncatedContent text={feed_item.notes}>
-								<p>{feed_item.notes}</p>
-							</TruncatedContent>
-						{/if}
-						{#if feed_item.url}
-							<p class="truncate">
-								<Link url={feed_item.url}>{feed_item.url}</Link>
-							</p>
-						{/if}
-					</Card.Content>
+					{#if in_feed}
+						<div class="flex flex-row items-center gap-2 px-3 py-2">
+							<MediaIcon class="size-5 shrink-0" />
+							<span class="truncate font-semibold">{feed_item.title}</span>
+							<div class="ml-auto flex flex-row shrink-0">
+								{#if feed_item.status === "interested"}
+									<BookmarkPlus class="size-5" />
+								{:else}
+									{#each [1, 2, 3, 4, 5] as star}
+										<Star class="size-4" fill={feed_item.rating >= star ? "yellow" : "none"} />
+									{/each}
+								{/if}
+							</div>
+						</div>
+					{:else}
+						<Card.Header class="px-3 pt-2">
+							<Card.Title>{feed_item.title}</Card.Title>
+						</Card.Header>
+						<Card.Content class="px-3 py-1">
+							<p>{feed_item.media_type}</p>
+							{#if feed_item.notes}
+								<TruncatedContent text={feed_item.notes}>
+									<p>{feed_item.notes}</p>
+								</TruncatedContent>
+							{/if}
+							{#if feed_item.url}
+								<p class="truncate">
+									<Link url={feed_item.url}>{feed_item.url}</Link>
+								</p>
+							{/if}
+						</Card.Content>
+					{/if}
 				</Card.Root>
 			</a>
 		</div>

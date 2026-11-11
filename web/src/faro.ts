@@ -2,7 +2,8 @@ import { initializeFaro, getWebInstrumentations } from "@grafana/faro-web-sdk";
 import { TracingInstrumentation } from "@grafana/faro-web-tracing";
 
 export const faro = initializeFaro({
-	url: "https://faro-collector-prod-us-east-2.grafana.net/collect/315eb106c6a079c67a84bb56a416230f",
+	// Proxied through our own server (src/routes/api/grafbanana) to avoid ad blockers and CORS
+	url: "/api/grafbanana",
 	app: {
 		name: "bumblebeans-frontend",
 		version: "0.0.1",

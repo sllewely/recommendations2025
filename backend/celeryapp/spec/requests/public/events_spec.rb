@@ -20,12 +20,12 @@ RSpec.describe "Public/Events", type: :request do
       expect(res['start_time_string']).to match(/\d?\d:\d\d/)
     end
 
-    it 'returns not found if the event is not public' do
+    it 'returns the event even if the event is not public' do
       event = create(:event)
       event.apply_privacy!(visibility: "friends")
 
       get "/public/events/#{event.id}"
-      expect(response).to have_http_status(:not_found)
+      expect(response).to have_http_status(:ok)
     end
 
     it 'returns not found if the event does not exist' do

@@ -270,7 +270,7 @@ RSpec.describe "Posts", type: :request do
         create(:post, user: @friend)
       end
       post1 = create(:post, user: @friend)
-      get "/rss?rss_api_key=" + @my_user.rss_api_key
+      get "/posts/rss?rss_api_key=" + @my_user.rss_api_key
 
       expect(response).to have_http_status(:ok)
 
@@ -283,7 +283,7 @@ RSpec.describe "Posts", type: :request do
       post1 = create(:post, user: @friend)
       event1 = create(:event, user: @friend)
       recommendation1 = create(:recommendation, user: @friend)
-      get "/rss?rss_api_key=" + @my_user.rss_api_key
+      get "/posts/rss?rss_api_key=" + @my_user.rss_api_key
 
       expect(response).to have_http_status(:ok)
 
@@ -442,6 +442,42 @@ RSpec.describe "Posts", type: :request do
       my_post = create(:post, user: new_user)
       delete "/posts/#{my_post.id}", params: {}, headers: @headers
       expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  describe "GET /posts query count" do
+    def create_feed_items(user, count)
+      count.times do
+        [create(:post, user: user), create(:event, user: user), create(:recommendation, user: user)].each do |feedable|
+          create_list(:comment, 2, commentable: feedable)
+          create(:reaction, reactable: feedable)
+          create(:rsvp, event: feedable) if feedable.is_a?(Event)
+          create(:feed_item_audience, feed_item: feedable.feed_item)
+        end
+      end
+    end
+
+    def count_queries(&block)
+      count = 0
+      counter = ->(*, payload) { count += 1 unless payload[:name] =~ /SCHEMA|TRANSACTION/ || payload[:cached] }
+      ActiveSupport::Notifications.subscribed(counter, "sql.active_record", &block)
+      count
+    end
+
+    it "does not grow with the number of feed items" do
+      my_user = create(:user)
+      post "/sign_in", params: { email: my_user.email, password: my_user.password }, headers: { 'ACCEPT' => 'application/json' }
+      headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{JSON.parse(response.body)["auth_token"]}" }
+
+      create_feed_items(my_user, 1)
+      few = count_queries { get "/posts", headers: headers }
+
+      create_feed_items(my_user, 4)
+      many = count_queries { get "/posts", headers: headers }
+
+      expect(response).to have_http_status(:ok)
+      expect(JSON.parse(response.body)["feed_items"].size).to eq(15)
+      expect(many).to eq(few)
     end
   end
 end

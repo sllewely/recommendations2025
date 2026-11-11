@@ -9,12 +9,14 @@
 	import * as Tooltip from "$lib/components/ui/tooltip/index.js";
 	import * as Card from "$lib/components/ui/card/index.js";
 	import { onMount } from "svelte";
+	import { CalendarDays } from "@lucide/svelte";
 
 	interface Props {
 		feed_item: Event;
+		in_feed?: boolean;
 	}
 
-	let { feed_item }: Props = $props();
+	let { feed_item, in_feed = false }: Props = $props();
 
 	// TODO: Going should match on my id instead of current user rsvp
 	// should be updateable state
@@ -55,56 +57,73 @@
 </script>
 
 <div>
-	<div class="p-2">
+	<div class="py-1">
 		<a href="/events/{feed_item.id}">
 			<Card.Root
-				class="dark:bg-gray-900 dark:text-gray-200 border-lime-500 hover:bg-lime-100 border-2 dark:hover:bg-emerald-950"
+				class="{in_feed
+					? 'border-0 shadow-none'
+					: 'border-lime-500 border-2'} dark:bg-gray-900 dark:text-gray-200 hover:bg-lime-100 dark:hover:bg-emerald-950"
 			>
-				<Card.Header>
+				<Card.Header class="px-3 pt-2 space-y-0.5 {in_feed ? 'pb-2' : ''}">
 					{#if feed_item.title}
-						<Card.Title>{feed_item.title}</Card.Title>
+						<Card.Title class="flex flex-row items-center gap-2">
+							{#if in_feed}
+								<CalendarDays class="size-5 shrink-0 text-lime-500" />
+							{/if}
+							{feed_item.title}
+						</Card.Title>
 					{/if}
-					<Card.Description>
-						<div class="flex flex-col">
-							<div>
-								{formattedStartDate}
-							</div>
-							<div>
-								At {formattedStartTime}
-							</div>
+					{#if in_feed}
+						<div class="flex flex-row items-center justify-between gap-2">
+							<Card.Description>
+								Happening at {formattedStartTime} on {formattedStartDate}
+							</Card.Description>
+							<RsvpBadge rsvp={current_user_rsvp} />
 						</div>
-					</Card.Description>
+					{:else}
+						<Card.Description>
+							<div class="flex flex-col">
+								<div>
+									{formattedStartDate}
+								</div>
+								<div>
+									Happening at {formattedStartTime}
+								</div>
+							</div>
+						</Card.Description>
+					{/if}
 				</Card.Header>
-				<Card.Content>
-					{#if feed_item.description}
-						<TruncatedContent text={feed_item.description}>
-							<MarkedDownPost captured_text={feed_item.description} />
-						</TruncatedContent>
-					{/if}
-					<div class="text-sm text-gray-500">
-						{#if feed_item.address}
-							<p>at {feed_item.address}</p>
+				{#if !in_feed}
+					<Card.Content class="px-3 py-1">
+						{#if feed_item.description}
+							<TruncatedContent text={feed_item.description}>
+								<MarkedDownPost captured_text={feed_item.description} />
+							</TruncatedContent>
 						{/if}
-					</div>
-					{#if feed_item.url}
-						<p class="truncate">
-							<Tooltip.Provider>
-								<Tooltip.Root>
-									<Tooltip.Trigger>
-										<Link url={feed_item.url}>{feed_item.url}</Link>
-									</Tooltip.Trigger>
-									<Tooltip.Content>
-										<p>{feed_item.url}</p>
-									</Tooltip.Content>
-								</Tooltip.Root>
-							</Tooltip.Provider>
-						</p>
-					{/if}
-					<div>
-						<RsvpBadge rsvp={current_user_rsvp} />
-					</div>
-					<div></div>
-				</Card.Content>
+						<div class="text-sm text-gray-500">
+							{#if feed_item.address}
+								<p>at {feed_item.address}</p>
+							{/if}
+						</div>
+						{#if feed_item.url}
+							<p class="truncate">
+								<Tooltip.Provider>
+									<Tooltip.Root>
+										<Tooltip.Trigger>
+											<Link url={feed_item.url}>{feed_item.url}</Link>
+										</Tooltip.Trigger>
+										<Tooltip.Content>
+											<p>{feed_item.url}</p>
+										</Tooltip.Content>
+									</Tooltip.Root>
+								</Tooltip.Provider>
+							</p>
+						{/if}
+						<div>
+							<RsvpBadge rsvp={current_user_rsvp} />
+						</div>
+					</Card.Content>
+				{/if}
 			</Card.Root>
 		</a>
 	</div>

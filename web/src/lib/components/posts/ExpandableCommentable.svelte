@@ -5,13 +5,16 @@
 	import Link from "$lib/components/text/Link.svelte";
 	import * as Collapsible from "$lib/components/ui/collapsible";
 	import CommentComponent from "$lib/components/posts/Comment.svelte";
+	import type { Snippet } from "svelte";
 
 	interface Props {
 		comments: Comment[];
 		feed_item: Post | Event | Recommendation;
+		// rendered on the right side of the comments toggle row
+		actions?: Snippet;
 	}
 
-	let { comments, feed_item }: Props = $props();
+	let { comments, feed_item, actions }: Props = $props();
 
 	let all_comments = $state(comments);
 	let num_comments = $derived(all_comments.length);
@@ -27,16 +30,19 @@
 	};
 </script>
 
-<div>
+<div class="px-3">
 	<Collapsible.Root>
-		<Collapsible.Trigger onclick={expand_comments}>
-			<Link>
-				<div class="flex">
-					{num_comments} Comments
-					<MessageCircleMore />
-				</div>
-			</Link>
-		</Collapsible.Trigger>
+		<div class="flex flex-row items-center justify-between">
+			<Collapsible.Trigger onclick={expand_comments}>
+				<Link>
+					<div class="flex">
+						{num_comments} Comments
+						<MessageCircleMore />
+					</div>
+				</Link>
+			</Collapsible.Trigger>
+			{@render actions?.()}
+		</div>
 		<div>
 			{#if num_comments > 0 && show_extra_comment}
 				<CommentComponent comment={all_comments.at(-1)} />
@@ -50,7 +56,7 @@
 					{/each}
 				</div>
 			</div>
+			<SubmitComment {feed_item} {update_comments} />
 		</Collapsible.Content>
-		<SubmitComment {feed_item} {update_comments} />
 	</Collapsible.Root>
 </div>

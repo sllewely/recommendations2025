@@ -14,46 +14,40 @@
 
 	let { feed_item }: Props = $props();
 
-	let by_line = " posted";
-
+	let type_name = "a post";
 	let border_color = "border-orange-500";
 	if (feed_item.class_name === "Event") {
-		border_color = "border-blue-500";
-		by_line = " posted an upcoming event";
-	} else {
-		border_color = "border-orange-500";
+		type_name = "an event";
+		border_color = "border-lime-500";
+	} else if (feed_item.class_name === "Recommendation") {
+		type_name = "a recommendation";
+		border_color = "border-yellow-500";
 	}
 
 	const localizedCreateTime = parseAbsoluteToLocal(feed_item.created_at);
 	const formattedCreateTime = new Intl.DateTimeFormat("en-US", {
-		dateStyle: "medium",
-		timeStyle: "short",
+		month: "short",
+		day: "numeric",
 		timeZone: localizedCreateTime.timeZone,
 	}).format(localizedCreateTime.toDate());
 
 	//TODO: Style the shadcn Button component to be a fun color!!
 </script>
 
-<div class="p-2 my-2 border-bottom-2 border-gray-600 rounded-lg shadow-md">
-	<div class="flex flex-row justify-between">
-		<div>
-			<UserCard user={feed_item.user} />
-		</div>
-		<div>
-			<span class="text-sm">posted at {formattedCreateTime}</span>
-		</div>
-	</div>
+<div class="px-2 py-1 my-2 border-l-4 {border_color} rounded-r-lg shadow-md">
+	<UserCard user={feed_item.user} subtitle="Posted {type_name} {formattedCreateTime}" />
 
 	{#if feed_item.class_name === "Recommendation"}
-		<RecommendationCard {feed_item} />
+		<RecommendationCard {feed_item} in_feed />
 	{:else if feed_item.class_name === "Post"}
-		<PostCard {feed_item} />
+		<PostCard {feed_item} in_feed />
 	{:else}
-		<div>
-			<EventCard {feed_item} />
-		</div>
+		<EventCard {feed_item} in_feed />
 	{/if}
 
-	<Reactions feedable={feed_item} />
-	<ExpandableCommentable comments={feed_item["comments"]} {feed_item} />
+	<ExpandableCommentable comments={feed_item["comments"]} {feed_item}>
+		{#snippet actions()}
+			<Reactions feedable={feed_item} />
+		{/snippet}
+	</ExpandableCommentable>
 </div>

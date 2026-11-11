@@ -6,9 +6,10 @@
 	interface Props {
 		user: User;
 		show_friendship_status?: boolean;
+		subtitle?: string;
 	}
 
-	let { user, show_friendship_status = true }: Props = $props();
+	let { user, show_friendship_status = true, subtitle }: Props = $props();
 </script>
 
 <div class="flex flex-row items-center">
@@ -19,12 +20,17 @@
 			<img src={bblogo} alt="profile picture" />
 		{/if}
 	</div>
-	<div class="flex flex-row items-center gap-2">
-		<a class="text-teal-400 hover:text-orange-400 font-bold" href={`/users/${user.id}`}
-			>{user.name}</a
-		>
-		{#if show_friendship_status && user.friendship_status}
-			<FriendshipBadge status={user.friendship_status} />
+	<div class="flex flex-col">
+		<div class="flex flex-row items-center gap-2">
+			<a class="text-teal-400 hover:text-orange-400 font-bold" href={`/users/${user.id}`}
+				>{user.name}</a
+			>
+			{#if show_friendship_status && user.friendship_status}
+				<FriendshipBadge status={user.friendship_status} />
+			{/if}
+		</div>
+		{#if subtitle}
+			<span class="text-sm text-gray-500 dark:text-gray-400">{subtitle}</span>
 		{/if}
 	</div>
 </div>

@@ -11,9 +11,9 @@
 	let { event_item }: Props = $props();
 </script>
 
-<div class="p-2">
+<div class="py-1">
 	<Card.Root>
-		<Card.Content class="text-xl font-bold flex justify-center">
+		<Card.Content class="px-3 py-1 text-xl font-bold flex justify-center">
 			{event_item.date_header}
 		</Card.Content>
 	</Card.Root>

@@ -2,7 +2,7 @@
 	import Header from "$lib/components/Header.svelte";
 	import Footer from "$lib/components/Footer.svelte";
 	import "../app.css";
-	import { current_user } from "$lib/state/current_user.svelte.js";
+	import { current_user, isSignedIn } from "$lib/state/current_user.svelte.js";
 	import { onMount } from "svelte";
 	import { afterNavigate } from "$app/navigation";
 	import { checkAndShowPendingToasts } from "$lib/state/toast.svelte.js";
@@ -22,6 +22,18 @@
 	global.groups = data.groups;
 
 	onMount(() => {});
+
+	// Keep the Faro user in sync with sign in / sign out
+	$effect(() => {
+		if (isSignedIn()) {
+			faro.api?.setUser({
+				id: String(current_user.id),
+				fullName: data.current_name ?? undefined,
+			});
+		} else {
+			faro.api?.resetUser();
+		}
+	});
 
 	afterNavigate(({ to }) => {
 		// Tag Faro signals with the route pattern (e.g. /events/[id]) instead of the raw URL

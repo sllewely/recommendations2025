@@ -56,7 +56,7 @@
 					{/each}
 				</div>
 			</div>
+			<SubmitComment {feed_item} {update_comments} />
 		</Collapsible.Content>
-		<SubmitComment {feed_item} {update_comments} />
 	</Collapsible.Root>
 </div>

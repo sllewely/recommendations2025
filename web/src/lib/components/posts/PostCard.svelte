@@ -45,7 +45,15 @@
 						{/if}
 						{#if feed_item.content}
 							<div class="min-w-0 flex-1">
-								<TruncatedContent text={feed_item.content} enabled={truncate}>
+								<!-- ~6 lines: six 1.5rem lines plus the paragraph's top margin -->
+								<TruncatedContent
+									text={feed_item.content}
+									enabled={truncate}
+									thresholdLength={400}
+									thresholdLines={6}
+									collapsedClass="max-h-[9.25rem]"
+									buttonClass="text-xs leading-none"
+								>
 									<MarkedDownPost captured_text={feed_item.content} />
 								</TruncatedContent>
 							</div>

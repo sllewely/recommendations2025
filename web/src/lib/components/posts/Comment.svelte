@@ -3,8 +3,9 @@
 	import { parseAbsoluteToLocal } from "@internationalized/date";
 	import MarkedDownPost from "$lib/components/posts/MarkedDownPost.svelte";
 	import FriendshipBadge from "$lib/components/ui/badge/FriendshipBadge.svelte";
+	import TruncatedContent from "$lib/components/posts/TruncatedContent.svelte";
 
-	const { comment } = $props();
+	const { comment, truncate = false } = $props();
 
 	const localizedCreateTime = parseAbsoluteToLocal(comment.created_at);
 	const formattedCreateTime = new Intl.DateTimeFormat("en-US", {
@@ -33,7 +34,17 @@
 		</div>
 		<div class="text-left">
 			<div class="text-gray-500 dark:text-gray-400">
-				<MarkedDownPost captured_text={comment.body} />
+				<!-- ~2 lines: two 1.5rem lines plus the paragraph's top margin -->
+				<TruncatedContent
+					text={comment.body}
+					enabled={truncate}
+					thresholdLength={120}
+					thresholdLines={2}
+					collapsedClass="max-h-[3.25rem]"
+					buttonClass="text-xs leading-none"
+				>
+					<MarkedDownPost captured_text={comment.body} />
+				</TruncatedContent>
 			</div>
 		</div>
 	</article>

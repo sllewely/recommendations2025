@@ -6,6 +6,8 @@
 		enabled?: boolean;
 		thresholdLength?: number;
 		thresholdLines?: number;
+		collapsedClass?: string;
+		buttonClass?: string;
 		children?: Snippet;
 	}
 
@@ -14,6 +16,8 @@
 		enabled = true,
 		thresholdLength = 280,
 		thresholdLines = 4,
+		collapsedClass = "max-h-28",
+		buttonClass = "text-sm mt-1",
 		children,
 	}: Props = $props();
 
@@ -33,14 +37,20 @@
 </script>
 
 <div class="relative">
-	<div class={is_too_long && !expanded ? "max-h-28 overflow-hidden relative" : "relative"}>
+	<!-- with a read more button, drop the bottom margin of the last markdown block so the
+	     button sits right under the text (important to beat MarkedDownPost's unlayered styles) -->
+	<div
+		class={is_too_long
+			? `relative [&_section>:last-child]:mb-0! ${expanded ? "" : `${collapsedClass} overflow-hidden`}`
+			: "relative"}
+	>
 		{@render children?.()}
 	</div>
 
 	{#if is_too_long}
 		<button
 			type="button"
-			class="text-sm font-semibold text-teal-400 hover:text-orange-400 hover:underline inline-block mt-1 focus:outline-none cursor-pointer"
+			class="{buttonClass} font-semibold text-teal-400 hover:text-orange-400 hover:underline block w-fit focus:outline-none cursor-pointer"
 			onclick={toggleExpand}
 		>
 			{expanded ? "read less" : "read more..."}

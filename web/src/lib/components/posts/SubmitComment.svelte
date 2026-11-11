@@ -16,7 +16,7 @@
 	let posting = $state(false);
 </script>
 
-<div class="mt-2">
+<div class="mt-1">
 	{#if posting}
 		...posting
 	{/if}
@@ -45,7 +45,7 @@
 		<input type="hidden" name="commentable_id" value={feed_item.id} />
 		<input type="hidden" name="commentable_type" value={feed_item.class_name} />
 		<Textarea name="body" placeholder="I was thinking..." />
-		<div class="flex justify-center pt-2">
+		<div class="flex justify-center pt-1">
 			<Button type="submit" disabled={posting}>
 				<MessageCirclePlus /> &nbsp; Submit Comment
 			</Button>

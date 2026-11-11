@@ -12,9 +12,10 @@
 
 	interface Props {
 		feed_item: Event;
+		in_feed?: boolean;
 	}
 
-	let { feed_item }: Props = $props();
+	let { feed_item, in_feed = false }: Props = $props();
 
 	// TODO: Going should match on my id instead of current user rsvp
 	// should be updateable state
@@ -55,12 +56,14 @@
 </script>
 
 <div>
-	<div class="p-2">
+	<div class="py-1">
 		<a href="/events/{feed_item.id}">
 			<Card.Root
-				class="dark:bg-gray-900 dark:text-gray-200 border-lime-500 hover:bg-lime-100 border-2 dark:hover:bg-emerald-950"
+				class="{in_feed
+					? 'border-0 shadow-none'
+					: 'border-lime-500 border-2'} dark:bg-gray-900 dark:text-gray-200 hover:bg-lime-100 dark:hover:bg-emerald-950"
 			>
-				<Card.Header>
+				<Card.Header class="px-3 pt-2 space-y-0.5">
 					{#if feed_item.title}
 						<Card.Title>{feed_item.title}</Card.Title>
 					{/if}
@@ -75,7 +78,7 @@
 						</div>
 					</Card.Description>
 				</Card.Header>
-				<Card.Content>
+				<Card.Content class="px-3 py-1">
 					{#if feed_item.description}
 						<TruncatedContent text={feed_item.description}>
 							<MarkedDownPost captured_text={feed_item.description} />

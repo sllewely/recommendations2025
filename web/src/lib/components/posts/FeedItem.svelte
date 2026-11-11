@@ -18,10 +18,10 @@
 
 	let border_color = "border-orange-500";
 	if (feed_item.class_name === "Event") {
-		border_color = "border-blue-500";
+		border_color = "border-lime-500";
 		by_line = " posted an upcoming event";
-	} else {
-		border_color = "border-orange-500";
+	} else if (feed_item.class_name === "Recommendation") {
+		border_color = "border-yellow-500";
 	}
 
 	const localizedCreateTime = parseAbsoluteToLocal(feed_item.created_at);
@@ -34,7 +34,7 @@
 	//TODO: Style the shadcn Button component to be a fun color!!
 </script>
 
-<div class="p-2 my-2 border-bottom-2 border-gray-600 rounded-lg shadow-md">
+<div class="px-2 py-1 my-2 border-l-4 {border_color} rounded-r-lg shadow-md">
 	<div class="flex flex-row justify-between">
 		<div>
 			<UserCard user={feed_item.user} />
@@ -45,13 +45,11 @@
 	</div>
 
 	{#if feed_item.class_name === "Recommendation"}
-		<RecommendationCard {feed_item} />
+		<RecommendationCard {feed_item} in_feed />
 	{:else if feed_item.class_name === "Post"}
-		<PostCard {feed_item} />
+		<PostCard {feed_item} in_feed />
 	{:else}
-		<div>
-			<EventCard {feed_item} />
-		</div>
+		<EventCard {feed_item} in_feed />
 	{/if}
 
 	<Reactions feedable={feed_item} />

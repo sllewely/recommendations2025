@@ -8,9 +8,10 @@
 	interface Props {
 		feed_item: Post;
 		truncate?: boolean;
+		in_feed?: boolean;
 	}
 
-	let { feed_item, truncate = true }: Props = $props();
+	let { feed_item, truncate = true, in_feed = false }: Props = $props();
 
 	if (feed_item.class_name !== "Post") {
 		console.error("not a post feed item");
@@ -19,18 +20,20 @@
 
 <div>
 	<div>
-		<div class="p-2">
+		<div class="py-1">
 			<a href="/posts/{feed_item.id}">
 				<Card.Root
-					class="border-orange-500 hover:bg-orange-100 dark:hover:bg-orange-900 dark:bg-gray-900 dark:text-gray-200"
+					class="{in_feed
+						? 'border-0 shadow-none'
+						: 'border-orange-500'} hover:bg-orange-100 dark:hover:bg-orange-900 dark:bg-gray-900 dark:text-gray-200"
 				>
 					{#if feed_item.title}
-						<Card.Header>
+						<Card.Header class="px-3 pt-2">
 							<Card.Title>{feed_item.title}</Card.Title>
 						</Card.Header>
 					{/if}
 
-					<Card.Content>
+					<Card.Content class="px-3 py-1">
 						{#if feed_item.content}
 							<TruncatedContent text={feed_item.content} enabled={truncate}>
 								<MarkedDownPost captured_text={feed_item.content} />

@@ -11,9 +11,10 @@
 
 	interface Props {
 		feed_item: Recommendation;
+		in_feed?: boolean;
 	}
 
-	let { feed_item }: Props = $props();
+	let { feed_item, in_feed = false }: Props = $props();
 
 	let by_line = $derived.by(() => {
 		if (feed_item.status === "watching") return " is watching";
@@ -63,15 +64,17 @@
 				</div>
 			</div>
 		{/if}
-		<div class="p-2">
+		<div class="py-1">
 			<a href="/recommendations/{feed_item.id}">
 				<Card.Root
-					class="border-yellow-500 hover:bg-yellow-100 border-2 dark:hover:bg-yellow-950 dark:bg-gray-900 dark:text-gray-200"
+					class="{in_feed
+						? 'border-0 shadow-none'
+						: 'border-yellow-500 border-2'} hover:bg-yellow-100 dark:hover:bg-yellow-950 dark:bg-gray-900 dark:text-gray-200"
 				>
-					<Card.Header>
+					<Card.Header class="px-3 pt-2">
 						<Card.Title>{feed_item.title}</Card.Title>
 					</Card.Header>
-					<Card.Content>
+					<Card.Content class="px-3 py-1">
 						<p>{feed_item.media_type}</p>
 						{#if feed_item.notes}
 							<TruncatedContent text={feed_item.notes}>

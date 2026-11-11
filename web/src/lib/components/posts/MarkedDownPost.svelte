@@ -63,7 +63,7 @@
 	@reference '$src/app.css';
 
 	div.markddown :global(p) {
-		@apply text-base my-2;
+		@apply text-base my-1;
 	}
 	div.markddown :global(h1) {
 		@apply text-4xl;

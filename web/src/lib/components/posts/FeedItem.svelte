@@ -45,6 +45,9 @@
 		<EventCard {feed_item} in_feed />
 	{/if}
 
-	<Reactions feedable={feed_item} />
-	<ExpandableCommentable comments={feed_item["comments"]} {feed_item} />
+	<ExpandableCommentable comments={feed_item["comments"]} {feed_item}>
+		{#snippet actions()}
+			<Reactions feedable={feed_item} />
+		{/snippet}
+	</ExpandableCommentable>
 </div>

@@ -55,7 +55,9 @@
 </script>
 
 <div class="relative">
-	<div class={"flex flex-row gap-2 absolute -top-10" + (open_choices ? "" : " hidden")}>
+	<div
+		class={"flex flex-row gap-2 absolute -top-10 right-0 z-10" + (open_choices ? "" : " hidden")}
+	>
 		{#each REACTS as react}
 			<ReactButton
 				click_handler={() => {
@@ -67,15 +69,16 @@
 		{/each}
 	</div>
 
-	<div class="flex flex-row gap-2">
+	<div class="flex flex-row items-center gap-2">
+		{#each Object.entries(grouped_reactions) as [react, count]}
+			<span class="text-sm">{reactToEmoji[react] || react}: {count}</span>
+		{/each}
 		<ReactButton
+			class="h-6 px-1.5"
 			click_handler={() => {
 				open_choices = !open_choices;
 			}}
 			react={my_reaction}
 		/>
-		{#each Object.entries(grouped_reactions) as [react, count]}
-			<span>{reactToEmoji[react] || react}: {count}</span>
-		{/each}
 	</div>
 </div>

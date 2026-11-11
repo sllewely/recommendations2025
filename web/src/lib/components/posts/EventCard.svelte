@@ -63,14 +63,19 @@
 					? 'border-0 shadow-none'
 					: 'border-lime-500 border-2'} dark:bg-gray-900 dark:text-gray-200 hover:bg-lime-100 dark:hover:bg-emerald-950"
 			>
-				<Card.Header class="px-3 pt-2 space-y-0.5">
+				<Card.Header class="px-3 pt-2 space-y-0.5 {in_feed ? 'pb-2' : ''}">
 					{#if feed_item.title}
 						<Card.Title>{feed_item.title}</Card.Title>
 					{/if}
-					<Card.Description>
-						{#if in_feed}
-							{formattedStartDate} at {formattedStartTime}
-						{:else}
+					{#if in_feed}
+						<div class="flex flex-row items-center justify-between gap-2">
+							<Card.Description>
+								{formattedStartDate} at {formattedStartTime}
+							</Card.Description>
+							<RsvpBadge rsvp={current_user_rsvp} />
+						</div>
+					{:else}
+						<Card.Description>
 							<div class="flex flex-col">
 								<div>
 									{formattedStartDate}
@@ -79,13 +84,11 @@
 									At {formattedStartTime}
 								</div>
 							</div>
-						{/if}
-					</Card.Description>
+						</Card.Description>
+					{/if}
 				</Card.Header>
-				<Card.Content class="px-3 py-1">
-					{#if in_feed}
-						<RsvpBadge rsvp={current_user_rsvp} />
-					{:else}
+				{#if !in_feed}
+					<Card.Content class="px-3 py-1">
 						{#if feed_item.description}
 							<TruncatedContent text={feed_item.description}>
 								<MarkedDownPost captured_text={feed_item.description} />
@@ -113,8 +116,8 @@
 						<div>
 							<RsvpBadge rsvp={current_user_rsvp} />
 						</div>
-					{/if}
-				</Card.Content>
+					</Card.Content>
+				{/if}
 			</Card.Root>
 		</a>
 	</div>

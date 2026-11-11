@@ -6,11 +6,12 @@
 		react: string;
 		selected?: boolean;
 		click_handler: () => void;
+		class?: string;
 	}
 
-	let { react, selected, click_handler }: Props = $props();
+	let { react, selected, click_handler, class: className }: Props = $props();
 </script>
 
-<Button size="sm" onclick={click_handler}>
+<Button size="sm" class={className} onclick={click_handler}>
 	<span>{reactToEmoji[react] || react}</span>
 </Button>

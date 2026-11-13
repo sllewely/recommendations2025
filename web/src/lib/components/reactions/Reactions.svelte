@@ -10,6 +10,7 @@
 	import { newToast, ToastType } from "$lib/state/toast.svelte";
 	import { current_user } from "$lib/state/current_user.svelte";
 	import { Badge } from "$lib/components/ui/badge";
+	import * as Tooltip from "$lib/components/ui/tooltip";
 
 	interface Props {
 		feedable: Post | Recommendation | Event;
@@ -19,11 +20,11 @@
 
 	let open_choices = $state(false);
 
-	// a hash of reactions counts grouped by react type
+	// a hash of reactor names grouped by react type
 	let grouped_reactions = $derived(
-		feedable.reactions.reduce<Record<string, number>>((counts, reaction) => {
-			counts[reaction.react] = (counts[reaction.react] ?? 0) + 1;
-			return counts;
+		feedable.reactions.reduce<Record<string, string[]>>((groups, reaction) => {
+			(groups[reaction.react] ??= []).push(reaction.user.name);
+			return groups;
 		}, {}),
 	);
 
@@ -71,11 +72,28 @@
 	</div>
 
 	<div class="flex flex-row items-center gap-2">
-		{#each Object.entries(grouped_reactions) as [react, count]}
-			<Badge variant="outline" class="gap-1 text-sm font-normal"
-				>{reactToEmoji[react] || react} {count}</Badge
-			>
-		{/each}
+		<Tooltip.Provider delayDuration={200}>
+			{#each Object.entries(grouped_reactions) as [react, names]}
+				<Tooltip.Root>
+					<Tooltip.Trigger>
+						{#snippet child({ props })}
+							<span {...props} class="inline-flex">
+								<Badge variant="outline" class="gap-1 text-sm font-normal"
+									>{reactToEmoji[react] || react} {names.length}</Badge
+								>
+							</span>
+						{/snippet}
+					</Tooltip.Trigger>
+					<Tooltip.Content>
+						<ul>
+							{#each names as name}
+								<li>{name}</li>
+							{/each}
+						</ul>
+					</Tooltip.Content>
+				</Tooltip.Root>
+			{/each}
+		</Tooltip.Provider>
 		<ReactButton
 			class="h-6 px-1.5"
 			click_handler={() => {

@@ -9,6 +9,7 @@
 	} from "$lib/api_calls/types";
 	import { newToast, ToastType } from "$lib/state/toast.svelte";
 	import { current_user } from "$lib/state/current_user.svelte";
+	import { Badge } from "$lib/components/ui/badge";
 
 	interface Props {
 		feedable: Post | Recommendation | Event;
@@ -71,7 +72,9 @@
 
 	<div class="flex flex-row items-center gap-2">
 		{#each Object.entries(grouped_reactions) as [react, count]}
-			<span class="text-sm">{reactToEmoji[react] || react}: {count}</span>
+			<Badge variant="outline" class="gap-1 text-sm font-normal"
+				>{reactToEmoji[react] || react} {count}</Badge
+			>
 		{/each}
 		<ReactButton
 			class="h-6 px-1.5"

@@ -1,10 +1,13 @@
 <script lang="ts">
-	import H1 from "$lib/components/text/H1.svelte";
-
+	import SubHeader from "$lib/components/SubHeader.svelte";
+	import SubHeaderTitle from "$lib/components/SubHeaderTitle.svelte";
 	const { data } = $props();
 </script>
 
-<H1>Users</H1>
+<SubHeader>
+	<SubHeaderTitle title="users" />
+</SubHeader>
+
 {#each data.users as user}
 	<p>{user.name}</p>
 {/each}

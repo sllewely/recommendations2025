@@ -29,7 +29,7 @@ class FriendRequestsController < ApplicationController
   # TODO: return friend request and user, so that we can reject friend requests.  Low priority
   def index
     render json: {
-      incoming_friend_requests: FriendRequestBlueprint.render_as_hash(current_user.friend_requests),
+      incoming_friend_requests: FriendRequestBlueprint.render_as_hash(current_user.friend_requests.pending),
       outgoing_friend_requests: FriendRequestBlueprint.render_as_hash(current_user.outgoing_friend_requests),
     }, status: :ok
   end
@@ -41,10 +41,7 @@ class FriendRequestsController < ApplicationController
     render json: { error: "Cannot send friend request: it you" }, status: :unprocessable_content and return if friend_id == current_user.id
     render json: { error: "Cannot send friend request: already friends" }, status: :unprocessable_content and return if current_user.friends.find_by(id: friend_id).present?
     try do
-      ActiveRecord::Base.transaction do
-        user.friend_requests.create!(incoming_friend_id: current_user.id, message: params['message'])
-        user.notifications << Notification.pending_friend_request(user, current_user)
-      end
+      user.friend_requests.create!(incoming_friend_id: current_user.id, message: params['message'])
     rescue ActiveRecord::RecordInvalid => e
       render json: { error: e.message }, status: :unprocessable_content and return
     end
@@ -57,5 +54,12 @@ class FriendRequestsController < ApplicationController
       "/users/#{current_user.id}"
     )
     render json: FriendRequestBlueprint.render(friend_request), status: :created
+  end
+
+  def ignore
+    friend_request = current_user.friend_requests.find_by(id: params[:id])
+    render json: { error: "friend request not found" }, status: :not_found and return if friend_request.nil?
+    friend_request.rejected!
+    render json: FriendRequestBlueprint.render(friend_request), status: :ok
   end
 end

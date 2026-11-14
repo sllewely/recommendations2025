@@ -1,327 +1,202 @@
 <script lang="ts">
 	import { enhance } from "$app/forms";
-	import * as Card from "$lib/components/ui/card/index.js";
-	import { Button } from "$lib/components/ui/button";
-	import { Calendar } from "$lib/components/ui/calendar";
-	import * as Popover from "$lib/components/ui/popover";
-	import { Input } from "$lib/components/ui/input";
-	import { type EventsFormSchema, eventsFormSchema } from "./schema";
-	import SuperDebug, { type SuperValidated, type Infer, superForm } from "sveltekit-superforms";
-	import { zodClient } from "sveltekit-superforms/adapters";
-	import { newToast, ToastType } from "$lib/state/toast.svelte.js";
+	import { browser } from "$app/environment";
 	import { goto } from "$app/navigation";
-	import { Textarea } from "$lib/components/ui/textarea";
-	import * as Tabs from "$lib/components/ui/tabs/index.js";
-	import { CalendarIcon } from "lucide-svelte";
+	import { type SuperValidated, type Infer, superForm } from "sveltekit-superforms";
+	import { zodClient } from "sveltekit-superforms/adapters";
 	import {
-		type DateValue,
-		DateFormatter,
 		getLocalTimeZone,
+		parseAbsoluteToLocal,
 		toCalendarDate,
 		toTime,
 		today,
-		Time,
-		parseAbsoluteToLocal,
 	} from "@internationalized/date";
+	import { CalendarDays } from "@lucide/svelte";
+	import { type EventsFormSchema, eventsFormSchema } from "./schema";
+	import { newToast, ToastType } from "$lib/state/toast.svelte.js";
+	import { formatWhen } from "$lib/format_date";
+	import type { Event as EventType, User } from "$lib/api_calls/types";
+	import Button from "$lib/components/Button.svelte";
 	import MarkedDownPost from "$lib/components/posts/MarkedDownPost.svelte";
-	import { Field, Control, Description } from "formsnap";
-	import FormLabel from "$lib/components/form/FormLabel.svelte";
-	import { Spinner } from "$lib/components/ui/spinner";
-	import FormFieldErrors from "$lib/components/form/FormFieldErrors.svelte";
+	import FeedBadge, { CARD } from "$lib/components/posts/FeedBadge.svelte";
+	import { cn } from "$lib/utils.js";
+	import FormField from "$lib/components/form/FormField.svelte";
+	import FormRow from "$lib/components/form/FormRow.svelte";
 	import SharingPrivacy from "$lib/components/form/SharingPrivacy.svelte";
-	import type { AudienceMember } from "$lib/components/form/AudiencePicker.svelte";
-	import FriendItem from "../circles/FriendItem.svelte";
-	import type { Event as EventType } from "$lib/api_calls/types";
+	import type { PickedPerson } from "$lib/components/users/PeoplePicker.svelte";
+	import PeoplePicker from "$lib/components/users/PeoplePicker.svelte";
+	import { Spinner } from "$lib/components/ui/spinner";
 
 	let {
 		data,
 	}: {
-		data: { form: SuperValidated<Infer<EventsFormSchema>>; event: EventType };
+		data: { form: SuperValidated<Infer<EventsFormSchema>>; event?: EventType };
 	} = $props();
 
 	const form = superForm(data.form, {
 		validators: zodClient(eventsFormSchema),
 	});
-
-	const { form: formData, enhance: superEnhance } = form;
-
-	const df = new DateFormatter("en-US", {
-		dateStyle: "long",
-	});
-
-	let default_date = today(getLocalTimeZone()).add({ days: 1 });
-	let start_date_value = $state<DateValue>(default_date);
-
-	$effect(() => {
-		$formData.start_date = start_date_value.toString();
-	});
+	const { form: formData } = form;
 
 	let creating = $state(false);
+	let audience = $state<PickedPerson[]>(data.event?.audience ?? []);
 
-	let friend_results = $state([]);
-	let friends_to_invite = $state([]);
-	let invited_friend_ids = $derived(friends_to_invite.map((f) => f.id));
-	let audience = $state<AudienceMember[]>(data.event?.audience ?? []);
+	let invited = $state<PickedPerson[]>(
+		data.event?.rsvps?.map((rsvp) => ({
+			type: "user" as const,
+			id: rsvp.user.id,
+			name: rsvp.user.name,
+			profile_photo_url: rsvp.user.profile_photo_url,
+		})) ?? [],
+	);
 
 	if (data.event) {
-		let start_date_time = data.event.start_date_time;
-		let start_date_localized = parseAbsoluteToLocal(start_date_time);
-		start_date_value = toCalendarDate(start_date_localized);
-
-		$formData.start_time = toTime(start_date_localized).toString().substring(0, 5);
+		const start = parseAbsoluteToLocal(data.event.start_date_time);
+		$formData.start_date = toCalendarDate(start).toString();
+		$formData.start_time = toTime(start).toString().substring(0, 5);
 		$formData.id = data.event.id;
-		friends_to_invite = data.event.rsvps.map((rsvp) => rsvp.user);
+	} else if (!$formData.start_date) {
+		$formData.start_date = today(getLocalTimeZone()).add({ days: 1 }).toString();
 	}
 
 	$effect(() => {
-		$formData.invited_friend_ids = invited_friend_ids;
+		$formData.invited_friend_ids = invited.map((f) => f.id);
+	});
+
+	let preview_when = $derived.by(() => {
+		if (!browser || !$formData.start_date) return "";
+		const start = new Date(`${$formData.start_date}T${$formData.start_time || "00:00"}`);
+		return isNaN(start.getTime()) ? "" : formatWhen(start.toISOString());
 	});
 </script>
 
-<div>
-	<div>
-		{#if creating}
-			<p>creating...</p>
-		{/if}
-		<form
-			id="events_form"
-			method="POST"
-			use:enhance={() => {
-				creating = true;
-				return async ({ update, result }) => {
-					await update();
-					creating = false;
-					let res = result.data;
-					if (res.success) {
-						if (data.event) {
-							newToast("You have successfully updated an event!!");
-						} else {
-							newToast("You have successfully created an event!!");
-						}
-						goto("/posts");
-					} else {
-						console.log("error result", result);
-						console.log("error message", res);
-						console.log(res.error);
-						if (res.error) {
-							newToast("Error creating an event: " + res.error, ToastType.Error);
-						} else {
-							newToast("Error creating an event", ToastType.Error);
-						}
-					}
-				};
-			}}
+<form
+	id="events_form"
+	method="POST"
+	class="flex flex-col gap-3"
+	use:enhance={() => {
+		creating = true;
+		return async ({ update, result }) => {
+			await update();
+			creating = false;
+			const res = result.data;
+			if (res?.success) {
+				newToast(
+					data.event
+						? "You have successfully updated an event!!"
+						: "You have successfully created an event!!",
+				);
+				goto("/");
+			} else {
+				newToast("Error saving event" + (res?.error ? ": " + res.error : ""), ToastType.Error);
+			}
+		};
+	}}
+>
+	<section aria-label="preview" class={cn("mb-7 flex flex-col gap-5", CARD)}>
+		<div class="flex flex-row items-center gap-3">
+			<FeedBadge icon={CalendarDays} accent="lime" />
+			{#if $formData.title?.trim()}
+				<h3 class="mt-1 text-lg font-semibold leading-tight">{$formData.title}</h3>
+			{:else}
+				<h3 class="mt-1 text-lg italic leading-tight text-zinc-500 dark:text-zinc-400">
+					your event
+				</h3>
+			{/if}
+		</div>
+		<ul
+			class="flex min-w-0 flex-col gap-1 text-sm text-zinc-500 dark:text-zinc-400 [&>li]:truncate [&_.value]:text-zinc-700 dark:[&_.value]:text-zinc-300"
 		>
-			<Field {form} name="title">
-				<Control>
-					{#snippet children({ props })}
-						<div class="flex flex-row gap-6">
-							<FormLabel>Title</FormLabel>
-							<Input {...props} bind:value={$formData.title} />
-						</div>
-					{/snippet}
-				</Control>
-				<FormFieldErrors />
-			</Field>
-			<Field {form} name="id">
-				<input hidden value={$formData.id} name="id" />
-			</Field>
-			<div class="flex flex-row pt-6 items-end gap-6">
-				<Field {form} name="start_date">
-					<Control>
-						<FormLabel>Date</FormLabel>
-						<Popover.Root>
-							<Popover.Trigger>
-								<Button variant="outline">
-									<CalendarIcon class="mr-2 size-4" />
-									{start_date_value
-										? df.format(start_date_value.toDate(getLocalTimeZone()))
-										: "Select a date"}
-								</Button>
-							</Popover.Trigger>
-							<Popover.Content class="w-auto p-0">
-								<Calendar
-									bind:value={start_date_value}
-									type="single"
-									initialFocus
-									onValueChange={(v) => {
-										if (v) {
-											$formData.start_date = v.toString();
-										} else {
-											$formData.start_date = "";
-										}
-									}}
-								/>
-							</Popover.Content>
-						</Popover.Root>
-						<input hidden value={$formData.start_date} name="start_date" />
-					</Control>
-					<FormFieldErrors />
-				</Field>
-				<Field {form} name="start_time">
-					<Control>
-						{#snippet children({ props })}
-							<FormLabel>Start Time</FormLabel>
-							<input type="time" {...props} bind:value={$formData.start_time} />
-						{/snippet}
-					</Control>
-					<FormFieldErrors />
-				</Field>
-				<Field {form} name="time_zone">
-					<input hidden value={getLocalTimeZone()} name="time_zone" />
-				</Field>
-			</div>
+			<li>on <span class="value">{preview_when}</span></li>
+			{#if $formData.address?.trim()}
+				<li>at <span class="value">{$formData.address}</span></li>
+			{/if}
+			{#if $formData.url?.trim()}
+				<li>see <span class="value underline">{$formData.url}</span></li>
+			{/if}
+		</ul>
+		{#if $formData.description?.trim()}
+			<MarkedDownPost captured_text={$formData.description} />
+		{/if}
+	</section>
 
-			<div class="pt-6">
-				<label for="description" class="font-semibold text-nowrap">Description</label>
-				<Tabs.Root value="write" class="w-full mt-2">
-					<Tabs.List class="grid w-full grid-cols-2">
-						<Tabs.Trigger value="write">Write</Tabs.Trigger>
-						<Tabs.Trigger value="preview">Preview Markdown</Tabs.Trigger>
-					</Tabs.List>
-					<Tabs.Content value="write" class="pt-4">
-						<Field {form} name="description">
-							<Control>
-								{#snippet children({ props })}
-									<Textarea
-										{...props}
-										id="description"
-										bind:value={$formData.description}
-										placeholder="Write event description here... (markdown supported)"
-										class="min-h-32"
-									/>
-								{/snippet}
-							</Control>
-							<Description class="text-xs font-light">Hype it up!!</Description>
-							<FormFieldErrors />
-						</Field>
-					</Tabs.Content>
-					<Tabs.Content value="preview" class="pt-4">
-						<div class="min-h-32 rounded-md border border-input bg-background p-4">
-							{#if $formData.description && $formData.description.trim().length > 0}
-								<MarkedDownPost captured_text={$formData.description} />
-							{:else}
-								<p class="text-sm text-muted-foreground italic">Nothing to preview</p>
-							{/if}
-						</div>
-					</Tabs.Content>
-				</Tabs.Root>
-			</div>
-			<Field {form} name="address">
-				<Control>
-					{#snippet children({ props })}
-						<div class="flex flex-row gap-6 pt-6 items-end">
-							<FormLabel>Address</FormLabel>
-							<Input {...props} bind:value={$formData.address} />
-						</div>
-					{/snippet}
-				</Control>
-				<FormFieldErrors />
-			</Field>
-			<Field {form} name="url">
-				<Control>
-					{#snippet children({ props })}
-						<div class="flex flex-row gap-6 pt-6 items-end">
-							<FormLabel>Url</FormLabel>
-							<Input {...props} bind:value={$formData.url} />
-						</div>
-					{/snippet}
-				</Control>
-				<Description class="font-light text-xs">Ticket or event link.</Description>
-				<FormFieldErrors />
-			</Field>
-			<Field {form} name="event_type">
-				<Control>
-					{#snippet children({ props })}
-						<div class="flex flex-row gap-6 pt-6 items-end">
-							<FormLabel>Event Type</FormLabel>
-							<Input {...props} bind:value={$formData.event_type} />
-						</div>
-					{/snippet}
-				</Control>
-				<Description class="text-xs font-light"
-					>Help people find what they're interested in.
-				</Description>
-				<FormFieldErrors />
-			</Field>
-			<div class="pt-6">
-				<span>Invite Friends</span>
-				<div class="flex gap-2">
-					<Input
-						id="friend_search"
-						placeholder="Search friends... (click search to return all friends)"
-					/>
-					<Button
-						type="button"
-						variant="outline"
-						onclick={async () => {
-							const name = document.getElementById("friend_search").value;
-							const response = await fetch(`/api/friends/search?search=${name}`);
-							friend_results = await response.json();
-						}}
-					>
-						Search
-					</Button>
-				</div>
+	<FormField
+		{form}
+		name="title"
+		label="title"
+		bind:value={$formData.title}
+		placeholder="what's happening?"
+	/>
 
-				{#if friend_results.length > 0}
-					<div class="pt-2">
-						<p class="text-sm font-medium">Results:</p>
-						<ul>
-							{#each friend_results as friend}
-								{#if !invited_friend_ids.includes(friend.id)}
-									<FriendItem
-										{friend}
-										buttonLabel="+"
-										buttonAriaLabel="invite friend"
-										onclick={() => {
-											friends_to_invite = [...friends_to_invite, friend];
-											friend_results = friend_results.filter((f) => f.id !== friend.id);
-										}}
-									/>
-								{/if}
-							{/each}
-						</ul>
-					</div>
-				{/if}
+	<FormField
+		{form}
+		name="start_date"
+		label="date"
+		type="date"
+		bind:value={$formData.start_date}
+		class="w-auto self-start dark:scheme-dark"
+	/>
+	<FormField
+		{form}
+		name="start_time"
+		label="start time"
+		type="time"
+		bind:value={$formData.start_time}
+		class="w-auto self-start dark:scheme-dark"
+	/>
 
-				{#if friends_to_invite.length > 0}
-					<div class="pt-2">
-						<p class="text-sm font-medium">Invited:</p>
-						<ul>
-							{#each friends_to_invite as friend}
-								<FriendItem
-									{friend}
-									buttonLabel="-"
-									buttonAriaLabel="remove invitation"
-									onclick={() => {
-										friends_to_invite = friends_to_invite.filter((f) => f.id !== friend.id);
-									}}
-								/>
-							{/each}
-						</ul>
-					</div>
-				{/if}
-			</div>
+	<FormField
+		{form}
+		name="description"
+		label="description"
+		multiline
+		bind:value={$formData.description}
+		placeholder="hype it up! (markdown supported)"
+		class="min-h-40"
+	/>
+	<FormField
+		{form}
+		name="address"
+		label="address"
+		bind:value={$formData.address}
+		placeholder="where is it?"
+	/>
+	<FormField
+		{form}
+		name="url"
+		label="link"
+		bind:value={$formData.url}
+		placeholder="tickets or event page"
+	/>
+	<FormField
+		{form}
+		name="event_type"
+		label="event type"
+		bind:value={$formData.event_type}
+		placeholder="helps people find what they're into"
+	/>
 
-			<Field {form} name="invited_friend_ids">
-				{#each $formData.invited_friend_ids as friend_id}
-					<input type="hidden" name="invited_friend_ids" value={friend_id} />
-				{/each}
-			</Field>
+	<FormRow label="invite friends" for="invite_friends">
+		<PeoplePicker
+			id="invite_friends"
+			name="invited_friend_ids"
+			add_label="invite"
+			picked_subtitle="invited!"
+			bind:picked={invited}
+		/>
+	</FormRow>
 
-			<div class="pt-6">
-				<SharingPrivacy bind:value={$formData.privacy} bind:audience />
-			</div>
+	<input hidden value={$formData.id} name="id" />
+	<input hidden value={getLocalTimeZone()} name="time_zone" />
 
-			<div class="pt-6">
-				<Button type="submit" disabled={creating}>
-					{#if creating}
-						<Spinner />
-					{/if}
-					Submit
-				</Button>
-			</div>
-		</form>
-	</div>
-</div>
+	<SharingPrivacy bind:value={$formData.privacy} bind:audience />
+
+	<FormRow>
+		<Button type="submit" disabled={creating} class="self-start">
+			{#if creating}
+				<Spinner />
+			{/if}
+			{$formData.id ? "save" : "create"}
+		</Button>
+	</FormRow>
+</form>

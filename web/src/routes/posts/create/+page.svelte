@@ -1,10 +1,14 @@
 <script lang="ts">
+	import SubHeader from "$lib/components/SubHeader.svelte";
+	import SubHeaderTitle from "$lib/components/SubHeaderTitle.svelte";
 	import PostForm from "$src/routes/posts/PostForm.svelte";
 	import type { PageData } from "./$types.js";
 
 	let { data }: { data: PageData } = $props();
 </script>
 
-<div>
-	<PostForm {data} />
-</div>
+<SubHeader>
+	<SubHeaderTitle title="create a post" caption="writing to your friends builds community" />
+</SubHeader>
+
+<PostForm {data} />

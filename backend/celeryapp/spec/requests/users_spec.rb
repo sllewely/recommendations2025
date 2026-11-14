@@ -126,6 +126,18 @@ RSpec.describe "User", type: :request do
       expect(res.size).to eq(3)
     end
 
+    it 'leaves out you and your friends with exclude_friends' do
+      friend = create(:user, name: "tom friend")
+      stranger = create(:user, name: "tom stranger")
+      create(:friendship, user: @my_user, friend: friend)
+      @my_user.update!(name: "tom me")
+
+      get "/users/?search=tom&exclude_friends=1", headers: @headers
+      ids = JSON.parse(response.body).map { |u| u["id"] }
+
+      expect(ids).to eq([stranger.id])
+    end
+
     it 'gets user matching tags' do
       tag_user1 = create(:user, name: "tom harp")
       tag_user1.update_tags(['nyc', 'recurse'])

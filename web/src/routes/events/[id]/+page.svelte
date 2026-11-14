@@ -1,24 +1,15 @@
 <script lang="ts">
-	import { enhance } from "$app/forms";
-	import LinkButton from "$lib/components/text/LinkButton.svelte";
+	import UserCard from "$lib/components/users/UserCard.svelte";
+	import Button from "$lib/components/Button.svelte";
+	import SubHeader from "$lib/components/SubHeader.svelte";
+	import SubHeaderTitle from "$lib/components/SubHeaderTitle.svelte";
 	import { newToast, ToastType } from "$lib/state/toast.svelte.js";
 	import { goto, invalidate } from "$app/navigation";
-	import { MessageCircleMore } from "@lucide/svelte";
-	import { Button } from "$lib/components/ui/button";
-	import { current_user, isSignedIn } from "$lib/state/current_user.svelte";
-	import * as Card from "$lib/components/ui/card/index.js";
-	import * as Tooltip from "$lib/components/ui/tooltip/index.js";
-	import Link from "$lib/components/text/Link.svelte";
-	import MarkedDownPost from "$lib/components/posts/MarkedDownPost.svelte";
-	import RsvpBadge from "$lib/components/ui/badge/RsvpBadge.svelte";
-	import { parseAbsoluteToLocal } from "@internationalized/date";
-	import { onMount } from "svelte";
 	import type { Event, User } from "$lib/api_calls/types";
-	import { Separator } from "$lib/components/ui/separator";
-	import * as Select from "$lib/components/ui/select/index.js";
-	import Commentable from "$lib/components/posts/Commentable.svelte";
-	import SelectRsvp from "$lib/components/rsvp/SelectRsvp.svelte";
-	import CalendarCopy from "$lib/CalendarCopy.svelte";
+	import EventCard from "$lib/components/posts/EventCard.svelte";
+	import Comments from "$lib/components/posts/Comments.svelte";
+	import RsvpList from "$lib/components/rsvp/RsvpList.svelte";
+	import SectionHeading from "$lib/components/text/SectionHeading.svelte";
 
 	interface Props {
 		data: {
@@ -31,17 +22,8 @@
 	let { data }: Props = $props();
 	let my_user_id = data.my_user_id;
 
-	let comments = data.event.comments || [];
-
-	let num_comments = comments.length;
-
-	/* RSVP status */
-	let current_user_rsvp = (() => {
-		if (my_user_id === null || my_user_id === "" || typeof my_user_id === "undefined") {
-			return null;
-		}
-		return data.event.rsvps.find((rsvp) => rsvp.user.id === my_user_id) ?? null;
-	})();
+	let comments = $state(data.event.comments ?? []);
+	let rsvps = $state(data.event.rsvps ?? []);
 
 	let delete_event = async () => {
 		const response = await fetch("/api/events/delete", {
@@ -54,150 +36,40 @@
 		let res = await response.json();
 		if (res.success) {
 			newToast("Successfully deleted event");
-			goto("/posts");
+			goto("/");
 		} else {
 			newToast("Error deleting a event: " + res.message, ToastType.Error);
 		}
 	};
-
-	let localizedCreateTime = $derived(parseAbsoluteToLocal(data.event.created_at));
-	let formattedCreateTime = $state();
-	let localizedStartTime = $derived(parseAbsoluteToLocal(data.event.start_date_time));
-	let formattedStartDate = $state();
-	let formattedStartTime = $state();
-
-	let signed_in = $state(false);
-	onMount(() => {
-		signed_in = isSignedIn();
-		localizedCreateTime = parseAbsoluteToLocal(data.event.created_at);
-
-		formattedCreateTime = new Intl.DateTimeFormat("en-US", {
-			dateStyle: "medium",
-			timeStyle: "short",
-			timeZone: localizedCreateTime.timeZone,
-		}).format(localizedCreateTime.toDate());
-
-		localizedStartTime = parseAbsoluteToLocal(data.event.start_date_time);
-		formattedStartDate = new Intl.DateTimeFormat("en-US", {
-			weekday: "short",
-			month: "short",
-			year: "numeric",
-			day: "numeric",
-			timeZone: localizedCreateTime.timeZone,
-		}).format(localizedStartTime.toDate());
-		formattedStartTime = new Intl.DateTimeFormat("en-US", {
-			hour: "numeric",
-			minute: "numeric",
-			hour12: true,
-			timeZone: localizedCreateTime.timeZone,
-		}).format(localizedStartTime.toDate());
-	});
 </script>
 
-<div>
-	{#if signed_in}
-		<CalendarCopy />
-	{/if}
-
+<SubHeader>
+	<SubHeaderTitle title={data.event.title || "event"}>
+		{#snippet caption()}
+			by <UserCard user={data.event.user} size="sm" />
+		{/snippet}
+	</SubHeaderTitle>
 	{#if my_user_id === data.event.user.id}
-		<div class="float-right relative">
-			<LinkButton url="/events/{data.event.id}/edit">Edit</LinkButton>
-			<Button onclick={delete_event} variant="destructive">Delete</Button>
+		<div class="flex flex-row gap-5">
+			<Button href="/events/{data.event.id}/edit">edit</Button>
+			<Button color="red" onclick={delete_event}>delete</Button>
 		</div>
 	{/if}
-	<div>
-		<div class="flex flex-row justify-between">
-			<!--        <svelte:boundary>-->
-			<div>
-				<span class="font-bold">
-					<!-- I just broke this for the feed TODO SARAH -->
-					<Link url="/users/{data.event.user.id}">{data.event.user.name}</Link>
-				</span>'s event
-			</div>
-			<!--        <div><span class="font-bold"><a class="text-teal-400 hover:text-orange-400" href="/users/{data.event.creator_id}">{data.event.creator_name}</a></span> posted an upcoming event</div>-->
-			<!--        </svelte:boundary>-->
-			<div>
-				<span class="text-sm">posted at {formattedCreateTime}</span>
-			</div>
-		</div>
-		<div class="p-2">
-			<Card.Root class=" border-lime-500 ">
-				<Card.Header>
-					{#if data.event.title}
-						<Card.Title>{data.event.title}</Card.Title>
-					{/if}
-					<Card.Description>
-						{formattedStartDate}
-						at {formattedStartTime}
-					</Card.Description>
-				</Card.Header>
-				<Card.Content>
-					<div class="flex flex-col gap-2">
-						{#if data.event.description}
-							<MarkedDownPost captured_text={data.event.description} />
-						{/if}
-						<div class="text-sm text-gray-500">
-							{#if data.event.address}
-								<span>at {data.event.address}</span>
-							{/if}
-						</div>
-						{#if data.event.url}
-							<p class="w-full truncate">
-								<Tooltip.Provider>
-									<Tooltip.Root>
-										<Tooltip.Trigger>
-											<Link url={data.event.url}>
-												<span class="text-sm">{data.event.url}</span>
-											</Link>
-										</Tooltip.Trigger>
-										<Tooltip.Content>
-											<span>{data.event.url}</span>
-										</Tooltip.Content>
-									</Tooltip.Root>
-								</Tooltip.Provider>
-							</p>
-						{/if}
-						{#if signed_in}
-							<div>
-								<SelectRsvp rsvp={current_user_rsvp} event_id={data.event.id} />
-							</div>
-						{:else}
-							<RsvpBadge rsvp={{ status: "not_rsvpd" }} />
-							<span><Link url="/sign_in">Sign in to rsvp</Link></span>
-						{/if}
-					</div>
+</SubHeader>
 
-					<Separator class="my-6" />
-					<div class="">
-						<span class="text-xl">Rsvps</span>
-						{#if signed_in}
-							{#each data.event.rsvps as rsvp}
-								<div class="flex flex-row justify-between">
-									<div>
-										{rsvp.user.name}
-									</div>
-									<div>
-										<RsvpBadge {rsvp} />
-									</div>
-								</div>
-							{/each}
-						{:else}
-							<span><Link url="/sign_in">Sign in to see who's coming</Link></span>
-							<span>Rsvps: {data.event.rsvps.length}</span>
-						{/if}
-					</div>
-				</Card.Content>
-			</Card.Root>
-		</div>
+<!-- the event across the top, then comments (left 2/3) and rsvps (right 1/3); stacked on mobile -->
+<div class="flex flex-col gap-10 md:grid md:grid-cols-3 md:gap-5">
+	<div class="md:col-span-3">
+		<EventCard feed_item={data.event} truncate={false} panels={false} />
 	</div>
-	<div>
-		{#if signed_in}
-			<Commentable feed_item={data.event} {comments} />
-		{:else}
-			<div class="flex">
-				{num_comments} Comments
-				<MessageCircleMore />
-			</div>
-		{/if}
-	</div>
+
+	<section class="flex min-w-0 flex-col gap-3 md:col-span-2">
+		<SectionHeading>comments</SectionHeading>
+		<Comments feed_item={data.event} bind:comments />
+	</section>
+
+	<section class="flex min-w-0 flex-col gap-3">
+		<SectionHeading>rsvps</SectionHeading>
+		<RsvpList event_id={data.event.id} bind:rsvps />
+	</section>
 </div>

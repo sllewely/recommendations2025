@@ -1,16 +1,18 @@
 <script lang="ts">
 	import { enhance } from "$app/forms";
-	import Link from "$lib/components/text/Link.svelte";
-	import PlusCircle from "$lib/components/posts/PlusCircle.svelte";
+	import { onMount } from "svelte";
+	import { invalidateAll } from "$app/navigation";
+	import { HeartHandshake } from "@lucide/svelte";
+	import FeedBadge, { ACCENTS } from "$lib/components/posts/FeedBadge.svelte";
+	import { cn } from "$lib/utils.js";
 	import { newToast, ToastType } from "$lib/state/toast.svelte";
-	import FormButton from "$lib/components/form/FormButton.svelte";
-	import Form from "$lib/components/form/Form.svelte";
-	import { goto } from "$app/navigation";
-	import { friends_map, fetch_friends_map } from "$lib/state/friends_map.svelte";
-	import { parseAbsoluteToLocal } from "@internationalized/date";
+	import { fetch_friends_map } from "$lib/state/friends_map.svelte";
+	import { refresh_unread } from "$lib/state/unread_notifications.svelte";
 	import type { PendingFriendRequest } from "$lib/api_calls/types";
+	import { formatWhen } from "$lib/format_date";
+	import Button from "$lib/components/Button.svelte";
+	import Comment from "$lib/components/posts/Comment.svelte";
 	import UserCard from "$lib/components/users/UserCard.svelte";
-	import { Button } from "$lib/components/ui/button";
 	import { Spinner } from "$lib/components/ui/spinner";
 
 	interface Props {
@@ -19,55 +21,72 @@
 
 	let { pending_friend_request }: Props = $props();
 
-	let updating = $state(false);
+	let friend = $derived(pending_friend_request.incoming_friend);
+	let message = $derived(pending_friend_request.message?.trim());
+	let updating = $state<"accept" | "ignore" | null>(null);
 
-	const localizedCreateTime = parseAbsoluteToLocal(pending_friend_request.created_at);
-	const formattedCreateTime = new Intl.DateTimeFormat("en-US", {
-		dateStyle: "medium",
-		timeZone: localizedCreateTime.timeZone,
-	}).format(localizedCreateTime.toDate());
+	let when = $state("");
+	onMount(() => {
+		when = formatWhen(pending_friend_request.created_at);
+	});
 </script>
 
-<div class="p-4 border-1 border-gray-200 rounded-sm flex flex-row gap-4">
-	<div class="flex flex-row justify-between w-100% grow">
-		<UserCard user={pending_friend_request.incoming_friend} />
-		<div>
-			<p>{pending_friend_request.message}</p>
+<div class={cn("flex w-full flex-row items-start gap-3 border-l-2 p-4", ACCENTS.yellow.bar)}>
+	<FeedBadge icon={HeartHandshake} accent="yellow" />
+	<div class="flex min-w-0 flex-1 flex-row flex-wrap items-start justify-between gap-3">
+		<div class="flex min-w-0 flex-col gap-3">
+			<span class="leading-tight text-zinc-900 dark:text-zinc-100">
+				You have a new friend request
+			</span>
+			<span class="text-sm leading-none text-zinc-500 dark:text-zinc-400">{when}</span>
+			{#if message}
+				<Comment user={friend} body={message} caption="wants to be friends!" class="pt-2" />
+			{:else}
+				<div class="flex flex-row flex-wrap items-center gap-1.5 pt-2 text-sm">
+					<UserCard user={friend} size="xs" />
+					<span class="text-zinc-500 dark:text-zinc-400">wants to be friends!</span>
+				</div>
+			{/if}
 		</div>
-		<div class="text-sm">{formattedCreateTime}</div>
-	</div>
 
-	<div>
 		<form
+			class="flex shrink-0 flex-row gap-2"
 			method="POST"
 			action="?/accept_friend_request"
-			use:enhance={() => {
-				updating = true;
-
+			use:enhance={({ action }) => {
+				const ignoring = action.search.includes("ignore");
+				updating = ignoring ? "ignore" : "accept";
 				return async ({ update, result }) => {
 					await update();
-					updating = false;
-					let res = result.data;
-					if (res.success) {
-						newToast("Accepted friend request");
-						await fetch_friends_map();
+					updating = null;
+					const res = result.type === "success" ? result.data : undefined;
+					if (res?.success) {
+						newToast(ignoring ? "Ignored friend request" : "Accepted friend request");
+						if (!ignoring) await fetch_friends_map();
+						refresh_unread();
 					} else {
-						newToast("Error accepting friend request: " + res.message, ToastType.Error);
+						newToast(
+							`Error ${ignoring ? "ignoring" : "accepting"} friend request: ` + res?.message,
+							ToastType.Error,
+						);
 					}
-					await goto("/friends");
+					await invalidateAll();
 				};
 			}}
 		>
-			<input type="hidden" name="user_id" value={pending_friend_request["incoming_friend"]["id"]} />
-			<Button
-				type="submit"
-				class="bg-transparent hover:bg-orange-500 text-teal-700 font-semibold hover:text-white py-2 px-4 border border-teal-500 hover:border-transparent rounded"
-				disabled={updating}
-			>
-				{#if updating}
+			<input type="hidden" name="user_id" value={friend.id} />
+			<input type="hidden" name="id" value={pending_friend_request.id} />
+			<Button type="submit" disabled={!!updating}>
+				{#if updating === "accept"}
 					<Spinner />
 				{/if}
-				Accept friend request
+				accept
+			</Button>
+			<Button type="submit" color="zinc" formaction="?/ignore_friend_request" disabled={!!updating}>
+				{#if updating === "ignore"}
+					<Spinner />
+				{/if}
+				ignore
 			</Button>
 		</form>
 	</div>

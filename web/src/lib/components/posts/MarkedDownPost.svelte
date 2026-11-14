@@ -75,7 +75,7 @@
 		@apply text-2xl;
 	}
 	div.markddown :global(a) {
-		@apply underline text-cyan-500;
+		@apply underline text-amber-500;
 	}
 	div.markddown :global(li) {
 		@apply text-sm;
@@ -83,6 +83,6 @@
 		list-style-position: inside;
 	}
 	div.markddown :global(code) {
-		@apply bg-gray-200 p-1 rounded;
+		@apply bg-zinc-200 p-1 rounded;
 	}
 </style>

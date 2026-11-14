@@ -14,12 +14,18 @@ export const load: PageServerLoad = withAuth(async ({ jwt, user_id }: LoadAuthCo
 	const string_tags = user.res?.tags ? user.res.tags.join(", ") : "";
 	if (user_obj) {
 		user_obj.string_tags = string_tags;
+		user_obj.blurb = user_obj.blurb ?? "";
 	}
 	const rss_url = VITE_API_URL + "posts/rss?rss_api_key=" + user_obj.rss_api_key;
+	// subscribe to this in google/apple calendar ("add from url") to see bumblebeans events
+	const calendar_url = user_obj?.calendar_api_key
+		? VITE_API_URL + "calendars/?token=" + user_obj.calendar_api_key
+		: null;
 
 	return {
 		user: user_obj,
 		rss_url: rss_url,
+		calendar_url: calendar_url,
 		form: await superValidate(user_obj, zod(profileFormSchema)),
 	};
 });

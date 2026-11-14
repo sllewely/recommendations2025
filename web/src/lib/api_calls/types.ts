@@ -12,6 +12,12 @@ export interface ApiResponse<T = unknown> {
 	unauthorized?: boolean;
 }
 
+export type CurrentUser = {
+	auth_token: string;
+	id: string;
+	groups: Group[];
+};
+
 export interface PostsResponse {
 	feed_items: Feedable[];
 	pagy: unknown;
@@ -83,7 +89,11 @@ export interface UserUpdatePayload {
 }
 
 export type FriendshipStatus =
-	"friends" | "self" | "none" | "pending_friend_request" | "sent_friend_request";
+	| "friends"
+	| "self"
+	| "none"
+	| "pending_friend_request"
+	| "sent_friend_request";
 
 export interface User {
 	id: string;
@@ -127,8 +137,28 @@ export interface Event {
 	reactions: Reaction[];
 }
 
+export type RsvpVariant = "not_rsvpd" | "going" | "interested" | "not_going" | "hide" | "invited";
 export type RsvpStatus = "interested" | "going" | "cant_go" | "hide" | "invited";
-export const RSVP_STATUSES = ["cant_go", "interested", "going"] as const;
+export const RSVP_STATUSES = ["going", "interested", "cant_go", "hide"] as const;
+export type RsvpDecorataions = {
+	text: string;
+	variant: string;
+};
+export const rsvpStatusToText = (status: RsvpStatus | null): RsvpDecorataions => {
+	switch (status) {
+		case "going":
+			return { text: "Going", variant: "rsvp_going" };
+		case "interested":
+			return { text: "Interested", variant: "rsvp_interested" };
+		case "cant_go":
+			return { text: "Can't go", variant: "rsvp_hide" };
+		case "hide":
+			return { text: "Not interested", variant: "rsvp_hide" };
+		case "invited":
+		default:
+			return { text: "Not rsvp'd", variant: "rsvp_invited" };
+	}
+};
 
 export interface Rsvp {
 	id?: string;
@@ -138,6 +168,10 @@ export interface Rsvp {
 	status: RsvpStatus;
 	user: User;
 }
+
+export type EventWithDateHeader =
+	| { date_header: string }
+	| (Event & { time_string: string; date_header?: string });
 
 export interface Recommendation {
 	id: string;
@@ -160,6 +194,7 @@ export interface Recommendation {
 }
 
 export type NotifTypes =
+	| "pending_friend_request"
 	| "accepted_friend_request"
 	| "created_a_feedable"
 	| "commented_on_your_commentable"
@@ -203,13 +238,21 @@ export type PendingFriendRequest = {
 	user: User;
 	incoming_friend: User;
 	message: string;
-	created_at: string;
 };
+
+export type CalendarUrl = string;
 
 export type CreateRecommendationData = unknown;
 
 export type FriendStatus =
-	"pending_friend_request" | "friends" | "sent_friend_request" | "none" | "self";
+	| "pending_friend_request"
+	| "friends"
+	| "sent_friend_request"
+	| "none"
+	| "self";
+
+// key is a user uuid.  If missing, status is "none".
+export type FriendsMap = Map<string, FriendStatus>;
 
 export type Group = {
 	id: string;

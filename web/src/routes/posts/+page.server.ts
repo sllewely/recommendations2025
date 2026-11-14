@@ -1,14 +1,34 @@
 import * as api from "$lib/api_calls/api.svelte.js";
+import { getEvents } from "$lib/api_calls/events.svelte.js";
+import { getPosts } from "$lib/api_calls/posts.svelte.js";
 import { withAuth, type LoadAuthContext, type ActionAuthContext } from "$lib/auth";
-import { loadFeed } from "$lib/feed.server";
 import { RecommendationStatus } from "$lib/enums.js";
 import { redirect } from "@sveltejs/kit";
 import { createComment, type CommentPayload } from "$lib/api_calls/comments.svelte.js";
 import { formDataToGeneric } from "$lib/api_calls/utils";
+import { getUser } from "$lib/api_calls/users.svelte";
+import { VITE_API_URL } from "$env/static/private";
 
-export const load = withAuth(async ({ jwt }: LoadAuthContext) => {
+export const load = withAuth(async ({ jwt, user_id }: LoadAuthContext) => {
+	const [postsResponse, eventsResponse, user] = await Promise.all([
+		getPosts(jwt),
+		getEvents(jwt),
+		getUser(user_id, jwt),
+	]);
+
+	if (postsResponse.unauthorized || eventsResponse.unauthorized || user.unauthorized) {
+		throw redirect(302, "/sign_in");
+	}
+
+	const calendar_url = user.res?.calendar_api_key
+		? VITE_API_URL + "calendars/?token=" + user.res.calendar_api_key
+		: null;
+
 	return {
-		...(await loadFeed(jwt, { type: ["Post"] })),
+		posts_response: postsResponse.success ? (postsResponse.res ?? {}) : {},
+		events: eventsResponse["res"],
+		calendar_url: calendar_url,
+		current_user_id: user_id,
 	};
 });
 
@@ -39,7 +59,7 @@ export const actions = {
 		}
 
 		// TODO: Success toast
-		throw redirect(302, "/");
+		throw redirect(302, "/posts");
 	}),
 
 	submit_comment: withAuth(async ({ jwt, request }: ActionAuthContext) => {

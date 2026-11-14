@@ -3,20 +3,23 @@
 	import { goto } from "$app/navigation";
 	import { type SuperValidated, type Infer, superForm } from "sveltekit-superforms";
 	import { zodClient } from "sveltekit-superforms/adapters";
+	import { Input } from "$lib/components/ui/input";
 	import { newToast, ToastType } from "$lib/state/toast.svelte.js";
 	import { type PostFormSchema, postFormSchema } from "./schema";
-	import Button from "$lib/components/Button.svelte";
-	import TextField from "$lib/components/TextField.svelte";
+	import { Button } from "$lib/components/ui/button/index.js";
+	import * as Card from "$lib/components/ui/card/index.js";
+	import * as Tabs from "$lib/components/ui/tabs/index.js";
+	import { Textarea } from "$lib/components/ui/textarea/index.js";
 	import MarkedDownPost from "$lib/components/posts/MarkedDownPost.svelte";
-	import { CARD } from "$lib/components/posts/FeedBadge.svelte";
-	import { cn } from "$lib/utils.js";
-	import FormField from "$lib/components/form/FormField.svelte";
-	import FormRow from "$lib/components/form/FormRow.svelte";
+	import H1 from "$lib/components/text/H1.svelte";
+	import { Field, Control, Description } from "formsnap";
+	import FormLabel from "$lib/components/form/FormLabel.svelte";
+	import FormFieldErrors from "$lib/components/form/FormFieldErrors.svelte";
 	import SharingPrivacy from "$lib/components/form/SharingPrivacy.svelte";
-	import type { PickedPerson } from "$lib/components/users/PeoplePicker.svelte";
+	import type { AudienceMember } from "$lib/components/form/AudiencePicker.svelte";
 	import type { ApiResponse, Post } from "$lib/api_calls/types";
 	import { Spinner } from "$lib/components/ui/spinner";
-	import UserCard from "$lib/components/users/UserCard.svelte";
+	import bblogo from "$lib/assets/android-launchericon-72-72.png";
 
 	let {
 		data,
@@ -30,7 +33,7 @@
 
 	let creating = $state(false);
 	// prefill the audience when editing an existing post
-	let audience = $state<PickedPerson[]>(data.post_response?.res?.audience ?? []);
+	let audience = $state<AudienceMember[]>(data.post_response?.res?.audience ?? []);
 	let user_search_results = $state([]);
 	let searching_user = $state(false);
 
@@ -89,68 +92,117 @@
 	};
 </script>
 
-<form
-	method="POST"
-	action="?/create_post"
-	class="flex flex-col gap-3"
-	use:enhance={() => {
-		creating = true;
-		return async ({ update, result }) => {
-			await update();
-			creating = false;
-			let res = result.data;
-			if (res.success) {
-				newToast("You have successfully created a post!!");
-				goto("/");
-			} else {
-				newToast("Error creating post: " + res.message, ToastType.Error);
-			}
-		};
-	}}
->
-	<section aria-label="preview" class={cn("mb-7 flex flex-col gap-5", CARD)}>
-		{#if $formData.content?.trim()}
-			<MarkedDownPost captured_text={$formData.content} />
-		{:else}
-			<p class="italic text-zinc-500 dark:text-zinc-400">your post will show up here</p>
-		{/if}
-	</section>
-
-	<FormField {form} name="content" label="content" bind:value={$formData.content}>
-		{#snippet control({ props })}
-			<div class="relative">
-				{#if user_search_results.length > 0}
-					<!-- @mention suggestions; Tab picks the first -->
-					<div
-						class="absolute top-full left-2.5 z-20 mt-1 flex flex-col gap-1 border border-dashed border-zinc-500 bg-zinc-100 p-3 dark:border-zinc-400 dark:bg-zinc-800"
-					>
-						{#each user_search_results as user}
-							<UserCard {user} size="xs" static />
-						{/each}
-					</div>
+<div>
+	<Card.Root>
+		<Card.Header>
+			<Card.Title>
+				{#if $formData.id}
+					Edit post
+				{:else}
+					Create a post
 				{/if}
-				<TextField
-					{...props}
-					multiline
-					bind:value={$formData.content}
-					onkeydown={usersearch}
-					placeholder="write your post here... (markdown supported)"
-					class="min-h-40"
-				/>
-			</div>
-		{/snippet}
-	</FormField>
-
-	<input hidden value={$formData.id} name="id" />
-
-	<SharingPrivacy bind:value={$formData.privacy} bind:audience />
-
-	<FormRow>
-		<Button type="submit" disabled={creating} class="self-start">
+			</Card.Title>
+			<Card.Description>writing to your friends builds community</Card.Description>
+		</Card.Header>
+		<Card.Content>
 			{#if creating}
-				<Spinner />
+				<p>creating...</p>
 			{/if}
-			{$formData.id ? "save" : "post"}
-		</Button>
-	</FormRow>
-</form>
+			<form
+				method="POST"
+				action="?/create_post"
+				use:enhance={() => {
+					creating = true;
+					return async ({ update, result }) => {
+						await update();
+						creating = false;
+						let res = result.data;
+						if (res.success) {
+							newToast("You have successfully created a post!!");
+							goto("/posts");
+						} else {
+							newToast("Error creating post: " + res.message, ToastType.Error);
+						}
+					};
+				}}
+			>
+				<Tabs.Root value="write" class="w-full">
+					<Tabs.List class="grid w-full grid-cols-2">
+						<Tabs.Trigger value="write">Write</Tabs.Trigger>
+						<Tabs.Trigger value="preview">Preview Markdown</Tabs.Trigger>
+					</Tabs.List>
+					<Tabs.Content value="write" class="pt-4">
+						<Field {form} name="content">
+							<Control>
+								{#snippet children({ props })}
+									<FormLabel>Content</FormLabel>
+									<div style="position:relative">
+										{#if user_search_results.length > 0}
+											<div style="position:absolute; left: 10px; bottom: -10px; z-index: 20;">
+												<Card.Root>
+													<Card.Content>
+														<div class="flex flex-col gap-1">
+															{#each user_search_results as user}
+																<div class="flex flex-row items-center gap-2">
+																	<div class="rounded-full w-6 h-6 overflow-hidden shrink-0">
+																		{#if user.profile_photo_url}
+																			<img
+																				src={"https://" + user.profile_photo_url}
+																				alt="profile picture"
+																			/>
+																		{:else}
+																			<img src={bblogo} alt="profile picture" />
+																		{/if}
+																	</div>
+																	<div>
+																		{user.name}
+																	</div>
+																</div>
+															{/each}
+														</div>
+													</Card.Content>
+												</Card.Root>
+											</div>
+										{/if}
+									</div>
+									<Textarea
+										{...props}
+										bind:value={$formData.content}
+										onkeydown={usersearch}
+										placeholder="Write your post here... (markdown supported)"
+										class="h-80"
+									/>
+								{/snippet}
+							</Control>
+							<FormFieldErrors />
+						</Field>
+					</Tabs.Content>
+					<Tabs.Content value="preview" class="pt-4">
+						<div class="min-h-80 rounded-md border border-input bg-background p-4">
+							{#if $formData.content && $formData.content.trim().length > 0}
+								<MarkedDownPost captured_text={$formData.content} />
+							{:else}
+								<p class="text-sm text-muted-foreground italic">Nothing to preview</p>
+							{/if}
+						</div>
+					</Tabs.Content>
+				</Tabs.Root>
+
+				<Field {form} name="id">
+					<input hidden value={$formData.id} name="id" />
+				</Field>
+				<div class="pt-4">
+					<SharingPrivacy bind:value={$formData.privacy} bind:audience />
+				</div>
+				<div class="pt-4">
+					<Button type="submit" disabled={creating}>
+						{#if creating}
+							<Spinner />
+						{/if}
+						Submit
+					</Button>
+				</div>
+			</form>
+		</Card.Content>
+	</Card.Root>
+</div>

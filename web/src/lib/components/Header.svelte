@@ -1,14 +1,14 @@
 <script lang="ts">
-	import { unread, refresh_unread } from "$lib/state/unread_notifications.svelte";
 	import { goto } from "$app/navigation";
 	import { current_user, isSignedIn } from "$lib/state/current_user.svelte";
 	import { setPendingToast, ToastType } from "$lib/state/toast.svelte";
-	import { Settings, Menu, X, BellRing, Bell, LogOut, User, UserRound } from "@lucide/svelte";
-	import { DropdownMenu } from "bits-ui";
+	import { Settings, Menu, X, BellRing, Bell, RotateCw } from "@lucide/svelte";
 	import bblogo from "$lib/assets/android-launchericon-72-72.png";
 	import { onMount } from "svelte";
+	import { User } from "lucide-svelte";
 
 	let mobileMenuOpen = $state(false);
+	let hasNotifications = $state(false);
 
 	const toggleMobileMenu = () => {
 		mobileMenuOpen = !mobileMenuOpen;
@@ -16,6 +16,10 @@
 
 	const closeMobileMenu = () => {
 		mobileMenuOpen = false;
+	};
+
+	const reloadPage = () => {
+		window.location.reload();
 	};
 
 	let log_out = async () => {
@@ -31,124 +35,114 @@
 		await goto("/");
 	};
 
-	const menuItemClass =
-		"relative flex cursor-pointer select-none items-center gap-2 px-2 py-1.5 text-sm text-zinc-200 outline-hidden data-highlighted:text-yellow-400 [&_svg]:size-4 [&_svg]:shrink-0";
-	const logOutItemClass = menuItemClass.replace(
-		"data-highlighted:text-yellow-400",
-		"data-highlighted:text-red-400",
-	);
-
-	let navLinks = $derived([
-		...(isSignedIn()
-			? [
-					{ href: "/posts", label: "posts" },
-					{ href: "/events", label: "events" },
-					{ href: "/recommendations", label: "recommendations" },
-				]
-			: [{ href: "/create_account", label: "sign up" }]),
-		{ href: "/about", label: "about" },
-	]);
-
-	let accountLinks = $derived([
-		{ href: `/users/${current_user.id}`, label: "my profile", icon: UserRound },
-		{ href: "/settings", label: "settings", icon: Settings },
-	]);
+	let icon_link = $derived(isSignedIn() ? "/posts" : "/");
 
 	onMount(async () => {
 		if (!isSignedIn()) return;
-		await refresh_unread();
+		const has_notifications_response = await fetch(`/api/notifications/has_active`, {
+			method: "GET",
+			headers: { "Content-Type": "application/json" },
+		});
+		const res = await has_notifications_response.json();
+		hasNotifications = res["res"]["has_active"];
 	});
 </script>
 
 <header class="text-white p-0 relative">
-	<div class="m-0 w-full flex items-center justify-between py-4 px-4 bg-zinc-700">
-		<!-- Logo + desktop links -->
-		<div class="flex items-center gap-10">
-			<a href="/" class="flex shrink-0 items-center gap-2">
-				<img src={bblogo} alt="" class="h-10 w-10" />
-				<span class="text-yellow-400 text-xl leading-none">bumblebeans</span>
-			</a>
+	<div class="m-0 w-full flex items-center justify-between py-4 bg-gray-800">
+		<!-- Mobile spacer -->
+		<div class="md:hidden w-16"></div>
 
-			<!-- Desktop navigation -->
-			<ul class="list-reset hidden md:flex items-center text-base gap-5">
-				{#each navLinks as link (link.href)}
-					<li><a href={link.href} class="text-zinc-300 hover:text-white">{link.label}</a></li>
-				{/each}
+		<!-- Logo -->
+		<div class="w-full text-center md:w-auto">
+			<a href={icon_link}>
+				<div class="flex flex-row items-center">
+					<div class="w-16 h-10">
+						<img src={bblogo} />
+					</div>
+					<div>
+						<p class="text-yellow-400 text-xl">BumbleBeans</p>
+					</div>
+				</div>
+			</a>
+		</div>
+
+		<!-- Desktop navigation -->
+		<div class="hidden md:block w-full text-center px-1">
+			<ul class="list-reset flex justify-center flex-wrap text-xs md:text-sm gap-3">
+				{#if isSignedIn()}
+					<li><a href="/posts" class="text-gray-400 hover:text-white">Posts</a></li>
+					<li>
+						<a href="/users/{current_user.id}" class="text-gray-400 hover:text-white">My profile</a>
+					</li>
+				{/if}
+				<li><a href="/roadmap" class="text-gray-400 hover:text-white">Roadmap</a></li>
+				<li><a href="/about" class="text-gray-400 hover:text-white">About</a></li>
+
+				{#if !isSignedIn()}
+					<li><a href="/create_account" class="text-gray-400 hover:text-white">Sign up</a></li>
+				{/if}
 			</ul>
 		</div>
 
 		<!-- Desktop right menu -->
-		<div class="hidden md:flex items-center gap-3 text-sm/6 justify-end whitespace-nowrap">
+		<div
+			class="hidden md:flex items-center space-x-2 w-full md:text-sm/6 text-xs md:text-center justify-end whitespace-nowrap pe-2"
+		>
+			<a class="font-semibold text-gray-400 hover:text-orange-400" href="/bug_report"
+				>Report a bug</a
+			>
 			{#if isSignedIn()}
-				{#if unread.any}
-					<a class="font-semibold text-yellow-400 hover:text-yellow-300" href="/notifications">
+				<a
+					href="/users/{current_user.id}"
+					class="font-semibold text-gray-400 hover:text-orange-400"
+				>
+					<User />
+				</a>
+				<a class="font-semibold text-gray-400 hover:text-orange-400" href="/settings">
+					<Settings />
+				</a>
+				{#if hasNotifications}
+					<a class="font-semibold text-red-600 hover:text-orange-400" href="/notifications">
 						<BellRing />
 					</a>
 				{:else}
-					<a class="font-semibold text-zinc-300 hover:text-white" href="/notifications">
+					<a class="font-semibold text-gray-400 hover:text-orange-400" href="/notifications">
 						<Bell />
 					</a>
 				{/if}
-
-				<!-- User menu -->
-				<DropdownMenu.Root>
-					<DropdownMenu.Trigger
-						aria-label="User menu"
-						class="cursor-pointer outline-hidden text-zinc-300 hover:text-white data-[state=open]:text-white"
-					>
-						<User />
-					</DropdownMenu.Trigger>
-					<DropdownMenu.Portal>
-						<DropdownMenu.Content
-							sideOffset={4}
-							align="end"
-							class="z-50 w-48 overflow-hidden border border-zinc-600 bg-zinc-700 p-1 text-zinc-100 shadow-md outline-hidden"
-						>
-							{#each accountLinks as link (link.href)}
-								<DropdownMenu.Item class={menuItemClass}>
-									{#snippet child({ props })}
-										<a href={link.href} {...props}><link.icon /> {link.label}</a>
-									{/snippet}
-								</DropdownMenu.Item>
-							{/each}
-							<DropdownMenu.Separator class="-mx-1 my-1 h-px bg-zinc-600" />
-							<DropdownMenu.Item class={logOutItemClass} onSelect={log_out}>
-								<LogOut /> log out
-							</DropdownMenu.Item>
-						</DropdownMenu.Content>
-					</DropdownMenu.Portal>
-				</DropdownMenu.Root>
+				<button
+					type="button"
+					class="cursor-pointer font-semibold text-gray-400 hover:text-orange-400"
+					onclick={log_out}
+					>Log out
+					<span aria-hidden="true">&rarr;</span></button
+				>
 			{:else}
-				<a href="/sign_in" class="text-base text-zinc-300 hover:text-white">log in</a>
+				<a href="/sign_in" class="font-semibold text-gray-400 hover:text-orange-400"
+					>Log in <span aria-hidden="true">&rarr;</span></a
+				>
 			{/if}
 		</div>
 
-		<!-- Mobile right side -->
-		<div class="md:hidden flex items-center gap-3">
-			{#if isSignedIn()}
-				{#if unread.any}
-					<a
-						class="text-yellow-400 hover:text-yellow-300"
-						href="/notifications"
-						aria-label="Notifications"
-					>
-						<BellRing />
-					</a>
-				{:else}
-					<a
-						class="text-zinc-300 hover:text-white"
-						href="/notifications"
-						aria-label="Notifications"
-					>
-						<Bell />
-					</a>
-				{/if}
+		<!-- Mobile right side: hamburger menu -->
+		<div class="md:hidden flex items-center pr-4 gap-2">
+			<a href="" onclick={reloadPage}>
+				<RotateCw class="text-gray-400 hover:text-orange-400" size={24} />
+			</a>
+			{#if hasNotifications}
+				<a class="font-semibold text-red-600 hover:text-orange-400" href="/notifications">
+					<BellRing />
+				</a>
+			{:else}
+				<a class="font-semibold text-gray-400 hover:text-orange-400" href="/notifications">
+					<Bell />
+				</a>
 			{/if}
+			<!-- Mobile hamburger menu button -->
 			<button
 				type="button"
-				aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
-				aria-expanded={mobileMenuOpen}
-				class="text-zinc-300 hover:text-white focus:outline-none"
+				class="text-gray-400 hover:text-white focus:outline-none"
 				onclick={toggleMobileMenu}
 			>
 				{#if mobileMenuOpen}
@@ -160,53 +154,116 @@
 		</div>
 	</div>
 
-	<!-- Mobile menu: same links as desktop -->
+	<!-- Mobile menu dropdown -->
 	{#if mobileMenuOpen}
-		<nav
-			class="md:hidden absolute top-full left-0 right-0 z-50 bg-zinc-700 border-t border-zinc-600 px-4 py-2"
+		<div
+			class="md:hidden absolute top-full left-0 right-0 bg-gray-800 border-t border-gray-600 z-50"
 		>
-			<ul>
-				{#each navLinks as link (link.href)}
+			<ul class="py-4 px-4 space-y-3">
+				{#if isSignedIn()}
 					<li>
 						<a
-							href={link.href}
-							class="block py-2 text-base text-zinc-300 hover:text-white"
-							onclick={closeMobileMenu}>{link.label}</a
+							href="/posts"
+							class="block text-gray-400 hover:text-white py-2"
+							onclick={closeMobileMenu}>Posts</a
 						>
 					</li>
-				{/each}
+					<li>
+						<a
+							href="/friends"
+							class="block text-gray-400 hover:text-white py-2"
+							onclick={closeMobileMenu}>Friends</a
+						>
+					</li>
+					<li>
+						<a
+							href="/recommendations/users/{current_user.id}"
+							class="block text-gray-400 hover:text-white py-2"
+							onclick={closeMobileMenu}>Saved Recommendations</a
+						>
+					</li>
+					<li>
+						<a
+							href="/users/{current_user.id}"
+							class="block text-gray-400 hover:text-white py-2"
+							onclick={closeMobileMenu}>My Profile</a
+						>
+					</li>
+					<li>
+						<a
+							href="/settings"
+							class="block text-gray-400 hover:text-white py-2"
+							onclick={closeMobileMenu}>Settings</a
+						>
+					</li>
+					<li class="border-t border-gray-600 pt-3">
+						<button
+							type="button"
+							class="block w-full text-left cursor-pointer font-semibold text-gray-400 hover:text-orange-400 py-2"
+							onclick={() => {
+								closeMobileMenu();
+								log_out();
+							}}
+							>Log out
+						</button>
+					</li>
+				{:else}
+					<li>
+						<a
+							href="/sign_in"
+							class="block text-gray-400 hover:text-white py-2"
+							onclick={closeMobileMenu}>Log in</a
+						>
+					</li>
+					<li>
+						<a
+							href="/create_account"
+							class="block text-gray-400 hover:text-white py-2"
+							onclick={closeMobileMenu}>Sign up</a
+						>
+					</li>
+				{/if}
+				<li>
+					<a
+						href="/roadmap"
+						class="block text-gray-400 hover:text-white py-2"
+						onclick={closeMobileMenu}>Roadmap</a
+					>
+				</li>
+				<li>
+					<a
+						href="/about"
+						class="block text-gray-400 hover:text-white py-2"
+						onclick={closeMobileMenu}>About</a
+					>
+				</li>
+				<li>
+					<a
+						href="/bug_report"
+						class="block text-gray-400 hover:text-white py-2"
+						onclick={closeMobileMenu}>Report a Bug</a
+					>
+				</li>
 			</ul>
+		</div>
+	{/if}
 
-			<div class="my-2 h-px bg-zinc-600"></div>
-
-			{#if isSignedIn()}
-				<ul>
-					{#each accountLinks as link (link.href)}
-						<li>
-							<a
-								href={link.href}
-								class="flex items-center gap-2 py-2 text-sm text-zinc-200 [&_svg]:size-4"
-								onclick={closeMobileMenu}><link.icon /> {link.label}</a
-							>
-						</li>
-					{/each}
+	<!-- Desktop secondary nav for signed-in users -->
+	{#if isSignedIn()}
+		<div class="hidden md:block mx-auto flex items-center justify-between py-2 px-3 bg-gray-600">
+			<div></div>
+			<div>
+				<ul class="list-reset flex justify-center flex-wrap text-xs md:text-sm gap-3">
+					<li><a href="/friends" class="text-gray-400 hover:text-white">Friends</a></li>
+					<li>
+						<a
+							href="/recommendations/users/{current_user.id}"
+							class="text-gray-400 hover:text-white">Saved Recommendations</a
+						>
+					</li>
 				</ul>
-				<div class="my-2 h-px bg-zinc-600"></div>
-				<button
-					type="button"
-					class="flex w-full cursor-pointer items-center gap-2 py-2 text-sm text-zinc-200 [&_svg]:size-4"
-					onclick={() => {
-						closeMobileMenu();
-						log_out();
-					}}><LogOut /> log out</button
-				>
-			{:else}
-				<a
-					href="/sign_in"
-					class="block py-2 text-base text-zinc-300 hover:text-white"
-					onclick={closeMobileMenu}>log in</a
-				>
-			{/if}
-		</nav>
+			</div>
+			<div></div>
+		</div>
 	{/if}
 </header>

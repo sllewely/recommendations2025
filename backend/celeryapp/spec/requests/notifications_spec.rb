@@ -2,12 +2,6 @@ require 'rails_helper'
 require 'json'
 
 RSpec.describe "Notifications", type: :request do
-  def friend_notification(user, friend)
-    notif = Notification.accepted_friendship_notification(friend)
-    notif.user = user
-    notif.save!
-    notif
-  end
 
   describe "GET /index" do
     before(:context) do
@@ -20,29 +14,19 @@ RSpec.describe "Notifications", type: :request do
       @headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{auth_token}" }
     end
 
-    it 'gets my notifications' do
-      friend_notification(@my_user, create(:user))
-      friend_notification(@my_user, create(:user))
+    it 'gets my pending friend notifications' do
+      new_friend1 = create(:user)
+      new_friend2 = create(:user)
+      Notification.pending_friend_request(@my_user, new_friend1).save!
+      Notification.pending_friend_request(@my_user, new_friend2).save!
 
       get "/notifications", headers: @headers
 
       expect(response).to have_http_status(:ok)
       res = JSON.parse(response.body)
       expect(res['notifications'].size).to eq(2)
-      expect(res['notifications'][0]['message']).to include("is now your friend!")
+      expect(res['notifications'][0]['message']).to include("You have a pending friend request from")
       expect(res['notifications'][0]['extras']['user_id']).to_not be_nil
-    end
-
-    it 'leaves out old pending friend request notifications' do
-      requester = create(:user)
-      Notification.create!(user: @my_user, notif_type: :pending_friend_request,
-                           message: "You have a pending friend request from #{requester.name}",
-                           extras: { user_id: requester.id })
-
-      get "/notifications", headers: @headers
-
-      res = JSON.parse(response.body)
-      expect(res['notifications'].map { |n| n['notif_type'] }).to_not include('pending_friend_request')
     end
 
   end
@@ -59,7 +43,10 @@ RSpec.describe "Notifications", type: :request do
     end
 
     it 'returns true if I have active notifications' do
-      friend_notification(@my_user, create(:user))
+      new_friend1 = create(:user)
+      new_friend2 = create(:user)
+      Notification.pending_friend_request(@my_user, new_friend1).save!
+      Notification.pending_friend_request(@my_user, new_friend2).save!
 
       get "/notifications/has_active", headers: @headers
 
@@ -69,7 +56,9 @@ RSpec.describe "Notifications", type: :request do
     end
 
     it 'returns false if my notifs are read' do
-      notif = friend_notification(@my_user, create(:user))
+      new_friend1 = create(:user)
+      notif = Notification.pending_friend_request(@my_user, new_friend1)
+      notif.save!
 
       patch "/notifications/#{notif.id}", params: { active: false }, headers: @headers
       expect(response).to have_http_status(:ok)
@@ -79,16 +68,6 @@ RSpec.describe "Notifications", type: :request do
       expect(response).to have_http_status(:ok)
       res = JSON.parse(response.body)
       expect(res['has_active']).to be false
-    end
-
-    it 'returns true if a friend request is waiting on me' do
-      other = create(:user)
-      @my_user.friend_requests.create!(incoming_friend_id: other.id)
-
-      get "/notifications/has_active", headers: @headers
-
-      res = JSON.parse(response.body)
-      expect(res['has_active']).to be true
     end
 
   end
@@ -104,8 +83,10 @@ RSpec.describe "Notifications", type: :request do
       @headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{auth_token}" }
     end
 
-    it 'marks a notification read' do
-      notif = friend_notification(@my_user, create(:user))
+    it 'gets my pending friend notifications' do
+      new_friend1 = create(:user)
+      notif = Notification.pending_friend_request(@my_user, new_friend1)
+      notif.save!
 
       patch "/notifications/#{notif.id}", params: { active: false }, headers: @headers
 

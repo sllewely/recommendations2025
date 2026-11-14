@@ -1,14 +1,10 @@
 <script lang="ts">
-	import SubHeader from "$lib/components/SubHeader.svelte";
-	import SubHeaderTitle from "$lib/components/SubHeaderTitle.svelte";
+	import H1 from "$lib/components/text/H1.svelte";
 	import Link from "$lib/components/text/Link.svelte";
 </script>
 
-<SubHeader>
-	<SubHeaderTitle title="roadmap" />
-</SubHeader>
-
 <div>
+	<H1>Roadmap</H1>
 	<p>I'm just one unpaid developer :') but all of your feedback is appreciated</p>
 	<p>
 		<Link

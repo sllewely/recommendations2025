@@ -3,16 +3,11 @@ class PostsController < ApplicationController
 
   skip_before_action :authenticate, only: [:rss]
 
-  FEEDABLE_TYPES = %w[Post Event Recommendation].freeze
-
   def index
     user_id = params[:user_id]
 
     feed = feed_items.visible_to(current_user)
     feed = feed.where(user_id: user_id) if user_id
-    # ?type=Post,Event narrows the feed to those feedable types
-    types = params[:type].to_s.split(",") & FEEDABLE_TYPES
-    feed = feed.where(feedable_type: types) if types.any?
 
     @pagy, @feed_items = pagy(feed, limit: 30)
     render json: {

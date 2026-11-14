@@ -1,70 +1,85 @@
 <script lang="ts">
-	import { onMount } from "svelte";
-	import SubHeader from "$lib/components/SubHeader.svelte";
-	import SubHeaderTitle from "$lib/components/SubHeaderTitle.svelte";
-	import Button from "$lib/components/Button.svelte";
-	import Feed from "$lib/components/posts/Feed.svelte";
-	import EventCard from "$lib/components/posts/EventCard.svelte";
-	import SectionHeading from "$lib/components/text/SectionHeading.svelte";
-	import Link from "$lib/components/text/Link.svelte";
-	import type { Event } from "$lib/api_calls/types";
-	import { formatDay, localDayKey } from "$lib/format_date";
-	import { feedCard, feedKey } from "$lib/feed";
-	import type { PageProps } from "./$types.js";
+	import { enhance } from "$app/forms";
+	import Input from "$lib/components/form/Input.svelte";
+	import InputDateTime from "$lib/components/form/InputDateTime.svelte";
+	import InputCheckbox from "$lib/components/form/InputCheckbox.svelte";
+	import FormButton from "$lib/components/form/FormButton.svelte";
+	import H1 from "$lib/components/text/H1.svelte";
 
-	let { data }: PageProps = $props();
+	import { newToast, ToastType } from "$lib/state/toast.svelte.js";
+	import { goto } from "$app/navigation";
+	import DateHeader from "$lib/components/posts/DateHeader.svelte";
 
-	let events = $derived(data.events ?? []);
+	let { data, form } = $props();
 
-	// days depend on the viewer's timezone, so group only in the browser
-	let mounted = $state(false);
-	onMount(() => {
-		mounted = true;
-	});
+	let creating = $state(false);
 
-	let days = $derived.by(() => {
-		if (!mounted) return [];
-		const groups: { key: string; heading: string; events: Event[] }[] = [];
-		for (const event of events) {
-			const key = localDayKey(event.start_date_time);
-			const last = groups.at(-1);
-			if (last?.key === key) {
-				last.events.push(event);
-			} else {
-				groups.push({ key, heading: formatDay(event.start_date_time), events: [event] });
-			}
-		}
-		return groups;
-	});
+	// TODO:
+	// Privacy
 </script>
 
-<SubHeader>
-	<SubHeaderTitle title="events" />
-	<Button href="/events/create">new</Button>
-</SubHeader>
-
-{#if events.length === 0}
-	<div
-		class="flex justify-center p-2 font-bold border-zinc-800 rounded-sm bg-lime-200 border dark:text-zinc-900"
-	>
-		<p>
-			no upcoming events!
-			<Link url="/events/create">create an event</Link>
-		</p>
+<div>
+	<div class="flex justify-center">
+		<H1>Community Events</H1>
 	</div>
-{:else if mounted}
-	<div class="flex flex-col gap-10">
-		{#each days as day (day.key)}
-			<section class="flex flex-col gap-5">
-				<SectionHeading>{day.heading}</SectionHeading>
-				<Feed items={day.events} key={feedKey} card={feedCard} content={event_card} />
-			</section>
-		{/each}
+	<div>
+		<p>This page is for aggregating public events happening in your neighborhood</p>
+		<p>I don't have time to work on this feature. Let me know if you want to collaborate!</p>
 	</div>
-{:else}
-	<Feed items={events} key={feedKey} card={feedCard} content={event_card} />
-{/if}
+	<div>
+		<!--		<div class="grid grid-cols-3">-->
+		<!--			<div>-->
+		<!--				{#if creating}-->
+		<!--					<p>creating...</p>-->
+		<!--				{/if}-->
+		<!--				<form-->
+		<!--					method="POST"-->
+		<!--					action="?/create_event"-->
+		<!--					use:enhance={() => {-->
+		<!--						creating = true;-->
+		<!--						return async ({ update, result }) => {-->
+		<!--							await update({ reset: false });-->
+		<!--							creating = false;-->
+		<!--							let res = result.data;-->
+		<!--							if (res.success) {-->
+		<!--								console.log("success create event");-->
+		<!--								newToast("You have successfully created an event!!");-->
+		<!--								goto("/events");-->
+		<!--							} else {-->
+		<!--								newToast("Error creating an event: " + res.message, ToastType.Error);-->
+		<!--							}-->
+		<!--						};-->
+		<!--					}}-->
+		<!--				>-->
+		<!--					<div class="flex flex-col">-->
+		<!--						<Card>-->
+		<!--							<H1>Create an event</H1>-->
+		<!--							<p class="text-xs">You'll need to be logged in to make an event!</p>-->
+		<!--							<InputCheckbox name="public" label="Public event" value="true" />-->
 
-{#snippet event_card(event: Event)}
-	<EventCard feed_item={event} />
-{/snippet}
+		<!--							<Input name="title" label="Title:" value={form?.title} />-->
+		<!--							<InputDateTime date_value={form?.date_input} time_value={form?.time_input} />-->
+		<!--							&lt;!&ndash;                            <InputDateTime name="end" date_value={form?.date_input} time_value="{form?.time_input}" />&ndash;&gt;-->
+		<!--							<Input name="description" label="Description:" />-->
+		<!--							<Input name="address" label="Address:" value={form?.address} />-->
+		<!--							<Input name="url" label="URL:" value={form?.url} />-->
+		<!--							<Input name="event_type" label="Event Type:" value={form?.event_type} />-->
+		<!--						</Card>-->
+		<!--					</div>-->
+		<!--					<FormButton>Create event</FormButton>-->
+		<!--				</form>-->
+		<!--			</div>-->
+
+		<!--			<div class="col-span-2">-->
+		<!--				<H1>Events</H1>-->
+		<!--				{#each data.events as event_item}-->
+		<!--					{#if !!event_item["date_header"]}-->
+		<!--						<DateHeader {event_item} />-->
+		<!--					{:else}-->
+		<!--						<EventFeedItem {event_item} />-->
+		<!--					{/if}-->
+		<!--				{/each}-->
+		<!--			</div>-->
+		<!--		</div>-->
+	</div>
+</div>

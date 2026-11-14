@@ -180,37 +180,4 @@ RSpec.describe "FriendRequests", type: :request do
       assert_includes email.body.to_s, "You have a new friend request from #{@my_user.name}!"
     end
   end
-
-  describe "POST /friend_requests/:id/ignore" do
-    before(:context) do
-      @my_user = create(:user)
-
-      headers = { 'ACCEPT' => 'application/json' }
-      post "/sign_in", params: { email: @my_user.email, password: @my_user.password }, headers: headers
-
-      auth_token = JSON.parse(response.body)["auth_token"]
-      @headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{auth_token}" }
-    end
-
-    it 'stops listing a request I ignored' do
-      friend_request = create(:friend_request, user: @my_user, incoming_friend: create(:user))
-
-      post "/friend_requests/#{friend_request.id}/ignore", headers: @headers
-      expect(response).to have_http_status(:ok)
-      expect(friend_request.reload).to be_rejected
-
-      get "/friend_requests", headers: @headers
-      ids = JSON.parse(response.body)['incoming_friend_requests'].map { |r| r['id'] }
-      expect(ids).to_not include(friend_request.id)
-    end
-
-    it "can't ignore a request someone else got" do
-      friend_request = create(:friend_request, user: create(:user), incoming_friend: create(:user))
-
-      post "/friend_requests/#{friend_request.id}/ignore", headers: @headers
-
-      expect(response).to have_http_status(:not_found)
-      expect(friend_request.reload).to be_pending
-    end
-  end
 end

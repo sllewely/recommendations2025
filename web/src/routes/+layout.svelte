@@ -1,8 +1,6 @@
 <script lang="ts">
 	import Header from "$lib/components/Header.svelte";
 	import Footer from "$lib/components/Footer.svelte";
-	import { createSubheaderSlot } from "$lib/state/subheader.svelte";
-	import { page } from "$app/state";
 	import "../app.css";
 	import { current_user, isSignedIn } from "$lib/state/current_user.svelte.js";
 	import { onMount } from "svelte";
@@ -14,12 +12,13 @@
 
 	let { children, data } = $props();
 
-	const subheader = createSubheaderSlot();
-
 	if (data.current_user_id) {
 		current_user.id = data.current_user_id;
 	}
 
+	if (data.calendar_url) {
+		global.calendarUrl = data.calendar_url;
+	}
 	global.groups = data.groups;
 
 	onMount(() => {});
@@ -47,27 +46,14 @@
 	<title>Bumblebeans</title>
 </svelte:head>
 
-<div class="app dark:bg-zinc-800 dark:text-zinc-100">
-	<div class="order-1"><Header /></div>
+<div class="app dark:bg-gray-900 dark:text-gray-200">
+	<Header />
 
 	<Toaster closeButton={true} richColors={true} />
-	<main class="order-3">
-		{#key page.url.pathname}
-			{@render children()}
-		{/key}
+	<main>
+		{@render children()}
 	</main>
-	<div class="order-2">
-		{#if subheader.content}
-			<div class="bg-zinc-700/50">
-				<div
-					class="mx-auto flex min-h-26 max-w-[52rem] items-center justify-between gap-4 px-4 py-5"
-				>
-					{@render subheader.content()}
-				</div>
-			</div>
-		{/if}
-	</div>
-	<div class="order-4"><Footer /></div>
+	<Footer />
 </div>
 
 <style>
@@ -81,9 +67,9 @@
 		flex: 1;
 		display: flex;
 		flex-direction: column;
-		padding: 2.5rem 1rem; /* py-10 px-4 */
+		padding: 1rem;
 		width: 100%;
-		max-width: 52rem;
+		max-width: 64rem;
 		margin: 0 auto;
 		box-sizing: border-box;
 	}

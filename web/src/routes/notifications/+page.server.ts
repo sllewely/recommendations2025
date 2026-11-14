@@ -32,8 +32,4 @@ export const actions = {
 
 		return response;
 	}),
-	ignore_friend_request: withAuth(async ({ jwt, request }: ActionAuthContext) => {
-		const data = await request.formData();
-		return api.post(`friend_requests/${data.get("id")}/ignore`, {}, jwt);
-	}),
 };

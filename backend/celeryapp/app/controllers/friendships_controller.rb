@@ -5,9 +5,7 @@ class FriendshipsController < ApplicationController
   def index
     # TODO: this will need to be paginated
     search = params[:search]
-    owner = params[:user_id].present? ? User.find_by(id: params[:user_id]) : current_user
-    render json: { error: "user not found" }, status: :not_found and return if owner.nil?
-    query = owner.friends
+    query = current_user.friends
     if search
       query = query.by_name(search)
     end
@@ -26,6 +24,8 @@ class FriendshipsController < ApplicationController
       Friendship.create_bidirectional_friendship!(current_user, user)
       current_user.notifications << Notification.accepted_friendship_notification(user)
       user.notifications << Notification.accepted_friendship_notification(current_user)
+      # clear pending friend request notifs
+      current_user.notifications.active.pending_friend_requests.update_all(active: false)
       friend_request.delete
     end
     PushNotification.send_push_notification(

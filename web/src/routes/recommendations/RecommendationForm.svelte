@@ -1,6 +1,16 @@
 <script lang="ts">
 	import { enhance } from "$app/forms";
+	import { Input } from "$lib/components/ui/input";
+	import H1 from "$lib/components/text/H1.svelte";
+	import Card from "$lib/components/Card.svelte";
+	import { Label } from "$lib/components/ui/label";
+	import { Button } from "$lib/components/ui/button";
+	import { Textarea } from "$lib/components/ui/textarea";
 	import { goto } from "$app/navigation";
+
+	import { MediaType, RecommendationStatus } from "$lib/enums";
+	import { current_user } from "$lib/state/current_user.svelte.js";
+	import { newToast, ToastType } from "$lib/state/toast.svelte.js";
 	import {
 		Book,
 		Clapperboard,
@@ -9,206 +19,237 @@
 		Link,
 		Soup,
 		Star,
+		BookmarkPlus,
 		MessageCircleHeart,
 	} from "@lucide/svelte";
-	import type { Recommendation } from "$lib/api_calls/types";
-	import { RecommendationStatus } from "$lib/enums";
-	import { newToast, ToastType } from "$lib/state/toast.svelte.js";
-	import { cn } from "$lib/utils.js";
-	import Button from "$lib/components/Button.svelte";
-	import TextField from "$lib/components/TextField.svelte";
-	import FormRow from "$lib/components/form/FormRow.svelte";
-	import RadioGroup, { type RadioOption } from "$lib/components/form/RadioGroup.svelte";
-	import MarkedDownPost from "$lib/components/posts/MarkedDownPost.svelte";
-	import FeedBadge, { CARD } from "$lib/components/posts/FeedBadge.svelte";
-	import { Spinner } from "$lib/components/ui/spinner";
+	import { Badge } from "$lib/components/ui/badge";
+	import * as Tooltip from "$lib/components/ui/tooltip";
 
-	interface Props {
-		recommendation?: Recommendation;
-		form?: Record<string, any> | null;
-	}
+	let { data, form } = $props();
 
-	let { recommendation, form }: Props = $props();
-
-	const MEDIA_TYPES = [
-		{ value: "book", label: "book", icon: Book },
-		{ value: "movie", label: "movie", icon: Clapperboard },
-		{ value: "tv_show", label: "tv show", icon: MonitorPlay },
-		{ value: "video_game", label: "video game", icon: Gamepad2 },
-		{ value: "url", label: "web article", icon: Link },
-		{ value: "restaurant", label: "restaurant", icon: Soup },
-	] as const satisfies RadioOption[];
-
-	const STATUSES = [
-		{ value: String(RecommendationStatus.Recommend), label: "recommending", saved: "recommend" },
-		{ value: String(RecommendationStatus.Interested), label: "interested in", saved: "interested" },
-	] as const;
-
-	let editing = !!recommendation;
 	let creating = $state(false);
-	let status = $state<string>(
-		String(
-			recommendation?.status === "interested"
-				? RecommendationStatus.Interested
-				: recommendation?.status === "watching"
-					? RecommendationStatus.Watching
-					: RecommendationStatus.Recommend,
-		),
-	);
-	let title = $state<string>(form?.title ?? recommendation?.title ?? "");
-	let notes = $state<string>(form?.notes ?? recommendation?.notes ?? "");
-	let url = $state<string>(form?.url ?? recommendation?.url ?? "");
-	let who_recommended = $state<string>(
-		form?.who_recommended ?? recommendation?.who_recommended ?? "",
-	);
-	let rating = $state<number>(Number(form?.rating ?? recommendation?.rating ?? 0));
+	let status = $state(RecommendationStatus.Interested);
 
-	let media_type = $state<string>(form?.media_type ?? recommendation?.media_type ?? "book");
-	let type_name = $derived(
-		MEDIA_TYPES.find((t) => t.value === media_type)?.label ?? media_type.trim(),
-	);
-	let status_name = $derived(STATUSES.find((s) => s.value === status)?.saved ?? "");
+	// TODO: save & remember the user's last selection
+	let media_type = $state(form?.media_type ?? "book");
 
-	let stars = $derived(rating > 0 ? "★".repeat(rating) + "☆".repeat(5 - rating) : "");
-	let attributes = $derived(
-		[
-			{ label: "am", value: status_name },
-			{ label: "from", value: who_recommended.trim() },
-			{ label: "is", value: type_name },
-			{ label: "see", value: url.trim(), link: true },
-			{ label: "give it a", value: stars },
-		].filter((attribute) => attribute.value),
-	);
-</script>
+	let tags = $state([]);
+	// $effect(() => {
+	//     tags = data.user.tags;
+	// })
 
-<form
-	id="recommendation_form"
-	method="POST"
-	action={editing ? "?/edit_recommendation" : "?/create_recommendation"}
-	class="flex flex-col gap-3"
-	use:enhance={() => {
-		creating = true;
-		return async ({ update, result }) => {
-			await update();
-			creating = false;
-			if (result.type !== "success") return;
-			const res = result.data;
-			if (res?.success) {
-				newToast(
-					editing
-						? "Updated your recommendation"
-						: "You have successfully created a recommendation",
-					ToastType.Success,
-				);
-				goto("/");
+	let rating = $state(form?.rating ?? 0);
+
+	function setStar(set_rating) {
+		return () => {
+			if (rating === set_rating) {
+				rating = 0;
 			} else {
-				newToast("Error saving recommendation: " + res?.message, ToastType.Error);
+				rating = set_rating;
 			}
 		};
-	}}
->
-	{#if recommendation}
-		<input type="hidden" name="id" value={recommendation.id} />
-	{/if}
-	<input type="hidden" name="media_type" value={media_type.trim() || "other"} />
-	<input type="hidden" name="rating" value={rating} />
+	}
 
-	<section aria-label="preview" class={cn("mb-7 flex flex-col gap-5", CARD)}>
-		<div class="flex flex-row items-center gap-3">
-			<FeedBadge icon={MessageCircleHeart} accent="fuchsia" />
-			{#if title.trim()}
-				<h3 class="mt-1 text-lg font-semibold leading-tight">{title}</h3>
-			{:else}
-				<h3 class="mt-1 text-lg italic leading-tight text-zinc-500 dark:text-zinc-400">
-					your recommendation
-				</h3>
-			{/if}
-		</div>
-		{#if attributes.length > 0}
-			<ul
-				class="flex min-w-0 flex-col gap-1 text-sm text-zinc-500 dark:text-zinc-400 [&>li]:truncate [&_.value]:text-zinc-700 dark:[&_.value]:text-zinc-300"
-			>
-				{#each attributes as attribute}
-					<li>
-						{attribute.label}
-						<span class={["value", attribute.link && "underline"]}>{attribute.value}</span>
-					</li>
-				{/each}
-			</ul>
-		{/if}
-		{#if notes.trim()}
-			<MarkedDownPost captured_text={notes} />
-		{/if}
-	</section>
+	function submitWithStatus(set_status) {
+		return () => {
+			if (set_status === "interested_in") {
+				status = RecommendationStatus.Interested;
+			} else {
+				status = RecommendationStatus.Recommend;
+			}
+			document.getElementById("recommendation_form").requestSubmit();
+		};
+	}
+</script>
 
-	<FormRow label="title" for="title">
-		<TextField id="title" name="title" bind:value={title} />
-	</FormRow>
-
-	<FormRow label="status">
-		<RadioGroup label="status" name="status" options={STATUSES} bind:value={status} />
-	</FormRow>
-
-	<FormRow label="rating">
-		<div class="flex h-8.5 flex-row items-center gap-1">
-			{#each [1, 2, 3, 4, 5] as star}
-				<button
-					type="button"
-					class="cursor-pointer"
-					aria-label="{star} star{star === 1 ? '' : 's'}"
-					aria-pressed={rating >= star}
-					onclick={() => (rating = rating === star ? 0 : star)}
-				>
-					<Star
-						class={cn(
-							"size-5",
-							rating >= star
-								? "fill-yellow-400 text-yellow-400"
-								: "text-zinc-400 dark:text-zinc-500",
-						)}
-					/>
-				</button>
-			{/each}
-		</div>
-	</FormRow>
-
-	<FormRow label="type">
-		<RadioGroup label="type" options={MEDIA_TYPES} other="other" bind:value={media_type} />
-	</FormRow>
-
-	<FormRow label="notes" for="notes">
-		<TextField
-			id="notes"
-			name="notes"
-			multiline
-			bind:value={notes}
-			placeholder="what do you think???"
-		/>
-	</FormRow>
-
-	<FormRow label="link" for="url">
-		<TextField id="url" name="url" bind:value={url} />
-	</FormRow>
-
-	<FormRow
-		label="who recommended it to you?"
-		for="who_recommended"
-		description="useful for remembering"
+<div>
+	<H1>Save a recommendation</H1>
+	<span class="text-cyan-800"
+		>Save your favorites, save what you want to remember for the future, or share what you're
+		reading or watching right now with your friends</span
 	>
-		<TextField
-			id="who_recommended"
-			name="who_recommended"
-			autocomplete="off"
-			bind:value={who_recommended}
-		/>
-	</FormRow>
 
-	<FormRow>
-		<Button type="submit" disabled={creating} class="self-start">
-			{#if creating}
-				<Spinner />
-			{/if}
-			{"save"}
-		</Button>
-	</FormRow>
-</form>
+	{#if creating}
+		<p>creating in...</p>
+	{/if}
+	<Card>
+		<form
+			id="recommendation_form"
+			method="POST"
+			action="?/create_recommendation"
+			use:enhance={() => {
+				creating = true;
+				return async ({ update, result }) => {
+					await update();
+					creating = false;
+					let res = result.data;
+					if (res.success) {
+						newToast("You have successfully created a recommendation", ToastType.Success);
+						goto("/posts");
+					} else {
+						newToast("Error creating recommendation: " + res.message, ToastType.Error);
+					}
+				};
+			}}
+		>
+			<div class="flex flex-col space-y-2">
+				<Label for="title">Title:</Label>
+				<Input name="title" value={form?.title} />
+
+				<Label for="media_type">Media type:</Label>
+				<input type="hidden" name="media_type" value={media_type} />
+				<div>
+					<Tooltip.Provider>
+						<Tooltip.Root>
+							<Tooltip.Trigger>
+								<Button
+									onclick={() => (media_type = "book")}
+									variant={media_type === "book" ? "secondary" : "outline"}
+									aria-label="book"
+								>
+									<Book />
+								</Button>
+							</Tooltip.Trigger>
+							<Tooltip.Content><p>Book</p></Tooltip.Content>
+						</Tooltip.Root>
+					</Tooltip.Provider>
+					<Tooltip.Provider>
+						<Tooltip.Root>
+							<Tooltip.Trigger>
+								<Button
+									onclick={() => (media_type = "movie")}
+									variant={media_type === "movie" ? "secondary" : "outline"}
+									aria-label="movie"
+								>
+									<Clapperboard />
+								</Button>
+							</Tooltip.Trigger>
+							<Tooltip.Content><p>Movie</p></Tooltip.Content>
+						</Tooltip.Root>
+					</Tooltip.Provider>
+					<Tooltip.Provider>
+						<Tooltip.Root>
+							<Tooltip.Trigger>
+								<Button
+									onclick={() => (media_type = "tv_show")}
+									variant={media_type === "tv_show" ? "secondary" : "outline"}
+									aria-label="tv show"
+								>
+									<MonitorPlay />
+								</Button>
+							</Tooltip.Trigger>
+							<Tooltip.Content><p>Tv show</p></Tooltip.Content>
+						</Tooltip.Root>
+					</Tooltip.Provider>
+					<Tooltip.Provider>
+						<Tooltip.Root>
+							<Tooltip.Trigger>
+								<Button
+									onclick={() => (media_type = "video_game")}
+									variant={media_type === "video_game" ? "secondary" : "outline"}
+									aria-label="video game"
+								>
+									<Gamepad2 />
+								</Button>
+							</Tooltip.Trigger>
+							<Tooltip.Content><p>Video game</p></Tooltip.Content>
+						</Tooltip.Root>
+					</Tooltip.Provider>
+					<Tooltip.Provider>
+						<Tooltip.Root>
+							<Tooltip.Trigger>
+								<Button
+									onclick={() => (media_type = "url")}
+									variant={media_type === "url" ? "secondary" : "outline"}
+									aria-label="web page"
+								>
+									<Link />
+								</Button>
+							</Tooltip.Trigger>
+							<Tooltip.Content><p>Web article</p></Tooltip.Content>
+						</Tooltip.Root>
+					</Tooltip.Provider>
+					<Tooltip.Provider>
+						<Tooltip.Root>
+							<Tooltip.Trigger>
+								<Button
+									onclick={() => (media_type = "restaurant")}
+									variant={media_type === "restaurant" ? "secondary" : "outline"}
+									aria-label="restaurant"
+								>
+									<Soup />
+								</Button>
+							</Tooltip.Trigger>
+							<Tooltip.Content><p>Restaurant</p></Tooltip.Content>
+						</Tooltip.Root>
+					</Tooltip.Provider>
+					<Tooltip.Provider>
+						<Tooltip.Root>
+							<Tooltip.Trigger>
+								<Button
+									onclick={() => (media_type = "other")}
+									variant={media_type === "other" ? "secondary" : "outline"}
+									aria-label="other"
+									><Input name="other_media_type" placeholder="other..." class="" />
+								</Button>
+							</Tooltip.Trigger>
+							<Tooltip.Content><p>Other</p></Tooltip.Content>
+						</Tooltip.Root>
+					</Tooltip.Provider>
+				</div>
+
+				<Label for="notes">Notes:</Label>
+				<Textarea name="notes" value={form?.notes} placeholder="What do you think???" />
+				<Label for="url">Link:</Label>
+				<Input name="url" value={form?.url} />
+				<div class="flex flex-row justify-between items-center">
+					<div>
+						<Label for="tags">Tags: #TODO not implemented</Label>
+						<Input
+							id="tags"
+							name="tags"
+							placeholder="scifi, nyc, storyrich"
+							value={form?.tags}
+							autocomplete="off"
+						/>
+						<div class="space-x-2">
+							{#each tags as tag}
+								<Badge>{tag}</Badge>
+							{/each}
+						</div>
+					</div>
+					<div class="flex flex-row">
+						<input type="hidden" name="rating" value={rating} />
+						<Star fill={rating >= 1 ? "yellow" : "white"} onclick={setStar(1)} />
+						<Star fill={rating >= 2 ? "yellow" : "white"} onclick={setStar(2)} />
+						<Star fill={rating >= 3 ? "yellow" : "white"} onclick={setStar(3)} />
+						<Star fill={rating >= 4 ? "yellow" : "white"} onclick={setStar(4)} />
+						<Star fill={rating >= 5 ? "yellow" : "white"} onclick={setStar(5)} />
+					</div>
+					<div>
+						<Label for="who_recommended">Who recommended to you?:</Label>
+						<Input
+							id="who_recommended"
+							name="who_recommended"
+							placeholder="useful for remembering"
+							value={form?.who_recommended}
+							autocomplete="off"
+						/>
+					</div>
+				</div>
+				<hr />
+
+				<div class="flex flex-row justify-center space-x-4">
+					<input type="hidden" name="status" value={status} />
+					<Button onclick={submitWithStatus("recommend")} disabled={creating}>
+						<MessageCircleHeart /> &nbsp; Share a review
+					</Button>
+					<Button onclick={submitWithStatus("interested_in")} disabled={creating}>
+						<BookmarkPlus />
+						&nbsp; Interested in
+					</Button>
+				</div>
+			</div>
+		</form>
+	</Card>
+</div>

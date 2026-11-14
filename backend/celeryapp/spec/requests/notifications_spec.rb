@@ -29,6 +29,25 @@ RSpec.describe "Notifications", type: :request do
       expect(res['notifications'][0]['extras']['user_id']).to_not be_nil
     end
 
+    it 'includes the friend request and where it stands' do
+      sender = create(:user)
+      friend_request = create(:friend_request, user: @my_user, incoming_friend: sender, message: "hi!")
+      Notification.pending_friend_request(@my_user, sender, friend_request).save!
+
+      get "/notifications", headers: @headers
+
+      notif = JSON.parse(response.body)['notifications'].find { |n| n['extras']['user_id'] == sender.id }
+      expect(notif['friend_request']['id']).to eq(friend_request.id)
+      expect(notif['friend_request']['status']).to eq("pending")
+      expect(notif['friend_request']['message']).to eq("hi!")
+      expect(notif['friend_request']['user']['id']).to eq(sender.id)
+
+      friend_request.rejected!
+      get "/notifications", headers: @headers
+      notif = JSON.parse(response.body)['notifications'].find { |n| n['extras']['user_id'] == sender.id }
+      expect(notif['friend_request']['status']).to eq("ignored")
+    end
+
   end
 
   describe "GET /has_active" do

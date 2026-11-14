@@ -1,14 +1,21 @@
 <script lang="ts">
-	import type { Group, Feedable } from "$lib/api_calls/types";
+	import SubHeader from "$lib/components/SubHeader.svelte";
+	import SubHeaderTitle from "$lib/components/SubHeaderTitle.svelte";
+	import SectionHeading from "$lib/components/text/SectionHeading.svelte";
+	import type { Group, Feedable, Event, Post, Recommendation } from "$lib/api_calls/types";
 	import UserCard from "$lib/components/users/UserCard.svelte";
 	import * as Collapsible from "$lib/components/ui/collapsible";
 	import Link from "$lib/components/text/Link.svelte";
-	import { Button } from "$lib/components/ui/button";
+	import Button from "$lib/components/Button.svelte";
 	import { Spinner } from "$lib/components/ui/spinner";
 	import { enhance } from "$app/forms";
 	import { newToast, ToastType } from "$lib/state/toast.svelte";
 	import { current_user, isSignedIn } from "$lib/state/current_user.svelte";
-	import FeedItem from "$lib/components/posts/FeedItem.svelte";
+	import Feed from "$lib/components/posts/Feed.svelte";
+	import PostCard from "$lib/components/posts/PostCard.svelte";
+	import EventCard from "$lib/components/posts/EventCard.svelte";
+	import RecommendationCard from "$lib/components/posts/RecommendationCard.svelte";
+	import { feedCard, feedKey } from "$lib/feed";
 
 	interface Props {
 		data: {
@@ -25,12 +32,16 @@
 	let is_member = $derived(data.group.users.some((user) => user.id === current_user.id));
 </script>
 
+<SubHeader>
+	<SubHeaderTitle title="group" />
+</SubHeader>
+
 <div>
 	<div class="flex flex-row justify-between items-center">
-		<h1 class="text-2xl font-bold">{data.group.name}</h1>
+		<SectionHeading>{data.group.name}</SectionHeading>
 
 		{#if is_member}
-			<Button>Member</Button>
+			<Button variant="filled" disabled>member</Button>
 		{:else}
 			<form
 				method="POST"
@@ -63,7 +74,7 @@
 	<Collapsible.Root>
 		<Collapsible.Trigger>
 			<Link>
-				<h2 class="text-xl font-bold">{data.group.users.length} Members...</h2>
+				<SectionHeading>{data.group.users.length} members...</SectionHeading>
 			</Link>
 		</Collapsible.Trigger>
 		<Collapsible.Content>
@@ -75,11 +86,17 @@
 		</Collapsible.Content>
 	</Collapsible.Root>
 
-	<h2>Posts</h2>
+	<SectionHeading>posts</SectionHeading>
 
-	<div>
-		{#each data.feed_items as feed_item}
-			<FeedItem feed_item={feed_item.feedable} />
-		{/each}
-	</div>
+	<Feed items={data.feed_items.map((item) => item.feedable)} key={feedKey} card={feedCard}>
+		{#snippet content(item)}
+			{#if item.class_name === "Event"}
+				<EventCard feed_item={item as Event} />
+			{:else if item.class_name === "Recommendation"}
+				<RecommendationCard feed_item={item as Recommendation} />
+			{:else}
+				<PostCard feed_item={item as Post} />
+			{/if}
+		{/snippet}
+	</Feed>
 </div>

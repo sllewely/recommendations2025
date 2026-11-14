@@ -1,4 +1,6 @@
 <script lang="ts">
+	import SubHeader from "$lib/components/SubHeader.svelte";
+	import SubHeaderTitle from "$lib/components/SubHeaderTitle.svelte";
 	import pkg from "mapbox-gl";
 	import "mapbox-gl/dist/mapbox-gl.css";
 	import { onMount, onDestroy } from "svelte";
@@ -30,6 +32,10 @@
 		}
 	});
 </script>
+
+<SubHeader>
+	<SubHeaderTitle title="events map" />
+</SubHeader>
 
 <div>
 	<div>Map!!</div>

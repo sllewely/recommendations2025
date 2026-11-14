@@ -4,12 +4,17 @@ import type { ApiResponse, Post, PostsResponse } from "./types";
 const ENDPOINT = "posts";
 
 /**
- * Fetches all posts
+ * Fetches the feed
  * @param token - JWT token for authentication
+ * @param params - optional query params, e.g. { type: "Post,Event", page: "2" }
  * @returns Promise with posts data or error
  */
-export async function getPosts(token: string): Promise<ApiResponse<PostsResponse>> {
-	return api.get<PostsResponse>(ENDPOINT, token);
+export async function getPosts(
+	token: string,
+	params: Record<string, string> = {},
+): Promise<ApiResponse<PostsResponse>> {
+	const query = new URLSearchParams(params).toString();
+	return api.get<PostsResponse>(query ? `${ENDPOINT}?${query}` : ENDPOINT, token);
 }
 
 /**

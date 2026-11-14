@@ -9,6 +9,9 @@ class UsersController < ApplicationController
     if params[:tag]
       query = query.by_tag(params[:tag])
     end
+    if params[:exclude_friends].present?
+      query = query.where.not(id: current_user.friends.select(:id)).where.not(id: current_user.id)
+    end
 
     render json: UserBlueprint.render(query.by_name(search), view: :authed), status: :ok
 

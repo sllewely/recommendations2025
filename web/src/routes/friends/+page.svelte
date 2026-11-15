@@ -314,8 +314,8 @@
 										title={"Remove from " + selected_circle.name}
 										aria-label={"Remove from " + selected_circle.name}
 										class="w-6 h-6 shrink-0 rounded-full border border-red-500 text-red-600 hover:bg-red-500 hover:text-white font-bold leading-none cursor-pointer"
-										>&minus;</button
-									>
+										>&minus;
+									</button>
 								</form>
 							{:else}
 								<form
@@ -339,8 +339,8 @@
 										title={"Add to " + selected_circle.name}
 										aria-label={"Add to " + selected_circle.name}
 										class="w-6 h-6 shrink-0 rounded-full border border-teal-500 text-teal-600 hover:bg-teal-500 hover:text-white font-bold leading-none cursor-pointer"
-										>+</button
-									>
+										>+
+									</button>
 								</form>
 							{/if}
 						{/if}
@@ -379,7 +379,7 @@
 			<Input
 				id="circle_name"
 				name="name"
-				placeholder="close friends"
+				placeholder="circle name"
 				autocomplete="off"
 				bind:value={new_circle_name}
 			/>

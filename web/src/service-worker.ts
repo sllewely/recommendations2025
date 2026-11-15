@@ -33,9 +33,12 @@ self.addEventListener("install", (event) => {
 		ASSETS.forEach((file) =>
 			stack.push(cache.add(file).catch((_) => console.error(`can't load ${file} to cache`))),
 		);
-		// await cache.addAll(stack);
+		// per-file catch above means one missing file won't fail the whole install
+		await Promise.all(stack);
 	}
 
+	// take over right away instead of waiting for every tab/PWA window to close
+	self.skipWaiting();
 	event.waitUntil(addFilesToCache());
 });
 
@@ -49,11 +52,11 @@ self.addEventListener("activate", (event) => {
 		}
 	}
 
-	event.waitUntil(deleteOldCaches());
+	// start controlling already-open pages without a reload
+	event.waitUntil(deleteOldCaches().then(() => self.clients.claim()));
 });
 
 self.addEventListener("fetch", (event) => {
-	console.log("fetch - sarah");
 	// ignore POST requests etc
 	if (event.request.method !== "GET") return;
 

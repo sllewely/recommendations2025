@@ -30,7 +30,6 @@
 	],
 	"theme_color": "#000000",
 	"background_color": "#FFFFFF",
-	"display": "standalone",
 	"orientation": "portrait",
 	"description": "peas in a pod"
 }

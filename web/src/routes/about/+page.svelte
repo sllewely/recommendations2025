@@ -1,15 +1,10 @@
 <script lang="ts">
-	import SubHeader from "$lib/components/SubHeader.svelte";
-	import SubHeaderTitle from "$lib/components/SubHeaderTitle.svelte";
-	import SectionHeading from "$lib/components/text/SectionHeading.svelte";
+	import H1 from "$lib/components/text/H1.svelte";
+	import H2 from "$lib/components/text/H2.svelte";
 </script>
 
-<SubHeader>
-	<SubHeaderTitle title="about" />
-</SubHeader>
-
-<div class="flex flex-col gap-y-4">
-	<SectionHeading>I'm building an app about becoming closer to the people you know</SectionHeading>
+<div class="flex flex-col m-10 gap-y-4">
+	<H1>I'm building an app about becoming closer to the people you know</H1>
 
 	<p>not driven by ads or suggested content</p>
 
@@ -21,8 +16,8 @@
 	<p>
 		Hey friends! I'm excited to build this overly ambitious social app. I'm a child of the 90s and
 		miss the days of social media when it was actually useful to <b>connect</b>
-		with the people you knew, instead of being bombarded with suggested content to drive ad revenue. I
-		want to make something fun.
+		with the people you knew, instead of being bombarded with suggested content to drive ad revenue.
+		I want to make something fun.
 	</p>
 
 	<p>Share <b>recommendations</b> and see what your friends are watching/reading/eating/playing.</p>
@@ -39,7 +34,7 @@
 	</p>
 
 	<p>&nbsp;</p>
-	<SectionHeading>recommendations</SectionHeading>
+	<H2>Recommendations</H2>
 
 	<p>
 		I want to share what I'm interested in with friends, so that we can talk about or share together
@@ -55,7 +50,7 @@
 	<p>I'm not planning on building any discovery or recommendation algorithm</p>
 
 	<p>&nbsp;</p>
-	<SectionHeading>events</SectionHeading>
+	<H2>Events</H2>
 
 	<p>
 		I want to broadcast to friends concerts and other events that I'm interested in, so I can see

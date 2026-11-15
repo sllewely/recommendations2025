@@ -31,11 +31,7 @@ Rails.application.routes.draw do
       get 'friends_map'
     end
   end
-  resources :friend_requests do
-    member do
-      post 'ignore'
-    end
-  end
+  resources :friend_requests
   resources :notifications do
     collection do
       get 'has_active'

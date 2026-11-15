@@ -1,12 +1,17 @@
 <script lang="ts">
-	import UserCard from "$lib/components/users/UserCard.svelte";
-	import Button from "$lib/components/Button.svelte";
-	import SubHeader from "$lib/components/SubHeader.svelte";
-	import SubHeaderTitle from "$lib/components/SubHeaderTitle.svelte";
+	import LinkButton from "$lib/components/text/LinkButton.svelte";
 	import PostCard from "$lib/components/posts/PostCard.svelte";
+	import { MessageCircleMore } from "@lucide/svelte";
+	import Comment from "$lib/components/posts/Comment.svelte";
+	import SubmitComment from "$lib/components/posts/SubmitComment.svelte";
 	import { goto } from "$app/navigation";
+	import { Button } from "$lib/components/ui/button";
 	import { newToast, ToastType } from "$lib/state/toast.svelte";
 	import type { Post } from "$lib/api_calls/types";
+	import Commentable from "$lib/components/posts/Commentable.svelte";
+	import Link from "$lib/components/text/Link.svelte";
+	import { parseAbsoluteToLocal } from "@internationalized/date";
+	import FriendshipBadge from "$lib/components/ui/badge/FriendshipBadge.svelte";
 
 	interface Props {
 		data: {
@@ -17,6 +22,14 @@
 
 	let { data }: Props = $props();
 	let my_user_id = data.my_user_id;
+
+	let localizedCreateTime = parseAbsoluteToLocal(data.post.created_at);
+
+	let formattedCreateTime = new Intl.DateTimeFormat("en-US", {
+		dateStyle: "medium",
+		timeStyle: "short",
+		timeZone: localizedCreateTime.timeZone,
+	}).format(localizedCreateTime.toDate());
 
 	let delete_post = async () => {
 		const response = await fetch("/api/delete_post", {
@@ -29,27 +42,40 @@
 		let res = await response.json();
 		if (res.success) {
 			newToast("Successfully deleted post");
-			goto("/");
+			goto("/posts");
 		} else {
 			newToast("Error deleting a post: " + res.message, ToastType.Error);
 		}
 	};
 </script>
 
-<SubHeader>
-	<SubHeaderTitle title={data.post.title || "post"}>
-		{#snippet caption()}
-			by <UserCard user={data.post.user} size="sm" />
-		{/snippet}
-	</SubHeaderTitle>
+<div>
 	{#if my_user_id.toString() === data.post.user.id.toString()}
-		<div class="flex flex-row gap-5">
-			<Button href="/posts/{data.post.id}/edit">edit</Button>
-			<Button color="red" onclick={delete_post}>delete</Button>
+		<div class="float-right relative">
+			<LinkButton url="/posts/{data.post.id}/edit">Edit</LinkButton>
+			<Button onclick={delete_post} variant="destructive">Delete</Button>
 		</div>
 	{/if}
-</SubHeader>
+	<div>
+		<div class="flex flex-row justify-between items-center">
+			<div class="flex flex-row items-center gap-2">
+				<div>
+					<span class="font-bold">
+						<Link url="/users/{data.post.user.id}">{data.post.user.name}</Link>
+					</span>'s post
+				</div>
+				{#if data.post.user?.friendship_status}
+					<FriendshipBadge status={data.post.user.friendship_status} />
+				{/if}
+			</div>
+			<div>
+				<span class="text-sm">posted at {formattedCreateTime}</span>
+			</div>
+		</div>
+		<PostCard feed_item={data.post} truncate={false} />
 
-<div class="flex flex-col gap-5">
-	<PostCard feed_item={data.post} truncate={false} />
+		<div>
+			<Commentable feed_item={data.post} comments={data.post.comments} />
+		</div>
+	</div>
 </div>

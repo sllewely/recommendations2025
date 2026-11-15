@@ -73,7 +73,7 @@ const config = {
 				sm: "calc(var(--radius) - 4px)",
 			},
 			fontFamily: {
-				sans: ['"AUTHENTIC Sans"', ...fontFamily.sans],
+				sans: [...fontFamily.sans],
 			},
 		},
 	},

@@ -1,8 +1,10 @@
 import { redirect } from "@sveltejs/kit";
 import { getRecommendation } from "$lib/api_calls/recommendations.svelte.ts";
 import { getUser } from "$lib/api_calls/users.svelte.ts";
-import * as api from "$lib/api_calls/api.svelte.ts";
 import { withAuth } from "$lib/auth";
+import { VITE_API_URL } from "$env/static/private";
+
+let root_url = VITE_API_URL;
 
 export const load = withAuth(async ({ jwt, user_id, params }) => {
 	let recommendation_id = params.id;
@@ -27,23 +29,33 @@ export const actions = {
 	edit_recommendation: withAuth(async ({ jwt, request }) => {
 		const data = await request.formData();
 
-		const response = await api.patch(
-			"recommendations/" + data.get("id"),
-			{
-				title: data.get("title"),
-				status: Number(data.get("status")) ?? 0,
-				notes: data.get("notes"),
-				media_type: data.get("media_type"),
-				who_recommended: data.get("who_recommended"),
-				rating: data.get("rating"),
-				url: data.get("url"),
-			},
-			jwt,
-		);
-		if (response.unauthorized) {
-			throw redirect(302, "/sign_in");
+		try {
+			const response = await fetch(root_url + "recommendations/" + data.get("id"), {
+				method: "PATCH",
+				body: JSON.stringify({
+					title: data.get("title"),
+					status: Number(data.get("status")) ?? 0,
+					notes: data.get("notes"),
+					media_type: data.get("media_type"),
+					who_recommended: data.get("who_recommended"),
+				}),
+				headers: {
+					"Content-Type": "application/json",
+					ACCEPT: "application/json",
+					Authorization: "Token " + jwt,
+				},
+			});
+			if (response.status === 401) {
+				throw redirect(302, "/sign_in");
+			}
+			const json = await response.json();
+		} catch (error) {
+			if (error?.status === 302) throw error;
+			console.error(error?.message);
 		}
 
-		return response;
+		//TODO: Success toast
+
+		throw redirect(302, "/posts");
 	}),
 };

@@ -112,19 +112,31 @@ self.addEventListener("push", function (event) {
 	event.waitUntil(
 		self.registration.showNotification(title, {
 			body: message,
+			// carries { url } so notificationclick knows where to go
+			data: data.data ?? {},
 		}),
 	);
 });
 
-self.addEventListener("notificationclick", async function (event) {
-	console.log("notificationclick - sarah");
-	console.log("event", event);
-	console.log("notification", event.notification);
-	let url = event.notification.data?.url;
-	if (!url) {
-		url = "https://bumblebeans.social/notifications";
+self.addEventListener("notificationclick", function (event) {
+	event.notification.close();
+
+	// handles both absolute urls and relative paths
+	const url = new URL(event.notification.data?.url || "/notifications", self.location.origin).href;
+
+	async function openUrl() {
+		const windows = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
+		// reuse an open tab of ours if there is one
+		const existing = windows.find((client) => new URL(client.url).origin === self.location.origin);
+		if (existing) {
+			// navigate() rejects/returns null for tabs this worker doesn't control
+			const navigated = await existing.navigate(url).catch(() => null);
+			if (navigated) return navigated.focus();
+		}
+		return self.clients.openWindow(url);
 	}
-	await self.clients.openWindow(url);
+
+	event.waitUntil(openUrl());
 });
 
 self.addEventListener("pushsubscriptionchange", (event) => {

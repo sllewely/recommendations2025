@@ -16,7 +16,7 @@
 	import Link from "$lib/components/text/Link.svelte";
 	import FriendStatusButton from "$lib/components/users/FriendStatusButton.svelte";
 	import bblogo from "$lib/assets/android-launchericon-72-72.png";
-	import { CircleDashed, Users } from "lucide-svelte";
+	import { CircleDashed, Search, Users } from "lucide-svelte";
 
 	interface Props {
 		data: {
@@ -80,6 +80,16 @@
 					return (a.name ?? "").localeCompare(b.name ?? "");
 				})
 			: friends,
+	);
+
+	let friend_filter = $state("");
+
+	let filtered_friends = $derived(
+		friend_filter.trim()
+			? sorted_friends.filter((f: User) =>
+					(f.name ?? "").toLowerCase().includes(friend_filter.trim().toLowerCase()),
+				)
+			: sorted_friends,
 	);
 
 	function toggle_circle(circle_id: string) {
@@ -269,9 +279,28 @@
 		</div>
 
 		<div class="pt-4">
-			<H2>Your friends</H2>
+			<div class="flex flex-row items-center justify-between gap-2 pb-2">
+				<H2>Your friends</H2>
+				<div class="relative w-48">
+					<Search
+						size={16}
+						class="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+					/>
+					<Input
+						id="friend_filter"
+						type="search"
+						placeholder="search friends"
+						autocomplete="off"
+						aria-label="Search friends by name"
+						class="pl-8"
+						bind:value={friend_filter}
+					/>
+				</div>
+			</div>
 			{#if friends.length === 0}
 				<p>You have no friends yet! Make some new ones :)</p>
+			{:else if filtered_friends.length === 0}
+				<p class="text-sm text-gray-500">No friends match "{friend_filter.trim()}"</p>
 			{/if}
 			{#if selected_circle}
 				<p class="text-sm text-gray-500 pb-2">
@@ -289,7 +318,7 @@
 				</p>
 			{/if}
 			<div class="grid grid-cols-2 gap-2">
-				{#each sorted_friends as friend (friend.id)}
+				{#each filtered_friends as friend (friend.id)}
 					<div class="flex flex-row items-center gap-2">
 						{#if selected_circle}
 							{#if circle_member_ids.has(friend.id)}

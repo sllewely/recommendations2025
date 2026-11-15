@@ -1,16 +1,10 @@
 <script lang="ts">
-	import SubHeader from "$lib/components/SubHeader.svelte";
-	import SubHeaderTitle from "$lib/components/SubHeaderTitle.svelte";
-	import SectionHeading from "$lib/components/text/SectionHeading.svelte";
+	import H1 from "$lib/components/text/H1.svelte";
 	import Link from "$lib/components/text/Link.svelte";
 </script>
 
-<SubHeader>
-	<SubHeaderTitle title="report a bug" />
-</SubHeader>
-
 <div>
-	<SectionHeading>submit a bug!</SectionHeading>
+	<H1>Submit a bug!</H1>
 	<p>Thanks for helping me improve</p>
 	<p>
 		<Link

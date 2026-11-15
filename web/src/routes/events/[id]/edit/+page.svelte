@@ -1,14 +1,18 @@
 <script lang="ts">
-	import SubHeader from "$lib/components/SubHeader.svelte";
-	import SubHeaderTitle from "$lib/components/SubHeaderTitle.svelte";
 	import EventsForm from "../../EventsForm.svelte";
+	import * as Card from "$lib/components/ui/card/index.js";
 	import type { PageData } from "./$types.js";
 
 	let { data }: { data: PageData } = $props();
 </script>
 
-<SubHeader>
-	<SubHeaderTitle title="edit event" caption="get your friends together" />
-</SubHeader>
-
-<EventsForm {data} />
+<div>
+	<Card.Root>
+		<Card.Header>
+			<Card.Title>Edit Event</Card.Title>
+		</Card.Header>
+		<Card.Content>
+			<EventsForm {data} />
+		</Card.Content>
+	</Card.Root>
+</div>

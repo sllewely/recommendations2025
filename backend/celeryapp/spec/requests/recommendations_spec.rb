@@ -71,7 +71,7 @@ RSpec.describe "Recommendations", type: :request do
       expect(res['title']).to eq("Annihilation")
 
       expect(friend.notifications.size).to eq(1)
-      expect(friend.notifications.first.message).to eq("#{@my_user.name} shared a new recommendation")
+      expect(friend.notifications.first.message).to eq("#{@my_user.name} created a new recommendation")
     end
   end
 

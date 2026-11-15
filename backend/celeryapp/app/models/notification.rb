@@ -13,6 +13,7 @@ class Notification < ApplicationRecord
 
   scope :active, -> { where(active: true) }
   scope :pending_friend_requests, -> { where(notif_type: 'pending_friend_request') }
+  scope :from_user, ->(user) { where("extras->>'user_id' = ?", user.id.to_s) }
 
   ###########################
   # Comments
@@ -38,10 +39,12 @@ class Notification < ApplicationRecord
   ###########################
   # Posts
 
+  VERBS = { "post" => "made", "event" => "created", "recommendation" => "shared" }.freeze
+
   def self.created_a_feedable(user, feedable)
     key = feedable.class.name.downcase
     Notification.new(
-      message: "#{user.name} created a new #{key}",
+      message: "#{user.name} #{VERBS.fetch(key, "created")} a new #{key}",
       notif_type: Notification.notif_types[:created_a_feedable],
       extras: { user_id: user.id, "#{key}_id" => feedable.id }
     )
@@ -80,12 +83,16 @@ class Notification < ApplicationRecord
   end
 
   # TODO: rethink model
-  def self.pending_friend_request(receiving_user, requesting_user)
+  def self.pending_friend_request(receiving_user, requesting_user, friend_request = nil)
     Notification.new(
       user_id: receiving_user.id,
       message: "You have a pending friend request from #{requesting_user.name}",
       notif_type: :pending_friend_request,
-      extras: { user_id: requesting_user.id }
+      extras: {
+        user_id: requesting_user.id,
+        friend_request_id: friend_request&.id,
+        message: friend_request&.message,
+      }
     )
   end
 

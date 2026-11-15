@@ -27,6 +27,19 @@ RSpec.describe "Friendships", type: :request do
       expect(res.first.keys).to include("name")
     end
 
+    it "lists another user's friends with user_id" do
+      other = create(:user)
+      their_friend = create(:user)
+      create(:friendship, user: other, friend: their_friend)
+      create(:friendship, user: @my_user, friend: create(:user))
+
+      get "/friendships?user_id=#{other.id}", headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      ids = JSON.parse(response.body).map { |u| u["id"] }
+      expect(ids).to eq([their_friend.id])
+    end
+
     it 'filters my friends' do
       friend = create(:user, name: 'james', presigned_url: 'sample.jpg')
       friend2 = create(:user, name: 'jimothy')
@@ -65,6 +78,17 @@ RSpec.describe "Friendships", type: :request do
       expect(response).to have_http_status(:created)
       res = JSON.parse(response.body)
       expect(res['id']).to eq(new_friend.id)
+    end
+
+    it 'marks the friend request notification read' do
+      new_friend = create(:user)
+      friend_request = create(:friend_request, user: @my_user, incoming_friend: new_friend)
+      notif = Notification.pending_friend_request(@my_user, new_friend, friend_request)
+      notif.save!
+
+      post "/friendships", params: { friend_id: new_friend.id }, headers: @headers
+
+      expect(notif.reload.active).to be false
     end
 
     it 'errors if there is no friend request' do

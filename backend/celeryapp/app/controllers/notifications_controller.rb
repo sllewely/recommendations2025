@@ -5,7 +5,7 @@ class NotificationsController < ApplicationController
     notifs = current_user.notifications.order(created_at: :desc)
     @pagy, @notifications = pagy(notifs, limit: 30)
     render json: {
-      notifications: @notifications,
+      notifications: @notifications.map { |notif| with_friend_request(notif) },
       pagy: @pagy
     }, status: :ok
   end
@@ -36,6 +36,28 @@ class NotificationsController < ApplicationController
   end
 
   private
+
+  # a friend request notification also gets who sent it and where the request stands now:
+  # pending, ignored, accepted (the request is gone and you're friends), or nil (withdrawn)
+  def with_friend_request(notif)
+    json = notif.as_json
+    return json unless notif.pending_friend_request?
+    sender = User.find_by(id: notif.extras["user_id"])
+    return json if sender.nil?
+
+    request = current_user.friend_requests.find_by(incoming_friend_id: sender.id)
+    status = if request
+      request.pending? ? "pending" : "ignored"
+    elsif current_user.friends.exists?(id: sender.id)
+      "accepted"
+    end
+    json.merge("friend_request" => {
+      "id" => request&.id || notif.extras["friend_request_id"],
+      "status" => status,
+      "message" => notif.extras["message"] || request&.message,
+      "user" => UserBlueprint.render_as_hash(sender),
+    })
+  end
 
   def notif_params
     params.except(:id).permit(:active)

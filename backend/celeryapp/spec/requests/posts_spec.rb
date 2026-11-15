@@ -43,7 +43,7 @@ RSpec.describe "Posts", type: :request do
       expect(res['content']).to eq("I love it a lot, you should read it")
 
       expect(friend.notifications.size).to eq(1)
-      expect(friend.notifications.first.message).to eq("#{@my_user.name} created a new post")
+      expect(friend.notifications.first.message).to eq("#{@my_user.name} made a new post")
     end
 
   end

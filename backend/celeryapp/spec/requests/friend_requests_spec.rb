@@ -126,6 +126,17 @@ RSpec.describe "FriendRequests", type: :request do
       expect(res['user']['id']).to eq(new_friend.id)
     end
 
+    it 'sends them a notification with the request and its message' do
+      new_friend = create(:user)
+      post "/friend_requests", params: { user_id: new_friend.id, message: "we met at the potluck" }, headers: @headers
+
+      notif = new_friend.notifications.pending_friend_requests.last
+      friend_request = new_friend.friend_requests.find_by(incoming_friend_id: @my_user.id)
+      expect(notif.extras["user_id"]).to eq(@my_user.id)
+      expect(notif.extras["friend_request_id"]).to eq(friend_request.id)
+      expect(notif.extras["message"]).to eq("we met at the potluck")
+    end
+
     it 'a friend request can have a message' do
       new_friend = create(:user)
       post "/friend_requests", params: { user_id: new_friend.id, message: "hey I know you from recurse" }, headers: @headers
@@ -178,6 +189,50 @@ RSpec.describe "FriendRequests", type: :request do
 
       email = ActionMailer::Base.deliveries.last
       assert_includes email.body.to_s, "You have a new friend request from #{@my_user.name}!"
+    end
+  end
+
+  describe "POST /friend_requests/:id/ignore" do
+    before(:context) do
+      @my_user = create(:user)
+
+      headers = { 'ACCEPT' => 'application/json' }
+      post "/sign_in", params: { email: @my_user.email, password: @my_user.password }, headers: headers
+
+      auth_token = JSON.parse(response.body)["auth_token"]
+      @headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{auth_token}" }
+    end
+
+    it 'stops listing a request I ignored' do
+      friend_request = create(:friend_request, user: @my_user, incoming_friend: create(:user))
+
+      post "/friend_requests/#{friend_request.id}/ignore", headers: @headers
+      expect(response).to have_http_status(:ok)
+      expect(friend_request.reload).to be_rejected
+
+      get "/friend_requests", headers: @headers
+      ids = JSON.parse(response.body)['incoming_friend_requests'].map { |r| r['id'] }
+      expect(ids).to_not include(friend_request.id)
+    end
+
+    it 'marks its notification read' do
+      sender = create(:user)
+      friend_request = create(:friend_request, user: @my_user, incoming_friend: sender)
+      notif = Notification.pending_friend_request(@my_user, sender, friend_request)
+      notif.save!
+
+      post "/friend_requests/#{friend_request.id}/ignore", headers: @headers
+
+      expect(notif.reload.active).to be false
+    end
+
+    it "can't ignore a request someone else got" do
+      friend_request = create(:friend_request, user: create(:user), incoming_friend: create(:user))
+
+      post "/friend_requests/#{friend_request.id}/ignore", headers: @headers
+
+      expect(response).to have_http_status(:not_found)
+      expect(friend_request.reload).to be_pending
     end
   end
 end

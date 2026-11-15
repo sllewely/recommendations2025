@@ -5,16 +5,14 @@ import { redirect } from "@sveltejs/kit";
 
 export const load = withAuth(async ({ jwt }: LoadAuthContext) => {
 	const notifications: ApiResponse<NotificationResponse> = await api.get("notifications", jwt);
-	const friend_requests_response = await api.get("friend_requests", jwt);
 
-	if (notifications.unauthorized || friend_requests_response.unauthorized) {
+	if (notifications.unauthorized) {
 		throw redirect(302, "/sign_in");
 	}
 
 	return {
 		notifications: notifications["res"]?.["notifications"] ?? [],
 		pagy: notifications["res"]?.["pagy"],
-		friend_requests: friend_requests_response["res"]?.["incoming_friend_requests"] ?? [],
 	};
 });
 
@@ -31,5 +29,9 @@ export const actions = {
 		);
 
 		return response;
+	}),
+	ignore_friend_request: withAuth(async ({ jwt, request }: ActionAuthContext) => {
+		const data = await request.formData();
+		return api.post(`friend_requests/${data.get("id")}/ignore`, {}, jwt);
 	}),
 };

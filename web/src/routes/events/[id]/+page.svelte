@@ -13,7 +13,14 @@
 	import RsvpBadge from "$lib/components/ui/badge/RsvpBadge.svelte";
 	import { parseAbsoluteToLocal } from "@internationalized/date";
 	import { onMount } from "svelte";
-	import { isSchedulingTime, type Event, type Guest, type User } from "$lib/api_calls/types";
+	import {
+		isSchedulingTime,
+		type Event,
+		type Guest,
+		type PlusOne,
+		type User,
+	} from "$lib/api_calls/types";
+	import { Badge } from "$lib/components/ui/badge";
 	import { Separator } from "$lib/components/ui/separator";
 	import * as Select from "$lib/components/ui/select/index.js";
 	import Commentable from "$lib/components/posts/Commentable.svelte";
@@ -21,6 +28,7 @@
 	import CalendarCopy from "$lib/CalendarCopy.svelte";
 	import ProposedTimeVotes from "$lib/components/events/ProposedTimeVotes.svelte";
 	import GuestRsvp from "$lib/components/rsvp/GuestRsvp.svelte";
+	import PlusOnes from "$lib/components/rsvp/PlusOnes.svelte";
 
 	interface Props {
 		data: {
@@ -46,6 +54,12 @@
 		}
 		return data.event.rsvps.find((rsvp) => rsvp.user.id === my_user_id) ?? null;
 	})();
+
+	/* +1s appear under the user who added them, or at the bottom if that user isn't in the list */
+	let plus_ones = $derived(data.event.plus_ones ?? []);
+	const plusOnesFor = (user_id: string) => plus_ones.filter((p) => p.user_id === user_id);
+	let listed_user_ids = $derived(new Set(data.event.rsvps.map((rsvp) => rsvp.user.id)));
+	let unlisted_plus_ones = $derived(plus_ones.filter((p) => !listed_user_ids.has(p.user_id)));
 
 	let delete_event = async () => {
 		const response = await fetch("/api/events/delete", {
@@ -192,6 +206,7 @@
 							<div>
 								<SelectRsvp rsvp={current_user_rsvp} event_id={data.event.id} />
 							</div>
+							<PlusOnes event_id={data.event.id} my_plus_ones={plusOnesFor(my_user_id)} />
 						{:else}
 							<GuestRsvp
 								event_id={data.event.id}
@@ -217,6 +232,17 @@
 					<Separator class="my-6" />
 					<div class="">
 						<span class="text-xl">Rsvps</span>
+						{#snippet plusOneRow(plus_one: PlusOne, with_user: boolean)}
+							<div class="flex flex-row justify-between pl-4 text-sm">
+								<div>
+									{plus_one.name}
+									{#if with_user}
+										<span class="text-xs text-muted-foreground">with {plus_one.user_name}</span>
+									{/if}
+								</div>
+								<Badge variant="outline">+1</Badge>
+							</div>
+						{/snippet}
 						{#each data.event.rsvps as rsvp}
 							<div class="flex flex-row justify-between">
 								<div>
@@ -226,6 +252,9 @@
 									<RsvpBadge {rsvp} />
 								</div>
 							</div>
+							{#each plusOnesFor(rsvp.user.id) as plus_one (plus_one.id)}
+								{@render plusOneRow(plus_one, false)}
+							{/each}
 						{/each}
 						{#each data.event.guest_rsvps ?? [] as guest_rsvp}
 							<div class="flex flex-row justify-between">
@@ -240,6 +269,9 @@
 									<RsvpBadge rsvp={guest_rsvp} />
 								</div>
 							</div>
+						{/each}
+						{#each unlisted_plus_ones as plus_one (plus_one.id)}
+							{@render plusOneRow(plus_one, true)}
 						{/each}
 					</div>
 				</Card.Content>

@@ -5,7 +5,7 @@ class Public::EventsController < ApplicationController
 
   def show
     # Anyone can access an event with the link
-    @event = Event.includes(rsvps: :user, guest_rsvps: :guest, proposed_times: [:users, :guests]).find_by(id: params[:id])
+    @event = Event.includes(rsvps: :user, guest_rsvps: :guest, plus_ones: :user, proposed_times: [:users, :guests]).find_by(id: params[:id])
 
     if @event
       render json: EventBlueprint.render(@event, view: :unauthed), status: :ok

@@ -140,6 +140,7 @@ export interface Event {
 	proposed_times: ProposedTime[];
 	chosen_proposed_time_id: string | null;
 	guest_rsvps: GuestRsvp[];
+	plus_ones: PlusOne[];
 }
 
 // someone who rsvps or votes without an account
@@ -160,6 +161,15 @@ export interface GuestRsvp {
 	guest_name?: string;
 	// only for the host
 	guest_email?: string | null;
+}
+
+// someone coming along with a user; just a name
+export interface PlusOne {
+	id: string;
+	name: string;
+	user_id: string;
+	// the user who brought them
+	user_name: string;
 }
 
 // proposed times are out but the host hasn't chosen one yet

@@ -149,6 +149,7 @@ class PostsController < ApplicationController
         { reactions: :user },
         { rsvps: { user: :groups } },
         { guest_rsvps: :guest },
+        { plus_ones: :user },
         { proposed_times: [:users, :guests] },
       ])
       .order(created_at: :desc)

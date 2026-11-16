@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_16_140000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_16_150000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -178,6 +178,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_16_140000) do
     t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.index ["numeric_user_id"], name: "index_notifications_on_numeric_user_id"
     t.index ["uuid"], name: "index_notifications_on_uuid", unique: true
+  end
+
+  create_table "plus_ones", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.uuid "event_id", null: false
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.uuid "user_id", null: false
+    t.index ["event_id"], name: "index_plus_ones_on_event_id"
+    t.index ["user_id"], name: "index_plus_ones_on_user_id"
   end
 
   create_table "posts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -373,6 +383,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_16_140000) do
   add_foreign_key "guest_rsvps", "events", on_delete: :cascade
   add_foreign_key "guest_rsvps", "guests", on_delete: :cascade
   add_foreign_key "notifications", "users", on_delete: :cascade
+  add_foreign_key "plus_ones", "events", on_delete: :cascade
+  add_foreign_key "plus_ones", "users", on_delete: :cascade
   add_foreign_key "posts", "users", on_delete: :cascade
   add_foreign_key "proposed_times", "events"
   add_foreign_key "proposed_times_guests", "guests", on_delete: :cascade

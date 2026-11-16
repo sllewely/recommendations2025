@@ -148,7 +148,9 @@ class PostsController < ApplicationController
         { comments: [{ user: :groups }, { reactions: :user }] },
         { reactions: :user },
         { rsvps: { user: :groups } },
-        { proposed_times: :users },
+        { guest_rsvps: :guest },
+        { plus_ones: :user },
+        { proposed_times: [:users, :guests] },
       ])
       .order(created_at: :desc)
   end

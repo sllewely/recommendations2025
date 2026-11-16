@@ -19,6 +19,7 @@ Rails.application.routes.draw do
   get "posts/rss", to: "posts#rss", defaults: { format: "rss" }
   resources :posts
   resources :rsvps
+  resources :plus_ones, only: [:create, :destroy]
   resources :proposed_times, only: [] do
     member do
       post "vote"
@@ -66,6 +67,16 @@ Rails.application.routes.draw do
   resources :web_push_registrations
 
   namespace :public do
-    resources :events
+    resources :events do
+      member do
+        post "rsvp"
+      end
+    end
+    resources :proposed_times, only: [] do
+      member do
+        post "vote"
+        delete "vote", action: :unvote
+      end
+    end
   end
 end

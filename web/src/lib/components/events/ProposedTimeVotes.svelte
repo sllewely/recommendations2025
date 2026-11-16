@@ -2,7 +2,8 @@
 	import { Button } from "$lib/components/ui/button";
 	import { newToast, ToastType } from "$lib/state/toast.svelte.js";
 	import { parseAbsoluteToLocal } from "@internationalized/date";
-	import type { ProposedTime, User } from "$lib/api_calls/types";
+	import type { Guest, ProposedTime, User } from "$lib/api_calls/types";
+	import GuestRsvpDialog, { type GuestDetails } from "$lib/components/rsvp/GuestRsvpDialog.svelte";
 	import { onMount } from "svelte";
 	import { invalidateAll } from "$app/navigation";
 	import { Star } from "lucide-svelte";
@@ -12,6 +13,9 @@
 		my_user,
 		is_host = false,
 		chosen_proposed_time_id = null,
+		event_id,
+		guest_mode = false,
+		guest = null,
 	}: {
 		proposed_times: ProposedTime[];
 		// null when signed out; voting is hidden
@@ -19,6 +23,11 @@
 		// the host can choose the winning time
 		is_host?: boolean;
 		chosen_proposed_time_id?: string | null;
+		event_id: string;
+		// signed out: vote as a guest
+		guest_mode?: boolean;
+		// the guest remembered in this browser, if any
+		guest?: Guest | null;
 	} = $props();
 
 	let times = $state<ProposedTime[]>(proposed_times.map((pt) => ({ ...pt })));
@@ -38,7 +47,55 @@
 		);
 	});
 
-	const iVoted = (pt: ProposedTime) => !!my_user && !!pt.users?.some((u) => u.id === my_user.id);
+	const iVoted = (pt: ProposedTime) => {
+		if (my_user) return !!pt.users?.some((u) => u.id === my_user.id);
+		if (guest) return pt.guest_ids.includes(guest.id);
+		return false;
+	};
+
+	const voterNames = (pt: ProposedTime) => [
+		...(pt.users ?? []).map((u) => u.name),
+		...(pt.guests ?? []).map((g) => g.name),
+	];
+
+	// a guest without a name is asked for one before their first vote
+	let guest_dialog_open = $state(false);
+	let guest_vote_pt = $state<ProposedTime | null>(null);
+
+	const postGuestVote = async (pt: ProposedTime, vote: boolean, details?: GuestDetails) => {
+		const response = await fetch("/api/guest/vote", {
+			method: "POST",
+			body: JSON.stringify({ id: pt.id, vote, name: details?.name, email: details?.email }),
+			headers: { "Content-Type": "application/json" },
+		});
+		const res = await response.json();
+		if (!res.success) {
+			newToast("Error voting: " + res.message, ToastType.Error);
+			return null;
+		}
+		const guest_id = vote ? res.res.guest.id : guest?.id;
+		pt.guest_ids = vote
+			? [...pt.guest_ids, guest_id]
+			: pt.guest_ids.filter((id) => id !== guest_id);
+		pt.vote_count += vote ? 1 : -1;
+		return res;
+	};
+
+	const submitGuestDetails = async (details: GuestDetails): Promise<boolean> => {
+		if (!guest_vote_pt) return false;
+		const voted = await postGuestVote(guest_vote_pt, true, details);
+		if (!voted) return false;
+		if (details.status) {
+			await fetch("/api/guest/rsvp", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ event_id, ...details }),
+			});
+		}
+		// picks up the newly remembered guest
+		await invalidateAll();
+		return true;
+	};
 
 	// set right away when the host clicks, before the server confirms; undefined = no click pending
 	let pending_chosen_id = $state<string | null | undefined>(undefined);
@@ -76,6 +133,15 @@
 	};
 
 	const toggleVote = async (pt: ProposedTime) => {
+		if (guest_mode) {
+			if (guest) {
+				await postGuestVote(pt, !iVoted(pt));
+			} else {
+				guest_vote_pt = pt;
+				guest_dialog_open = true;
+			}
+			return;
+		}
 		if (!my_user) return;
 		const vote = !iVoted(pt);
 		const response = await fetch("/api/proposed_times/vote", {
@@ -90,7 +156,7 @@
 		}
 		const users = pt.users ?? [];
 		pt.users = vote ? [...users, my_user] : users.filter((u) => u.id !== my_user.id);
-		pt.vote_count = pt.users.length;
+		pt.vote_count += vote ? 1 : -1;
 	};
 </script>
 
@@ -131,9 +197,9 @@
 					<span class:font-bold={chosen} class:text-lg={chosen}>
 						{formatted[pt.id] ?? ""}
 					</span>
-					{#if pt.users && pt.users.length > 0}
+					{#if voterNames(pt).length > 0}
 						<span class="text-xs text-muted-foreground">
-							{pt.users.map((u) => u.name).join(", ")}
+							{voterNames(pt).join(", ")}
 						</span>
 					{/if}
 				</div>
@@ -143,7 +209,7 @@
 					{pt.vote_count}
 					{pt.vote_count === 1 ? "vote" : "votes"}
 				</span>
-				{#if my_user}
+				{#if my_user || guest_mode}
 					<Button
 						size="sm"
 						variant={iVoted(pt) ? "default" : "outline"}
@@ -156,6 +222,18 @@
 		</div>
 	{/each}
 </div>
+
+{#if guest_mode}
+	<GuestRsvpDialog
+		bind:open={guest_dialog_open}
+		{guest}
+		require_status={false}
+		title="Vote as a guest"
+		description="Tell the host who you are. No account needed."
+		submit_label="Vote"
+		onSubmit={submitGuestDetails}
+	/>
+{/if}
 
 <style>
 	.star-pop {

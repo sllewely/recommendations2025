@@ -139,6 +139,37 @@ export interface Event {
 	reactions: Reaction[];
 	proposed_times: ProposedTime[];
 	chosen_proposed_time_id: string | null;
+	guest_rsvps: GuestRsvp[];
+	plus_ones: PlusOne[];
+}
+
+// someone who rsvps or votes without an account
+export interface Guest {
+	id: string;
+	name: string;
+	email?: string | null;
+}
+
+export type GuestRsvpStatus = "going" | "interested" | "cant_go";
+export const GUEST_RSVP_STATUSES = ["going", "interested", "cant_go"] as const;
+
+export interface GuestRsvp {
+	id: string;
+	status: GuestRsvpStatus;
+	guest_id: string;
+	// only for signed in viewers
+	guest_name?: string;
+	// only for the host
+	guest_email?: string | null;
+}
+
+// someone coming along with a user; just a name
+export interface PlusOne {
+	id: string;
+	name: string;
+	user_id: string;
+	// the user who brought them
+	user_name: string;
 }
 
 // proposed times are out but the host hasn't chosen one yet
@@ -150,7 +181,9 @@ export interface ProposedTime {
 	id: string;
 	start_date_time: string;
 	vote_count: number;
+	guest_ids: string[];
 	users?: User[];
+	guests?: Guest[];
 }
 
 export type RsvpVariant = "not_rsvpd" | "going" | "interested" | "not_going" | "hide" | "invited";

@@ -3,6 +3,8 @@ class Event < ApplicationRecord
   belongs_to :user
   # create scopes for each rsvp status
   has_many :rsvps
+  has_many :guest_rsvps, dependent: :destroy
+  has_many :plus_ones, -> { order(:created_at) }, dependent: :destroy
   has_many :comments, as: :commentable, dependent: :destroy
   has_many :reactions, as: :reactable, dependent: :destroy
   has_many :proposed_times, -> { order(:start_date_time) }, dependent: :destroy

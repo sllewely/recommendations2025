@@ -148,8 +148,10 @@
 								{#if isSchedulingTime(data.event)}
 									<span class="font-semibold">Pending</span>
 								{:else if data.event.chosen_proposed_time_id}
-									<Star class="size-5 shrink-0 fill-yellow-400 text-yellow-500" />
-									<span class="font-semibold">Confirmed</span>
+									<span class="inline-flex flex-row items-center gap-1 font-semibold">
+										<Star class="size-5 shrink-0 fill-yellow-400 text-yellow-500" />
+										Confirmed
+									</span>
 								{/if}
 								{formattedStartDate}
 								at {formattedStartTime}
@@ -240,7 +242,6 @@
 
 <style>
 	.time-updated {
-		display: inline-block;
 		border-radius: 0.25rem;
 		animation: time-updated 1.4s ease-out;
 	}

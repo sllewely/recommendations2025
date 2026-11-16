@@ -67,6 +67,14 @@ class Notification < ApplicationRecord
     )
   end
 
+  def self.guest_rsvpd_to_event(guest, event)
+    Notification.new(
+      message: "#{guest.name} (guest) rsvp'd to your event",
+      notif_type: Notification.notif_types[:event_rsvp],
+      extras: { "event_id" => event.id }
+    )
+  end
+
   ###########################
   # Friendships
 

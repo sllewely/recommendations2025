@@ -1,5 +1,6 @@
 import * as api from "$lib/api_calls/api.svelte";
 import { getUser } from "$lib/api_calls/users.svelte";
+import { getGuest } from "$lib/server/guest_cookies";
 
 export async function load({ cookies, params }) {
 	const jwt = cookies.get("jwt");
@@ -25,6 +26,8 @@ export async function load({ cookies, params }) {
 
 	return {
 		event: event_response["res"],
+		// set when this browser has rsvp'd or voted as a guest
+		guest: getGuest(cookies),
 	};
 }
 

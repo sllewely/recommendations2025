@@ -10,6 +10,7 @@ class EventBlueprint < Blueprinter::Base
     fields :title, :description, :start_date_time, :event_type, :url, :user_id, :start_date_string,
            :start_time_string, :create_date_string, :create_time_string
     association :rsvps, blueprint: RsvpBlueprint, view: :unauthed
+    association :guest_rsvps, blueprint: GuestRsvpBlueprint, view: :unauthed
     association :user, blueprint: UserBlueprint, view: :unauthed
     association :comments, blueprint: CommentBlueprint, view: :unauthed
     association :reactions, blueprint: ReactionBlueprint
@@ -24,6 +25,7 @@ class EventBlueprint < Blueprinter::Base
     field :visibility, if: ->(_field, obj, options) { options[:current_user]&.id == obj.user_id }
     field :audience, if: ->(_field, obj, options) { options[:current_user]&.id == obj.user_id }
     association :rsvps, blueprint: RsvpBlueprint, view: :authed, options: ->(options) { options }
+    association :guest_rsvps, blueprint: GuestRsvpBlueprint, view: :authed, options: ->(options) { options }
     association :comments, blueprint: CommentBlueprint, view: :authed, options: ->(options) { options }
     association :user, blueprint: UserBlueprint, view: :authed, options: ->(options) { options }
     association :proposed_times, blueprint: ProposedTimeBlueprint, view: :authed

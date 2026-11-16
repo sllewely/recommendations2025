@@ -9,6 +9,7 @@ interface RequestOptions<T = unknown> {
 	path: string;
 	data?: T;
 	token?: string;
+	headers?: Record<string, string>;
 }
 
 /**
@@ -32,8 +33,9 @@ async function send<T = unknown, D = unknown>({
 	path,
 	data,
 	token,
+	headers: extra_headers,
 }: RequestOptions<D>): Promise<ApiResponse<T>> {
-	const headers = new Headers();
+	const headers = new Headers(extra_headers);
 
 	const opts: RequestInit = {
 		method,
@@ -98,8 +100,12 @@ export function get<T = unknown>(path: string, token?: string): Promise<ApiRespo
 /**
  * Makes a DELETE request to the API
  */
-export function del<T = unknown>(path: string, token?: string): Promise<ApiResponse<T>> {
-	return send<T>({ method: "DELETE", path, token });
+export function del<T = unknown>(
+	path: string,
+	token?: string,
+	headers?: Record<string, string>,
+): Promise<ApiResponse<T>> {
+	return send<T>({ method: "DELETE", path, token, headers });
 }
 
 /**
@@ -109,8 +115,9 @@ export function post<T = unknown, D = unknown>(
 	path: string,
 	data: D,
 	token?: string,
+	headers?: Record<string, string>,
 ): Promise<ApiResponse<T>> {
-	return send<T, D>({ method: "POST", path, data, token });
+	return send<T, D>({ method: "POST", path, data, token, headers });
 }
 
 /**

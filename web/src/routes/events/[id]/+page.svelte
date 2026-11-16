@@ -13,19 +13,22 @@
 	import RsvpBadge from "$lib/components/ui/badge/RsvpBadge.svelte";
 	import { parseAbsoluteToLocal } from "@internationalized/date";
 	import { onMount } from "svelte";
-	import { isSchedulingTime, type Event, type User } from "$lib/api_calls/types";
+	import { isSchedulingTime, type Event, type Guest, type User } from "$lib/api_calls/types";
 	import { Separator } from "$lib/components/ui/separator";
 	import * as Select from "$lib/components/ui/select/index.js";
 	import Commentable from "$lib/components/posts/Commentable.svelte";
 	import SelectRsvp from "$lib/components/rsvp/SelectRsvp.svelte";
 	import CalendarCopy from "$lib/CalendarCopy.svelte";
 	import ProposedTimeVotes from "$lib/components/events/ProposedTimeVotes.svelte";
+	import GuestRsvp from "$lib/components/rsvp/GuestRsvp.svelte";
 
 	interface Props {
 		data: {
 			event: Event;
 			user: User;
 			my_user_id: string;
+			// signed out: the guest remembered in this browser, if any
+			guest?: Guest | null;
 		};
 	}
 
@@ -190,8 +193,11 @@
 								<SelectRsvp rsvp={current_user_rsvp} event_id={data.event.id} />
 							</div>
 						{:else}
-							<RsvpBadge rsvp={{ status: "not_rsvpd" }} />
-							<span><Link url="/sign_in">Sign in to rsvp</Link></span>
+							<GuestRsvp
+								event_id={data.event.id}
+								guest={data.guest ?? null}
+								guest_rsvps={data.event.guest_rsvps ?? []}
+							/>
 						{/if}
 					</div>
 
@@ -202,6 +208,9 @@
 							my_user={signed_in ? (data.user ?? null) : null}
 							is_host={my_user_id === data.event.user.id}
 							chosen_proposed_time_id={data.event.chosen_proposed_time_id}
+							event_id={data.event.id}
+							guest_mode={!signed_in}
+							guest={signed_in ? null : (data.guest ?? null)}
 						/>
 					{/if}
 
@@ -219,9 +228,23 @@
 									</div>
 								</div>
 							{/each}
+							{#each data.event.guest_rsvps ?? [] as guest_rsvp}
+								<div class="flex flex-row justify-between">
+									<div>
+										{guest_rsvp.guest_name}
+										<span class="text-xs text-muted-foreground">guest</span>
+										{#if guest_rsvp.guest_email}
+											<span class="text-xs text-muted-foreground">· {guest_rsvp.guest_email}</span>
+										{/if}
+									</div>
+									<div>
+										<RsvpBadge rsvp={guest_rsvp} />
+									</div>
+								</div>
+							{/each}
 						{:else}
 							<span><Link url="/sign_in">Sign in to see who's coming</Link></span>
-							<span>Rsvps: {data.event.rsvps.length}</span>
+							<span>Rsvps: {data.event.rsvps.length + (data.event.guest_rsvps?.length ?? 0)}</span>
 						{/if}
 					</div>
 				</Card.Content>

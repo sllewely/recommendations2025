@@ -66,6 +66,16 @@ Rails.application.routes.draw do
   resources :web_push_registrations
 
   namespace :public do
-    resources :events
+    resources :events do
+      member do
+        post "rsvp"
+      end
+    end
+    resources :proposed_times, only: [] do
+      member do
+        post "vote"
+        delete "vote", action: :unvote
+      end
+    end
   end
 end

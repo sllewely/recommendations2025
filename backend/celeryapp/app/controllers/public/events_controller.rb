@@ -5,7 +5,7 @@ class Public::EventsController < ApplicationController
 
   def show
     # Anyone can access an event with the link
-    @event = Event.includes(:guest_rsvps, proposed_times: [:users, :guests]).find_by(id: params[:id])
+    @event = Event.includes(rsvps: :user, guest_rsvps: :guest, proposed_times: [:users, :guests]).find_by(id: params[:id])
 
     if @event
       render json: EventBlueprint.render(@event, view: :unauthed), status: :ok
@@ -33,7 +33,7 @@ class Public::EventsController < ApplicationController
     PushNotification.send_push_notification(
       @event.user,
       "New rsvp",
-      "#{current_guest.name} (guest) rsvp'd to your event #{@event.title}",
+      "#{current_guest.name} rsvp'd to your event #{@event.title}",
       "/events/#{@event.id}"
     )
 

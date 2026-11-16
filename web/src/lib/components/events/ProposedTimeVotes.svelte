@@ -55,7 +55,7 @@
 
 	const voterNames = (pt: ProposedTime) => [
 		...(pt.users ?? []).map((u) => u.name),
-		...(pt.guests ?? []).map((g) => `${g.name} (guest)`),
+		...(pt.guests ?? []).map((g) => g.name),
 	];
 
 	// a guest without a name is asked for one before their first vote

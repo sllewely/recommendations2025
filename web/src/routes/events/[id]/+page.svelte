@@ -217,35 +217,30 @@
 					<Separator class="my-6" />
 					<div class="">
 						<span class="text-xl">Rsvps</span>
-						{#if signed_in}
-							{#each data.event.rsvps as rsvp}
-								<div class="flex flex-row justify-between">
-									<div>
-										{rsvp.user.name}
-									</div>
-									<div>
-										<RsvpBadge {rsvp} />
-									</div>
+						{#each data.event.rsvps as rsvp}
+							<div class="flex flex-row justify-between">
+								<div>
+									{rsvp.user.name}
 								</div>
-							{/each}
-							{#each data.event.guest_rsvps ?? [] as guest_rsvp}
-								<div class="flex flex-row justify-between">
-									<div>
-										{guest_rsvp.guest_name}
-										<span class="text-xs text-muted-foreground">guest</span>
-										{#if guest_rsvp.guest_email}
-											<span class="text-xs text-muted-foreground">· {guest_rsvp.guest_email}</span>
-										{/if}
-									</div>
-									<div>
-										<RsvpBadge rsvp={guest_rsvp} />
-									</div>
+								<div>
+									<RsvpBadge {rsvp} />
 								</div>
-							{/each}
-						{:else}
-							<span><Link url="/sign_in">Sign in to see who's coming</Link></span>
-							<span>Rsvps: {data.event.rsvps.length + (data.event.guest_rsvps?.length ?? 0)}</span>
-						{/if}
+							</div>
+						{/each}
+						{#each data.event.guest_rsvps ?? [] as guest_rsvp}
+							<div class="flex flex-row justify-between">
+								<div>
+									{guest_rsvp.guest_name}
+									<span class="text-xs text-muted-foreground">guest</span>
+									{#if guest_rsvp.guest_email}
+										<span class="text-xs text-muted-foreground">· {guest_rsvp.guest_email}</span>
+									{/if}
+								</div>
+								<div>
+									<RsvpBadge rsvp={guest_rsvp} />
+								</div>
+							</div>
+						{/each}
 					</div>
 				</Card.Content>
 			</Card.Root>

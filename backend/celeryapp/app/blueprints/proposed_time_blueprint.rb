@@ -10,11 +10,13 @@ class ProposedTimeBlueprint < Blueprinter::Base
     proposed_time.guests.map(&:id)
   end
 
+  # anyone with the event link can see who voted
+  association :users, blueprint: UserBlueprint, view: :unauthed
+  association :guests, blueprint: GuestBlueprint
+
   view :unauthed do
   end
 
   view :authed do
-    association :users, blueprint: UserBlueprint, view: :unauthed
-    association :guests, blueprint: GuestBlueprint
   end
 end

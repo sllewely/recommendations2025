@@ -70,7 +70,7 @@ RSpec.describe "Public/GuestRsvps", type: :request do
       post "/public/events/#{event.id}/rsvp", params: { name: 'Sam', status: 'going' }
 
       notification = event.user.notifications.last
-      expect(notification.message).to include('Sam (guest)')
+      expect(notification.message).to eq("Sam rsvp'd to your event")
       expect(notification.extras['event_id']).to eq(event.id)
     end
 
@@ -122,14 +122,23 @@ RSpec.describe "Public/GuestRsvps", type: :request do
       @headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{auth_token}" }
     end
 
-    it 'the public event has guest rsvps without names' do
-      guest_rsvp = create(:guest_rsvp)
+    it 'the public event shows who rsvpd and voted, but not emails' do
+      event = create(:event)
+      guest_rsvp = create(:guest_rsvp, event: event, guest: create(:guest, email: 'sam@example.com'))
+      rsvp = create(:rsvp, event: event)
+      proposed_time = create(:proposed_time, event: event)
+      create(:proposed_time_user, proposed_time: proposed_time, user: rsvp.user)
+      create(:proposed_time_guest, proposed_time: proposed_time, guest: guest_rsvp.guest)
 
-      get "/public/events/#{guest_rsvp.event.id}"
+      get "/public/events/#{event.id}"
 
       res = JSON.parse(response.body)
-      expect(res['guest_rsvps'].first['guest_id']).to eq(guest_rsvp.guest.id)
-      expect(res['guest_rsvps'].first).not_to have_key('guest_name')
+      expect(res['guest_rsvps'].first['guest_name']).to eq(guest_rsvp.guest.name)
+      expect(res['guest_rsvps'].first).not_to have_key('guest_email')
+      expect(res['rsvps'].first['user']['name']).to eq(rsvp.user.name)
+      expect(res['proposed_times'].first['users'].first['name']).to eq(rsvp.user.name)
+      expect(res['proposed_times'].first['guests'].first['name']).to eq(guest_rsvp.guest.name)
+      expect(response.body).not_to include('sam@example.com')
     end
 
     it 'signed in viewers see guest names but not emails' do

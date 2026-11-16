@@ -141,6 +141,10 @@ export interface Event {
 	chosen_proposed_time_id: string | null;
 }
 
+// proposed times are out but the host hasn't chosen one yet
+export const isSchedulingTime = (event: Event): boolean =>
+	(event.proposed_times?.length ?? 0) > 0 && !event.chosen_proposed_time_id;
+
 // a candidate start time for an event, voted on by users
 export interface ProposedTime {
 	id: string;

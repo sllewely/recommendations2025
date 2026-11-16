@@ -3,7 +3,7 @@
 	import LinkButton from "$lib/components/text/LinkButton.svelte";
 	import { newToast, ToastType } from "$lib/state/toast.svelte.js";
 	import { goto, invalidate } from "$app/navigation";
-	import { MessageCircleMore } from "@lucide/svelte";
+	import { MessageCircleMore, Star } from "@lucide/svelte";
 	import { Button } from "$lib/components/ui/button";
 	import { current_user, isSignedIn } from "$lib/state/current_user.svelte";
 	import * as Card from "$lib/components/ui/card/index.js";
@@ -13,7 +13,7 @@
 	import RsvpBadge from "$lib/components/ui/badge/RsvpBadge.svelte";
 	import { parseAbsoluteToLocal } from "@internationalized/date";
 	import { onMount } from "svelte";
-	import type { Event, User } from "$lib/api_calls/types";
+	import { isSchedulingTime, type Event, type User } from "$lib/api_calls/types";
 	import { Separator } from "$lib/components/ui/separator";
 	import * as Select from "$lib/components/ui/select/index.js";
 	import Commentable from "$lib/components/posts/Commentable.svelte";
@@ -141,7 +141,16 @@
 					{/if}
 					<Card.Description>
 						{#key start_time_updates}
-							<span class:time-updated={start_time_updates > 0}>
+							<span
+								class="inline-flex flex-row items-center gap-1"
+								class:time-updated={start_time_updates > 0}
+							>
+								{#if isSchedulingTime(data.event)}
+									<span class="font-semibold">Pending</span>
+								{:else if data.event.chosen_proposed_time_id}
+									<Star class="size-5 shrink-0 fill-yellow-400 text-yellow-500" />
+									<span class="font-semibold">Confirmed</span>
+								{/if}
 								{formattedStartDate}
 								at {formattedStartTime}
 							</span>

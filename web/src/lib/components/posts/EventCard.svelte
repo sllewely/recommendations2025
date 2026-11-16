@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { parseAbsolute, parseAbsoluteToLocal } from "@internationalized/date";
 	import { current_user } from "$lib/state/current_user.svelte";
-	import type { Event } from "$lib/api_calls/types";
+	import { isSchedulingTime, type Event } from "$lib/api_calls/types";
 	import RsvpBadge from "$lib/components/ui/badge/RsvpBadge.svelte";
 	import MarkedDownPost from "$lib/components/posts/MarkedDownPost.svelte";
 	import TruncatedContent from "$lib/components/posts/TruncatedContent.svelte";
@@ -79,7 +79,11 @@
 				{/if}
 				<div class="flex flex-row items-center justify-between gap-2">
 					<Card.Description>
-						Happening {briefStartDateTime}
+						{#if isSchedulingTime(feed_item)}
+							Scheduling a time
+						{:else}
+							Happening {briefStartDateTime}
+						{/if}
 					</Card.Description>
 					<RsvpBadge rsvp={current_user_rsvp} />
 				</div>

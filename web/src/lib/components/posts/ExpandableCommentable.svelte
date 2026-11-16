@@ -23,7 +23,7 @@
 		all_comments = new_comments;
 	};
 
-	let remove_comment = (id: number) => {
+	let remove_comment = (id: string) => {
 		all_comments = all_comments.filter((c) => c.id !== id);
 	};
 

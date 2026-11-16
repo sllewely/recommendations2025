@@ -75,6 +75,21 @@ RSpec.describe "Comments", type: :request do
       expect(res[3]['commentable_id']).to eq(event.id)
     end
 
+    it 'returns reactions on comments' do
+      post1 = create(:post)
+      existing = create(:comment, :for_post, commentable: post1)
+      create(:reaction, react: 'heart', reactable: existing)
+
+      post "/comments", params: { body: 'hoo boy I sure love stew', commentable_id: post1.id, commentable_type: "Post" }, headers: @headers
+
+      expect(response).to have_http_status(:created)
+      res = JSON.parse(response.body)
+      expect(res[0]['class_name']).to eq('Comment')
+      expect(res[0]['reactions'].size).to eq(1)
+      expect(res[0]['reactions'][0]['react']).to eq('heart')
+      expect(res[1]['reactions']).to eq([])
+    end
+
     it 'in app notifications are sent to people when I comment' do
       user = create(:user)
       event = create(:event, user: user)

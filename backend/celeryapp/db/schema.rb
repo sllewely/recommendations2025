@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_04_130000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_15_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -23,20 +23,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_04_130000) do
     t.index ["user_id"], name: "index_circles_on_user_id"
   end
 
-  create_table "comments", force: :cascade do |t|
+  create_table "comments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.text "body", null: false
     t.uuid "commentable_id"
     t.string "commentable_type", null: false
     t.datetime "created_at", null: false
     t.integer "numeric_commentable_id"
+    t.bigint "numeric_id", default: 0
     t.integer "numeric_user_id"
     t.datetime "updated_at", null: false
     t.uuid "user_id"
-    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.index ["commentable_id", "commentable_type"], name: "index_comments_on_commentable_id_and_commentable_type"
+    t.index ["id"], name: "index_comments_on_id", unique: true
     t.index ["numeric_commentable_id", "commentable_type"], name: "index_comments_on_numeric_commentable_id_and_commentable_type"
     t.index ["numeric_user_id"], name: "index_comments_on_numeric_user_id"
-    t.index ["uuid"], name: "index_comments_on_uuid", unique: true
   end
 
   create_table "events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

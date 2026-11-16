@@ -50,7 +50,7 @@ class CommentsController < ApplicationController
     rescue ActiveRecord::RecordInvalid => e
       render json: { error: e.message }, status: :unprocessable_content and return
     end
-    render json: CommentBlueprint.render(commentable.comments.order(:created_at), view: :authed), status: :created
+    render json: CommentBlueprint.render(commentable.comments.includes(:user, reactions: :user).order(:created_at), view: :authed), status: :created
   end
 
   private

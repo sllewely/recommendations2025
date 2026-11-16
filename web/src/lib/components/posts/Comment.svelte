@@ -7,6 +7,7 @@
 	import { current_user } from "$lib/state/current_user.svelte";
 	import { newToast, ToastType } from "$lib/state/toast.svelte";
 	import { X } from "@lucide/svelte";
+	import Reactions from "$lib/components/reactions/Reactions.svelte";
 
 	// ondelete is called with the comment id after it is successfully deleted
 	const { comment, truncate = false, ondelete = undefined } = $props();
@@ -102,5 +103,10 @@
 				</TruncatedContent>
 			</div>
 		</div>
+		{#if comment.reactions}
+			<div class="flex justify-end">
+				<Reactions feedable={comment} />
+			</div>
+		{/if}
 	</article>
 </div>

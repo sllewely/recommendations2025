@@ -3,7 +3,7 @@
 	import LinkButton from "$lib/components/text/LinkButton.svelte";
 	import { newToast, ToastType } from "$lib/state/toast.svelte.js";
 	import { goto, invalidate } from "$app/navigation";
-	import { MessageCircleMore } from "@lucide/svelte";
+	import { MessageCircleMore, Star } from "@lucide/svelte";
 	import { Button } from "$lib/components/ui/button";
 	import { current_user, isSignedIn } from "$lib/state/current_user.svelte";
 	import * as Card from "$lib/components/ui/card/index.js";
@@ -13,12 +13,13 @@
 	import RsvpBadge from "$lib/components/ui/badge/RsvpBadge.svelte";
 	import { parseAbsoluteToLocal } from "@internationalized/date";
 	import { onMount } from "svelte";
-	import type { Event, User } from "$lib/api_calls/types";
+	import { isSchedulingTime, type Event, type User } from "$lib/api_calls/types";
 	import { Separator } from "$lib/components/ui/separator";
 	import * as Select from "$lib/components/ui/select/index.js";
 	import Commentable from "$lib/components/posts/Commentable.svelte";
 	import SelectRsvp from "$lib/components/rsvp/SelectRsvp.svelte";
 	import CalendarCopy from "$lib/CalendarCopy.svelte";
+	import ProposedTimeVotes from "$lib/components/events/ProposedTimeVotes.svelte";
 
 	interface Props {
 		data: {
@@ -65,6 +66,16 @@
 	let localizedStartTime = $derived(parseAbsoluteToLocal(data.event.start_date_time));
 	let formattedStartDate = $state();
 	let formattedStartTime = $state();
+	// bumps when the start time or confirmed status changes on the page (the host clicked a star)
+	let start_time_updates = $state(0);
+	let previous_schedule: string | null = null;
+	$effect(() => {
+		const schedule = `${data.event.start_date_time}|${data.event.chosen_proposed_time_id}`;
+		if (previous_schedule !== null && previous_schedule !== schedule) {
+			start_time_updates += 1;
+		}
+		previous_schedule = schedule;
+	});
 
 	let signed_in = $state(false);
 	onMount(() => {
@@ -76,20 +87,22 @@
 			timeStyle: "short",
 			timeZone: localizedCreateTime.timeZone,
 		}).format(localizedCreateTime.toDate());
+	});
 
-		localizedStartTime = parseAbsoluteToLocal(data.event.start_date_time);
+	// an effect (not onMount) so the start time updates when the host chooses a proposed time
+	$effect(() => {
 		formattedStartDate = new Intl.DateTimeFormat("en-US", {
 			weekday: "short",
 			month: "short",
 			year: "numeric",
 			day: "numeric",
-			timeZone: localizedCreateTime.timeZone,
+			timeZone: localizedStartTime.timeZone,
 		}).format(localizedStartTime.toDate());
 		formattedStartTime = new Intl.DateTimeFormat("en-US", {
 			hour: "numeric",
 			minute: "numeric",
 			hour12: true,
-			timeZone: localizedCreateTime.timeZone,
+			timeZone: localizedStartTime.timeZone,
 		}).format(localizedStartTime.toDate());
 	});
 </script>
@@ -127,8 +140,23 @@
 						<Card.Title>{data.event.title}</Card.Title>
 					{/if}
 					<Card.Description>
-						{formattedStartDate}
-						at {formattedStartTime}
+						{#key start_time_updates}
+							<span
+								class="inline-flex flex-row items-center gap-1"
+								class:time-updated={start_time_updates > 0}
+							>
+								{#if isSchedulingTime(data.event)}
+									<span class="font-semibold">Pending</span>
+								{:else if data.event.chosen_proposed_time_id}
+									<span class="inline-flex flex-row items-center gap-1 font-semibold">
+										<Star class="size-5 shrink-0 fill-yellow-400 text-yellow-500" />
+										Confirmed
+									</span>
+								{/if}
+								{formattedStartDate}
+								at {formattedStartTime}
+							</span>
+						{/key}
 					</Card.Description>
 				</Card.Header>
 				<Card.Content>
@@ -167,6 +195,16 @@
 						{/if}
 					</div>
 
+					{#if data.event.proposed_times?.length > 0}
+						<Separator class="my-6" />
+						<ProposedTimeVotes
+							proposed_times={data.event.proposed_times}
+							my_user={signed_in ? (data.user ?? null) : null}
+							is_host={my_user_id === data.event.user.id}
+							chosen_proposed_time_id={data.event.chosen_proposed_time_id}
+						/>
+					{/if}
+
 					<Separator class="my-6" />
 					<div class="">
 						<span class="text-xl">Rsvps</span>
@@ -201,3 +239,31 @@
 		{/if}
 	</div>
 </div>
+
+<style>
+	.time-updated {
+		border-radius: 0.25rem;
+		animation: time-updated 1.4s ease-out;
+	}
+
+	@keyframes time-updated {
+		0% {
+			transform: scale(1);
+			background-color: transparent;
+		}
+		25% {
+			transform: scale(1.15);
+			background-color: rgb(250 204 21 / 0.6);
+		}
+		100% {
+			transform: scale(1);
+			background-color: transparent;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.time-updated {
+			animation: none;
+		}
+	}
+</style>

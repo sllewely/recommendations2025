@@ -137,6 +137,20 @@ export interface Event {
 	comments: Comment[];
 	rsvps: Rsvp[];
 	reactions: Reaction[];
+	proposed_times: ProposedTime[];
+	chosen_proposed_time_id: string | null;
+}
+
+// proposed times are out but the host hasn't chosen one yet
+export const isSchedulingTime = (event: Event): boolean =>
+	(event.proposed_times?.length ?? 0) > 0 && !event.chosen_proposed_time_id;
+
+// a candidate start time for an event, voted on by users
+export interface ProposedTime {
+	id: string;
+	start_date_time: string;
+	vote_count: number;
+	users?: User[];
 }
 
 export type RsvpVariant = "not_rsvpd" | "going" | "interested" | "not_going" | "hide" | "invited";

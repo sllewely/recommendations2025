@@ -50,6 +50,7 @@ export const actions = {
 				privacy_user_ids: form.data.privacy_user_ids,
 				privacy_circle_ids: form.data.privacy_circle_ids,
 				invited_friend_ids: form.data.invited_friend_ids,
+				proposed_times: form.data.proposed_times,
 			},
 			jwt,
 		);

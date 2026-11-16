@@ -14,6 +14,7 @@ export const eventsFormSchema = z.object({
 	privacy_user_ids: z.string().array().default([]),
 	privacy_circle_ids: z.string().array().default([]),
 	invited_friend_ids: z.string().array().default([]),
+	proposed_times: z.string().array().default([]),
 	id: z.string().nullable(),
 });
 

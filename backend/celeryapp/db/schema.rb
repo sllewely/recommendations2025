@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_15_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_16_130000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -41,6 +41,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_15_120000) do
 
   create_table "events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "address"
+    t.uuid "chosen_proposed_time_id"
     t.datetime "created_at", null: false
     t.string "description"
     t.datetime "end_date_time"
@@ -52,6 +53,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_15_120000) do
     t.datetime "updated_at", null: false
     t.string "url"
     t.uuid "user_id"
+    t.index ["chosen_proposed_time_id"], name: "index_events_on_chosen_proposed_time_id"
     t.index ["end_date_time"], name: "index_events_on_end_date_time"
     t.index ["event_type"], name: "index_events_on_event_type"
     t.index ["id"], name: "index_events_on_id", unique: true
@@ -168,6 +170,25 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_15_120000) do
     t.uuid "user_id"
     t.index ["id"], name: "index_posts_on_id", unique: true
     t.index ["numeric_user_id"], name: "index_posts_on_numeric_user_id"
+  end
+
+  create_table "proposed_times", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.uuid "event_id", null: false
+    t.datetime "start_date_time", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id", "start_date_time"], name: "index_proposed_times_on_event_id_and_start_date_time", unique: true
+    t.index ["event_id"], name: "index_proposed_times_on_event_id"
+  end
+
+  create_table "proposed_times_users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.uuid "proposed_time_id", null: false
+    t.datetime "updated_at", null: false
+    t.uuid "user_id", null: false
+    t.index ["proposed_time_id", "user_id"], name: "index_proposed_times_users_on_proposed_time_id_and_user_id", unique: true
+    t.index ["proposed_time_id"], name: "index_proposed_times_users_on_proposed_time_id"
+    t.index ["user_id"], name: "index_proposed_times_users_on_user_id"
   end
 
   create_table "reactions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -308,6 +329,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_15_120000) do
 
   add_foreign_key "circles", "users"
   add_foreign_key "comments", "users", on_delete: :cascade
+  add_foreign_key "events", "proposed_times", column: "chosen_proposed_time_id", on_delete: :nullify
   add_foreign_key "events", "users", on_delete: :cascade
   add_foreign_key "feed_item_audiences", "circles", on_delete: :cascade
   add_foreign_key "feed_item_audiences", "feed_items", on_delete: :cascade
@@ -320,6 +342,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_15_120000) do
   add_foreign_key "group_users", "users"
   add_foreign_key "notifications", "users", on_delete: :cascade
   add_foreign_key "posts", "users", on_delete: :cascade
+  add_foreign_key "proposed_times", "events"
+  add_foreign_key "proposed_times_users", "proposed_times"
+  add_foreign_key "proposed_times_users", "users"
   add_foreign_key "reactions", "users"
   add_foreign_key "recommendations", "users", on_delete: :cascade
   add_foreign_key "rsvps", "events", on_delete: :cascade

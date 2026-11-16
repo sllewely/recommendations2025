@@ -5,9 +5,12 @@ class Event < ApplicationRecord
   has_many :rsvps
   has_many :comments, as: :commentable, dependent: :destroy
   has_many :reactions, as: :reactable, dependent: :destroy
+  has_many :proposed_times, -> { order(:start_date_time) }, dependent: :destroy
+  belongs_to :chosen_proposed_time, class_name: "ProposedTime", optional: true
   include Feedable
 
   before_save :ensure_end_time
+  before_save :clear_moved_chosen_proposed_time
 
   validates :title, presence: true
   validates :start_date_time, presence: true
@@ -68,6 +71,32 @@ class Event < ApplicationRecord
     get_time_string(created_at)
   end
 
+  # replaces the proposed times with the given start times, keeping votes on times that remain
+  def sync_proposed_times!(start_date_times)
+    times = Array(start_date_times).filter_map { |t| Time.zone.parse(t.to_s) rescue nil }.uniq(&:to_i)
+    proposed_times.each do |proposed_time|
+      proposed_time.destroy! unless times.any? { |t| t.to_i == proposed_time.start_date_time.to_i }
+    end
+    times.each do |t|
+      proposed_times.create!(start_date_time: t) unless proposed_times.any? { |pt| !pt.destroyed? && pt.start_date_time.to_i == t.to_i }
+    end
+    proposed_times.reset
+  end
+
+  # the host picks a winning proposed time, which becomes the event's start time
+  def choose_proposed_time!(proposed_time)
+    old_start = start_date_time
+    # keep the event's length, unless the end was just the default end of day
+    if end_date_time && end_date_time.to_i != old_start.end_of_day.to_i
+      self.end_date_time = proposed_time.start_date_time + (end_date_time - old_start)
+    else
+      self.end_date_time = nil
+    end
+    self.start_date_time = proposed_time.start_date_time
+    self.chosen_proposed_time = proposed_time
+    save!
+  end
+
   def total_rsvp
     self.rsvps.count
   end
@@ -77,5 +106,11 @@ class Event < ApplicationRecord
   # gives it an end time if it doesn't have one
   def ensure_end_time
     self.end_date_time ||= self.start_date_time.end_of_day
+  end
+
+  # the winner no longer applies if the start time was moved off of it
+  def clear_moved_chosen_proposed_time
+    return if chosen_proposed_time.nil?
+    self.chosen_proposed_time = nil unless chosen_proposed_time.start_date_time.to_i == start_date_time.to_i
   end
 end

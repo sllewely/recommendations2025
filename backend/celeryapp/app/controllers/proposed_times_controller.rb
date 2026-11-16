@@ -13,14 +13,24 @@ class ProposedTimesController < ApplicationController
 
   def choose
     event = @proposed_time.event
-    if event.user_id != current_user.id
-      render json: { error: "only the host can choose a time" }, status: :forbidden and return
-    end
+    return render_host_only if event.user_id != current_user.id
     event.choose_proposed_time!(@proposed_time)
     render json: EventBlueprint.render(event, view: :authed, current_user: current_user), status: :ok
   end
 
+  # back to pending; the start time stays where it is
+  def unchoose
+    event = @proposed_time.event
+    return render_host_only if event.user_id != current_user.id
+    event.update!(chosen_proposed_time: nil) if event.chosen_proposed_time_id == @proposed_time.id
+    render json: EventBlueprint.render(event, view: :authed, current_user: current_user), status: :ok
+  end
+
   private
+
+  def render_host_only
+    render json: { error: "only the host can choose a time" }, status: :forbidden
+  end
 
   def set_proposed_time
     # anyone with the link can see an event, so anyone signed in can vote on its times

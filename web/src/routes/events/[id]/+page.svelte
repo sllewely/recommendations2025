@@ -66,15 +66,15 @@
 	let localizedStartTime = $derived(parseAbsoluteToLocal(data.event.start_date_time));
 	let formattedStartDate = $state();
 	let formattedStartTime = $state();
-	// bumps when the start time changes on the page (the host chose a proposed time)
+	// bumps when the start time or confirmed status changes on the page (the host clicked a star)
 	let start_time_updates = $state(0);
-	let previous_start_date_time: string | null = null;
+	let previous_schedule: string | null = null;
 	$effect(() => {
-		const start_date_time = data.event.start_date_time;
-		if (previous_start_date_time !== null && previous_start_date_time !== start_date_time) {
+		const schedule = `${data.event.start_date_time}|${data.event.chosen_proposed_time_id}`;
+		if (previous_schedule !== null && previous_schedule !== schedule) {
 			start_time_updates += 1;
 		}
-		previous_start_date_time = start_date_time;
+		previous_schedule = schedule;
 	});
 
 	let signed_in = $state(false);

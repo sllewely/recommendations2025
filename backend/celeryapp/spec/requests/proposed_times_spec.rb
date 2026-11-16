@@ -141,6 +141,31 @@ RSpec.describe "ProposedTimes", type: :request do
       expect(event.reload.chosen_proposed_time_id).to be_nil
     end
 
+    it 'the host unchooses a time, keeping the start time' do
+      event = create(:event, user: @my_user)
+      proposed_time = create(:proposed_time, event: event)
+      event.choose_proposed_time!(proposed_time)
+
+      delete "/proposed_times/#{proposed_time.id}/choose", headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      expect(JSON.parse(response.body)['chosen_proposed_time_id']).to be_nil
+      event.reload
+      expect(event.chosen_proposed_time_id).to be_nil
+      expect(event.start_date_time.to_i).to eq(proposed_time.start_date_time.to_i)
+    end
+
+    it 'only the host can unchoose a time' do
+      event = create(:event)
+      proposed_time = create(:proposed_time, event: event)
+      event.choose_proposed_time!(proposed_time)
+
+      delete "/proposed_times/#{proposed_time.id}/choose", headers: @headers
+
+      expect(response).to have_http_status(:forbidden)
+      expect(event.reload.chosen_proposed_time_id).to eq(proposed_time.id)
+    end
+
     it 'clears the winner when the start time is moved off of it' do
       event = create(:event, user: @my_user)
       proposed_time = create(:proposed_time, event: event)

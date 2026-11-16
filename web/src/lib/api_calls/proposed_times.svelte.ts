@@ -38,3 +38,13 @@ export async function removeVoteForProposedTime(
 export async function chooseProposedTime(id: string, token: string): Promise<ApiResponse<Event>> {
 	return api.post<Event>(`${ENDPOINT}/${id}/choose`, {}, token);
 }
+
+/**
+ * Host unconfirms the chosen proposed time; the event goes back to pending
+ * @param id - Proposed time ID
+ * @param token - JWT token for authentication
+ * @returns Promise with the updated event or error. Returns 403 if not the host
+ */
+export async function unchooseProposedTime(id: string, token: string): Promise<ApiResponse<Event>> {
+	return api.del<Event>(`${ENDPOINT}/${id}/choose`, token);
+}

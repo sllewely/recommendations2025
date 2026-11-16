@@ -24,6 +24,7 @@ Rails.application.routes.draw do
       post "vote"
       delete "vote", action: :unvote
       post "choose"
+      delete "choose", action: :unchoose
     end
   end
   resources :users, only: [:index, :show, :update]

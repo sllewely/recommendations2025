@@ -40,34 +40,39 @@
 
 	const iVoted = (pt: ProposedTime) => !!my_user && !!pt.users?.some((u) => u.id === my_user.id);
 
-	// filled in right away when the host clicks, before the server confirms
-	let pending_chosen_id = $state<string | null>(null);
-	let chosen_id = $derived(pending_chosen_id ?? chosen_proposed_time_id);
-	// the star that should play its pop animation
-	let just_chosen_id = $state<string | null>(null);
+	// set right away when the host clicks, before the server confirms; undefined = no click pending
+	let pending_chosen_id = $state<string | null | undefined>(undefined);
+	let chosen_id = $derived(
+		pending_chosen_id === undefined ? chosen_proposed_time_id : pending_chosen_id,
+	);
+	// the star that should play its pop animation; pops re-keys it so it can replay
+	let just_clicked_id = $state<string | null>(null);
+	let pops = $state(0);
 	// leave room for the star column so times line up
 	let show_stars = $derived(is_host || !!chosen_id);
 
-	const chooseTime = async (pt: ProposedTime) => {
-		if (pt.id === chosen_id) return;
-		pending_chosen_id = pt.id;
-		just_chosen_id = pt.id;
+	// clicking the chosen star again unconfirms it
+	const toggleChosen = async (pt: ProposedTime) => {
+		const choose = pt.id !== chosen_id;
+		pending_chosen_id = choose ? pt.id : null;
+		just_clicked_id = pt.id;
+		pops += 1;
 		const response = await fetch("/api/proposed_times/choose", {
 			method: "POST",
-			body: JSON.stringify({ id: pt.id }),
+			body: JSON.stringify({ id: pt.id, choose }),
 			headers: { "Content-Type": "application/json" },
 		});
 		const res = await response.json();
 		if (!res.success) {
-			pending_chosen_id = null;
-			just_chosen_id = null;
+			pending_chosen_id = undefined;
+			just_clicked_id = null;
 			newToast("Error choosing a time: " + res.message, ToastType.Error);
 			return;
 		}
-		newToast("Event time updated!");
-		// reload the event so its start time shows the winner
+		newToast(choose ? "Event time confirmed!" : "Event time is pending again");
+		// reload the event so its start time and status update
 		await invalidateAll();
-		pending_chosen_id = null;
+		pending_chosen_id = undefined;
 	};
 
 	const toggleVote = async (pt: ProposedTime) => {
@@ -93,7 +98,7 @@
 	<span class="text-xl">Find a time</span>
 	<p class="text-xs font-light">
 		Vote for the times that work for you.{#if is_host}
-			Click a star to choose the winner.{/if}
+			Click a star to choose the winner, or click it again to unconfirm.{/if}
 	</p>
 	{#each times as pt (pt.id)}
 		{@const chosen = pt.id === chosen_id}
@@ -103,23 +108,24 @@
 		<div class="flex flex-row items-center justify-between gap-2">
 			<div class="flex flex-row items-center gap-3">
 				{#if show_stars}
-					<span class="shrink-0" class:star-pop={pt.id === just_chosen_id}>
-						{#if is_host}
-							<button
-								type="button"
-								class="block cursor-pointer rounded-full hover:scale-110 transition-transform disabled:cursor-default disabled:hover:scale-100"
-								aria-label={chosen ? "chosen time" : "choose this time"}
-								aria-pressed={chosen}
-								disabled={chosen}
-								onclick={() => chooseTime(pt)}
-							>
-								<Star class={star_class} />
-							</button>
-						{:else}
-							<!-- placeholder keeps the times aligned with the chosen one -->
-							<Star class={star_class} style={chosen ? "" : "visibility: hidden"} />
-						{/if}
-					</span>
+					{#key pt.id === just_clicked_id ? pops : 0}
+						<span class="shrink-0" class:star-pop={pt.id === just_clicked_id}>
+							{#if is_host}
+								<button
+									type="button"
+									class="block cursor-pointer rounded-full hover:scale-110 transition-transform"
+									aria-label={chosen ? "unconfirm this time" : "choose this time"}
+									aria-pressed={chosen}
+									onclick={() => toggleChosen(pt)}
+								>
+									<Star class={star_class} />
+								</button>
+							{:else}
+								<!-- placeholder keeps the times aligned with the chosen one -->
+								<Star class={star_class} style={chosen ? "" : "visibility: hidden"} />
+							{/if}
+						</span>
+					{/key}
 				{/if}
 				<div class="flex flex-col">
 					<span class:font-bold={chosen} class:text-lg={chosen}>

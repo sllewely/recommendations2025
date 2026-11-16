@@ -139,8 +139,9 @@
 				</div>
 			</div>
 		{:else}
-			<div class="text-left">
-				<div class="text-gray-500 dark:text-gray-400">
+			<!-- reactions sit in the bottom right corner, beside the body -->
+			<div class="flex items-end gap-2 text-left">
+				<div class="min-w-0 flex-1 text-gray-500 dark:text-gray-400">
 					<!-- ~2 lines: two 1.5rem lines plus the paragraph's top margin -->
 					<TruncatedContent
 						text={comment.body}
@@ -153,11 +154,11 @@
 						<MarkedDownPost captured_text={comment.body} />
 					</TruncatedContent>
 				</div>
-			</div>
-		{/if}
-		{#if comment.reactions}
-			<div class="flex justify-end">
-				<Reactions feedable={comment} />
+				{#if comment.reactions}
+					<div class="shrink-0 pb-1">
+						<Reactions feedable={comment} />
+					</div>
+				{/if}
 			</div>
 		{/if}
 	</article>

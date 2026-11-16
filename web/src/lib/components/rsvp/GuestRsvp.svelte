@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Button } from "$lib/components/ui/button";
 	import RsvpButton from "$lib/components/rsvp/RsvpButton.svelte";
+	import Link from "$lib/components/text/Link.svelte";
 	import GuestRsvpDialog, { type GuestDetails } from "$lib/components/rsvp/GuestRsvpDialog.svelte";
 	import { newToast, ToastType } from "$lib/state/toast.svelte";
 	import { invalidateAll } from "$app/navigation";
@@ -35,11 +36,6 @@
 		await invalidateAll();
 		return true;
 	};
-
-	const forget = async () => {
-		await fetch("/api/guest/forget", { method: "POST" });
-		await invalidateAll();
-	};
 </script>
 
 <div class="flex flex-row flex-wrap items-center gap-2">
@@ -50,10 +46,10 @@
 	{/if}
 	{#if guest}
 		<span class="text-xs text-muted-foreground">
-			RSVPing as {guest.name} ·
-			<button type="button" class="underline cursor-pointer" onclick={forget}>not you?</button>
+			RSVPing as {guest.name}
 		</span>
 	{/if}
+	<span class="text-xs"><Link url="/sign_in">Sign in</Link></span>
 </div>
 
 <GuestRsvpDialog bind:open {guest} current_status={my_rsvp?.status ?? null} onSubmit={rsvp} />

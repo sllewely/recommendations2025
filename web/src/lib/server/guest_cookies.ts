@@ -26,9 +26,3 @@ export function setGuestCookies(cookies: Cookies, guest: GuestWithToken) {
 		cookies.delete("guest_email", { path: "/" });
 	}
 }
-
-export function clearGuestCookies(cookies: Cookies) {
-	for (const name of ["guest_token", "guest_id", "guest_name", "guest_email"]) {
-		cookies.delete(name, { path: "/" });
-	}
-}

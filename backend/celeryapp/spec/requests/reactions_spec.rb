@@ -49,5 +49,19 @@ RSpec.describe "Reactions", type: :request do
       expect(response).to have_http_status(:unprocessable_content)
     end
 
+    it 'creates a reaction on a comment' do
+      comment = create(:comment, :for_post)
+
+      post "/reactions", params: { react: 'heart', reactable_type: 'Comment', reactable_id: comment.id }, headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      res = JSON.parse(response.body)
+      expect(res['react']).to eq('heart')
+      expect(res['reactable_type']).to eq('Comment')
+      expect(res['reactable_id']).to eq(comment.id)
+
+      expect(comment.reactions.size).to eq(1)
+    end
+
   end
 end

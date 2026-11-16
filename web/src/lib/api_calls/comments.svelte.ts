@@ -32,9 +32,20 @@ export async function createComment(
  * @returns Promise with updated comment data or error. Returns 404 if comment not found
  */
 export async function updateComment(
-	id: number,
+	id: string,
 	data: { body: string },
 	token: string,
 ): Promise<ApiResponse<Comment>> {
 	return api.patch<Comment>(`${ENDPOINT}/${id}`, data, token);
+}
+
+/**
+ * Deletes a comment
+ * Note: Only the comment owner can delete their comments
+ * @param id - Comment ID
+ * @param token - JWT token for authentication
+ * @returns Promise with success status. Returns 404 if comment not found or not owned
+ */
+export async function deleteComment(id: string, token: string): Promise<ApiResponse<void>> {
+	return api.del(`${ENDPOINT}/${id}`, token);
 }

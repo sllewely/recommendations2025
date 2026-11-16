@@ -62,7 +62,7 @@ class PostsController < ApplicationController
 
   def show
     post_id = params[:id]
-    @post = Post.includes(:user, comments: :user).find_by(id: post_id)
+    @post = Post.includes(:user, comments: [:user, { reactions: :user }]).find_by(id: post_id)
     if @post&.visible_to?(current_user)
       render json: PostBlueprint.render(
         @post,
@@ -145,7 +145,7 @@ class PostsController < ApplicationController
       .includes(feedable: [
         { feed_item: { feed_item_audiences: [:user, { circle: :members }] } },
         { user: :groups },
-        { comments: { user: :groups } },
+        { comments: [{ user: :groups }, { reactions: :user }] },
         { reactions: :user },
         { rsvps: { user: :groups } },
       ])

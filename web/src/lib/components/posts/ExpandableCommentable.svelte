@@ -23,6 +23,14 @@
 		all_comments = new_comments;
 	};
 
+	let remove_comment = (id: string) => {
+		all_comments = all_comments.filter((c) => c.id !== id);
+	};
+
+	let replace_comment = (updated: Comment) => {
+		all_comments = all_comments.map((c) => (c.id === updated.id ? updated : c));
+	};
+
 	let show_extra_comment = $state(true);
 
 	let expand_comments = () => {
@@ -45,14 +53,21 @@
 		</div>
 		<div>
 			{#if num_comments > 0 && show_extra_comment}
-				<CommentComponent comment={all_comments.at(-1)} truncate />
+				{#key all_comments.at(-1)?.id}
+					<CommentComponent
+						comment={all_comments.at(-1)}
+						truncate
+						ondelete={remove_comment}
+						onupdate={replace_comment}
+					/>
+				{/key}
 			{/if}
 		</div>
 		<Collapsible.Content>
 			<div>
 				<div>
-					{#each all_comments as comment}
-						<CommentComponent {comment} />
+					{#each all_comments as comment (comment.id)}
+						<CommentComponent {comment} ondelete={remove_comment} onupdate={replace_comment} />
 					{/each}
 				</div>
 			</div>

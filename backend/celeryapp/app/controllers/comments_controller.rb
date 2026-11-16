@@ -5,9 +5,20 @@ class CommentsController < ApplicationController
     if @comment.nil?
       render json: { error: "comment not found" }, status: :not_found and return
     end
-    @comment.update(body: params[:body])
+    unless @comment.update(body: params[:body])
+      render json: { error: @comment.errors.full_messages.to_sentence }, status: :unprocessable_content and return
+    end
     render json: CommentBlueprint.render(@comment, view: :authed), status: :ok
 
+  end
+
+  def destroy
+    @comment = current_user.comments.find_by(id: params[:id])
+    if @comment.nil?
+      render json: { error: "comment not found" }, status: :not_found and return
+    end
+    @comment.destroy
+    head :no_content
   end
 
   def create
@@ -41,7 +52,7 @@ class CommentsController < ApplicationController
     rescue ActiveRecord::RecordInvalid => e
       render json: { error: e.message }, status: :unprocessable_content and return
     end
-    render json: CommentBlueprint.render(commentable.comments.order(:created_at), view: :authed), status: :created
+    render json: CommentBlueprint.render(commentable.comments.includes(:user, reactions: :user).order(:created_at), view: :authed), status: :created
   end
 
   private

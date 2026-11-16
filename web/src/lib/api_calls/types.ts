@@ -55,13 +55,15 @@ export interface Post {
 }
 
 export interface Comment {
-	id: number;
+	id: string;
 	created_at: string;
 	updated_at: string;
 	commentable_id: number;
 	user_id: number;
 	body: string;
 	user?: User;
+	class_name: "Comment";
+	reactions: Reaction[];
 }
 
 export const REACTS = ["like", "heart", "celebrate", "muscle", "eyes", "upsidedown_face"];

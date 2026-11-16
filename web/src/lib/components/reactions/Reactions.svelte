@@ -4,6 +4,7 @@
 		type Post,
 		type Recommendation,
 		type Event,
+		type Comment,
 		REACTS,
 		reactToEmoji,
 	} from "$lib/api_calls/types";
@@ -13,7 +14,7 @@
 	import * as Tooltip from "$lib/components/ui/tooltip";
 
 	interface Props {
-		feedable: Post | Recommendation | Event;
+		feedable: Post | Recommendation | Event | Comment;
 	}
 
 	let { feedable }: Props = $props();

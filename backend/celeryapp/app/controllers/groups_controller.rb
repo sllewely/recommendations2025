@@ -37,7 +37,7 @@ class GroupsController < ApplicationController
     render json: {}, status: :not_found and return if group.nil?
 
     feed = FeedItem.by_friends(group.users.pluck(:id))
-                   .includes(feedable: [event: [:user, comments: [:user]], post: [:user, comments: [:user]], recommendation: [:user, comments: [:user]]])
+                   .includes(feedable: [event: [:user, comments: [:user, { reactions: :user }]], post: [:user, comments: [:user, { reactions: :user }]], recommendation: [:user, comments: [:user, { reactions: :user }]]])
                    .order(created_at: :desc)
 
     # TODO: privacy

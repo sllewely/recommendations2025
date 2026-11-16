@@ -144,5 +144,36 @@ RSpec.describe "Comments", type: :request do
     end
 
   end
-end
 
+  describe 'destroy' do
+
+    before(:all) do
+      @my_user = create(:user)
+
+      headers = { 'ACCEPT' => 'application/json' }
+      post "/sign_in", params: { email: @my_user.email, password: @my_user.password }, headers: headers
+
+      auth_token = JSON.parse(response.body)["auth_token"]
+      @headers = { 'ACCEPT' => 'application/json', 'Authorization' => "Token #{auth_token}" }
+    end
+
+    it 'deletes my own comment' do
+      comment = create(:comment, :for_post, user: @my_user)
+
+      delete "/comments/#{comment.id}", headers: @headers
+
+      expect(response).to have_http_status(:no_content)
+      expect(Comment.find_by(id: comment.id)).to be_nil
+    end
+
+    it 'cant delete someone elses comment' do
+      comment = create(:comment, :for_post)
+
+      delete "/comments/#{comment.id}", headers: @headers
+
+      expect(response).to have_http_status(:not_found)
+      expect(Comment.find_by(id: comment.id)).not_to be_nil
+    end
+
+  end
+end

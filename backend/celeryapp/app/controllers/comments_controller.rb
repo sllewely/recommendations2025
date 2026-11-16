@@ -10,6 +10,15 @@ class CommentsController < ApplicationController
 
   end
 
+  def destroy
+    @comment = current_user.comments.find_by(id: params[:id])
+    if @comment.nil?
+      render json: { error: "comment not found" }, status: :not_found and return
+    end
+    @comment.destroy
+    head :no_content
+  end
+
   def create
     # TODO: Can only post on comment within friends
     @comment = current_user.comments.new(comment_params)

@@ -17,6 +17,10 @@
 	let update_comments = (new_comments: Comment[]) => {
 		all_comments = new_comments;
 	};
+
+	let remove_comment = (id: number) => {
+		all_comments = all_comments.filter((c) => c.id !== id);
+	};
 </script>
 
 <div>
@@ -26,8 +30,8 @@
 	</div>
 	<div>
 		<div>
-			{#each all_comments as comment}
-				<CommentComponent {comment} />
+			{#each all_comments as comment (comment.id)}
+				<CommentComponent {comment} ondelete={remove_comment} />
 			{/each}
 		</div>
 	</div>

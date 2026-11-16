@@ -158,6 +158,24 @@ RSpec.describe "Comments", type: :request do
       expect(res['body']).to eq('hoo boy I sure love stew')
     end
 
+    it 'cant update a comment to have an empty body' do
+      comment = create(:comment, :for_post, user: @my_user, body: 'original')
+
+      patch "/comments/#{comment.id}", params: { body: '' }, headers: @headers
+
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(comment.reload.body).to eq('original')
+    end
+
+    it 'cant update someone elses comment' do
+      comment = create(:comment, :for_post, body: 'original')
+
+      patch "/comments/#{comment.id}", params: { body: 'hacked' }, headers: @headers
+
+      expect(response).to have_http_status(:not_found)
+      expect(comment.reload.body).to eq('original')
+    end
+
   end
 
   describe 'destroy' do

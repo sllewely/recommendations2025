@@ -5,7 +5,9 @@ class CommentsController < ApplicationController
     if @comment.nil?
       render json: { error: "comment not found" }, status: :not_found and return
     end
-    @comment.update(body: params[:body])
+    unless @comment.update(body: params[:body])
+      render json: { error: @comment.errors.full_messages.to_sentence }, status: :unprocessable_content and return
+    end
     render json: CommentBlueprint.render(@comment, view: :authed), status: :ok
 
   end

@@ -5,14 +5,18 @@
 	import { invalidateAll } from "$app/navigation";
 	import { X } from "lucide-svelte";
 	import type { PlusOne } from "$lib/api_calls/types";
+	import type { Snippet } from "svelte";
 
 	let {
 		event_id,
 		my_plus_ones,
+		children,
 	}: {
 		event_id: string;
 		// the +1s the viewer added
 		my_plus_ones: PlusOne[];
+		// shown before "add a plus one", e.g. the rsvp button
+		children?: Snippet;
 	} = $props();
 
 	let adding = $state(false);
@@ -54,42 +58,49 @@
 	};
 </script>
 
-<div class="flex flex-row flex-wrap items-center gap-2">
-	{#each my_plus_ones as plus_one (plus_one.id)}
-		<span class="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs">
-			+1 {plus_one.name}
+<div class="flex flex-col gap-2">
+	<div class="flex flex-row flex-wrap items-center gap-3">
+		{@render children?.()}
+		{#if adding}
+			<form class="flex flex-row items-center gap-2" onsubmit={add}>
+				<Input
+					class="h-8 w-40"
+					placeholder="Their name"
+					aria-label="+1's name"
+					maxlength={60}
+					bind:value={name}
+				/>
+				<Button type="submit" size="sm" disabled={!name.trim() || saving}>Add</Button>
+				<Button type="button" size="sm" variant="ghost" onclick={() => (adding = false)}>
+					Cancel
+				</Button>
+			</form>
+		{:else}
+			<!-- styled like Link -->
 			<button
 				type="button"
-				class="cursor-pointer"
-				aria-label="remove {plus_one.name}"
-				onclick={() => remove(plus_one)}
+				class="cursor-pointer text-xs text-teal-400 hover:text-orange-400"
+				onclick={() => (adding = true)}
 			>
-				<X class="size-3" />
+				add a plus one
 			</button>
-		</span>
-	{/each}
-	{#if adding}
-		<form class="flex flex-row items-center gap-2" onsubmit={add}>
-			<Input
-				class="h-8 w-40"
-				placeholder="Their name"
-				aria-label="+1's name"
-				maxlength={60}
-				bind:value={name}
-			/>
-			<Button type="submit" size="sm" disabled={!name.trim() || saving}>Add</Button>
-			<Button type="button" size="sm" variant="ghost" onclick={() => (adding = false)}>
-				Cancel
-			</Button>
-		</form>
-	{:else}
-		<!-- styled like Link -->
-		<button
-			type="button"
-			class="cursor-pointer text-xs text-teal-400 hover:text-orange-400"
-			onclick={() => (adding = true)}
-		>
-			add a plus one
-		</button>
+		{/if}
+	</div>
+	{#if my_plus_ones.length > 0}
+		<div class="flex flex-row flex-wrap items-center gap-2">
+			{#each my_plus_ones as plus_one (plus_one.id)}
+				<span class="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs">
+					+1 {plus_one.name}
+					<button
+						type="button"
+						class="cursor-pointer"
+						aria-label="remove {plus_one.name}"
+						onclick={() => remove(plus_one)}
+					>
+						<X class="size-3" />
+					</button>
+				</span>
+			{/each}
+		</div>
 	{/if}
 </div>

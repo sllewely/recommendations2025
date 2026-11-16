@@ -181,6 +181,19 @@
 						{#if data.event.description}
 							<MarkedDownPost captured_text={data.event.description} />
 						{/if}
+						{#if data.event.proposed_times?.length > 0}
+							<Separator class="my-4" />
+							<ProposedTimeVotes
+								proposed_times={data.event.proposed_times}
+								my_user={signed_in ? (data.user ?? null) : null}
+								is_host={my_user_id === data.event.user.id}
+								chosen_proposed_time_id={data.event.chosen_proposed_time_id}
+								event_id={data.event.id}
+								guest_mode={!signed_in}
+								guest={signed_in ? null : (data.guest ?? null)}
+							/>
+							<Separator class="my-4" />
+						{/if}
 						<div class="text-sm text-gray-500">
 							{#if data.event.address}
 								<span>at {data.event.address}</span>
@@ -203,10 +216,9 @@
 							</p>
 						{/if}
 						{#if signed_in}
-							<div>
+							<PlusOnes event_id={data.event.id} my_plus_ones={plusOnesFor(my_user_id)}>
 								<SelectRsvp rsvp={current_user_rsvp} event_id={data.event.id} />
-							</div>
-							<PlusOnes event_id={data.event.id} my_plus_ones={plusOnesFor(my_user_id)} />
+							</PlusOnes>
 						{:else}
 							<GuestRsvp
 								event_id={data.event.id}
@@ -215,19 +227,6 @@
 							/>
 						{/if}
 					</div>
-
-					{#if data.event.proposed_times?.length > 0}
-						<Separator class="my-6" />
-						<ProposedTimeVotes
-							proposed_times={data.event.proposed_times}
-							my_user={signed_in ? (data.user ?? null) : null}
-							is_host={my_user_id === data.event.user.id}
-							chosen_proposed_time_id={data.event.chosen_proposed_time_id}
-							event_id={data.event.id}
-							guest_mode={!signed_in}
-							guest={signed_in ? null : (data.guest ?? null)}
-						/>
-					{/if}
 
 					<Separator class="my-6" />
 					<div class="">

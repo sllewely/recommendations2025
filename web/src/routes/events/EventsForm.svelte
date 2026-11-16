@@ -31,6 +31,7 @@
 	import SharingPrivacy from "$lib/components/form/SharingPrivacy.svelte";
 	import type { AudienceMember } from "$lib/components/form/AudiencePicker.svelte";
 	import FriendItem from "../circles/FriendItem.svelte";
+	import FindATime from "$lib/components/events/FindATime.svelte";
 	import type { Event as EventType } from "$lib/api_calls/types";
 
 	let {
@@ -62,6 +63,16 @@
 	let friends_to_invite = $state([]);
 	let invited_friend_ids = $derived(friends_to_invite.map((f) => f.id));
 	let audience = $state<AudienceMember[]>(data.event?.audience ?? []);
+	let proposed_times = $state<string[]>(
+		(data.event?.proposed_times ?? []).map((pt) => pt.start_date_time),
+	);
+	let finding_time = $state(proposed_times.length > 0);
+
+	const useProposedTime = (start_date_time: string) => {
+		const localized = parseAbsoluteToLocal(start_date_time);
+		start_date_value = toCalendarDate(localized);
+		$formData.start_time = toTime(localized).toString().substring(0, 5);
+	};
 
 	if (data.event) {
 		let start_date_time = data.event.start_date_time;
@@ -75,6 +86,10 @@
 
 	$effect(() => {
 		$formData.invited_friend_ids = invited_friend_ids;
+	});
+
+	$effect(() => {
+		$formData.proposed_times = proposed_times;
 	});
 </script>
 
@@ -170,7 +185,27 @@
 				<Field {form} name="time_zone">
 					<input hidden value={getLocalTimeZone()} name="time_zone" />
 				</Field>
+				<Button type="button" variant="outline" onclick={() => (finding_time = !finding_time)}>
+					{finding_time ? "Hide" : "Find a time"}
+					{#if !finding_time && proposed_times.length > 0}
+						({proposed_times.length})
+					{/if}
+				</Button>
 			</div>
+			{#if finding_time}
+				<div class="pt-4">
+					<FindATime
+						bind:proposed_times
+						existing={data.event?.proposed_times ?? []}
+						onUse={useProposedTime}
+					/>
+				</div>
+			{/if}
+			<Field {form} name="proposed_times">
+				{#each $formData.proposed_times as start_date_time}
+					<input type="hidden" name="proposed_times" value={start_date_time} />
+				{/each}
+			</Field>
 
 			<div class="pt-6">
 				<label for="description" class="font-semibold text-nowrap">Description</label>

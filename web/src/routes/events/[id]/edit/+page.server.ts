@@ -19,7 +19,13 @@ export const load = withAuth(async ({ jwt, params }: LoadAuthContext) => {
 	return {
 		event: event,
 		form: await superValidate(
-			event ? { ...event, privacy: event.visibility ?? "public" } : event,
+			event
+				? {
+						...event,
+						privacy: event.visibility ?? "public",
+						proposed_times: (event.proposed_times ?? []).map((pt) => pt.start_date_time),
+					}
+				: event,
 			zod(eventsFormSchema),
 		),
 	};
@@ -56,6 +62,7 @@ export const actions = {
 				privacy_user_ids: form.data.privacy_user_ids,
 				privacy_circle_ids: form.data.privacy_circle_ids,
 				invited_friend_ids: form.data.invited_friend_ids,
+				proposed_times: form.data.proposed_times,
 			},
 			jwt,
 		);

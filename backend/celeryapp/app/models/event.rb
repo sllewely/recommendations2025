@@ -5,6 +5,7 @@ class Event < ApplicationRecord
   has_many :rsvps
   has_many :comments, as: :commentable, dependent: :destroy
   has_many :reactions, as: :reactable, dependent: :destroy
+  has_many :proposed_times, -> { order(:start_date_time) }, dependent: :destroy
   include Feedable
 
   before_save :ensure_end_time
@@ -66,6 +67,18 @@ class Event < ApplicationRecord
 
   def create_time_string
     get_time_string(created_at)
+  end
+
+  # replaces the proposed times with the given start times, keeping votes on times that remain
+  def sync_proposed_times!(start_date_times)
+    times = Array(start_date_times).filter_map { |t| Time.zone.parse(t.to_s) rescue nil }.uniq(&:to_i)
+    proposed_times.each do |proposed_time|
+      proposed_time.destroy! unless times.any? { |t| t.to_i == proposed_time.start_date_time.to_i }
+    end
+    times.each do |t|
+      proposed_times.create!(start_date_time: t) unless proposed_times.any? { |pt| !pt.destroyed? && pt.start_date_time.to_i == t.to_i }
+    end
+    proposed_times.reset
   end
 
   def total_rsvp

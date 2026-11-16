@@ -19,6 +19,7 @@
 	import Commentable from "$lib/components/posts/Commentable.svelte";
 	import SelectRsvp from "$lib/components/rsvp/SelectRsvp.svelte";
 	import CalendarCopy from "$lib/CalendarCopy.svelte";
+	import ProposedTimeVotes from "$lib/components/events/ProposedTimeVotes.svelte";
 
 	interface Props {
 		data: {
@@ -166,6 +167,14 @@
 							<span><Link url="/sign_in">Sign in to rsvp</Link></span>
 						{/if}
 					</div>
+
+					{#if data.event.proposed_times?.length > 0}
+						<Separator class="my-6" />
+						<ProposedTimeVotes
+							proposed_times={data.event.proposed_times}
+							my_user={signed_in ? (data.user ?? null) : null}
+						/>
+					{/if}
 
 					<Separator class="my-6" />
 					<div class="">

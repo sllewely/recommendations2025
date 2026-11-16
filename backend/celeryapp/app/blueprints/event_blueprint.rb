@@ -13,6 +13,7 @@ class EventBlueprint < Blueprinter::Base
     association :user, blueprint: UserBlueprint, view: :unauthed
     association :comments, blueprint: CommentBlueprint, view: :unauthed
     association :reactions, blueprint: ReactionBlueprint
+    association :proposed_times, blueprint: ProposedTimeBlueprint, view: :unauthed
   end
 
   view :authed do
@@ -24,5 +25,6 @@ class EventBlueprint < Blueprinter::Base
     association :rsvps, blueprint: RsvpBlueprint, view: :authed, options: ->(options) { options }
     association :comments, blueprint: CommentBlueprint, view: :authed, options: ->(options) { options }
     association :user, blueprint: UserBlueprint, view: :authed, options: ->(options) { options }
+    association :proposed_times, blueprint: ProposedTimeBlueprint, view: :authed
   end
 end

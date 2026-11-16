@@ -4,7 +4,7 @@ class EventsController < ApplicationController
   def index
     @events = Event
                 .visible_to(current_user)
-                .includes(:user, rsvps: :user, comments: [:user, { reactions: :user }])
+                .includes(:user, rsvps: :user, proposed_times: :users, comments: [:user, { reactions: :user }])
                 .upcoming.order(start_date_time: :asc)
 
     # TODO: improve query performance
@@ -18,6 +18,7 @@ class EventsController < ApplicationController
       @event = current_user.events.new(event_params)
       @event.save!
       @event.apply_privacy!(**privacy)
+      @event.sync_proposed_times!(params[:proposed_times]) if params.key?(:proposed_times)
       # invitees get their own notification below
       @event.feed_item.viewers_among(current_user.friends.where.not(id: invited_friend_ids)).each do |friend|
         friend.notifications << Notification.created_a_feedable(current_user, @event)
@@ -47,7 +48,7 @@ class EventsController < ApplicationController
 
   def show
     # anyone with the link can see an event; privacy only limits where it is listed
-    @event = Event.includes(comments: [:user, { reactions: :user }]).find_by(id: params[:id])
+    @event = Event.includes(proposed_times: :users, comments: [:user, { reactions: :user }]).find_by(id: params[:id])
     if @event
       render json: EventBlueprint.render(@event, view: :authed, current_user: current_user), status: :ok
     else
@@ -66,6 +67,7 @@ class EventsController < ApplicationController
     ActiveRecord::Base.transaction do
       @event.update!(event_params)
       @event.apply_privacy!(**privacy)
+      @event.sync_proposed_times!(params[:proposed_times]) if params.key?(:proposed_times)
       if params.key?(:invited_friend_ids)
         # find the difference between the current friends and the invited friends
         old_invited_friends = @event.rsvps.pluck(:user_id)

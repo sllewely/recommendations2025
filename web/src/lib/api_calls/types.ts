@@ -137,6 +137,15 @@ export interface Event {
 	comments: Comment[];
 	rsvps: Rsvp[];
 	reactions: Reaction[];
+	proposed_times: ProposedTime[];
+}
+
+// a candidate start time for an event, voted on by users
+export interface ProposedTime {
+	id: string;
+	start_date_time: string;
+	vote_count: number;
+	users?: User[];
 }
 
 export type RsvpVariant = "not_rsvpd" | "going" | "interested" | "not_going" | "hide" | "invited";

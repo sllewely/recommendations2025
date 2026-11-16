@@ -19,6 +19,12 @@ Rails.application.routes.draw do
   get "posts/rss", to: "posts#rss", defaults: { format: "rss" }
   resources :posts
   resources :rsvps
+  resources :proposed_times, only: [] do
+    member do
+      post "vote"
+      delete "vote", action: :unvote
+    end
+  end
   resources :users, only: [:index, :show, :update]
   resources :groups, only: [:index, :show] do
     member do

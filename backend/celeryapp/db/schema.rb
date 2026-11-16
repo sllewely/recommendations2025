@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_15_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_16_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -170,6 +170,25 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_15_120000) do
     t.index ["numeric_user_id"], name: "index_posts_on_numeric_user_id"
   end
 
+  create_table "proposed_times", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.uuid "event_id", null: false
+    t.datetime "start_date_time", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id", "start_date_time"], name: "index_proposed_times_on_event_id_and_start_date_time", unique: true
+    t.index ["event_id"], name: "index_proposed_times_on_event_id"
+  end
+
+  create_table "proposed_times_users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.uuid "proposed_time_id", null: false
+    t.datetime "updated_at", null: false
+    t.uuid "user_id", null: false
+    t.index ["proposed_time_id", "user_id"], name: "index_proposed_times_users_on_proposed_time_id_and_user_id", unique: true
+    t.index ["proposed_time_id"], name: "index_proposed_times_users_on_proposed_time_id"
+    t.index ["user_id"], name: "index_proposed_times_users_on_user_id"
+  end
+
   create_table "reactions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "react", null: false
@@ -320,6 +339,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_15_120000) do
   add_foreign_key "group_users", "users"
   add_foreign_key "notifications", "users", on_delete: :cascade
   add_foreign_key "posts", "users", on_delete: :cascade
+  add_foreign_key "proposed_times", "events"
+  add_foreign_key "proposed_times_users", "proposed_times"
+  add_foreign_key "proposed_times_users", "users"
   add_foreign_key "reactions", "users"
   add_foreign_key "recommendations", "users", on_delete: :cascade
   add_foreign_key "rsvps", "events", on_delete: :cascade

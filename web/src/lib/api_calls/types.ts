@@ -138,6 +138,7 @@ export interface Event {
 	rsvps: Rsvp[];
 	reactions: Reaction[];
 	proposed_times: ProposedTime[];
+	chosen_proposed_time_id: string | null;
 }
 
 // a candidate start time for an event, voted on by users

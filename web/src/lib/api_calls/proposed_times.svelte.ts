@@ -1,5 +1,5 @@
 import * as api from "./api.svelte";
-import type { ApiResponse, ProposedTime } from "./types";
+import type { ApiResponse, Event, ProposedTime } from "./types";
 
 const ENDPOINT = "proposed_times";
 
@@ -27,4 +27,14 @@ export async function removeVoteForProposedTime(
 	token: string,
 ): Promise<ApiResponse<void>> {
 	return api.del(`${ENDPOINT}/${id}/vote`, token);
+}
+
+/**
+ * Host chooses the winning proposed time, which becomes the event's start time
+ * @param id - Proposed time ID
+ * @param token - JWT token for authentication
+ * @returns Promise with the updated event or error. Returns 403 if not the host
+ */
+export async function chooseProposedTime(id: string, token: string): Promise<ApiResponse<Event>> {
+	return api.post<Event>(`${ENDPOINT}/${id}/choose`, {}, token);
 }

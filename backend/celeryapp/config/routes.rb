@@ -23,6 +23,7 @@ Rails.application.routes.draw do
     member do
       post "vote"
       delete "vote", action: :unvote
+      post "choose"
     end
   end
   resources :users, only: [:index, :show, :update]

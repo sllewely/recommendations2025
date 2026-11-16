@@ -66,6 +66,16 @@
 	let localizedStartTime = $derived(parseAbsoluteToLocal(data.event.start_date_time));
 	let formattedStartDate = $state();
 	let formattedStartTime = $state();
+	// bumps when the start time changes on the page (the host chose a proposed time)
+	let start_time_updates = $state(0);
+	let previous_start_date_time: string | null = null;
+	$effect(() => {
+		const start_date_time = data.event.start_date_time;
+		if (previous_start_date_time !== null && previous_start_date_time !== start_date_time) {
+			start_time_updates += 1;
+		}
+		previous_start_date_time = start_date_time;
+	});
 
 	let signed_in = $state(false);
 	onMount(() => {
@@ -77,20 +87,22 @@
 			timeStyle: "short",
 			timeZone: localizedCreateTime.timeZone,
 		}).format(localizedCreateTime.toDate());
+	});
 
-		localizedStartTime = parseAbsoluteToLocal(data.event.start_date_time);
+	// an effect (not onMount) so the start time updates when the host chooses a proposed time
+	$effect(() => {
 		formattedStartDate = new Intl.DateTimeFormat("en-US", {
 			weekday: "short",
 			month: "short",
 			year: "numeric",
 			day: "numeric",
-			timeZone: localizedCreateTime.timeZone,
+			timeZone: localizedStartTime.timeZone,
 		}).format(localizedStartTime.toDate());
 		formattedStartTime = new Intl.DateTimeFormat("en-US", {
 			hour: "numeric",
 			minute: "numeric",
 			hour12: true,
-			timeZone: localizedCreateTime.timeZone,
+			timeZone: localizedStartTime.timeZone,
 		}).format(localizedStartTime.toDate());
 	});
 </script>
@@ -128,8 +140,12 @@
 						<Card.Title>{data.event.title}</Card.Title>
 					{/if}
 					<Card.Description>
-						{formattedStartDate}
-						at {formattedStartTime}
+						{#key start_time_updates}
+							<span class:time-updated={start_time_updates > 0}>
+								{formattedStartDate}
+								at {formattedStartTime}
+							</span>
+						{/key}
 					</Card.Description>
 				</Card.Header>
 				<Card.Content>
@@ -173,6 +189,8 @@
 						<ProposedTimeVotes
 							proposed_times={data.event.proposed_times}
 							my_user={signed_in ? (data.user ?? null) : null}
+							is_host={my_user_id === data.event.user.id}
+							chosen_proposed_time_id={data.event.chosen_proposed_time_id}
 						/>
 					{/if}
 
@@ -210,3 +228,32 @@
 		{/if}
 	</div>
 </div>
+
+<style>
+	.time-updated {
+		display: inline-block;
+		border-radius: 0.25rem;
+		animation: time-updated 1.4s ease-out;
+	}
+
+	@keyframes time-updated {
+		0% {
+			transform: scale(1);
+			background-color: transparent;
+		}
+		25% {
+			transform: scale(1.15);
+			background-color: rgb(250 204 21 / 0.6);
+		}
+		100% {
+			transform: scale(1);
+			background-color: transparent;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.time-updated {
+			animation: none;
+		}
+	}
+</style>

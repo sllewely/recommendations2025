@@ -11,6 +11,15 @@ class ProposedTimesController < ApplicationController
     render json: ProposedTimeBlueprint.render(@proposed_time.reload, view: :authed), status: :ok
   end
 
+  def choose
+    event = @proposed_time.event
+    if event.user_id != current_user.id
+      render json: { error: "only the host can choose a time" }, status: :forbidden and return
+    end
+    event.choose_proposed_time!(@proposed_time)
+    render json: EventBlueprint.render(event, view: :authed, current_user: current_user), status: :ok
+  end
+
   private
 
   def set_proposed_time

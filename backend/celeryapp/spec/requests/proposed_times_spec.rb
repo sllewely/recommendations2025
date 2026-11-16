@@ -104,4 +104,52 @@ RSpec.describe "ProposedTimes", type: :request do
       expect(res['proposed_times'].first['users'].first['id']).to eq(@my_user.id)
     end
   end
+
+  describe 'choose' do
+    it 'the host chooses a winning time, which becomes the start time' do
+      event = create(:event, user: @my_user)
+      proposed_time = create(:proposed_time, event: event, start_date_time: (DateTime.now + 12.days).change(usec: 0))
+
+      post "/proposed_times/#{proposed_time.id}/choose", headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      res = JSON.parse(response.body)
+      expect(res['chosen_proposed_time_id']).to eq(proposed_time.id)
+      event.reload
+      expect(event.start_date_time.to_i).to eq(proposed_time.start_date_time.to_i)
+      expect(event.end_date_time).to be > event.start_date_time
+    end
+
+    it 'keeps the event length when choosing a time' do
+      start = (DateTime.now + 2.days).change(usec: 0)
+      event = create(:event, user: @my_user, start_date_time: start, end_date_time: start + 3.hours)
+      proposed_time = create(:proposed_time, event: event, start_date_time: start + 5.days)
+
+      post "/proposed_times/#{proposed_time.id}/choose", headers: @headers
+
+      event.reload
+      expect(event.end_date_time - event.start_date_time).to eq(3.hours)
+    end
+
+    it 'only the host can choose a time' do
+      event = create(:event)
+      proposed_time = create(:proposed_time, event: event)
+
+      post "/proposed_times/#{proposed_time.id}/choose", headers: @headers
+
+      expect(response).to have_http_status(:forbidden)
+      expect(event.reload.chosen_proposed_time_id).to be_nil
+    end
+
+    it 'clears the winner when the start time is moved off of it' do
+      event = create(:event, user: @my_user)
+      proposed_time = create(:proposed_time, event: event)
+      event.choose_proposed_time!(proposed_time)
+
+      patch "/events/#{event.id}", params: { start_date_time: (proposed_time.start_date_time + 1.day).iso8601 }, headers: @headers
+
+      expect(response).to have_http_status(:ok)
+      expect(event.reload.chosen_proposed_time_id).to be_nil
+    end
+  end
 end

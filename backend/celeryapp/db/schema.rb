@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_16_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_16_130000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -41,6 +41,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_16_120000) do
 
   create_table "events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "address"
+    t.uuid "chosen_proposed_time_id"
     t.datetime "created_at", null: false
     t.string "description"
     t.datetime "end_date_time"
@@ -52,6 +53,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_16_120000) do
     t.datetime "updated_at", null: false
     t.string "url"
     t.uuid "user_id"
+    t.index ["chosen_proposed_time_id"], name: "index_events_on_chosen_proposed_time_id"
     t.index ["end_date_time"], name: "index_events_on_end_date_time"
     t.index ["event_type"], name: "index_events_on_event_type"
     t.index ["id"], name: "index_events_on_id", unique: true
@@ -327,6 +329,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_16_120000) do
 
   add_foreign_key "circles", "users"
   add_foreign_key "comments", "users", on_delete: :cascade
+  add_foreign_key "events", "proposed_times", column: "chosen_proposed_time_id", on_delete: :nullify
   add_foreign_key "events", "users", on_delete: :cascade
   add_foreign_key "feed_item_audiences", "circles", on_delete: :cascade
   add_foreign_key "feed_item_audiences", "feed_items", on_delete: :cascade

@@ -14,6 +14,7 @@ class EventBlueprint < Blueprinter::Base
     association :comments, blueprint: CommentBlueprint, view: :unauthed
     association :reactions, blueprint: ReactionBlueprint
     association :proposed_times, blueprint: ProposedTimeBlueprint, view: :unauthed
+    field :chosen_proposed_time_id
   end
 
   view :authed do

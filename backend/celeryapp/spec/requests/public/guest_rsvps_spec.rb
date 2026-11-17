@@ -151,14 +151,15 @@ RSpec.describe "Public/GuestRsvps", type: :request do
       expect(res['guest_rsvps'].first).not_to have_key('guest_email')
     end
 
-    it 'the host sees guest emails' do
+    it 'not even the host sees guest emails' do
       event = create(:event, user: @my_user)
       create(:guest_rsvp, event: event, guest: create(:guest, email: 'sam@example.com'))
 
       get "/events/#{event.id}", headers: @headers
 
       res = JSON.parse(response.body)
-      expect(res['guest_rsvps'].first['guest_email']).to eq('sam@example.com')
+      expect(res['guest_rsvps'].first).not_to have_key('guest_email')
+      expect(response.body).not_to include('sam@example.com')
     end
 
     it 'editing invited friends leaves guest rsvps alone' do

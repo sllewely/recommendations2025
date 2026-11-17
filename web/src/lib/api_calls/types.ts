@@ -159,8 +159,6 @@ export interface GuestRsvp {
 	guest_id: string;
 	// only for signed in viewers
 	guest_name?: string;
-	// only for the host
-	guest_email?: string | null;
 }
 
 // someone coming along with a user; just a name

@@ -92,7 +92,6 @@
 			<div class="flex flex-col gap-2">
 				<Label for="guest_email">Email <span class="font-light">(optional)</span></Label>
 				<Input id="guest_email" type="email" bind:value={email} autocomplete="email" />
-				<p class="text-xs font-light">Only the host sees this.</p>
 			</div>
 			<Dialog.Footer class="flex flex-row items-center justify-between gap-2 sm:justify-between">
 				<span class="text-xs">Have an account? <Link url="/sign_in">Sign in</Link></span>

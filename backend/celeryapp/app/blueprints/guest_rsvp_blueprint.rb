@@ -10,10 +10,7 @@ class GuestRsvpBlueprint < Blueprinter::Base
   view :unauthed do
   end
 
+  # guests' emails are saved but never sent with the event
   view :authed do
-    # only the host sees guests' emails
-    field :guest_email, if: ->(_field, guest_rsvp, options) { options[:current_user]&.id == guest_rsvp.event.user_id } do |guest_rsvp|
-      guest_rsvp.guest.email
-    end
   end
 end

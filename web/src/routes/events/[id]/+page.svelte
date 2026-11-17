@@ -260,9 +260,6 @@
 								<div>
 									{guest_rsvp.guest_name}
 									<span class="text-xs text-muted-foreground">guest</span>
-									{#if guest_rsvp.guest_email}
-										<span class="text-xs text-muted-foreground">· {guest_rsvp.guest_email}</span>
-									{/if}
 								</div>
 								<div>
 									<RsvpBadge rsvp={guest_rsvp} />

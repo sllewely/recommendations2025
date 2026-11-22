@@ -88,17 +88,17 @@
 			</div>
 		{/if}
 		<div class="py-1">
-			<a href="/recommendations/{feed_item.id}">
+			<a href="/recommendations/{feed_item.id}" class={in_feed ? "card-link" : ""}>
 				<Card.Root
-					class="{in_feed
-						? 'border-0 shadow-none'
-						: 'border-yellow-500 border-2'} hover:bg-yellow-100 dark:hover:bg-yellow-950 dark:bg-gray-900 dark:text-gray-200"
+					class={in_feed
+						? "border-0 bg-transparent shadow-none dark:bg-transparent"
+						: "border-yellow-500 border-2 hover:bg-yellow-100 dark:hover:bg-yellow-950 dark:bg-gray-900 dark:text-gray-200"}
 				>
 					{#if in_feed}
-						<div class="flex flex-row items-center gap-2 px-3 py-2">
-							<MessageCircleHeart class="size-5 shrink-0 text-yellow-500" />
-							<MediaIcon class="size-5 shrink-0" />
-							<span class="truncate font-semibold">{feed_item.title}</span>
+						<div class="flex flex-row items-center gap-2">
+							<MessageCircleHeart class="size-5 shrink-0 text-fuchsia-500 dark:text-fuchsia-300" />
+							<MediaIcon class="size-5 shrink-0 text-zinc-500 dark:text-zinc-400" />
+							<span class="truncate text-lg font-semibold leading-tight">{feed_item.title}</span>
 							<div class="ml-auto flex flex-row shrink-0">
 								{#if feed_item.status === "interested"}
 									<BookmarkPlus class="size-5" />

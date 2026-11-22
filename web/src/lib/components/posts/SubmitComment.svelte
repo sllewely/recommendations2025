@@ -1,9 +1,8 @@
 <script lang="ts">
 	import { enhance } from "$app/forms";
-	import { Button } from "$lib/components/ui/button";
-	import { Textarea } from "$lib/components/ui/textarea";
+	import Button from "$lib/components/Button.svelte";
+	import TextField from "$lib/components/TextField.svelte";
 	import { newToast, ToastType } from "$lib/state/toast.svelte";
-	import { MessageCirclePlus } from "@lucide/svelte";
 	import type { Comment, Feedable } from "$lib/api_calls/types";
 
 	interface Props {
@@ -16,10 +15,7 @@
 	let posting = $state(false);
 </script>
 
-<div class="mt-1">
-	{#if posting}
-		...posting
-	{/if}
+<div class="mt-2">
 	<form
 		method="POST"
 		action="/posts?/submit_comment"
@@ -44,10 +40,16 @@
 	>
 		<input type="hidden" name="commentable_id" value={feed_item.id} />
 		<input type="hidden" name="commentable_type" value={feed_item.class_name} />
-		<Textarea name="body" placeholder="I was thinking..." />
-		<div class="flex justify-center pt-1">
-			<Button type="submit" disabled={posting}>
-				<MessageCirclePlus /> &nbsp; Submit Comment
+		<div class="flex flex-row items-end gap-2.5">
+			<TextField
+				multiline
+				rows={1}
+				name="body"
+				placeholder="I was thinking..."
+				class="min-h-0 flex-1"
+			/>
+			<Button type="submit" disabled={posting} class="shrink-0">
+				{posting ? "posting..." : "comment"}
 			</Button>
 		</div>
 	</form>

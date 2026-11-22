@@ -10,8 +10,8 @@
 	} from "$lib/api_calls/types";
 	import { newToast, ToastType } from "$lib/state/toast.svelte";
 	import { current_user } from "$lib/state/current_user.svelte";
-	import { Badge } from "$lib/components/ui/badge";
 	import * as Tooltip from "$lib/components/ui/tooltip";
+	import { cn } from "$lib/utils.js";
 
 	interface Props {
 		feedable: Post | Recommendation | Event | Comment;
@@ -32,6 +32,15 @@
 	let my_reaction = $derived(
 		feedable.reactions.find((reaction) => reaction.user.id === current_user.id)?.react ?? "like",
 	);
+
+	// the react you've actually picked (my_reaction falls back to "like" for the button)
+	let mine = $derived(
+		feedable.reactions.find((reaction) => reaction.user.id === current_user.id)?.react,
+	);
+
+	// dashed pill styling from the redesign (f6826f0)
+	const pill =
+		"inline-flex h-7 items-center border border-dashed border-zinc-500 text-sm font-normal dark:border-zinc-400";
 
 	const update_reactions = async (react: String) => {
 		console.log(react);
@@ -59,10 +68,16 @@
 
 <div class="relative">
 	<div
-		class={"flex flex-row gap-2 absolute -top-10 right-0 z-10" + (open_choices ? "" : " hidden")}
+		role="group"
+		aria-label="pick a reaction"
+		class={cn(
+			"absolute -top-9 right-0 z-10 flex h-7 flex-row bg-zinc-100 dark:bg-zinc-800",
+			!open_choices && "hidden",
+		)}
 	>
-		{#each REACTS as react}
+		{#each REACTS as react, i}
 			<ReactButton
+				class={cn(i > 0 && "-ml-px")}
 				click_handler={() => {
 					update_reactions(react);
 					open_choices = false;
@@ -78,14 +93,17 @@
 				<Tooltip.Root>
 					<Tooltip.Trigger>
 						{#snippet child({ props })}
-							<span {...props} class="inline-flex">
-								<Badge variant="outline" class="gap-1 text-sm font-normal"
-									>{reactToEmoji[react] || react} {names.length}</Badge
-								>
+							<span {...props} class={cn(pill, "gap-1.5 px-2.5", react === mine && "border-solid")}>
+								<span>{reactToEmoji[react] || react}</span>
+								<span class="tabular-nums">{names.length}</span>
 							</span>
 						{/snippet}
 					</Tooltip.Trigger>
-					<Tooltip.Content>
+					<Tooltip.Content
+						sideOffset={6}
+						class="max-w-64 rounded-none border border-zinc-600 bg-zinc-700 px-2 py-1 text-center text-xs text-zinc-100 shadow-md"
+						arrowClasses="hidden"
+					>
 						<ul>
 							{#each names as name}
 								<li>{name}</li>
@@ -96,7 +114,7 @@
 			{/each}
 		</Tooltip.Provider>
 		<ReactButton
-			class="h-6 px-1.5"
+			class="text-zinc-500 hover:border-zinc-600 dark:text-zinc-400 dark:hover:border-zinc-300"
 			click_handler={() => {
 				open_choices = !open_choices;
 			}}

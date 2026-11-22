@@ -8,6 +8,8 @@
 	import { parseAbsoluteToLocal } from "@internationalized/date";
 	import Reactions from "$lib/components/reactions/Reactions.svelte";
 	import PrivacyIcon from "$lib/components/posts/PrivacyIcon.svelte";
+	import { ACCENTS, CARD, FEED_ACCENTS } from "$lib/components/posts/feed_styles";
+	import { cn } from "$lib/utils.js";
 
 	interface Props {
 		feed_item: Post | Event | Recommendation;
@@ -16,14 +18,12 @@
 	let { feed_item }: Props = $props();
 
 	let type_name = "a post";
-	let border_color = "border-orange-500";
 	if (feed_item.class_name === "Event") {
 		type_name = "an event";
-		border_color = "border-lime-500";
 	} else if (feed_item.class_name === "Recommendation") {
 		type_name = "a recommendation";
-		border_color = "border-yellow-500";
 	}
+	const accent = ACCENTS[FEED_ACCENTS[feed_item.class_name] ?? "sky"];
 
 	const localizedCreateTime = parseAbsoluteToLocal(feed_item.created_at);
 	const formattedCreateTime = new Intl.DateTimeFormat("en-US", {
@@ -31,28 +31,43 @@
 		day: "numeric",
 		timeZone: localizedCreateTime.timeZone,
 	}).format(localizedCreateTime.toDate());
-
-	//TODO: Style the shadcn Button component to be a fun color!!
 </script>
 
-<div class="px-2 py-1 my-2 border-l-4 {border_color} rounded-r-lg shadow-md">
-	<UserCard user={feed_item.user} subtitle="Posted {type_name} {formattedCreateTime}">
-		{#snippet subtitle_extra()}
-			<PrivacyIcon visibility={feed_item.visibility} />
-		{/snippet}
-	</UserCard>
+<div class="my-2 flex flex-col">
+	<div class="mb-1 flex h-12 flex-row items-stretch gap-1.5">
+		<div aria-hidden="true" class="flex aspect-square h-full shrink-0">
+			<div
+				class="mt-auto ml-auto size-[calc(50%+1px)] rounded-tl-xl border-t-2 border-l-2 border-dashed border-zinc-500 dark:border-zinc-400"
+			></div>
+		</div>
+		<UserCard user={feed_item.user} subtitle="Posted">
+			{#snippet subtitle_extra()}
+				<span class={cn("font-bold", accent.text)}>{type_name}</span>
+				{formattedCreateTime}
+				<PrivacyIcon visibility={feed_item.visibility} />
+			{/snippet}
+		</UserCard>
+	</div>
 
-	{#if feed_item.class_name === "Recommendation"}
-		<RecommendationCard {feed_item} in_feed />
-	{:else if feed_item.class_name === "Post"}
-		<PostCard {feed_item} in_feed />
-	{:else}
-		<EventCard {feed_item} in_feed />
-	{/if}
+	<article
+		class={cn(
+			"relative flex flex-col gap-1 border border-dashed border-transparent",
+			CARD,
+			accent.hover,
+		)}
+	>
+		{#if feed_item.class_name === "Recommendation"}
+			<RecommendationCard {feed_item} in_feed />
+		{:else if feed_item.class_name === "Post"}
+			<PostCard {feed_item} in_feed />
+		{:else}
+			<EventCard {feed_item} in_feed />
+		{/if}
 
-	<ExpandableCommentable comments={feed_item["comments"]} {feed_item}>
-		{#snippet actions()}
-			<Reactions feedable={feed_item} />
-		{/snippet}
-	</ExpandableCommentable>
+		<ExpandableCommentable comments={feed_item["comments"]} {feed_item}>
+			{#snippet actions()}
+				<Reactions feedable={feed_item} />
+			{/snippet}
+		</ExpandableCommentable>
+	</article>
 </div>

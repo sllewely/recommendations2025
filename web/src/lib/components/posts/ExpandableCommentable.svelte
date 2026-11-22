@@ -1,8 +1,6 @@
 <script lang="ts">
 	import SubmitComment from "$lib/components/posts/SubmitComment.svelte";
-	import { MessageCircleMore } from "@lucide/svelte";
 	import type { Comment, Feedable, Post, Event, Recommendation } from "$lib/api_calls/types";
-	import Link from "$lib/components/text/Link.svelte";
 	import * as Collapsible from "$lib/components/ui/collapsible";
 	import CommentComponent from "$lib/components/posts/Comment.svelte";
 	import type { Snippet } from "svelte";
@@ -38,16 +36,14 @@
 	};
 </script>
 
-<div class="px-3">
+<div>
 	<Collapsible.Root>
 		<div class="flex flex-row items-center justify-between">
-			<Collapsible.Trigger onclick={expand_comments}>
-				<Link>
-					<div class="flex">
-						{num_comments} Comments
-						<MessageCircleMore />
-					</div>
-				</Link>
+			<Collapsible.Trigger
+				onclick={expand_comments}
+				class="cursor-pointer text-sm font-bold underline underline-offset-2"
+			>
+				comments ({num_comments})
 			</Collapsible.Trigger>
 			{@render actions?.()}
 		</div>

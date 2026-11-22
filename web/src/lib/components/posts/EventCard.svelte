@@ -9,6 +9,8 @@
 	import { onMount } from "svelte";
 	import { CalendarDays } from "@lucide/svelte";
 	import UserCard from "$lib/components/users/UserCard.svelte";
+	import { ACCENTS, CARD_BG } from "$lib/components/posts/feed_styles";
+	import { cn } from "$lib/utils.js";
 
 	interface Props {
 		feed_item: Event;
@@ -62,18 +64,24 @@
 	});
 </script>
 
-<div class={in_feed ? "py-1" : "px-2 py-1 my-2 border-l-4 border-lime-500 rounded-r-lg shadow-md"}>
+<div
+	class={in_feed
+		? ""
+		: cn(
+				"my-2 flex flex-col gap-1 border border-dashed border-transparent px-3 py-2",
+				CARD_BG,
+				ACCENTS.lime.hover,
+			)}
+>
 	{#if !in_feed}
 		<UserCard user={feed_item.user} />
 	{/if}
-	<a href="/events/{feed_item.id}">
-		<Card.Root
-			class="border-0 shadow-none dark:bg-gray-900 dark:text-gray-200 hover:bg-lime-100 dark:hover:bg-emerald-950"
-		>
-			<Card.Header class="px-3 pt-2 pb-2 space-y-0.5">
+	<a href="/events/{feed_item.id}" class="card-link">
+		<Card.Root class="border-0 bg-transparent shadow-none dark:bg-transparent">
+			<Card.Header class="p-0 space-y-0.5">
 				{#if feed_item.title}
-					<Card.Title class="flex flex-row items-center gap-2">
-						<CalendarDays class="size-5 shrink-0 text-lime-500" />
+					<Card.Title class="flex flex-row items-center gap-2 text-lg font-semibold leading-tight">
+						<CalendarDays class="size-5 shrink-0 text-lime-500 dark:text-lime-300" />
 						{feed_item.title}
 					</Card.Title>
 				{/if}
@@ -89,7 +97,7 @@
 				</div>
 			</Card.Header>
 			{#if !in_feed && feed_item.description}
-				<Card.Content class="px-3 pt-0 pb-2">
+				<Card.Content class="px-0 pt-2 pb-0">
 					<!-- ~2 lines: two 1.5rem lines plus the paragraph's top margin -->
 					<TruncatedContent
 						text={feed_item.description}

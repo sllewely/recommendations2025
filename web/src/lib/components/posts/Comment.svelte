@@ -78,7 +78,7 @@
 </script>
 
 <div class="flex justify-left">
-	<article class="w-full px-2 py-1 text-base bg-white rounded-lg dark:bg-gray-900">
+	<article class="w-full px-2 py-1 text-base bg-transparent rounded-lg">
 		<div class="flex justify-between items-center">
 			<div class="flex items-center gap-2">
 				<p

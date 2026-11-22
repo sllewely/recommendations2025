@@ -1,10 +1,8 @@
 <script lang="ts">
-	import DateHeader from "$lib/components/posts/DateHeader.svelte";
 	import FeedItem from "$lib/components/posts/FeedItem.svelte";
-	import H1 from "$lib/components/text/H1.svelte";
 	import Link from "$lib/components/text/Link.svelte";
-	import { Button, buttonVariants } from "$lib/components/ui/button";
-	import { CalendarPlus2, MessageCircleHeart, MessageSquareText } from "@lucide/svelte";
+	import Button from "$lib/components/Button.svelte";
+	import { MessageCircleHeart } from "@lucide/svelte";
 	import type { PageProps } from "./$types.js";
 	import { parseAbsoluteToLocal } from "@internationalized/date";
 	import type { Event } from "$lib/api_calls/types";
@@ -77,185 +75,116 @@
 	});
 </script>
 
-<div>
-	<!-- Mobile toggle buttons -->
-	<div class="md:hidden mb-4">
-		<div class="flex bg-gray-200 rounded-lg p-1">
-			<button
-				class="flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-md font-medium transition-colors {activeTab ===
-				'posts'
-					? 'bg-white text-gray-900 shadow-sm'
-					: 'text-gray-600 hover:text-gray-900'}"
-				onclick={() => (activeTab = "posts")}
-			>
-				<NotebookPen size={18} />
-				Posts
-			</button>
-			<button
-				class="flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-md font-medium transition-colors {activeTab ===
-				'events'
-					? 'bg-white text-gray-900 shadow-sm'
-					: 'text-gray-600 hover:text-gray-900'}"
-				onclick={() => (activeTab = "events")}
-			>
-				<CalendarDays size={18} />
-				Calendar
-			</button>
-		</div>
-	</div>
-
-	<!-- Desktop layout (unchanged) -->
-	<div class="hidden md:grid md:grid-cols-3">
-		<div class="flex flex-col col-span-2">
-			<div>
-				<div class="flex flex-row gap-2 items-center justify-center pb-2">
-					<Button href="/posts/create" class={buttonVariants({ variant: "post" })}>
-						<NotebookPen />
-						Post
-					</Button>
-					<Button href="/events/create" class={buttonVariants({ variant: "event" })}>
-						<CalendarPlus />
-						Event
-					</Button>
-					<Button
-						href="/recommendations/create"
-						class={buttonVariants({ variant: "recommendation" })}
-					>
-						<MessageCircleHeart />
-						Recommendation
-					</Button>
-				</div>
+{#snippet feed_column()}
+	<section class="flex min-w-0 flex-col">
+		<div class="flex flex-row flex-wrap items-center justify-between gap-3">
+			<h2 class="text-lg font-bold leading-tight">posts</h2>
+			<div class="flex flex-row flex-wrap gap-2">
+				<Button href="/posts/create">
+					<NotebookPen />
+					new post
+				</Button>
+				<Button href="/events/create">
+					<CalendarPlus />
+					new event
+				</Button>
+				<Button href="/recommendations/create">
+					<MessageCircleHeart />
+					new rec
+				</Button>
 			</div>
-			<H1>Posts</H1>
-
-			{#if feed_items.length === 0}
-				<div
-					class="flex justify-center p-2 mb-2 font-bold border-gray-800 rounded-sm bg-lime-200 border-1"
-				>
-					<p>
-						Your feed is empty!
-						<Link url="/friends">Add friends!!</Link>
-					</p>
-				</div>
-			{/if}
-			<div>
-				{#each feed_items as feed_item}
-					<FeedItem feed_item={feed_item.feedable} />
-				{/each}
-			</div>
-			{#if fetching_more_posts}
-				<div class="flex justify-center pt-20">
-					<Spinner class="size-24" />
-				</div>
-			{/if}
-
-			{#if !next_page}
-				<div class="flex justify-center pt-20">Reached the end of time :)</div>
-			{/if}
 		</div>
-		<div class="flex flex-col pl-2">
-			<Button href="/events/create" class={buttonVariants({ variant: "event" })}>
-				<CalendarPlus />
-				Event
-			</Button>
-			<H1>Calendar</H1>
 
-			{#if events_and_date_headers.length === 0}
-				<div
-					class="flex justify-center p-2 mb-2 font-bold border-gray-800 rounded-sm bg-lime-200 border-1 dark:text-gray-900"
-				>
-					<p>
-						No upcoming events.
-						<Link url="/events/create">Create a new event</Link>
-					</p>
-				</div>
-			{/if}
-			{#each events_and_date_headers as event_item}
-				{#if !!event_item["date_header"]}
-					<DateHeader {event_item} />
-				{:else}
-					<EventCard feed_item={event_item} />
-				{/if}
+		{#if feed_items.length === 0}
+			<p class="mt-3 text-zinc-500 dark:text-zinc-400">
+				your feed is empty! <Link url="/friends">add friends!!</Link>
+			</p>
+		{/if}
+		<div>
+			{#each feed_items as feed_item}
+				<FeedItem feed_item={feed_item.feedable} />
 			{/each}
 		</div>
+		{#if fetching_more_posts}
+			<div class="flex justify-center pt-20">
+				<Spinner class="size-24" />
+			</div>
+		{/if}
+
+		{#if !next_page}
+			<div class="flex justify-center pt-10 italic text-zinc-500 dark:text-zinc-400">
+				Reached the end of time :)
+			</div>
+		{/if}
+	</section>
+{/snippet}
+
+{#snippet calendar_column()}
+	<section class="flex min-w-0 flex-col">
+		<div class="flex flex-row flex-wrap items-center justify-between gap-3">
+			<h2 class="text-lg font-bold leading-tight">calendar</h2>
+			<Button href="/events/create">
+				<CalendarPlus />
+				new event
+			</Button>
+		</div>
+
+		{#if events_and_date_headers.length === 0}
+			<p class="mt-3 text-sm text-zinc-500 dark:text-zinc-400">
+				no upcoming events. <Link url="/events/create">create a new event</Link>
+			</p>
+		{/if}
+		{#each events_and_date_headers as event_item}
+			{#if !!event_item["date_header"]}
+				<h3 class="mt-3 text-sm font-bold text-zinc-500 dark:text-zinc-400">
+					{event_item.date_header}
+				</h3>
+			{:else}
+				<EventCard feed_item={event_item} />
+			{/if}
+		{/each}
+	</section>
+{/snippet}
+
+<div>
+	<!-- Mobile toggle buttons -->
+	<div class="md:hidden mb-6 flex flex-row gap-2">
+		<Button
+			variant={activeTab === "posts" ? "filled" : "dashed"}
+			color={activeTab === "posts" ? "yellow" : "zinc"}
+			aria-pressed={activeTab === "posts"}
+			class="flex-1"
+			onclick={() => (activeTab = "posts")}
+		>
+			<NotebookPen />
+			posts
+		</Button>
+		<Button
+			variant={activeTab === "events" ? "filled" : "dashed"}
+			color={activeTab === "events" ? "yellow" : "zinc"}
+			aria-pressed={activeTab === "events"}
+			class="flex-1"
+			onclick={() => (activeTab = "events")}
+		>
+			<CalendarDays />
+			calendar
+		</Button>
+	</div>
+
+	<!-- Desktop layout -->
+	<div class="hidden md:grid md:grid-cols-3 md:gap-10">
+		<div class="col-span-2">
+			{@render feed_column()}
+		</div>
+		{@render calendar_column()}
 	</div>
 
 	<!-- Mobile layout with toggle -->
 	<div class="md:hidden">
 		{#if activeTab === "posts"}
-			<div class="flex flex-col">
-				<div>
-					<div class="flex flex-row gap-2 items-center justify-center pb-2">
-						<Button href="/posts/create" class={buttonVariants({ variant: "post" })}>
-							<NotebookPen />
-							Post
-						</Button>
-						<Button href="/events/create" class={buttonVariants({ variant: "event" })}>
-							<CalendarPlus />
-							Event
-						</Button>
-						<Button
-							href="/recommendations/create"
-							class={buttonVariants({ variant: "recommendation" })}
-						>
-							<MessageCircleHeart />
-							Recommendation
-						</Button>
-					</div>
-				</div>
-				<H1>Posts</H1>
-
-				{#if feed_items.length === 0}
-					<div
-						class="flex justify-center p-2 mb-2 font-bold border-gray-800 rounded-sm bg-lime-200 border-1"
-					>
-						<p>
-							Your feed is empty!
-							<Link url="/friends">Add friends!!</Link>
-						</p>
-					</div>
-				{/if}
-				<div>
-					{#each feed_items as feed_item}
-						<FeedItem feed_item={feed_item.feedable} />
-					{/each}
-				</div>
-				{#if fetching_more_posts}
-					<div class="flex justify-center pt-20">
-						<Spinner class="size-24" />
-					</div>
-				{/if}
-
-				{#if !next_page}
-					<div class="flex justify-center pt-20">Reached the end of time :)</div>
-				{/if}
-			</div>
+			{@render feed_column()}
 		{:else}
-			<div class="flex flex-col">
-				<Button href="/events/create" class={buttonVariants({ variant: "event" })}>
-					<CalendarPlus />
-					Event
-				</Button>
-				<H1>Calendar</H1>
-
-				{#if events_and_date_headers.length === 0}
-					<div
-						class="flex justify-center p-2 mb-2 font-bold border-gray-800 rounded-sm bg-lime-200 border-1 dark:text-gray-900"
-					>
-						<p>
-							No upcoming events.
-							<Link url="/events/create">Create a new event</Link>
-						</p>
-					</div>
-				{/if}
-				{#each events_and_date_headers as event_item}
-					{#if !!event_item["date_header"]}
-						<DateHeader {event_item} />
-					{:else}
-						<EventCard feed_item={event_item} />
-					{/if}
-				{/each}
-			</div>
+			{@render calendar_column()}
 		{/if}
 	</div>
 </div>

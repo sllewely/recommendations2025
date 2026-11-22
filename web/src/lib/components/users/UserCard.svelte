@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { User } from "$lib/api_calls/types";
-	import bblogo from "$lib/assets/android-launchericon-72-72.png";
+	import Avatar from "$lib/components/users/Avatar.svelte";
 	import FriendshipBadge from "$lib/components/ui/badge/FriendshipBadge.svelte";
 	import type { Snippet } from "svelte";
 
@@ -16,13 +16,7 @@
 </script>
 
 <div class="flex flex-row items-center">
-	<div class="rounded-full w-12 h-12 overflow-hidden mr-2 shrink-0">
-		{#if user.profile_photo_url}
-			<img src={"https://" + user.profile_photo_url} alt="profile picture" />
-		{:else}
-			<img src={bblogo} alt="profile picture" />
-		{/if}
-	</div>
+	<Avatar {user} class="mr-2" />
 	<div class="flex flex-col">
 		<div class="flex flex-row items-center gap-2">
 			<a class="text-teal-400 hover:text-orange-400 font-bold" href={`/users/${user.id}`}

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import PrivacyIcon from "$lib/components/posts/PrivacyIcon.svelte";
 	import LinkButton from "$lib/components/text/LinkButton.svelte";
 	import PostCard from "$lib/components/posts/PostCard.svelte";
 	import { MessageCircleMore } from "@lucide/svelte";
@@ -68,8 +69,9 @@
 					<FriendshipBadge status={data.post.user.friendship_status} />
 				{/if}
 			</div>
-			<div>
+			<div class="flex flex-row items-center gap-1.5">
 				<span class="text-sm">posted at {formattedCreateTime}</span>
+				<PrivacyIcon visibility={data.post.visibility} />
 			</div>
 		</div>
 		<PostCard feed_item={data.post} truncate={false} />

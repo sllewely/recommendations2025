@@ -2,14 +2,17 @@
 	import type { User } from "$lib/api_calls/types";
 	import bblogo from "$lib/assets/android-launchericon-72-72.png";
 	import FriendshipBadge from "$lib/components/ui/badge/FriendshipBadge.svelte";
+	import type { Snippet } from "svelte";
 
 	interface Props {
 		user: User;
 		show_friendship_status?: boolean;
 		subtitle?: string;
+		// shown inline after the subtitle
+		subtitle_extra?: Snippet;
 	}
 
-	let { user, show_friendship_status = true, subtitle }: Props = $props();
+	let { user, show_friendship_status = true, subtitle, subtitle_extra }: Props = $props();
 </script>
 
 <div class="flex flex-row items-center">
@@ -30,7 +33,10 @@
 			{/if}
 		</div>
 		{#if subtitle}
-			<span class="text-sm text-gray-500 dark:text-gray-400">{subtitle}</span>
+			<span class="flex flex-row items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400">
+				{subtitle}
+				{@render subtitle_extra?.()}
+			</span>
 		{/if}
 	</div>
 </div>

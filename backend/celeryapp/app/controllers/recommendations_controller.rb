@@ -6,7 +6,7 @@ class RecommendationsController < ApplicationController
     if user_id.nil?
       render json: { error: "Error expected param user_id" }, status: :bad_request and return
     end
-    recommendations = User.find(user_id).recommendations.visible_to(current_user).order(created_at: :desc)
+    recommendations = User.find(user_id).recommendations.visible_to(current_user).includes(:feed_item).order(created_at: :desc)
     if params['status']
       recommendations = recommendations.where(status: params['status'])
     end
@@ -20,7 +20,7 @@ class RecommendationsController < ApplicationController
   end
 
   def show
-    @recommendation = Recommendation.includes(:user, comments: [:user, { reactions: :user }]).find_by(id: params[:id])
+    @recommendation = Recommendation.includes(:user, :feed_item, comments: [:user, { reactions: :user }]).find_by(id: params[:id])
     if @recommendation.nil? || !@recommendation.visible_to?(current_user)
       render json: { error: 'not found' }, status: :not_found and return
     end

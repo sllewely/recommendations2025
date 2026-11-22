@@ -1,4 +1,5 @@
 <script lang="ts">
+	import PrivacyIcon from "$lib/components/posts/PrivacyIcon.svelte";
 	import { enhance } from "$app/forms";
 	import LinkButton from "$lib/components/text/LinkButton.svelte";
 	import { newToast, ToastType } from "$lib/state/toast.svelte.js";
@@ -146,8 +147,9 @@
 			</div>
 			<!--        <div><span class="font-bold"><a class="text-teal-400 hover:text-orange-400" href="/users/{data.event.creator_id}">{data.event.creator_name}</a></span> posted an upcoming event</div>-->
 			<!--        </svelte:boundary>-->
-			<div>
+			<div class="flex flex-row items-center gap-1.5">
 				<span class="text-sm">posted at {formattedCreateTime}</span>
+				<PrivacyIcon visibility={data.event.visibility} />
 			</div>
 		</div>
 		<div class="p-2">

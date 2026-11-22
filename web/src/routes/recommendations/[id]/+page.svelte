@@ -1,4 +1,5 @@
 <script lang="ts">
+	import PrivacyIcon from "$lib/components/posts/PrivacyIcon.svelte";
 	import H1 from "$lib/components/text/H1.svelte";
 	import H2 from "$lib/components/text/H2.svelte";
 	import Card from "$lib/components/Card.svelte";
@@ -61,8 +62,9 @@
 					<Link url="/users/{data.recommendation.user.id}">{data.recommendation.user.name}</Link>
 				</span>'s recommendation
 			</div>
-			<div>
+			<div class="flex flex-row items-center gap-1.5">
 				<span class="text-sm">posted at {formattedCreateTime}</span>
+				<PrivacyIcon visibility={data.recommendation.visibility} />
 			</div>
 		</div>
 		<Card>

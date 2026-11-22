@@ -7,6 +7,7 @@
 	import type { Post, Event, Recommendation } from "$lib/api_calls/types";
 	import { parseAbsoluteToLocal } from "@internationalized/date";
 	import Reactions from "$lib/components/reactions/Reactions.svelte";
+	import PrivacyIcon from "$lib/components/posts/PrivacyIcon.svelte";
 
 	interface Props {
 		feed_item: Post | Event | Recommendation;
@@ -35,7 +36,11 @@
 </script>
 
 <div class="px-2 py-1 my-2 border-l-4 {border_color} rounded-r-lg shadow-md">
-	<UserCard user={feed_item.user} subtitle="Posted {type_name} {formattedCreateTime}" />
+	<UserCard user={feed_item.user} subtitle="Posted {type_name} {formattedCreateTime}">
+		{#snippet subtitle_extra()}
+			<PrivacyIcon visibility={feed_item.visibility} />
+		{/snippet}
+	</UserCard>
 
 	{#if feed_item.class_name === "Recommendation"}
 		<RecommendationCard {feed_item} in_feed />

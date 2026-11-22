@@ -17,13 +17,14 @@ class EventBlueprint < Blueprinter::Base
     association :reactions, blueprint: ReactionBlueprint
     association :proposed_times, blueprint: ProposedTimeBlueprint, view: :unauthed
     field :chosen_proposed_time_id
+    # anyone who can see it can see how it's shared
+    field :visibility
   end
 
   view :authed do
     include_view :unauthed
     field :address
-    # privacy settings are only shown to the owner
-    field :visibility, if: ->(_field, obj, options) { options[:current_user]&.id == obj.user_id }
+    # the audience is only shown to the owner
     field :audience, if: ->(_field, obj, options) { options[:current_user]&.id == obj.user_id }
     association :rsvps, blueprint: RsvpBlueprint, view: :authed, options: ->(options) { options }
     association :guest_rsvps, blueprint: GuestRsvpBlueprint, view: :authed, options: ->(options) { options }

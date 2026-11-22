@@ -11,8 +11,8 @@ class PostBlueprint < Blueprinter::Base
   association :comments, blueprint: CommentBlueprint, view: :authed, options: ->(options) { options }
   association :reactions, blueprint: ReactionBlueprint
 
-  # privacy settings are only shown to the owner
-  field :visibility, if: ->(_field, obj, options) { options[:current_user]&.id == obj.user_id }
+  # anyone who can see it can see how it's shared; the audience is only shown to the owner
+  field :visibility
   field :audience, if: ->(_field, obj, options) { options[:current_user]&.id == obj.user_id }
 
   view :authed do

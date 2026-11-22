@@ -4,7 +4,7 @@ class EventsController < ApplicationController
   def index
     @events = Event
                 .visible_to(current_user)
-                .includes(:user, rsvps: :user, guest_rsvps: :guest, plus_ones: :user, proposed_times: [:users, :guests], comments: [:user, { reactions: :user }])
+                .includes(:user, :feed_item, rsvps: :user, guest_rsvps: :guest, plus_ones: :user, proposed_times: [:users, :guests], comments: [:user, { reactions: :user }])
                 .upcoming.order(start_date_time: :asc)
 
     # TODO: improve query performance
@@ -48,7 +48,7 @@ class EventsController < ApplicationController
 
   def show
     # anyone with the link can see an event; privacy only limits where it is listed
-    @event = Event.includes(guest_rsvps: :guest, plus_ones: :user, proposed_times: [:users, :guests], comments: [:user, { reactions: :user }]).find_by(id: params[:id])
+    @event = Event.includes(:feed_item, guest_rsvps: :guest, plus_ones: :user, proposed_times: [:users, :guests], comments: [:user, { reactions: :user }]).find_by(id: params[:id])
     if @event
       render json: EventBlueprint.render(@event, view: :authed, current_user: current_user), status: :ok
     else

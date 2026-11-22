@@ -41,7 +41,7 @@ RSpec.describe "Privacy", type: :request do
       expect(ids).not_to include(stranger_friends_post.id, hidden_post.id)
     end
 
-    it "only shows privacy settings to the owner" do
+    it "shows visibility to viewers but the audience only to the owner" do
       mine = shared(create(:post, user: me), "specific", user_ids: [friend.id])
       theirs = shared(create(:post, user: friend), "public")
 
@@ -52,7 +52,7 @@ RSpec.describe "Privacy", type: :request do
       their_json = feedables.find { |f| f["id"] == theirs.id }
       expect(my_json["visibility"]).to eq("specific")
       expect(my_json["audience"]).to eq([{ "type" => "user", "id" => friend.id, "name" => friend.name }])
-      expect(their_json).not_to have_key("visibility")
+      expect(their_json["visibility"]).to eq("public")
       expect(their_json).not_to have_key("audience")
     end
   end

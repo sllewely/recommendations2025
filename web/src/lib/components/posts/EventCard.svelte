@@ -68,7 +68,7 @@
 	class={in_feed
 		? ""
 		: cn(
-				"my-3 flex flex-col gap-3 border border-dashed border-transparent p-4",
+				"my-2 flex flex-col gap-1 border border-dashed border-transparent px-3 py-2",
 				CARD_BG,
 				ACCENTS.lime.hover,
 			)}

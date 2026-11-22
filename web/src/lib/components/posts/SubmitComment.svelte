@@ -15,7 +15,7 @@
 	let posting = $state(false);
 </script>
 
-<div class="mt-2">
+<div class="mt-1">
 	<form
 		method="POST"
 		action="/posts?/submit_comment"

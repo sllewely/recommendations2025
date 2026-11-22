@@ -96,7 +96,7 @@
 		</div>
 
 		{#if feed_items.length === 0}
-			<p class="mt-5 text-zinc-500 dark:text-zinc-400">
+			<p class="mt-3 text-zinc-500 dark:text-zinc-400">
 				your feed is empty! <Link url="/friends">add friends!!</Link>
 			</p>
 		{/if}
@@ -130,13 +130,13 @@
 		</div>
 
 		{#if events_and_date_headers.length === 0}
-			<p class="mt-5 text-sm text-zinc-500 dark:text-zinc-400">
+			<p class="mt-3 text-sm text-zinc-500 dark:text-zinc-400">
 				no upcoming events. <Link url="/events/create">create a new event</Link>
 			</p>
 		{/if}
 		{#each events_and_date_headers as event_item}
 			{#if !!event_item["date_header"]}
-				<h3 class="mt-5 text-sm font-bold text-zinc-500 dark:text-zinc-400">
+				<h3 class="mt-3 text-sm font-bold text-zinc-500 dark:text-zinc-400">
 					{event_item.date_header}
 				</h3>
 			{:else}

@@ -1,6 +1,6 @@
 // Card + accent styling for the feed, from the redesign (f6826f0)
 export const CARD_BG = "rounded-xl bg-zinc-100 dark:bg-zinc-700/50";
-export const CARD = CARD_BG + " p-5";
+export const CARD = CARD_BG + " px-3 py-2";
 
 // class names written out in full so Tailwind finds them.
 // `hover` lights up the card's dashed border while its ".card-link" is hovered

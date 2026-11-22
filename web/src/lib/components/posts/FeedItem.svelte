@@ -33,8 +33,8 @@
 	}).format(localizedCreateTime.toDate());
 </script>
 
-<div class="my-5 flex flex-col">
-	<div class="mb-1.5 flex h-12 flex-row items-stretch gap-1.5">
+<div class="my-2 flex flex-col">
+	<div class="mb-1 flex h-12 flex-row items-stretch gap-1.5">
 		<div aria-hidden="true" class="flex aspect-square h-full shrink-0">
 			<div
 				class="mt-auto ml-auto size-[calc(50%+1px)] rounded-tl-xl border-t-2 border-l-2 border-dashed border-zinc-500 dark:border-zinc-400"
@@ -51,7 +51,7 @@
 
 	<article
 		class={cn(
-			"relative flex flex-col gap-3 border border-dashed border-transparent",
+			"relative flex flex-col gap-1 border border-dashed border-transparent",
 			CARD,
 			accent.hover,
 		)}
